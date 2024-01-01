@@ -1,0 +1,109 @@
+// General variables
+$theme-font-color: #242934;
+$theme-body-font-color: #2b2b2b;
+// $theme-body-sub-title-color: rgba($theme-body-font-color, 0.7);
+$body-color: #f8f8f8;
+// Theme colors variables
+$primary-color: #8DBC20;
+$secondary-color: #16c7f9;
+$success-color: #51bb25;
+$info-color: #a927f9;
+$warning-color: #f8d62b;
+$danger-color: #dc3545;
+$light-color: #f4f4f4;
+$light-grey: #ecf3fa;
+$dark-gray: #ecf3fa;
+$dark-color: #2c323F;
+$semi-dark: #59667a;
+$light-font: #59667a;
+$auth-bg-color: #FAFAFA;
+$black: #000;
+$white: #fff;
+$border-input-outline: #86b7fe;
+$border-input-shadow: rgba(13, 110, 253, 0.25);
+// Theme colors variables for hover
+$primary-hover: #6c9019;
+$secondary-hover: #23b6de;
+$success-hover: #469524;
+$info-hover: #8427be;
+$warning-hover: #ccb439;
+$danger-hover: #b71e2d;
+$dark-hover: #56595f;
+$light-hover: #d3d0d0;
+$disabled-color: #ddd;
+$input-height: 37px;
+// Global size variables
+$border-radius-btn: 6px;
+$pd-sm-btn: 4px 8px;
+$pd-md-btn: 6px 28px;
+$fs-sm: 11px;
+$fs-md: 14px;
+$fs-input-error: 12.25px;
+$pd-md-input: 6px 12px;
+$fs-md-input: 16px;
+// gradient colors
+// $gradient-primary: linear-gradient(26deg, var(--theme-deafult) 0%, #a26cf8 100%);
+//social colors
+$fb: #50598e;
+$twitter: #6fa2d8;
+$google-plus: #c64e40;
+$linkedin: #0077B5;
+//fonts
+$font-roboto: Roboto;
+// $font-serif: sans-serif;
+// $font-awesome: FontAwesome;
+// $font-ICO: IcoFont;
+//General tag settings
+$body-font-size: 14px;
+// $body-font-color: $theme-body-font-color;
+$ul-padding-left: 0px;
+$ul-padding-right: 0px;
+$ancher-color: var(--theme-deafult);
+$btn-focus-box-shadow: none;
+$all-focus-outline-color: var(--theme-deafult);
+$paragraph-font-size: 13px;
+$paragraph-line-height: 1.7;
+$paragraph-letter-spacing: 0.7px;
+$blockquote-padding: 15px;
+$blockquote-border: 4px solid $light-grey;
+$small-tag-padding: 10px;
+$pre-tag-bg-color: rgba($primary-color, 0.03);
+$pre-tag-padding: 20px 0;
+//badge settings
+$badge-padding :0.44em 0.7em;
+$badge-svg-size :10px;
+//Tour settings
+$tour-color: var(--theme-deafult);
+$sidebar-transition: 0.5s;
+$sidebar-height: calc(100vh - 115px);
+//Header settings
+$main-header-position: fixed;
+$main-header-top: 0;
+$main-header-shadow: 0 0 20px rgba($semi-dark, 0.1);
+//page settings
+$page-body-padding: 0 20px 0 20px;
+// $page-body-bg-color: $light-color;
+$page-body-margin-bottom: 0px;
+$page-title-padding: 30px;
+$common-box-shadow: 2px 3.464px 8px 0px rgba(22, 145, 248, 0.18);
+$page-title-font-size: 24px;
+$page-title-margin-bottom: 0;
+$page-title-text-tranform: capitalize;
+$page-small-title-display: block;
+$page-small-title-font-size: 12px;
+$page-small-title-margin-bottom: 5px;
+$page-small-title-text-transform: capitalize;
+// $page-small-title-text-color: $theme-body-sub-title-color;
+$breadcrumb-size: 16px;
+$breadcrumb-content: "/";
+//main header left settings
+$header-left-bg-color: $white;
+$main-header-padding: 27px 22px;
+$main-header-z-index: 8;
+$header-wrapper-padding: 30px;
+$header-wrapper-nav-right: 0px;
+$header-wrapper-nav-icon-size: 20px;
+// $header-wrapper-nav-icon-color: $theme-font-color;
+$header-wrapper-nav-icon-align: middle;
+$header-size: 136px;
+$box-layout-space: 40px;
