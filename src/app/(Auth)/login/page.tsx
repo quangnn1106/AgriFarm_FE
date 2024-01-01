@@ -1,5 +1,6 @@
 'use client';
-import { useEffect } from 'react';
+// client component vs server component
+import { useEffect, useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import styles from '../auth.module.scss';
 import Link from 'next/link';
@@ -18,6 +19,7 @@ const cx = classNames.bind(styles);
 const Login: React.FC = () => {
   const router = useRouter();
   const { userLogin } = useAppSelector(state => state.authReducer);
+
   const dispatch = useAppDispatch();
   const { data: session } = useSession();
   useEffect(() => {
