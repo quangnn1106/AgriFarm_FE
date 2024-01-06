@@ -1,5 +1,5 @@
 {
-  "name": "zlmms_fe",
+  "name": "agrifarm_fe",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,13 +14,16 @@
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.12.2",
     "axios": "^1.6.2",
+    "bootstrap": "^5.3.2",
     "classnames": "^2.3.2",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.1",
+    "react-icons": "^4.12.0",
     "react-redux": "^9.0.4",
+    "sharp": "^0.33.1",
     "yup": "^1.3.2"
   },
   "devDependencies": {
