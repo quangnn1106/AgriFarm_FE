@@ -1,29 +1,16 @@
-'use client';
-import React, { useEffect } from 'react';
-import { Spin } from 'antd';
+import Loader from '@/components/Loader/Loader';
 
-const LoadingAll: React.FC = () => {
-  const [spinning, setSpinning] = React.useState<boolean>(true);
+type Props = {};
 
-  //   const showLoader = () => {
-  //     setTimeout(() => {
-  //       setSpinning(false);
-  //     }, 3000);
-  //   };
-  //   useEffect(() => {
-  //     setTimeout(() => {
-  //       setSpinning(false);
-  //     }, 5000);
-  //   }, []);
-
+const loading = (props: Props) => {
   return (
     <>
-      <Spin
-        spinning={spinning}
-        fullscreen
+      <Loader
+        fullScreen
+        spinning
       />
     </>
   );
 };
 
-export default LoadingAll;
+export default loading;

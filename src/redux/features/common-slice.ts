@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, settings, http } from '@/utils/config';
+import { ACCESS_TOKEN, http } from '@/utils/config';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from '../createAppAsyncThunk';
 import { loginModel } from '@/app/(Auth)/models/login-model';
@@ -50,8 +50,7 @@ const auth = createSlice({
         loginAsyncApi.fulfilled,
         (state: UserState, action: PayloadAction<UserLoginResponse>) => {
           state.userLogin = action.payload;
-          settings.setStorage(ACCESS_TOKEN, action.payload?.access as string);
-          settings.setCookie(ACCESS_TOKEN, action.payload?.access as string, 3);
+
           state.userLogin.status = 'done';
         }
       )
