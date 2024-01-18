@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
-import { Layout } from 'antd';
+import { Col, Layout, Row } from 'antd';
 import loginBanner from '@/assets/Images/loginbanner.png';
 import signUpBanner from '@/assets/Images/signup-img.png';
 import Image from 'next/image';
@@ -9,8 +9,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader/Loader';
 import { usePathname } from 'next/navigation';
-import { roboto } from '@/styles/base/font';
-import '../../styles/base/global.css';
+
 const { Sider, Content } = Layout;
 
 const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
@@ -54,13 +53,35 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
     );
   }
   return (
-    <Layout>
-      <Sider
-        width={windowSize.width / 1.8}
+    // <Layout hasSider>
+    //   <Sider
+    //     width={windowSize.width / 1.8}
+    //     style={{
+    //       height: windowSize.height,
+    //       backgroundSize: 'cover'
+    //     }}
+    //   >
+    //     <Image
+    //       src={isPath ? loginBanner : signUpBanner}
+    //       alt='Rice'
+    //       quality={100}
+    //       sizes='100vw'
+    //       style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+    //     />
+    //   </Sider>
+    //   <Content>{children}</Content>
+    // </Layout>
+
+    <Row>
+      <Col
         style={{
           height: windowSize.height,
           backgroundSize: 'cover'
         }}
+        xs={24}
+        sm={14}
+        md={14}
+        lg={14}
       >
         <Image
           src={isPath ? loginBanner : signUpBanner}
@@ -69,9 +90,16 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
           sizes='100vw'
           style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         />
-      </Sider>
-      <Content style={{ position: 'relative' }}>{children}</Content>
-    </Layout>
+      </Col>
+      <Col
+        xs={24}
+        sm={10}
+        md={10}
+        lg={10}
+      >
+        <Content>{children}</Content>
+      </Col>
+    </Row>
   );
 };
 
