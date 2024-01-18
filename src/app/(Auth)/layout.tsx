@@ -52,6 +52,7 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
       />
     );
   }
+
   return (
     // <Layout hasSider>
     //   <Sider
