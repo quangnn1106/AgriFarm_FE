@@ -1,15 +1,16 @@
 'use client';
 import { Form, Input, Button, Row, Col, ConfigProvider, Checkbox } from 'antd';
 import styles from '../auth.module.scss';
-import Link from 'next/link';
+
 import classNames from 'classnames/bind';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { registerModel } from '../models/register-model';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { registerAsyncApi, resetState } from '@/redux/features/common-slice';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
 import Loading from '@/components/LoadingBtn/Loading';
+import { useRouter } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 
