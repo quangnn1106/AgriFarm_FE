@@ -3,55 +3,11 @@
 import TableComponent from "@/components/Table/table";
 import React from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import type { MenuProps, TableColumnsType } from 'antd';
+import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { Content } from "antd/es/layout/layout";
 
-interface User {
-    key: React.Key; 
-    userId: string;
-    fullName: string;
-    phoneNum: string;
-    address: string;
-    email: string;
-  }
 
-  const columns: TableColumnsType<User> = [
-    {
-        title: 'User ID', 
-        dataIndex: 'userId',
-    },
-    {
-        title: 'FullName',
-        dataIndex: 'fullName',
-    },
-    {
-        title: 'Phone',
-        dataIndex: 'phoneNum',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-    }
-  ];
-
-  const data: User[] = []
-  for (let i = 0; i < 40; i++) {
-    data.push({
-        key: i,
-        userId: `ADNW0383`,
-        fullName: `Tran Tu My`,
-        phoneNum: `0796858854`,
-        address: `Can Tho`,
-        email: `trantumy18112002@gmail.com`,
-    })
-  }
-
-  
 const UserList: React.FC = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },

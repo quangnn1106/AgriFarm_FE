@@ -1,0 +1,8 @@
+{
+  "Nav": {
+    "dashboard": "Thống kê"
+  },
+  "LocaleSwitcher": {
+    "switchLocale": "Convert {locale, select, vi {vi} "
+  }
+}

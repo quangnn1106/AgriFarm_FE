@@ -1,8 +1,8 @@
 import { ACCESS_TOKEN, http } from '@/utils/config';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from '../createAppAsyncThunk';
-import { loginModel } from '@/app/(Auth)/models/login-model';
-import { registerModel } from '@/app/(Auth)/models/register-model';
+import { loginModel } from '@/app/[locale]/(Auth)/models/login-model';
+import { registerModel } from '@/app/[locale]/(Auth)/models/register-model';
 
 export type UserState = {
   userLogin: UserLoginResponse | null;
