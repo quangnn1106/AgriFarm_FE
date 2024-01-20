@@ -2,8 +2,7 @@ type Props = {};
 import React, { useState } from "react";
 
 import styles from './style-table.module.scss';
-import { Button, Table } from "antd";
-import type { TableColumnsType } from 'antd';
+import { Button, MenuProps, Table, TableColumnsType } from "antd";
 
 interface User {
     key: React.Key; 
@@ -13,6 +12,12 @@ interface User {
     address: string;
     email: string;
   }
+
+  interface T {
+    
+  }
+   type Columns = Required<MenuProps>['items'][number];
+    
 
   const columns: TableColumnsType<User> = [
     {
@@ -37,6 +42,8 @@ interface User {
     }
   ];
 
+ 
+
   const data: User[] = []
   for (let i = 0; i < 40; i++) {
     data.push({
@@ -48,6 +55,11 @@ interface User {
         email: `trantumy18112002@gmail.com`,
     })
   }
+
+
+
+
+
 
 const TableComponent: React.FC = (props: Props) => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
