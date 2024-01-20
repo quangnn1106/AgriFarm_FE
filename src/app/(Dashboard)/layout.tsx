@@ -7,6 +7,8 @@ const { Header, Content, Sider } = Layout;
 
 import MenuSider from '../Layouts/MainLayout/MenuSider/MenuSider';
 
+import AdminSider from '../Layouts/SuperAdmin/Sider/AdminSider';
+
 export default function DashBoardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -18,14 +20,15 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
           hasSider
         >
           <Sider
-            width={250}
+            width={230}
             theme='light'
             className='sidebar'
-            collapsible
-            collapsed={collapsed}
-            onCollapse={value => setCollapsed(value)}
+            // collapsible
+            // collapsed={collapsed}
+            // onCollapse={value => setCollapsed(value)}
           >
-            <MenuSider />
+            {/* <MenuSider /> */}
+            <AdminSider />
           </Sider>
           <Content className='site_layout_background'>{children}</Content>
         </Layout>

@@ -11,7 +11,6 @@ body {
     // border-radius: 5px;
     // margin: 24px 16px;
     background-color: $white;
-
     .sidebar {
         position: absolute;
         z-index: 1;
@@ -24,7 +23,6 @@ body {
 
 .layout {
     height: fit-content;
-
     header {
         display: flex;
         align-items: center;
@@ -34,32 +32,26 @@ body {
         z-index: 2;
         justify-content: space-between;
     }
-
     .right_menu {
         display: flex;
         align-items: center;
         min-width: 200px;
-
         .ul_right {
             display: flex;
         }
-
         ul {
             justify-content: center;
             width: 100%;
-
             li:first-child {
                 padding: 0 1px;
                 display: flex;
                 cursor: pointer;
-
                 span {
                     display: flex;
                     align-items: center;
                 }
             }
         }
-
         .iconButton {
             width: 48px;
             height: 48px;
@@ -70,12 +62,10 @@ body {
             cursor: pointer;
             font-size: 24px;
         }
-
         .iconSearch {
             font-size: 24px;
         }
     }
-
     .logo {
         height: 32px;
         width: 96px;
