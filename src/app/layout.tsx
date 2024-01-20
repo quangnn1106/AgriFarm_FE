@@ -1,11 +1,10 @@
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
 import { ReduxProvider } from '@/redux/provider';
-import classNames from 'classnames/bind';
+
 
 
 import Providers from '@/components/Provider/Provider';
-import { Suspense } from 'react';
-import LoadingAll from './loading';
+
 import { roboto } from '@/styles/base/font';
 import '../styles/global.scss';
 import { Metadata } from 'next';
@@ -24,9 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StyledComponentsRegistry>
           <Providers>
             <body suppressHydrationWarning={false}>
-              <main>
-                <Suspense fallback={<LoadingAll />}>{children} </Suspense>
-              </main>
+              <main>{children}</main>
             </body>
           </Providers>
         </StyledComponentsRegistry>

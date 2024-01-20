@@ -14,52 +14,48 @@ import {
 import Link from 'next/link';
 import styles from './menuSider.module.scss';
 const cx = classNames.bind(styles);
-type Props = {};
-
-type MenuItem = Required<MenuProps>['items'][number];
-
 import classNames from 'classnames/bind';
 import { usePathname } from 'next/navigation';
 
-// const roboto = Roboto({
-//   variable: '--font-roboto',
-//   subsets: ['latin'],
-//   weight: '400'
-// });
+type MenuItem = Required<MenuProps>['items'][number];
 
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,
   icon?: React.ReactNode,
-  children?: MenuItem[]
+  children?: MenuItem[],
+  type?: 'group'
 ): MenuItem {
   return {
     key,
     icon,
     children,
-    label
+    label,
+    type
   } as MenuItem;
 }
 
-const items: MenuItem[] = [
-  getItem(<Link href={'/statistic'}>Home</Link>, '/statistic', <HomeOutlined />),
-  getItem(<Link href={'/lead'}>Lead</Link>, '/lead', <NotificationOutlined />),
-  getItem(<Link href={'/contact'}>Contacts</Link>, '/contact', <UserOutlined />),
-  getItem(<Link href={'/account'}>Account</Link>, '/account', <TeamOutlined />),
-  getItem(
-    <Link href={'/opportunity'}>Opportunity</Link>,
-    '/opportunity',
-    <DollarOutlined />
-  ),
-  getItem(<Link href={'/task'}>Tasks</Link>, '/task', <CheckCircleOutlined />),
-  getItem(<Link href={'/meeting'}>Meeting</Link>, '/meeting', <MessageOutlined />),
-  getItem(<Link href={'/content'}>Content</Link>, '/content', <MessageOutlined />),
-  getItem(<Link href={'/calls'}>Calls</Link>, '/calls', <PhoneOutlined />),
-  getItem(<Link href={'/service'}>Services</Link>, '/service', <LikeOutlined />),
-  getItem(<Link href={'/products'}>Products</Link>, '/products', <NotificationOutlined />)
-];
-
-const MenuSider = (props: Props) => {
+// const items: MenuItem[] = [
+//   getItem(<Link href={'/statistic'}>Home</Link>, '/statistic', <HomeOutlined />),
+//   getItem(<Link href={'/lead'}>Lead</Link>, '/lead', <NotificationOutlined />),
+//   getItem(<Link href={'/contact'}>Contacts</Link>, '/contact', <UserOutlined />),
+//   getItem(<Link href={'/account'}>Account</Link>, '/account', <TeamOutlined />),
+//   getItem(
+//     <Link href={'/opportunity'}>Opportunity</Link>,
+//     '/opportunity',
+//     <DollarOutlined />
+//   ),
+//   getItem(<Link href={'/task'}>Tasks</Link>, '/task', <CheckCircleOutlined />),
+//   getItem(<Link href={'/meeting'}>Meeting</Link>, '/meeting', <MessageOutlined />),
+//   getItem(<Link href={'/content'}>Content</Link>, '/content', <MessageOutlined />),
+//   getItem(<Link href={'/calls'}>Calls</Link>, '/calls', <PhoneOutlined />),
+//   getItem(<Link href={'/service'}>Services</Link>, '/service', <LikeOutlined />),
+//   getItem(<Link href={'/products'}>Products</Link>, '/products', <NotificationOutlined />)
+// ];
+type Props = {
+  items: MenuItem[];
+};
+const MenuSider = ({ items }: Props) => {
   const path = usePathname();
 
   const [current, setCurrent] = useState(`${path}`);
@@ -79,8 +75,9 @@ const MenuSider = (props: Props) => {
             // itemSelectedBg: 'none',
             itemSelectedColor: 'black',
             iconSize: 15,
-            itemHeight: 50,
-            itemColor: '#5F5F5F'
+            itemHeight: 40,
+            itemColor: '#5F5F5F',
+            groupTitleColor: '757575'
           }
         }
       }}
