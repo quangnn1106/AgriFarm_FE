@@ -7,14 +7,14 @@ const publicPages = [
   '/login',
   '/register',
   '/statistic',
-  '/:path*'
+  '/user'
   // (/secret requires auth)
 ];
 
 const intlMiddleware = createMiddleware({
   locales,
   localePrefix: 'as-needed',
-  defaultLocale: 'en'
+  defaultLocale: 'vi'
 });
 
 const authMiddleware = withAuth(
