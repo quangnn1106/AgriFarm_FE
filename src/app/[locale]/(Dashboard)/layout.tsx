@@ -20,7 +20,7 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
           hasSider
         >
           <Sider
-            width={230}
+            width={255}
             theme='light'
             className='sidebar'
             // collapsible
@@ -28,7 +28,6 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
             // onCollapse={value => setCollapsed(value)}
           >
             {/* <MenuSider /> */}
-            <LocaleSwitcher />
             <AdminSider />
           </Sider>
           <Content className='site_layout_background'>{children}</Content>

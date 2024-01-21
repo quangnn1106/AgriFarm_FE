@@ -1,8 +1,37 @@
 {
-  "Nav": {
-    "dashboard": "Thống kê"
-  },
-  "LocaleSwitcher": {
-    "switchLocale": "Convert {locale, select, vi {vi} "
-  }
+    "Nav": {
+        "gr_dash": "Thông tin",
+        "dashboard": "Thống kê",
+        "site_pro": "Thông tin nông trại",
+        "map": "Bản đồ",
+        "natural_feature": "Các yếu tố tự nhiên",
+        "land": "Quản lí đất",
+        "water": "Quản lí nguồn nước",
+        "farm_resource": "Nguồn lực của nông trại",
+        "user": "Người dùng",
+        "user_role": "Phân quyền người dùng",
+        "user_cer": "Quản lí Chứng chỉ",
+        "activities": "Các hoạt động",
+        "risk": "Quản lí Rủi ro",
+        "activity": "Quản lí hoạt động",
+        "culti": "Quản lí Canh tác",
+        "pro": "Quản lí Sản xuất",
+        "wastes": "Quản lí Chất thải",
+        "inven": "Quản lí kho",
+        "pesti": "Thuốc trừ sâu",
+        "fer": "Phân bón",
+        "rice_va": "Giống lúa",
+        "prod": "Sản phẩm",
+        "external": "Ngoài hệ thống",
+        "subcontract": "Nhà cung cấp",
+        "expert": "Chuyên gia",
+        "GBG": "Global G.A.P",
+        "doc": "Tài liệu",
+        "rice_culti": "Nhật ký canh tác lúa",
+        "GBG_checklist": "Tiêu chuẩn Global G.A.P",
+        "subscription": "Quản lý gói đăng ký"
+    },
+    "LocaleSwitcher": {
+        "switchLocale": "Convert {locale, select, vi {vi} "
+    }
 }
