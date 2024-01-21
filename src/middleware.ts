@@ -7,7 +7,7 @@ const publicPages = [
   '/login',
   '/register',
   '/statistic',
-  '/:path*'
+  '/user'
   // (/secret requires auth)
 ];
 
