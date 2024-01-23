@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 
 import Loading from '@/components/LoadingBtn/Loading';
 import { useRouter } from 'next/navigation';
+import { LOGIN_PATH } from '@/constants/routes';
 
 const cx = classNames.bind(styles);
 
@@ -73,7 +74,7 @@ const RegisterForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item
@@ -81,7 +82,7 @@ const RegisterForm: React.FC = () => {
               label='Province/City'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item
@@ -89,7 +90,7 @@ const RegisterForm: React.FC = () => {
               label='Farm code'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item
@@ -97,7 +98,7 @@ const RegisterForm: React.FC = () => {
               label='Farm Name'
               rules={[{ required: true, message: 'Password is required' }]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item
@@ -105,7 +106,7 @@ const RegisterForm: React.FC = () => {
               label='Your full name'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item
@@ -113,7 +114,7 @@ const RegisterForm: React.FC = () => {
               label='Phone'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input size='large' />
             </Form.Item>
 
             <Form.Item>
@@ -166,15 +167,9 @@ const RegisterForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item>
-              <p style={{ marginTop: '0', marginBottom: '5px' }}>Have an account yet</p>
-              <Button
-                type='primary'
-                htmlType='submit'
-                size='large'
-                className={cx('regis__btn')}
-              >
-                Login
-              </Button>
+              <p style={{ marginTop: '0', marginBottom: '5px' }}>
+                Have an account yet? <a href={LOGIN_PATH}>Click here</a>
+              </p>
             </Form.Item>
           </Form>
         </ConfigProvider>

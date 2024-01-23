@@ -10,9 +10,10 @@ import { loginAsyncApi, resetState } from '@/redux/features/common-slice';
 import classNames from 'classnames/bind';
 import { loginModel } from '../models/login-model';
 import Loading from '@/components/LoadingBtn/Loading';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
+import { usePathname } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -21,16 +22,45 @@ const LoginForm: React.FC = () => {
   const { userLogin } = useAppSelector(state => state.authReducer);
 
   const dispatch = useAppDispatch();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   // useEffect(() => {
   //   if (userLogin?.access as string) {
   //     router.push('/dashboard');
   //   }
   // }, [userLogin, router]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const searchParams = useSearchParams();
+  console.log('searchParams: ', searchParams);
+
+  const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  console.log('callbackUrl: ', callbackUrl);
 
   const handleLogin = async (data: loginModel) => {
-    const actionAsyncThunk = loginAsyncApi(data);
-    dispatch(actionAsyncThunk);
+    // const actionAsyncThunk = loginAsyncApi(data);
+    // dispatch(actionAsyncThunk);
+    try {
+      console.log('data: ', data.siteCode);
+      setLoading(true);
+      const res = await signIn('credentials', {
+        sideCode: data?.siteCode as string,
+        userName: data?.userName as string,
+        password: data?.password as string,
+        redirect: false,
+        callbackUrl
+      });
+      setLoading(false);
+
+      if (!res?.error) {
+        router.push(callbackUrl);
+      } else {
+        setError('Invalid User or password');
+        console.log(error);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      setError(error?.message);
+    }
   };
 
   return (
@@ -40,7 +70,7 @@ const LoginForm: React.FC = () => {
           theme={{
             components: {
               Form: {
-                 itemMarginBottom: 10,
+                itemMarginBottom: 10,
                 // verticalLabelPadding: '0 0 0',
                 labelFontSize: 12,
                 labelColor: 'rgb(133, 133, 133)'
@@ -60,19 +90,19 @@ const LoginForm: React.FC = () => {
 
             <Form.Item
               name='siteId'
-              label='SiteID'
+              label='SiteId'
               rules={[{ required: true }]}
             >
               <Input size='large' />
             </Form.Item>
             <Form.Item
-              name='email'
-              label='Email'
+              name='userName'
+              label='UserName'
               rules={[
                 { required: true },
                 {
                   type: 'email',
-                  message: 'Email is not valid'
+                  message: 'UserName is not valid'
                 }
               ]}
             >
@@ -90,13 +120,16 @@ const LoginForm: React.FC = () => {
             <Form.Item>
               <Row className={cx('form_btn')}>
                 <Col span={12}>
+                  {error && <p className={cx('auth__error')}>{error}</p>}
+
                   <Button
                     type='primary'
                     htmlType='submit'
                     size='large'
                     className={cx('auth__btn')}
+                    disabled={loading ? true : false}
                   >
-                    Login
+                    {loading ? <Loading userState={status} /> : 'Login'}
                   </Button>
                 </Col>
                 <Col span={12}>
@@ -111,15 +144,9 @@ const LoginForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item>
-              <p>Have an account yet</p>
-              <Button
-                type='primary'
-                htmlType='submit'
-                size='large'
-                className={cx('regis__btn')}
-              >
-                Register
-              </Button>
+              <p>
+                Have an account yet? <a href={REGISTER_PATH}>Click here</a>{' '}
+              </p>
             </Form.Item>
           </Form>
         </ConfigProvider>

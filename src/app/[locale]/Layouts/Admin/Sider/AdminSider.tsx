@@ -31,6 +31,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
+import { signOut } from 'next-auth/react';
 const cx = classNames.bind(styles);
 
 type Props = {};
@@ -73,10 +74,11 @@ const AdminSider = (props: Props) => {
         </div>
         <Flex justify='center'>
           <Button
+            style={{ width: '154px' }}
             className=''
             type='link'
             onClick={() => {
-              alert('logout');
+              signOut();
             }}
             danger
           >
@@ -90,7 +92,7 @@ const AdminSider = (props: Props) => {
                 height={17}
                 alt='logout icon'
               />
-              Logout Account
+              {t('logout')}
             </Flex>
           </Button>
         </Flex>

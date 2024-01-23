@@ -22,6 +22,7 @@
 
     .auth__error {
         color: red;
+        margin-bottom: 10px;
     }
 
     .login_area {
@@ -35,7 +36,7 @@
     }
 
     .auth__btn_regis {
-        width: 35%;
+        width: 100%;
         background: $primary-color;
     }
 

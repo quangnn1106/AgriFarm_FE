@@ -6,8 +6,8 @@ import createMiddleware from 'next-intl/middleware';
 const publicPages = [
   '/login',
   '/register',
-  '/statistic',
-  '/user'
+  '/salogin'
+
   // (/secret requires auth)
 ];
 
@@ -29,7 +29,7 @@ const authMiddleware = withAuth(
       authorized: ({ token, req }) => (token ? true : false)
     },
     pages: {
-      signIn: '/login'
+      signIn: '/login' || '/salogin'
     }
   }
 );
