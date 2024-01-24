@@ -1,7 +1,7 @@
 import { ColumnsType } from 'antd/es/table';
 import { UserModel } from './user-model';
 import { Dropdown, MenuProps, Modal, Space, Button, Switch, Tag, TableColumnsType } from 'antd';
-import { EditOutlined, DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 
 export const userTableColumns: TableColumnsType<UserModel> = [
@@ -41,9 +41,9 @@ export const userTableColumns: TableColumnsType<UserModel> = [
         value: 'New York',
       },
     ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value: string, record)=> record.address.startsWith(value),
+    // filterMode: 'tree',
+    // filterSearch: true,
+    // onFilter: (value: string, record)=> record.address.startsWith(value),
     width: 'max-content',
   },
   {
@@ -67,9 +67,9 @@ export const userTableColumns: TableColumnsType<UserModel> = [
         value: 'Member',
       },
     ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value: string, record)=> record.role_name.startsWith(value),
+    // filterMode: 'tree',
+    // filterSearch: true,
+    // onFilter: (value: string, record)=> record.role_name.startsWith(value),
     width: 'max-content'
   },
   {
@@ -114,13 +114,15 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <EditOutlined /> Details
+                <ExclamationCircleOutlined /> Details
                 </Space>
               </a>
             ),
             key: '0'
           },
-
+          {
+            type: 'divider'
+          },
           {
             label: (
               <a

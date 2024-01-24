@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "id": "string",
+      "full_name": "string",
+      "first_name": "string",
+      "last_name": "string",
+      "email": "string",
+      "phone_number": "string",
+      "address": "string",
+      "created_date": "YYYY/MM/DD",
+      "updated_date": "YYYY/MM/DD",
+      "site_name": "string",
+      "role_name": "string",
+      "is_active": true,
+      "DOB": "YYYY/MM/DD",
+      "Gender": "String",
+      "Avatar": "string",
+      "Password": "string",
+      "Certificate" : [
+        {
+            "id": "string",
+            "certificate_name": "string"
+        },
+        {
+            "id": "string",
+            "certificate_name": "string"
+        },{
+            "id": "string",
+            "certificate_name": "string"
+        }
+      ]
+    },
+    {
+      "id": "string",
+      "full_name": "string",
+      "first_name": "string",
+      "last_name": "string",
+      "email": "string",
+      "phone_number": "string",
+      "address": "string",
+      "created_date": "string",
+      "updated_date": "string",
+      "site_name": "string",
+      "role_name": "string",
+      "is_active": true
+    }
+  ]
+}

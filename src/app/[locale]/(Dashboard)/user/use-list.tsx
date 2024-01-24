@@ -98,17 +98,11 @@ const UserList: React.FC = () => {
         })
       };
     return (
-        <Content style={{ padding: '0 20px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Home</Breadcrumb.Item>
-                <Breadcrumb.Item>User</Breadcrumb.Item>
-            </Breadcrumb>
+        <Content style={{ padding: '0px' }}>
             <Layout
-                style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+                style={{ padding: '0px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
             >
                 <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                <><div> User Management</div>
-                </>
                 <Table
                     rowKey={'id'}
                     rowSelection={{
