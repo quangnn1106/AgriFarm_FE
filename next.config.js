@@ -11,14 +11,14 @@ const nextConfig = {
             hostname: 'lh3.googleusercontent.com',
         },],
     },
-    // async redirects() {
-    //     return [{
-    //         source: '/',
-    //         destination: '/',
-    //         permanent: true,
+    async redirects() {
+        return [{
+            source: '/',
+            destination: '/statistic',
+            permanent: true,
 
-    //     },]
-    // },
+        },]
+    },
 }
 
 module.exports = withNextIntl(nextConfig)

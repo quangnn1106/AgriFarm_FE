@@ -29,7 +29,8 @@
     "doc": "Document",
     "rice_culti": "Rice cultivation record",
     "GBG_checklist": "Global G.A.P checklist",
-    "subscription": "Manage subcriptions"
+    "subscription": "Manage subcriptions",
+    "logout": "Logout Account"
   },
   "LocaleSwitcher": {
     "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"

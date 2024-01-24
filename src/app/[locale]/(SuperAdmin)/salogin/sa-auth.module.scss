@@ -1,0 +1,67 @@
+@import "../../../../styles/base/variable";
+
+// .logo {
+//     position: absolute;
+//     transform: translate(0, 0);
+//     margin-top: 10px;
+//     height: 41px;
+//     display: flex;
+// }
+.auth__form {
+    width: 27rem;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: auto;
+
+    .auth__title {
+        margin-bottom: 0;
+        color: $primary-color;
+        margin-top: 0;
+        margin: auto;
+        font-weight: 500;
+    }
+
+    .auth_subtitle {
+        color: rgb(133, 133, 133);
+        margin: 0;
+        margin: auto;
+    }
+
+    .auth__error {
+        color: red;
+    }
+
+    .login_area {
+        display: flex;
+        align-items: center;
+    }
+
+    .auth__btn {
+        width: 100%;
+        margin-top: 20px;
+        background: $primary-color;
+    }
+
+    .auth__btn_regis {
+        width: 35%;
+        background: $primary-color;
+    }
+
+    .login_form_forgot {
+        float: right;
+        margin: auto;
+    }
+
+    .regis__btn {
+        width: 100%;
+        background: $white;
+        color: $primary-color;
+        border: 2px solid $primary-color;
+    }
+
+    .form_btn {
+        display: flex;
+        align-items: center;
+    }
+}

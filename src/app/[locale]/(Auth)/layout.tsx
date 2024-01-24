@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader/Loader';
 import { usePathname } from 'next/navigation';
+import LogoImage from '@/components/Logo/LogoImage';
 
 const { Sider, Content } = Layout;
 
@@ -53,9 +54,6 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-
-
-  
   return (
     // <Layout hasSider>
     //   <Sider
@@ -95,11 +93,15 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
           style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         />
       </Col>
+      <div className=''>
+        <LogoImage />
+      </div>
       <Col
         xs={24}
         sm={10}
         md={10}
         lg={10}
+        className='mt_auto'
       >
         <Content>{children}</Content>
       </Col>

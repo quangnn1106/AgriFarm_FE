@@ -28,7 +28,7 @@ export default function RootLayout({ children, params: { locale } }: Props) {
       <ReduxProvider>
         <StyledComponentsRegistry>
           <Providers>
-            <body suppressHydrationWarning={false}>
+            <body suppressHydrationWarning={true}>
               <NextIntlClientProvider
                 locale={locale}
                 messages={messages}

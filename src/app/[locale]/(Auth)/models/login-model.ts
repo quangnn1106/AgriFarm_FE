@@ -1,4 +1,5 @@
 export type loginModel = {
-    email: string;
-    password: string;
+  siteCode: string;
+  userName: string;
+  password: string;
 };
