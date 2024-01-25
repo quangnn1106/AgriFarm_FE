@@ -9,7 +9,7 @@ const nextConfig = {
         remotePatterns: [{
             protocol: 'https',
             hostname: 'lh3.googleusercontent.com',
-        },],
+        }, ],
     },
     async redirects() {
         return [{
@@ -17,7 +17,7 @@ const nextConfig = {
             destination: '/statistic',
             permanent: true,
 
-        },]
+        }, ]
     },
 }
 
