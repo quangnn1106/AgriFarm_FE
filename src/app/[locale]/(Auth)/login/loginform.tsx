@@ -1,7 +1,7 @@
 'use client';
-// client component vs server component
+
 import { useState } from 'react';
-import { Form, Input, Button, Space, Row, Col, ConfigProvider } from 'antd';
+import { Form, Input, Button, Row, Col, ConfigProvider } from 'antd';
 import styles from '../auth.module.scss';
 
 import classNames from 'classnames/bind';
@@ -77,7 +77,7 @@ const LoginForm: React.FC = () => {
             <Form.Item
               name='siteId'
               label='SiteId'
-              rules={[{ required: false }]}
+              rules={[{ required: true }]}
             >
               <Input size='large' />
             </Form.Item>
@@ -87,7 +87,7 @@ const LoginForm: React.FC = () => {
               rules={[
                 { required: true },
                 {
-                  type: 'string',
+                  type: 'email',
                   message: 'UserName is not valid'
                 }
               ]}

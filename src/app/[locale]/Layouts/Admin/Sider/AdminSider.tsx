@@ -16,9 +16,7 @@ import {
 } from 'react-icons/fa6';
 import { MdInventory } from 'react-icons/md';
 import { GiHighGrass, GiPlantRoots } from 'react-icons/gi';
-import sampleAva from '@/assets/Images/avatar.jpg';
 import iconRice from '@/assets/Images/emojione-monotone_sheaf-of-rice.png';
-import logoutIcon from '@/assets/Images/logout.png';
 import styles from './AdminSider.module.scss';
 import {
   HomeFilled,
@@ -26,12 +24,12 @@ import {
   DeleteFilled,
   SafetyCertificateFilled
 } from '@ant-design/icons';
-import { Button, Flex, type MenuProps } from 'antd';
+import { type MenuProps } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
-import { signOut } from 'next-auth/react';
+
 import {
   GetUserInfoGroup,
   getItem

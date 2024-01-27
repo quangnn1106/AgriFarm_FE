@@ -1,27 +1,17 @@
 import React from 'react';
 import MenuSider from '../../MainLayout/MenuSider/MenuSider';
-import {
-  
-  FaMapLocationDot,
-  FaUser,
- 
-  FaClipboard
-} from 'react-icons/fa6';
-import {  MdOutlineFeedback } from 'react-icons/md';
+import { FaMapLocationDot, FaUser, FaClipboard } from 'react-icons/fa6';
+import { MdOutlineFeedback } from 'react-icons/md';
 import { GiHighGrass } from 'react-icons/gi';
 
 import styles from './SASider.module.scss';
-import {
-  HomeFilled,
-
-  ClusterOutlined
-} from '@ant-design/icons';
-import { Button, Flex, type MenuProps } from 'antd';
+import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
+import { type MenuProps } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+
 import classNames from 'classnames/bind';
-import { signOut } from 'next-auth/react';
+
 import {
   GetUserInfoGroup,
   getItem
