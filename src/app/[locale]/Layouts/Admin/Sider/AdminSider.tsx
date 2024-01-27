@@ -16,9 +16,7 @@ import {
 } from 'react-icons/fa6';
 import { MdInventory } from 'react-icons/md';
 import { GiHighGrass, GiPlantRoots } from 'react-icons/gi';
-import sampleAva from '@/assets/Images/avatar.jpg';
 import iconRice from '@/assets/Images/emojione-monotone_sheaf-of-rice.png';
-import logoutIcon from '@/assets/Images/logout.png';
 import styles from './AdminSider.module.scss';
 import {
   HomeFilled,
@@ -26,83 +24,24 @@ import {
   DeleteFilled,
   SafetyCertificateFilled
 } from '@ant-design/icons';
-import { Button, Flex, type MenuProps } from 'antd';
+import { type MenuProps } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
-import { signOut } from 'next-auth/react';
+
+import {
+  GetUserInfoGroup,
+  getItem
+} from '../../MainLayout/MenuSider/Models/menuItemsUser';
 const cx = classNames.bind(styles);
 
 type Props = {};
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: 'group'
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type
-  } as MenuItem;
-}
 
 const AdminSider = (props: Props) => {
   const t = useTranslations('Nav');
   const items: MenuProps['items'] = [
-    getItem(
-      <>
-        <div className='d-flex'>
-          <Image
-            src={sampleAva}
-            width={40}
-            height={40}
-            priority={true}
-            placeholder='empty'
-            alt='123'
-          />
-          <div className={cx(' d-flex flex-col', 'text_sidebar')}>
-            <p className={cx('p_role')}>Admin</p>
-            <p className={cx('p_name')}>Nguyen Van A</p>
-          </div>
-        </div>
-        <Flex justify='center'>
-          <Button
-            style={{ width: '154px' }}
-            className=''
-            type='link'
-            onClick={() => {
-              signOut();
-            }}
-            danger
-          >
-            <Flex
-              gap='small'
-              align='center'
-            >
-              <Image
-                src={logoutIcon}
-                width={17}
-                height={17}
-                alt='logout icon'
-              />
-              {t('logout')}
-            </Flex>
-          </Button>
-        </Flex>
-      </>,
-      'user',
-      null,
-      [],
-      'group'
-    ),
-
+    GetUserInfoGroup(),
     { type: 'divider' },
 
     getItem(
@@ -248,15 +187,6 @@ const AdminSider = (props: Props) => {
   ];
   return (
     <>
-      {/* <Image
-        src={sampleAva}
-        width={30}
-        height={30}
-        priority={true}
-        placeholder='empty'
-        alt='123'
-        style={{ position: 'absolute' }}
-      /> */}
       <MenuSider items={items} />
     </>
   );

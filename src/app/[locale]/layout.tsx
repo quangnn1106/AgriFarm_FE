@@ -1,8 +1,7 @@
-import StyledComponentsRegistry from '@/lib/AntdRegistry';
 import { ReduxProvider } from '@/redux/provider';
 
 import Providers from '@/components/Provider/Provider';
-
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { roboto } from '@/styles/base/font';
 import '../../styles/global.scss';
 import { Metadata } from 'next';
@@ -28,21 +27,18 @@ export default function RootLayout({ children, params: { locale } }: Props) {
       className={`${roboto.variable}`}
     >
       <ReduxProvider>
-        <StyledComponentsRegistry>
-          <Providers>
-            <ConfigProvider theme={theme}>
-              
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages}
+        >
+          <AntdRegistry>
+            <Providers>
               <body suppressHydrationWarning={true}>
-                <NextIntlClientProvider
-                  locale={locale}
-                  messages={messages}
-                >
-                  <main>{children}</main>
-                </NextIntlClientProvider>
+                <main>{children}</main>
               </body>
-            </ConfigProvider>
-          </Providers>
-        </StyledComponentsRegistry>
+            </Providers>
+          </AntdRegistry>
+        </NextIntlClientProvider>
       </ReduxProvider>
     </html>
   );
