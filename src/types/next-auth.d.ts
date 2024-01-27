@@ -1,3 +1,4 @@
+import { ROLES } from '@/constants/roles';
 import NextAuth, { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
@@ -24,5 +25,5 @@ export interface UserInfo {
   userName: string;
   siteId: string;
   siteCode: string;
-  roles: string[];
+  roles: ROLES[];
 }

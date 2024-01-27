@@ -3,3 +3,8 @@ export type loginModel = {
   userName: string;
   password: string;
 };
+
+export type SuperAdminLogin = {
+  userName: string;
+  password: string;
+};

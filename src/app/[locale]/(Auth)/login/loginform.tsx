@@ -1,11 +1,8 @@
 'use client';
 // client component vs server component
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Form, Input, Button, Space, Row, Col, ConfigProvider } from 'antd';
 import styles from '../auth.module.scss';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { loginAsyncApi, resetState } from '@/redux/features/common-slice';
 
 import classNames from 'classnames/bind';
 import { loginModel } from '../models/login-model';
@@ -13,32 +10,21 @@ import Loading from '@/components/LoadingBtn/Loading';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
-import { usePathname } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { userLogin } = useAppSelector(state => state.authReducer);
 
-  const dispatch = useAppDispatch();
   const { data: session, status } = useSession();
-  // useEffect(() => {
-  //   if (userLogin?.access as string) {
-  //     router.push('/dashboard');
-  //   }
-  // }, [userLogin, router]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
-  console.log('searchParams: ', searchParams);
 
   const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-  console.log('callbackUrl: ', callbackUrl);
 
   const handleLogin = async (data: loginModel) => {
-    // const actionAsyncThunk = loginAsyncApi(data);
-    // dispatch(actionAsyncThunk);
     try {
       console.log('data: ', data.siteCode);
       setLoading(true);
@@ -91,7 +77,7 @@ const LoginForm: React.FC = () => {
             <Form.Item
               name='siteId'
               label='SiteId'
-              rules={[{ required: true }]}
+              rules={[{ required: false }]}
             >
               <Input size='large' />
             </Form.Item>
@@ -101,7 +87,7 @@ const LoginForm: React.FC = () => {
               rules={[
                 { required: true },
                 {
-                  type: 'email',
+                  type: 'string',
                   message: 'UserName is not valid'
                 }
               ]}
