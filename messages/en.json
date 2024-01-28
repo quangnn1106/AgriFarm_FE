@@ -34,5 +34,22 @@
   },
   "LocaleSwitcher": {
     "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"
+  },
+  "Disease": {
+    "diagnostic" : "Diagnostic",
+    "search_condition" : "Search condition",
+    "search_result" : "Search result",
+    "keyword_text_placeholder" : "Search by description, feedback, disease name,...",
+    "start_date" : "Start date",
+    "end_date" : "End date",
+    "search_by_date" : "Date",
+    "search_by_keyword" : "Keyword",
+    "search_btn" : "Search",
+    "add_diagnosis" : "Diagnosis",
+    "export_excel" : "Export",
+    "col_name_predict" : "Predict result",
+    "col_name_description" : "Description",
+    "col_name_feedback" : "Feedback",
+    "col_name_date" : "Date"
   }
 }

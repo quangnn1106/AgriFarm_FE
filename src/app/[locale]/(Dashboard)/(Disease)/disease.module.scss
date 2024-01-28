@@ -1,0 +1,18 @@
+@import "../../../../styles/base/variable";
+.disease__title {
+    color: #373737;
+    font-weight: 700;
+}
+.disease__line {
+    border-top: 2px solid #CFD0D2;
+}
+.disease__btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #4caf4f !important;
+    min-width: 8rem;
+}
+.disease__searchBtn {
+    background: #4caf4f !important;;
+    width: 10rem;
+}
