@@ -14,23 +14,23 @@ declare module 'next-auth' {
   }
 
   interface User {
-    Data: Contents;
-    Status: number;
-    Message: null;
+    data: Contents;
+    status: number;
+    message: null;
   }
 }
 
 export type Contents = {
-  Token: string;
-  UserInfo: UserInfo;
-  IsSuccess: boolean;
+  token: string;
+  userInfo: UserInfo;
+  isSuccess: boolean;
 };
 
 export type UserInfo = {
-  UserName: string;
-  FullName: string;
-  Email: string;
-  SiteId: string;
-  SiteCode: string;
-  Role: string;
+  userName: string;
+  fullName: string;
+  email: string;
+  siteId: string;
+  siteCode: string;
+  role: string;
 };

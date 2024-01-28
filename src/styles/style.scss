@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    height: 100%;
 }
 
 p {
@@ -50,6 +51,16 @@ p {
 
 .m_h {
     min-height: 100vh !important;
+}
+
+.enable_scroll {
+    overflow: auto;
+    height: 100vh;
+}
+
+.disable_scroll {
+    overflow-y: hidden;
+    //overflow-x: hidden;
 }
 
 .layout {

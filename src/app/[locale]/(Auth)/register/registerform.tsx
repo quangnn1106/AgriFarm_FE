@@ -74,7 +74,7 @@ const RegisterForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -82,7 +82,7 @@ const RegisterForm: React.FC = () => {
               label='Province/City'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -90,7 +90,7 @@ const RegisterForm: React.FC = () => {
               label='Farm code'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -98,7 +98,7 @@ const RegisterForm: React.FC = () => {
               label='Farm Name'
               rules={[{ required: true, message: 'Password is required' }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -106,7 +106,7 @@ const RegisterForm: React.FC = () => {
               label='Your full name'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -114,7 +114,7 @@ const RegisterForm: React.FC = () => {
               label='Phone'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item>

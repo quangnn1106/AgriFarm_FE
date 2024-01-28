@@ -115,10 +115,10 @@ export const options: AuthOptions = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        const access = user?.Data?.Token;
+        const access = user?.data?.token;
         token.access_token = access;
-        token.user_info = user?.Data?.UserInfo;
-        console.log('user.access jwttttttt: ', user?.Data?.Token);
+        token.user_info = user?.data?.userInfo;
+        console.log('user.access jwttttttt: ', user?.data?.token);
       }
 
       return token;

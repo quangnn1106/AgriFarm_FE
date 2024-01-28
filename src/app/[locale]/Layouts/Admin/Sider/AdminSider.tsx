@@ -44,97 +44,64 @@ const AdminSider = (props: Props) => {
     GetUserInfoGroup(),
     { type: 'divider' },
 
-    getItem(
-      `${t('gr_dash')}`,
-      'dashboard',
-      null,
-      [
-        getItem(
-          <Link href={`/statistic`}>{t('dashboard')}</Link>,
-          `/dashboard`,
-          <HomeFilled />
-        ),
-        getItem(
-          <Link href={`/siteprofile`}>{t('site_pro')}</Link>,
-          `/siteprofile`,
-          <FaCircleUser />
-        ),
-        getItem(
-          <Link href={`/subscription`}>{t('subscription')}</Link>,
-          `/subscription`,
-          <FaClipboard />
-        )
-      ],
-      'group'
-    ),
+    getItem(`${t('gr_dash')}`, 'dashboard', <HomeFilled />, [
+      getItem(
+        <Link href={`/statistic`}>{t('dashboard')}</Link>,
+        `/dashboard`,
+        <HomeFilled />
+      ),
+      getItem(
+        <Link href={`/siteprofile`}>{t('site_pro')}</Link>,
+        `/siteprofile`,
+        <FaCircleUser />
+      ),
+      getItem(
+        <Link href={`/subscription`}>{t('subscription')}</Link>,
+        `/subscription`,
+        <FaClipboard />
+      )
+    ]),
     { type: 'divider' },
 
-    getItem(
-      `${t('map')}`,
-      'map',
-      null,
-      [getItem(<Link href={`/map`}>{t('map')}</Link>, `/map`, <FaMapLocationDot />)],
-      'group'
-    ),
-    getItem(
-      `${t('natural_feature')}`,
-      'natural feature',
-
-      null,
-      [
-        getItem(<Link href={`/land`}>{t('land')}</Link>, `/land`, <FaPlantWilt />),
-        getItem(<Link href={`/water`}>{t('water')}</Link>, `/water`, <FaWater />)
-      ],
-      'group'
-    ),
+    getItem(`${t('map')}`, 'map', <FaMapLocationDot />, [
+      getItem(<Link href={`/map`}>{t('map')}</Link>, `/map`, <FaMapLocationDot />)
+    ]),
+    getItem(`${t('natural_feature')}`, 'natural feature', <FaPlantWilt />, [
+      getItem(<Link href={`/land`}>{t('land')}</Link>, `/land`, <FaPlantWilt />),
+      getItem(<Link href={`/water`}>{t('water')}</Link>, `/water`, <FaWater />)
+    ]),
     { type: 'divider' },
 
-    getItem(
-      `${t('farm_resource')}`,
-      'farm resources',
-      null,
-      [
-        getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
-        getItem(
-          <Link href={`/role`}>{t('user_role')}</Link>,
-          `/role`,
-          <FaClipboardUser />
-        ),
-        getItem(
-          <Link href={`/certificate`}>{t('user_cer')}</Link>,
-          `/certificate`,
-          <SafetyCertificateFilled />
-        )
-      ],
-      'group'
-    ),
+    getItem(`${t('farm_resource')}`, 'farm resources', <FaClipboardUser />, [
+      getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
+      getItem(<Link href={`/role`}>{t('user_role')}</Link>, `/role`, <FaClipboardUser />),
+      getItem(
+        <Link href={`/certificate`}>{t('user_cer')}</Link>,
+        `/certificate`,
+        <SafetyCertificateFilled />
+      )
+    ]),
     { type: 'divider' },
 
-    getItem(
-      `${t('activities')}`,
-      'activities',
-      null,
-      [
-        getItem(<Link href={`/risk`}>{t('risk')}</Link>, `/risk`, <WarningOutlined />),
-        getItem(
-          <Link href={`/activity`}>{t('activity')}</Link>,
-          `/activity`,
-          <FaClipboardList />
-        ),
-        getItem(
-          <Link href={`/cultivation`}>{t('culti')}</Link>,
-          `/cultivation`,
-          <GiHighGrass />
-        ),
-        getItem(
-          <Link href={`/production`}>{t('pro')}</Link>,
-          `/production`,
-          <GiPlantRoots />
-        ),
-        getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
-      ],
-      'group'
-    ),
+    getItem(`${t('activities')}`, 'activities', <FaClipboardList />, [
+      getItem(<Link href={`/risk`}>{t('risk')}</Link>, `/risk`, <WarningOutlined />),
+      getItem(
+        <Link href={`/activity`}>{t('activity')}</Link>,
+        `/activity`,
+        <FaClipboardList />
+      ),
+      getItem(
+        <Link href={`/cultivation`}>{t('culti')}</Link>,
+        `/cultivation`,
+        <GiHighGrass />
+      ),
+      getItem(
+        <Link href={`/production`}>{t('pro')}</Link>,
+        `/production`,
+        <GiPlantRoots />
+      ),
+      getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
+    ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
@@ -144,46 +111,34 @@ const AdminSider = (props: Props) => {
 
     { type: 'divider' },
 
-    getItem(
-      `${t('external')}`,
-      'external',
-      null,
-      [
-        getItem(
-          <Link href={`/subcontractor`}>{t('subcontract')}</Link>,
-          `/subcontractor`,
-          <FaHandshakeAngle />
-        ),
-        getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
-      ],
-      'group'
-    ),
+    getItem(`${t('external')}`, 'external', <FaHandshakeAngle />, [
+      getItem(
+        <Link href={`/subcontractor`}>{t('subcontract')}</Link>,
+        `/subcontractor`,
+        <FaHandshakeAngle />
+      ),
+      getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
+    ]),
     { type: 'divider' },
 
-    getItem(
-      `${t('GBG')}`,
-      'GBG',
-      null,
-      [
-        getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
-        getItem(
-          <Link href={`/rice_cultivation`}>{t('rice_culti')}</Link>,
-          `/rice_cultivation`,
-          <Image
-            src={iconRice}
-            alt='icon_rice'
-            width={18}
-            height={20}
-          />
-        ),
-        getItem(
-          <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
-          `/globalcheck`,
-          <FaClipboardCheck />
-        )
-      ],
-      'group'
-    )
+    getItem(`${t('GBG')}`, 'GBG', <FaClipboardCheck />, [
+      getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
+      getItem(
+        <Link href={`/rice_cultivation`}>{t('rice_culti')}</Link>,
+        `/rice_cultivation`,
+        <Image
+          src={iconRice}
+          alt='icon_rice'
+          width={18}
+          height={20}
+        />
+      ),
+      getItem(
+        <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
+        `/globalcheck`,
+        <FaClipboardCheck />
+      )
+    ])
   ];
   return (
     <>
