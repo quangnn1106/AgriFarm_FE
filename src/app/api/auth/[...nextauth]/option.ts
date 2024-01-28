@@ -5,6 +5,7 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { UserInfo } from '@/types/next-auth';
+
 // import { loginUser, registerUser } from '@/services/authService';
 export const options: AuthOptions = {
   providers: [
@@ -33,7 +34,7 @@ export const options: AuthOptions = {
             password: credentials?.password as string
           });
           const user = response.data;
-          console.log('return data user: ', user);
+          console.log('return data user admin: ', user);
 
           // If no error and we have user data, return it
           if (response.status === 200 && user) {
@@ -114,19 +115,20 @@ export const options: AuthOptions = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        token.access_token = user?.token;
-        token.userInfo = user?.userInfo;
-
-        // console.log('user.access jwttttttt: ', user);
-        // console.log('token.access_token: ', token.profile);
+        const access = user?.Data?.Token;
+        token.access_token = access;
+        token.user_info = user?.Data?.UserInfo;
+        console.log('user.access jwttttttt: ', user?.Data?.Token);
       }
 
       return token;
     },
 
     session: async ({ session, token, user }) => {
-      session.user.token = token.access_token as string;
-      session.user.userInfo = token?.userInfo as UserInfo;
+      console.log('vo session roi nha');
+
+      session.user.accessToken = token?.access_token as string;
+      session.user.userInfo = token?.user_info as UserInfo;
       // console.log('session: ', session?.user?.profile);
       // console.log('session user profile: ', token?.profile);
 

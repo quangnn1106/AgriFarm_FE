@@ -8,22 +8,29 @@ declare module 'next-auth' {
   interface Session {
     user: {
       /** The user's postal address. */
-      token: string;
+      accessToken: string;
       userInfo: UserInfo;
-      isSuccess: boolean;
     } & DefaultSession['user'];
   }
 
   interface User {
-    token: string;
-    userInfo: UserInfo;
-    isSuccess: boolean;
+    Data: Contents;
+    Status: number;
+    Message: null;
   }
 }
 
-export interface UserInfo {
-  userName: string;
-  siteId: string;
-  siteCode: string;
-  roles: ROLES[];
-}
+export type Contents = {
+  Token: string;
+  UserInfo: UserInfo;
+  IsSuccess: boolean;
+};
+
+export type UserInfo = {
+  UserName: string;
+  FullName: string;
+  Email: string;
+  SiteId: string;
+  SiteCode: string;
+  Role: string;
+};

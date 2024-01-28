@@ -39,7 +39,7 @@ export function GetUserInfoGroup(): MenuItem {
     signOut();
   };
   const { data: session } = useSession();
-  const check = session?.user.userInfo.roles.length === 4;
+
   const t = useTranslations('Nav');
   return getItem(
     <>
@@ -53,10 +53,8 @@ export function GetUserInfoGroup(): MenuItem {
           alt='123'
         />
         <div className={cx('d-flex flex-col', 'text_sidebar')}>
-          <p className={cx('p_role')}>
-            {check ? session?.user.userInfo.roles[2] : session?.user.userInfo.roles[0]}
-          </p>
-          <p className={cx('p_name')}>{session?.user.userInfo.userName}</p>
+          <p className={cx('p_role')}>{session?.user.userInfo.FullName}</p>
+          <p className={cx('p_name')}>{session?.user.userInfo.FullName}</p>
         </div>
       </div>
       <Flex justify='center'>
