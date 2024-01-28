@@ -15,7 +15,7 @@ import Loader from '@/components/Loader/Loader';
 export default function DashBoardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { data: session, status } = useSession();
-  console.log('role: ', session?.user?.userInfo?.Role);
+
   if (status === 'loading') {
     return (
       <Loader
@@ -39,7 +39,7 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
             // collapsed={collapsed}
             // onCollapse={value => setCollapsed(value)}
           >
-            <RenderSideBar roles={session?.user?.userInfo?.Role as ROLES} />
+            <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} />
           </Sider>
           <Content className='site_layout_background'>
             <Suspense

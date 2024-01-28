@@ -53,8 +53,8 @@ export function GetUserInfoGroup(): MenuItem {
           alt='123'
         />
         <div className={cx('d-flex flex-col', 'text_sidebar')}>
-          <p className={cx('p_role')}>{session?.user?.userInfo?.FullName}</p>
-          <p className={cx('p_name')}>{session?.user?.userInfo?.FullName}</p>
+          <p className={cx('p_role')}>{session?.user?.userInfo?.role}</p>
+          <p className={cx('p_name')}>{session?.user?.userInfo?.fullName}</p>
         </div>
       </div>
       <Flex justify='center'>

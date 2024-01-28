@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import logo from '@/assets/Images/LogoAgri.png';
+import logo from '@/assets/Images/Logo.png';
 
 type Props = {};
 
@@ -12,7 +12,7 @@ const LogoImage = (props: Props) => {
       height={41}
       alt='logo'
       priority={true}
-      style={{ position: 'absolute' }}
+      style={{ position: 'absolute', left: '0' }}
     />
   );
 };
