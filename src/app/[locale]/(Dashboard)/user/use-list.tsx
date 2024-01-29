@@ -4,10 +4,10 @@ import TableComponent from "@/components/Table/table";
 import React, { useEffect, useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps, TableProps } from 'antd';
-import { Breadcrumb, Layout, Menu, Table, theme } from 'antd';
+import { Breadcrumb, ConfigProvider, Layout, Menu, Table, theme } from 'antd';
 import { Content } from "antd/es/layout/layout";
 import { UserModel } from "./models/user-model";
-import { userTableColumns } from "./models/columnsType";
+import { userTableColumns } from "./columnsType";
 import { http } from "@/utils/config";
 import classNames from "classnames/bind";
 import { maxHeaderSize } from 'http';
@@ -98,37 +98,50 @@ const UserList: React.FC = () => {
         })
       };
     return (
-        <Content style={{ padding: '0px' }}>
-            <Layout
-                style={{ padding: '0px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
-            >
-                <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                <Table
-                    rowKey={'id'}
-                    rowSelection={{
-                        type: 'checkbox',
-                        ...checkRowSelection
-                    }}
-                    columns={userTableColumns}
-                    dataSource={data.map(user => ({
-                    ...user,
-                    onDetails: () => handleDetails(user.id),
-                    onDelete: () => handleDelete(user.id),
-                    onUpdate: () => handleUpdate(user.id),
-                    }))}
-                    onChange={onChange}
-                    pagination={{
-                    showTotal: total => `Total ${total} Items`,
-                    showSizeChanger: true,
-                    pageSizeOptions: ['10', '20', '30'],
-                    total: users.length,
-                    }}
-                    scroll={{ x:'max-content' }}
-                    className={cx('table_style')}
-      />
-                </Content>
-            </Layout>
-        </Content>
+        <><ConfigProvider
+            theme={{
+                components: {
+                    Table: {
+                        cellPaddingBlock: 8,
+                        headerSortHoverBg: '#F2F3F5',
+                        borderColor: '#F2F3F5',
+                        headerBg: '#F2F3F5',
+                        rowHoverBg: '#F2F3F5'
+                    }
+                }
+            }}
+        ><Content style={{ padding: '0px' }}>
+                <Layout
+                    style={{ padding: '0px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+                >
+                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                        <Table
+                            rowKey={'id'}
+                            rowSelection={{
+                                type: 'checkbox',
+                                ...checkRowSelection
+                            }}
+                            columns={userTableColumns}
+                            dataSource={data.map(user => ({
+                                ...user,
+                                onDetails: () => handleDetails(user.id),
+                                onDelete: () => handleDelete(user.id),
+                                onUpdate: () => handleUpdate(user.id),
+                            }))}
+                            onChange={onChange}
+                            pagination={{
+                                showTotal: total => `Total ${total} Items`,
+                                showSizeChanger: true,
+                                pageSizeOptions: ['10', '20', '30'],
+                                total: users.length,
+                            }}
+                            scroll={{ x: 'max-content' }}
+                            className={cx('table_style')} 
+                            
+                            />
+                    </Content>
+                </Layout>
+            </Content></ConfigProvider></>
     )
 }
 
