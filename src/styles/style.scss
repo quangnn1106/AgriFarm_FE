@@ -1,0 +1,128 @@
+body {
+    margin: 0;
+    height: 100%;
+}
+
+p {
+    margin: 0;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.al-center {
+    align-items: center;
+}
+
+.sa_login {
+    height: 100vh;
+    display: flex;
+    padding: 0 8vw;
+
+    img {
+        top: 20px;
+    }
+}
+
+.mt_auto {
+    margin: auto;
+}
+
+.site_layout .site_layout_background {
+    // padding: 24px;
+    // border-radius: 5px;
+    // margin: 24px 16px;
+    background-color: $white;
+
+    .sidebar {
+        position: absolute;
+        z-index: 1;
+    }
+}
+
+.m_h {
+    min-height: 100vh !important;
+}
+
+.enable_scroll {
+    overflow: auto;
+    height: 100vh;
+}
+
+.disable_scroll {
+    overflow-y: hidden;
+    //overflow-x: hidden;
+}
+
+.layout {
+    height: fit-content;
+
+    header {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+        justify-content: space-between;
+    }
+
+    .right_menu {
+        display: flex;
+        align-items: center;
+        min-width: 200px;
+
+        .ul_right {
+            display: flex;
+        }
+
+        ul {
+            justify-content: center;
+            width: 100%;
+
+            li:first-child {
+                padding: 0 1px;
+                display: flex;
+                cursor: pointer;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+
+        .iconButton {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .iconSearch {
+            font-size: 24px;
+        }
+    }
+
+    .logo {
+        height: 32px;
+        width: 96px;
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

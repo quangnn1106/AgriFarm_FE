@@ -1,0 +1,20 @@
+.text {
+    box-shadow: 0px 4px 16px 0px #0000001A !important;
+    height: 100%;
+    font-weight: 600;
+}
+
+.text_sidebar {
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 10px;
+
+    .p_role {
+        text-transform: uppercase;
+    }
+
+    .p_name {
+        color: black;
+        font-size: 15px;
+    }
+}

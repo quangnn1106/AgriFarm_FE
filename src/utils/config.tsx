@@ -7,81 +7,6 @@ export const REFRESH_TOKEN: string = 'refreshToken';
 
 export const USER_LOGIN: string = 'userLogin';
 
-//Cấu hình các hàm get set storage cũng như cookie
-
-export const settings = {
-  setStorageJson: (name: string, data: any): void => {
-    data = JSON.stringify(data);
-    localStorage.setItem(name, data);
-  },
-  setStorage: (name: string, data: string): void => {
-    localStorage.setItem(name, data);
-  },
-  getStorageJson: (name: string): any | undefined => {
-    if (localStorage.getItem(name)) {
-      const dataStore: string | undefined | null = localStorage.getItem(name);
-      if (typeof dataStore == 'string') {
-        const data = JSON.parse(dataStore);
-        return data;
-      }
-      return undefined;
-    }
-    return; //undefined
-  },
-  getStore: (name: string): string | null | undefined | boolean | any => {
-    if (localStorage.getItem(name)) {
-      const data: string | null | undefined = localStorage.getItem(name);
-      return data;
-    }
-    return; //undefined
-  },
-  setCookieJson: (name: string, value: any, days: number): void => {
-    var expires = '';
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    value = JSON.stringify(value);
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
-  },
-  getCookieJson: (name: string): any => {
-    var nameEQ = name + '=';
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return JSON.parse(c.substring(nameEQ.length, c.length));
-    }
-    return null;
-  },
-  setCookie: (name: string, value: string, days: number): void => {
-    var expires = '';
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
-  },
-  getCookie: (name: string): string | null => {
-    var nameEQ = name + '=';
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-  },
-  eraseCookie: (name: string): void => {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  },
-  clearStorage: (name: string) => {
-    localStorage.removeItem(name);
-  }
-};
-
 export const http = axios.create({
   baseURL: DOMAIN,
   headers: {
@@ -93,13 +18,7 @@ export const http = axios.create({
 // http.interceptors.request
 
 http.interceptors.request.use(
-  config => {
-    //Cấu hình tất cả header gửi đi đều có bearer token (token authorization đăng nhập)
-    // const token = localStorage.getItem('accessToken');
-    const token = settings.getCookie(ACCESS_TOKEN);
-    config.headers.Authorization = token ? `Bearer ${token}` : '';
-
-    console.log('have set bearer: ', config);
+  async config => {
     return config;
   },
   err => {
@@ -121,25 +40,21 @@ http.interceptors.response.use(
       //Chuyển hướng trang về trang chủ
       console.log(error.response.message);
 
+      console.log('Status 400 during HTTP request.');
+      return Promise.resolve(error.response);
       //  alert('lỗi kh tìm thấy api hoặc bad request: ');
     }
 
     if (error.response?.status === 401 || error.response?.status === 403) {
       //Chuyển hướng trang về trang login
       //  alert('lỗi kh co quyen call api');
-      //    window.location.href = 'http://localhost:3000/auth/login';
-      // const router = useRouter();
-      // router.push('/auth/login');
+
       console.log(error.response.message);
     }
 
     return Promise.reject(error);
   }
 );
-
-// export const authAxios = () =>{
-//   const getAccessToken =
-// }
 
 /* Các status code thường gặp
     200: Request gửi đi và nhận về kết quả thành
