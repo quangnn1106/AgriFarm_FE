@@ -1,6 +1,8 @@
 // public paths
 export const LOGIN_PATH = '/login',
-  REGISTER_PATH = '/register';
+  REGISTER_PATH = '/register',
+  SUCCESS_PATH = '/success',
+  SALOGIN_PATH = '/salogin';
 
 // private paths
 export const DASH_BOARD_PATH = '/statistic';

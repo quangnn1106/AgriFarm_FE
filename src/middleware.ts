@@ -3,10 +3,17 @@ import { locales } from './navigation';
 import { NextRequest } from 'next/server';
 // export { default } from 'next-auth/middleware';
 import createMiddleware from 'next-intl/middleware';
+import {
+  LOGIN_PATH,
+  REGISTER_PATH,
+  SALOGIN_PATH,
+  SUCCESS_PATH
+} from './constants/routes';
 const publicPages = [
-  '/login',
-  '/register',
-  '/salogin'
+  LOGIN_PATH,
+  REGISTER_PATH,
+  SALOGIN_PATH,
+  SUCCESS_PATH
 
   // (/secret requires auth)
 ];
@@ -29,7 +36,8 @@ const authMiddleware = withAuth(
       authorized: ({ token, req }) => (token ? true : false)
     },
     pages: {
-      signIn: '/login' || '/salogin'
+      signIn: '/login' || '/salogin',
+      newUser: '/register'
     }
   }
 );
