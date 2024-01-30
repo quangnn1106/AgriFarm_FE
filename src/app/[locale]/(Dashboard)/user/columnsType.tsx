@@ -1,5 +1,5 @@
 import { ColumnsType } from 'antd/es/table';
-import { UserModel } from './user-model';
+import { UserModel } from './models/user-model';
 import { Dropdown, MenuProps, Modal, Space, Button, Switch, Tag, TableColumnsType } from 'antd';
 import { EditOutlined, DeleteOutlined, EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';

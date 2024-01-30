@@ -39,5 +39,31 @@
   },
   "LocaleSwitcher": {
     "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"
+  },
+  "UserManagement" : {
+    "PROFILE_IMAGE": "PROFILE IMAGE",
+    "change_avatar": "Change avatar",
+    "GENERAL_INFORMATION": "GENERAL INFORMATION",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "phone_number": "Phone Number",
+    "email": "Email",
+    "address": "Address",
+    "date_of_birth": "Date of birth",
+    "gender": "Gender" ,
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "ROLE": "ROLE",
+    "admin": "Admin",
+    "manager": "Manager",
+    "member": "Member",
+    "ONBOARDING": "ONBOARDING",
+    "CHANGE_PASSWORD": "CHANGE PASSWORD",
+    "new_password": "New password: ",
+    "confirm_password": "Confirm password: ",
+    "PROFILE": "PROFILE",
+    "edit_information": "Edit Information"
+
   }
 }

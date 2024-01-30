@@ -12,7 +12,7 @@ const HomeButtonA = (props: Props) => {
         <>
         <Button
         className={cx('home-btn')}
-        href='#'
+        
       >
         <HomeOutlined />
         Farm Name
