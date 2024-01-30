@@ -2,14 +2,11 @@
 import React, { Suspense, useState } from 'react';
 
 import { Layout, Badge, Button } from 'antd';
-import { BellOutlined, SearchOutlined } from '@ant-design/icons';
-const { Header, Content, Sider } = Layout;
 
-import MenuSider from '../Layouts/MainLayout/MenuSider/MenuSider';
-import AdminSider from '../Layouts/Admin/Sider/AdminSider';
-import LocaleSwitcher from '@/components/Locale/LocaleSwitcher';
+const { Content, Sider } = Layout;
+
 import themeConfig from '@/lib/theme/themeConfig';
-import SAdminSider from '../Layouts/SAdmin/Sider/SASider';
+
 import { useSession } from 'next-auth/react';
 import RenderSideBar from '../Layouts/MainLayout/MenuSider/RenderSideBar';
 import { ROLES } from '@/constants/roles';
@@ -18,7 +15,7 @@ import Loader from '@/components/Loader/Loader';
 export default function DashBoardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { data: session, status } = useSession();
-  console.log('role: ', session?.user.userInfo?.roles.length);
+
   if (status === 'loading') {
     return (
       <Loader
@@ -42,7 +39,7 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
             // collapsed={collapsed}
             // onCollapse={value => setCollapsed(value)}
           >
-            <RenderSideBar roles={session?.user.userInfo?.roles[0] as ROLES} />
+            <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} />
           </Sider>
           <Content className='site_layout_background'>
             <Suspense

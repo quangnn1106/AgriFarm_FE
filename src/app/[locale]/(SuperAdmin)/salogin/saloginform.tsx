@@ -41,7 +41,7 @@ const SaLoginForm: React.FC = () => {
       if (!res?.error) {
         router.push(callbackUrl);
       } else {
-        setError('Invalid User or password');
+        setError('Invalid User or passwords');
         console.log(error);
       }
     } catch (error: any) {

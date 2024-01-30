@@ -8,19 +8,19 @@ type Props = { roles: ROLES };
 
 const RenderSideBar = ({ roles }: Props) => {
   const { data: session } = useSession();
-  const roleLength = session?.user.userInfo.roles.length;
+
   const renderSidebarContent = () => {
-    switch (roles && roleLength) {
-      case 4 || ROLES.SUPER_ADMIN:
+    switch (roles) {
+      case ROLES.SUPER_ADMIN:
         return <SAdminSider />;
 
-      case 1 || ROLES.ADMIN:
+      case ROLES.ADMIN:
         return <AdminSider />;
 
-      case 1 || ROLES.MANAGER:
+      case ROLES.MANAGER:
         return <AdminSider />;
 
-      case 1 || ROLES.MEMBER:
+      case ROLES.MEMBER:
         return (
           <div>
             {/* Member Sidebar Content */}

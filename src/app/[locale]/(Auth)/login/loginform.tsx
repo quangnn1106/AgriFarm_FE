@@ -87,7 +87,7 @@ const LoginForm: React.FC = () => {
               rules={[
                 { required: true },
                 {
-                  type: 'email',
+                  type: 'string',
                   message: 'UserName is not valid'
                 }
               ]}
