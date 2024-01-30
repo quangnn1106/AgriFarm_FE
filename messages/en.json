@@ -62,7 +62,8 @@
     "CHANGE_PASSWORD": "CHANGE PASSWORD",
     "new_password": "New password: ",
     "confirm_password": "Confirm password: ",
-    "PROFILE": "PROFILE"
+    "PROFILE": "PROFILE",
+    "edit_information": "Edit Information"
 
   }
 }

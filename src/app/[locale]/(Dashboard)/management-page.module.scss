@@ -1,3 +1,4 @@
+//style list page
 .table_style {
     :global {
         // ant-table-ping-right.ant-table-fixed-column.ant-table-scroll-horizontal.ant-table-has-fix-left.ant-table-has-fix-right {
@@ -100,4 +101,15 @@
     border-radius: 12px;
     margin: 12px 24px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
+
+//Style profile page
+
+.group-info-label  {
+    padding-left: 24px;
+    font-weight: 500;
+}
+
+.padding-input {
+    padding: 8px 30px;
 }

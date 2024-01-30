@@ -62,7 +62,7 @@
     "CHANGE_PASSWORD": "THAY ĐỔI MẬT KHẨU",
     "new_password": "Mật khẩu mới: ",
     "confirm_password": "Xác nhận lại mật khẩu: ",
-    "PROFILE": "HỒ SƠ"
-
+    "PROFILE": "HỒ SƠ",
+    "edit_information": "Chỉnh sửa thông tin"
   }
 }
