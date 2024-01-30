@@ -40,7 +40,7 @@
   "LocaleSwitcher": {
     "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"
   },
-  "UserManagement" : {
+  "UserManagement": {
     "PROFILE_IMAGE": "PROFILE IMAGE",
     "change_avatar": "Change avatar",
     "GENERAL_INFORMATION": "GENERAL INFORMATION",
@@ -50,7 +50,7 @@
     "email": "Email",
     "address": "Address",
     "date_of_birth": "Date of birth",
-    "gender": "Gender" ,
+    "gender": "Gender",
     "male": "Male",
     "female": "Female",
     "other": "Other",
@@ -64,6 +64,9 @@
     "confirm_password": "Confirm password: ",
     "PROFILE": "PROFILE",
     "edit_information": "Edit Information"
-
+  },
+  "Message": {
+    "server_error": "Server Error Please Try Again!",
+    "email_error": "Email Exist Please Try Again!"
   }
 }

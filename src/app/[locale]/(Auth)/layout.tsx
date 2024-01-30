@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 
 import { Col, Layout, Row } from 'antd';
-import loginBanner from '@/assets/Images/loginbanner.png';
-import signUpBanner from '@/assets/Images/signup-img.png';
+import loginBanner from '~/loginbanner.png';
+import signUpBanner from '~/signup-img.png';
 import Image from 'next/image';
 
 import { useSession } from 'next-auth/react';

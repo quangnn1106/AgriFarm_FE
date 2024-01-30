@@ -1,5 +1,5 @@
 export default interface HttpResponseCommon<T> {
-  data: T;
+  data: T | [];
   status: number;
-  message: string;
+  message?: string | null;
 }
