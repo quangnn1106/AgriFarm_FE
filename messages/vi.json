@@ -36,20 +36,20 @@
     "switchLocale": "Convert {locale, select, vi {vi} "
   },
   "Disease": {
-    "diagnostic" : "Diagnostic_vi",
-    "search_condition" : "Search condition_vi",
-    "search_result" : "Search result_vi",
-    "keyword_text_placeholder" : "Search by description, feedback, disease name,..._vi",
-    "start_date" : "Start date_vi",
-    "end_date" : "End date_vi",
-    "search_by_date" : "Date_vi",
-    "search_by_keyword" : "Keyword_vi",
-    "search_btn" : "Search_vi",
-    "add_diagnosis" : "Diagnosis_vi",
-    "export_excel" : "Export_vi",
-    "col_name_predict" : "Predict result_vi",
-    "col_name_description" : "Description_vi",
-    "col_name_feedback" : "Feedback_vi",
-    "col_name_date" : "Date_vi"
+    "diagnostic" : "Chẩn đoán bệnh trên lúa dựa trên mô tả triệu chứng",
+    "search_condition" : "Điều kiện tìm kiếm",
+    "search_result" : "Kết quả tìm kiếm",
+    "keyword_text_placeholder" : "Tìm kiếm bằng Mô tả, Phản hồi, Tên bệnh,...",
+    "start_date" : "Ngày bắt đầu",
+    "end_date" : "Ngày kết thúc",
+    "search_by_date" : "Ngày",
+    "search_by_keyword" : "Từ khóa",
+    "search_btn" : "Tìm kiếm",
+    "add_diagnosis" : "Chẩn đoán",
+    "export_excel" : "Xuất",
+    "col_name_predict" : "Kết quả chẩn đoán",
+    "col_name_description" : "Mô tả",
+    "col_name_feedback" : "Phản hồi",
+    "col_name_date" : "Ngày"
   }
 }
