@@ -36,9 +36,13 @@ http.interceptors.response.use(
   },
   error => {
     //Hàm cấu hình cho tất cả lỗi nhận về
-    if (error.response?.status === 400 || error.response?.status === 404) {
+    if (
+      error.response?.status === 400 ||
+      error.response?.status === 404 ||
+      error.response?.status === 500
+    ) {
       //Chuyển hướng trang về trang chủ
-      console.log(error.response.message);
+      console.log(error?.response);
 
       console.log('Status 400 during HTTP request.');
       return Promise.resolve(error.response);

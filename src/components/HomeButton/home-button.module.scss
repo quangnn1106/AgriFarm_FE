@@ -1,0 +1,17 @@
+.home-btn{
+    font-size: 24px !important;
+    font-weight: bolder !important;
+    height: fit-content !important;
+    width: fit-content !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    span {
+        svg {
+            color: #009A29;
+        }
+    } 
+}
+.home-btn:hover{
+    color: #009A29 !important;
+}

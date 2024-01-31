@@ -1,18 +1,30 @@
 'use client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 
 import { Layout, Badge, Button } from 'antd';
-import { BellOutlined, SearchOutlined } from '@ant-design/icons';
-const { Header, Content, Sider } = Layout;
 
-import MenuSider from '../Layouts/MainLayout/MenuSider/MenuSider';
-import AdminSider from '../Layouts/Admin/Sider/AdminSider';
-import LocaleSwitcher from '@/components/Locale/LocaleSwitcher';
+const { Content, Sider } = Layout;
+
+import themeConfig from '@/lib/theme/themeConfig';
+
+import { useSession } from 'next-auth/react';
+import RenderSideBar from '../Layouts/MainLayout/MenuSider/RenderSideBar';
+import { ROLES } from '@/constants/roles';
+import Loader from '@/components/Loader/Loader';
 
 export default function DashBoardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
+  const { data: session, status } = useSession();
 
-  return (
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning
+      />
+    );
+  }
+  return themeConfig(
     <section>
       <Layout className='layout'>
         <Layout
@@ -27,10 +39,20 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
             // collapsed={collapsed}
             // onCollapse={value => setCollapsed(value)}
           >
-            {/* <MenuSider /> */}
-            <AdminSider />
+            <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} />
           </Sider>
-          <Content className='site_layout_background'>{children}</Content>
+          <Content className='site_layout_background'>
+            <Suspense
+              fallback={
+                <Loader
+                  fullScreen
+                  spinning
+                />
+              }
+            >
+              {children}
+            </Suspense>
+          </Content>
         </Layout>
       </Layout>
     </section>

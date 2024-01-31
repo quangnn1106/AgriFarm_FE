@@ -5,6 +5,7 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { UserInfo } from '@/types/next-auth';
+
 // import { loginUser, registerUser } from '@/services/authService';
 export const options: AuthOptions = {
   providers: [
@@ -29,6 +30,42 @@ export const options: AuthOptions = {
         try {
           const response = await http.post('/user/auth/token', {
             siteCode: credentials?.siteCode as string,
+            userName: credentials?.userName as string,
+            password: credentials?.password as string
+          });
+          const user = response.data;
+          console.log('return data user admin: ', user);
+
+          // If no error and we have user data, return it
+          if (response.status === 200 && user) {
+            console.log('return data user 200: ', user);
+
+            return user;
+          }
+        } catch (error: any) {
+          console.log('error credential: ', error.message);
+        }
+        // Return null if user data could not be retrieved
+
+        return null;
+      }
+    }),
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. 'Sign in with...')
+      name: 'Sign in SA',
+      id: 'SAcredentials',
+
+      credentials: {
+        userName: {
+          label: 'UserName',
+          type: 'userName',
+          placeholder: 'example@example.com'
+        },
+        password: { label: 'Password', type: 'password' }
+      },
+      async authorize(credentials, req) {
+        try {
+          const response = await http.post('/user/auth/token', {
             userName: credentials?.userName as string,
             password: credentials?.password as string
           });
@@ -78,19 +115,20 @@ export const options: AuthOptions = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        token.access_token = user?.token;
-        token.userInfo = user?.userInfo;
-
-        // console.log('user.access jwttttttt: ', user);
-        // console.log('token.access_token: ', token.profile);
+        const access = user?.data?.token;
+        token.access_token = access;
+        token.user_info = user?.data?.userInfo;
+        console.log('user.access jwttttttt: ', user?.data?.token);
       }
 
       return token;
     },
 
     session: async ({ session, token, user }) => {
-      session.user.token = token.access_token as string;
-      session.user.userInfo = token?.userInfo as UserInfo;
+      console.log('vo session roi nha');
+
+      session.user.accessToken = token?.access_token as string;
+      session.user.userInfo = token?.user_info as UserInfo;
       // console.log('session: ', session?.user?.profile);
       // console.log('session user profile: ', token?.profile);
 

@@ -3,32 +3,58 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from '../createAppAsyncThunk';
 import { loginModel } from '@/app/[locale]/(Auth)/models/login-model';
 import { registerModel } from '@/app/[locale]/(Auth)/models/register-model';
+import FormRegisterValues from '@/types/register';
+import HttpResponseCommon from '@/types/response';
+import Admin, { Solution } from '@/types/admin';
+import { register } from '@/services/authService';
 
-export type UserState = {
-  userLogin: UserLoginResponse | null;
-  userRegister: UserRegisterResponse | null;
-};
+export interface UserState {
+  userRegister: HttpResponseCommon<Admin> | null;
+}
 
-export type UserLoginResponse = {
-  email: string;
-  access: string;
-  status: string;
-};
-
-export type UserRegisterResponse = {
-  email: string;
-  status: string;
-};
+// export interface UserLoginResponse {
+//   data: {
+//     id: string;
+//     firstName: string;
+//     lastName: string;
+//     phone: string;
+//     email: string;
+//     address: string;
+//     siteCode: string;
+//     siteName: string;
+//     isApprove: number;
+//     solution: Solution;
+//     cost: number;
+//     paymentDetail: string;
+//   };
+//   status: string;
+// }
 
 const initialState: UserState = {
-  userLogin: {
-    email: '',
-    access: '',
-    status: ''
-  },
   userRegister: {
-    email: '',
-    status: ''
+    data: {
+      id: '49ee98e2-6a34-4895-a325-188fbe7c2c07',
+      firstName: 'string 01',
+      lastName: 'string 01',
+      phone: 'string',
+      email: 'string',
+      address: 'string',
+      siteCode: 'string',
+      siteName: 'string',
+      isApprove: 0,
+      solution: {
+        id: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6',
+        name: 'Solution 1',
+        description: 'This is cheapest solution',
+        price: 10.0,
+        durationInMonth: 6
+      },
+      cost: 10.0,
+      paymentDetail: ''
+    },
+
+    status: 0,
+    message: null
   }
 };
 
@@ -37,39 +63,26 @@ const auth = createSlice({
   initialState,
   reducers: {
     resetState: (state: UserState) => {
-      if (state.userLogin) state.userLogin.status = '';
-      if (state.userRegister) state.userRegister.status = '';
+      if (state.userRegister) state.userRegister.status = 0;
     }
   },
   extraReducers(builder) {
-    builder
-      .addCase(loginAsyncApi.pending, (state: UserState) => {
-        if (state.userLogin) state.userLogin.status = 'loading';
-      })
-      .addCase(
-        loginAsyncApi.fulfilled,
-        (state: UserState, action: PayloadAction<UserLoginResponse>) => {
-          state.userLogin = action.payload;
+    builder.addCase(registerAsyncApi.pending, (state: UserState) => {
+      if (state.userRegister) state.userRegister.message = 'loading';
+    });
+    builder.addCase(registerAsyncApi.fulfilled, (state: UserState, action) => {
+      //tắt loading
+      console.log('action: ', action);
 
-          state.userLogin.status = 'done';
-        }
-      )
-      .addCase(loginAsyncApi.rejected, (state: UserState) => {
-        if (state.userLogin) state.userLogin.status = 'error';
-      })
-      .addCase(registerAsyncApi.pending, (state: UserState) => {
-        if (state.userRegister) state.userRegister.status = 'loading';
-      })
-      .addCase(registerAsyncApi.fulfilled, (state: UserState) => {
-        if (state.userRegister) {
-          state.userRegister.status = 'done';
-        }
-      })
-      .addCase(registerAsyncApi.rejected, (state: UserState) => {
-        if (state.userRegister) {
-          state.userRegister.status = 'error';
-        }
-      });
+      state.userRegister = action.payload;
+    });
+    builder.addCase(registerAsyncApi.rejected, (state: UserState, action) => {
+      if (state.userRegister) {
+        console.log('state.userRegister rejected: ', action);
+
+        state.userRegister.message = 'error';
+      }
+    });
   }
 });
 
@@ -77,18 +90,34 @@ export const { resetState } = auth.actions;
 
 export default auth.reducer;
 
-export const loginAsyncApi = createAppAsyncThunk(
-  'userReducer/loginAsyncApi',
-  async (userLogin: loginModel) => {
-    const response = await http.post('/common/login/', userLogin);
-    return response.data;
-  }
-);
+// export const loginAsyncApi = createAppAsyncThunk(
+//   'userReducer/loginAsyncApi',
+//   async (userLogin: loginModel) => {
+//     const response = await http.post('/common/login/', userLogin);
+//     return response.data;
+//   }
+// );
 
 export const registerAsyncApi = createAppAsyncThunk(
   'userReducer/registerAsyncApi',
-  async (userRegister: registerModel) => {
-    const response = await http.post('/common/register/', userRegister);
-    return response.data;
+  async (values: FormRegisterValues) => {
+    const userRegister: FormRegisterValues = {
+      ...values,
+      paymentDetail: 'custom default',
+      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
+    };
+    const response: HttpResponseCommon<Admin> = await register(userRegister);
+    if (response && response.status === 202) {
+      console.log('data resp register: ', response);
+
+      return response;
+    }
+    if (response && response.status === 500) {
+      console.log('ấdasdasdasdass', response.message);
+
+      return response;
+    }
+
+    return null;
   }
 );

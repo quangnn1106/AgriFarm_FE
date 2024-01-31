@@ -1,33 +1,42 @@
 'use client';
 import { Form, Input, Button, Row, Col, ConfigProvider, Checkbox } from 'antd';
 import styles from '../auth.module.scss';
-
 import classNames from 'classnames/bind';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { registerModel } from '../models/register-model';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { registerAsyncApi, resetState } from '@/redux/features/common-slice';
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 import Loading from '@/components/LoadingBtn/Loading';
 import { useRouter } from 'next/navigation';
-import { LOGIN_PATH } from '@/constants/routes';
+import { LOGIN_PATH, SUCCESS_PATH } from '@/constants/routes';
+import FormRegisterValues from '@/types/register';
+import { useTranslations } from 'next-intl';
+import { MessageError } from '@/constants/message';
+import { STATUS_ACCEPTED, STATUS_SERVER_ERROR } from '@/constants/https';
 
 const cx = classNames.bind(styles);
 
 const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { userRegister } = useAppSelector(state => state.authReducer);
+  const t = useTranslations('Message');
   const dispatch = useAppDispatch();
-
+  const [error, setError] = useState<string>('');
   useEffect(() => {
-    if (userRegister?.status === 'done') {
+    if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
-      router.push('/auth/login');
+      setError('');
+      router.push(SUCCESS_PATH);
     }
-  }, [userRegister, router, dispatch]);
+    if (userRegister?.status === STATUS_SERVER_ERROR) {
+      const messageError = userRegister?.message as string;
+      if (messageError === MessageError.EMAIL_EXIST) {
+        setError(t('email_error'));
+      } else setError(t('server_error'));
+    }
+  }, [userRegister, router, dispatch, t]);
 
-  const handleRegister = async (data: registerModel) => {
+  const handleRegister = async (data: FormRegisterValues) => {
+    console.log('data register: ', data);
     const actionAsyncThunk = registerAsyncApi(data);
     dispatch(actionAsyncThunk);
   };
@@ -74,39 +83,47 @@ const RegisterForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
-              name='provinceCity'
-              label='Province/City'
+              name='address'
+              label='Address'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
-              name='FarmCode'
+              name='siteCode'
               label='Farm code'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
-              name='farmName'
+              name='siteName'
               label='Farm Name'
               rules={[{ required: true, message: 'Password is required' }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
-              name='fullName'
-              label='Your full name'
+              name='firstName'
+              label='First Name'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='lastName'
+              label='Last name'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item
@@ -114,7 +131,7 @@ const RegisterForm: React.FC = () => {
               label='Phone'
               rules={[{ required: true }]}
             >
-              <Input size='large' />
+              <Input size='middle' />
             </Form.Item>
 
             <Form.Item>
@@ -154,13 +171,19 @@ const RegisterForm: React.FC = () => {
                   </Form.Item>
                 </Col>
                 <Col span={24}>
+                  {error && <p className={cx('auth__error')}>{error}</p>}
                   <Button
                     type='primary'
                     htmlType='submit'
                     size='large'
                     className={cx('auth__btn_regis')}
+                    disabled={userRegister?.message === 'loading' ? true : false}
                   >
-                    Register
+                    {userRegister?.message === 'loading' ? (
+                      <Loading userState='loading' />
+                    ) : (
+                      'Register'
+                    )}
                   </Button>
                 </Col>
               </Row>
