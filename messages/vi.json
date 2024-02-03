@@ -40,7 +40,7 @@
   "LocaleSwitcher": {
     "switchLocale": "Convert {locale, select, vi {vi} "
   },
-  "UserManagement" : {
+  "UserManagement": {
     "PROFILE_IMAGE": "ẢNH ĐẠI DIỆN",
     "change_avatar": "Thay đổi ảnh đại diện",
     "GENERAL_INFORMATION": "THÔNG TIN CÁ NHÂN",
@@ -50,7 +50,7 @@
     "email": "Email",
     "address": "Địa chỉ: ",
     "date_of_birth": "Ngày sinh: ",
-    "gender": "Giới tính: " ,
+    "gender": "Giới tính: ",
     "male": "Nam",
     "female": "Nữ",
     "other": "Khác",
@@ -70,5 +70,9 @@
     "suspended": "Vô hiệu hóa",
     "active": "Đang hoạt động"
 
+  },
+  "Message": {
+    "server_error": "Lỗi máy chủ vui lòng thử lại",
+    "email_error": "Email đã tồn tại vui lòng thử lại"
   }
 }

@@ -8,8 +8,9 @@ import classNames from 'classnames/bind';
 import { loginModel } from '../models/login-model';
 import Loading from '@/components/LoadingBtn/Loading';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
+import { Link, useRouter } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -38,6 +39,8 @@ const LoginForm: React.FC = () => {
       setLoading(false);
 
       if (!res?.error) {
+        setError('');
+
         router.push(callbackUrl);
       } else {
         setError('Invalid User or password');
@@ -77,7 +80,7 @@ const LoginForm: React.FC = () => {
             <Form.Item
               name='siteId'
               label='SiteId'
-              rules={[{ required: true }]}
+              rules={[{ required: false }]}
             >
               <Input size='large' />
             </Form.Item>
@@ -131,7 +134,7 @@ const LoginForm: React.FC = () => {
 
             <Form.Item>
               <p>
-                Have an account yet? <a href={REGISTER_PATH}>Click here</a>{' '}
+                Have an account yet? <Link href={REGISTER_PATH}>Click here</Link>{' '}
               </p>
             </Form.Item>
           </Form>
