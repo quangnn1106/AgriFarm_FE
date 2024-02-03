@@ -10,7 +10,7 @@ import Loading from '@/components/LoadingBtn/Loading';
 import { signIn, useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
-import { useRouter } from '@/navigation';
+import { Link, useRouter } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -134,7 +134,7 @@ const LoginForm: React.FC = () => {
 
             <Form.Item>
               <p>
-                Have an account yet? <a href={REGISTER_PATH}>Click here</a>{' '}
+                Have an account yet? <Link href={REGISTER_PATH}>Click here</Link>{' '}
               </p>
             </Form.Item>
           </Form>
