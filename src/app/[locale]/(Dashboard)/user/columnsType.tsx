@@ -1,26 +1,41 @@
 import { ColumnsType } from 'antd/es/table';
 import { UserModel } from './models/user-model';
-import { Dropdown, MenuProps, Modal, Space, Button, Switch, Tag, TableColumnsType } from 'antd';
-import { EditOutlined, DeleteOutlined, EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  Dropdown,
+  MenuProps,
+  Modal,
+  Space,
+  Button,
+  Switch,
+  Tag,
+  TableColumnsType
+} from 'antd';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EllipsisOutlined,
+  ExclamationCircleOutlined
+} from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
+import Admin from '@/types/admin';
 
 export const userTableColumns: TableColumnsType<UserModel> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    width: 'max-content',
-    fixed: 'left',
-  },
+  // {
+  //   title: 'ID',
+  //   dataIndex: 'id',
+  //   width: 'max-content',
+  //   fixed: 'left'
+  // },
   {
     title: 'Full Name',
-    dataIndex: 'full_name',
-    render: (_, userItem) => `${userItem.first_name} ${userItem.last_name}`,
+    dataIndex: 'firstName',
+    render: (_, userItem) => `${userItem.firstName} ${userItem.lastName}`,
     width: 'max-content',
-    fixed: 'left',
+    fixed: 'left'
   },
   {
     title: 'Phone Number',
-    dataIndex: 'phone_number',
+    dataIndex: 'phone',
     width: 'max-contentt'
   },
   {
@@ -34,53 +49,57 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     filters: [
       {
         text: 'London',
-        value: 'London',
+        value: 'London'
       },
       {
         text: 'New York',
-        value: 'New York',
-      },
+        value: 'New York'
+      }
     ],
     // filterMode: 'tree',
     // filterSearch: true,
     // onFilter: (value: string, record)=> record.address.startsWith(value),
-    width: 'max-content',
-  },
-  {
-    title: 'Site',
-    dataIndex: 'site_name'
-  },
-  {
-    title: 'Role',
-    dataIndex: 'role_name',
-    filters: [
-      {
-        text: 'Admin',
-        value: 'Admin',
-      },
-      {
-        text: 'Manager',
-        value: 'Manager',
-      },
-      {
-        text: 'Member',
-        value: 'Member',
-      },
-    ],
-    // filterMode: 'tree',
-    // filterSearch: true,
-    // onFilter: (value: string, record)=> record.role_name.startsWith(value),
     width: 'max-content'
   },
   {
-    title: 'Is Active',
-    dataIndex: 'is_active',
+    title: 'Site Code',
+    dataIndex: 'siteCode'
+  },
+  {
+    title: 'Site Name',
+    dataIndex: 'siteName'
+  },
+  // {
+  //   title: 'Role',
+  //   dataIndex: 'role_name',
+  //   filters: [
+  //     {
+  //       text: 'Admin',
+  //       value: 'Admin'
+  //     },
+  //     {
+  //       text: 'Manager',
+  //       value: 'Manager'
+  //     },
+  //     {
+  //       text: 'Member',
+  //       value: 'Member'
+  //     }
+  //   ],
+  //   // filterMode: 'tree',
+  //   // filterSearch: true,
+  //   // onFilter: (value: string, record)=> record.role_name.startsWith(value),
+  //   width: 'max-content'
+  // },
+  {
+    title: 'Is Approve',
+    dataIndex: 'isApprove',
     sorter: true,
     // filterMode: 'tree',
     // onFilter: (value: boolean, record)=> record.is_active.,
-    render: (_, { is_active }) => {
-      let color = is_active == true ? 'blue' : 'grey';
-      let key = is_active == true ? 'Active' : 'Inactive';
+    render: (_, { isApprove }) => {
+      let color = isApprove === 1 ? 'blue' : 'grey';
+      let key = isApprove === 1 ? 'Approved' : 'Waiting';
       return (
         <Tag
           color={color}
@@ -114,7 +133,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                <ExclamationCircleOutlined /> Details
+                  <ExclamationCircleOutlined /> Details
                 </Space>
               </a>
             ),
@@ -173,7 +192,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
         <Dropdown
           menu={{
             items: renderItems(
-              userItem.id,
+              userItem.id!,
               userItem.onDetails!,
               userItem.onDelete!,
               userItem.onUpdate!
