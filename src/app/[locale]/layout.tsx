@@ -18,8 +18,8 @@ type Props = {
   params: { locale: string };
 };
 
-export default function RootLayout({ children, params: { locale } }: Props) {
-  unstable_setRequestLocale(locale);
+export default function LocaleLayout({ children, params: { locale } }: Props) {
+  // unstable_setRequestLocale(locale);
   const messages = useMessages();
   return (
     <html
