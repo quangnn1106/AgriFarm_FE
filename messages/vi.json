@@ -63,6 +63,12 @@
     "new_password": "Mật khẩu mới: ",
     "confirm_password": "Xác nhận lại mật khẩu: ",
     "PROFILE": "HỒ SƠ",
-    "edit_information": "Chỉnh sửa thông tin"
+    "edit_information": "Chỉnh sửa thông tin",
+    "save_change": "Lưu thay đổi",
+    "STATUS": "TRẠNG THÁI HOẠT ĐỘNG",
+    "terminated": "Hủy",
+    "suspended": "Vô hiệu hóa",
+    "active": "Đang hoạt động"
+
   }
 }
