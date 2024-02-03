@@ -19,7 +19,7 @@ import { DatePicker, Space } from 'antd';
 import { Input } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import HomeButtonA from '@/components/HomeButton/home-button';
-import AddUser from './add/page';
+import AddUser from './add/modalAdd';
 
 const { Search } = Input;
 
