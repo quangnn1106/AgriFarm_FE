@@ -11,11 +11,11 @@ export const register: (
   const res = await http.post('register/Registry/Post', payload);
   console.log('response authService outututu: ', res);
   return res.data;
-  if (res.status === 202) {
-    console.log('response authService: ', res);
+  // if (res.status === 202) {
+  //   console.log('response authService: ', res);
 
-    return res.data;
-  } else return res.data;
+  //   return res.data;
+  // } else return res.data;
   // } else {
   //   console.log('res?.data?.message: ', res?.data);
 
