@@ -2,12 +2,15 @@ import React from 'react';
 import { Table } from 'antd';
 import { diseaseModel } from '../../model/disease-model';
 import { useTranslations } from 'next-intl';
-import { SortOrder } from 'antd/lib/table/interface';
+import { useRouter } from 'next/navigation';
+
 interface TableComponentProps {
+    loading: boolean,
     data: diseaseModel[];
 }
-const TableComponent: React.FC<TableComponentProps> = ({ data }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
     const t = useTranslations('Disease');
+    const router = useRouter();
     const columns = [
         {
             title: '#',
@@ -43,8 +46,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ data }) => {
             width: 250,
         },
     ];
-
-  return <Table columns={columns} dataSource={data} />;
+    return <Table loading={loading} columns={columns} dataSource={data} onRow={(record, rowIndex) => {
+            return {
+                onClick: (e) => {
+                    router.push(`/disease-diagnotic-detail?id=${record.key}`);
+                }
+            }
+        }}
+    />;
 };
 
 export default TableComponent;

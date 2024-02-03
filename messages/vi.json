@@ -68,6 +68,7 @@
   "Message": {
     "server_error": "Lỗi máy chủ vui lòng thử lại",
     "email_error": "Email đã tồn tại vui lòng thử lại"
+  },
   "Disease": {
     "diagnostic" : "Chẩn đoán bệnh trên lúa dựa trên mô tả triệu chứng",
     "search_condition" : "Điều kiện tìm kiếm",
@@ -83,6 +84,14 @@
     "col_name_predict" : "Kết quả chẩn đoán",
     "col_name_description" : "Mô tả",
     "col_name_feedback" : "Phản hồi",
-    "col_name_date" : "Ngày"
+    "col_name_date" : "Ngày",
+    "detail" : "Chi tiết",
+    "lbl_predict_result" : "Kết quả chẩn đoán",
+    "lbl_location" : "Location_vi",
+    "lbl_description" : "Mô tả",
+    "lbl_feedback" : "Phản hồi",
+    "lbl_feedback_status" : "Trạng thái phản hồi",
+    "lbl_feedback_content" : "Nội dung phản hồi",
+    "lbl_user" : "Người sử dụng (Id)"
   }
 }

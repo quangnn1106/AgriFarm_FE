@@ -68,6 +68,7 @@
   "Message": {
     "server_error": "Server Error Please Try Again!",
     "email_error": "Email Exist Please Try Again!"
+  },
   "Disease": {
     "diagnostic" : "Diagnostic",
     "search_condition" : "Search condition",

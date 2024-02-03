@@ -14,6 +14,7 @@ import fetchDiseaseDataForExport from './api/exportDiseaseDiagnosesApi';
 
 const cx = classNames.bind(styles);
 const DiseaseDiagnotic = () => {
+    const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState('');
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
@@ -29,6 +30,7 @@ const DiseaseDiagnotic = () => {
     };
     const searchAction = async () => {
         try {
+            setLoading(true);
             const responseData = await fetchDiseaseData(keyword, dateFrom, dateTo);
             setApiData(responseData);
             console.log('API Response:', responseData);
@@ -39,6 +41,8 @@ const DiseaseDiagnotic = () => {
             } else {
                 throw new Error(`Unknown error occurred: ${error}`);
             }
+        } finally {
+            setLoading(false);
         }
     };
     const exportExcel = async () => {
@@ -99,7 +103,7 @@ const DiseaseDiagnotic = () => {
                 {t('export_excel')}
             </Button>
         </Flex>
-        <TableComponent data={apiData}/>
+        <TableComponent data={apiData} loading={loading} />
     </Content>
     );
 };

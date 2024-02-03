@@ -16,3 +16,24 @@
     background: #4caf4f !important;;
     width: 10rem;
 }
+// Disagnostic detail
+.dd {
+    margin-top: 20px;
+    text-align: left;
+    word-wrap: break-word;
+    .dd__row {
+        margin: 15px 0px;
+        align-items: center;
+        min-height: 45px;
+    }
+    .dd__label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #666666;
+    }
+
+    .dd__content {
+        font-size: 16px;
+        color: #373737;
+    }
+}

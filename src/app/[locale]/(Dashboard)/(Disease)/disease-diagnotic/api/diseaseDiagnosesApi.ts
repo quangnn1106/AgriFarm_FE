@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { diseaseModel } from "../model/disease-model"; 
 import { http } from '@/utils/config';
 
@@ -19,7 +20,7 @@ const fetchDiseaseData = async (
         const responseData = response.data;
         const normalizedData: diseaseModel[] = responseData['data'].map(
             (item: any, index: number) => ({
-                key: `row_${index + 1}`,
+                key : item.id,
                 no: index + 1,
                 predictResult: item.plantDisease.diseaseName,
                 description: item.description,

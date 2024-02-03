@@ -1,5 +1,7 @@
+import { UUID } from "crypto";
+
 export type diseaseModel = {
-    key: string;
+    key : UUID,
     no: number;
     predictResult: string;
     description: string;
