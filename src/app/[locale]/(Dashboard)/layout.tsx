@@ -1,20 +1,18 @@
 'use client';
-import React, { Suspense, useState } from 'react';
-
-import { Layout, Badge, Button } from 'antd';
-
-const { Content, Sider } = Layout;
-
-import themeConfig from '@/lib/theme/themeConfig';
-
-import { useSession } from 'next-auth/react';
-import RenderSideBar from '../Layouts/MainLayout/MenuSider/RenderSideBar';
 import { ROLES } from '@/constants/roles';
+import { useSession } from 'next-auth/react';
+import { ReactNode } from 'react';
+import LayoutSuperAdmin from './(SuperAdmin)/layoutSuperAdmin';
+import LayoutAdmin from './(Admin)/layoutAdmin';
 import Loader from '@/components/Loader/Loader';
 
-export default function DashBoardLayout({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
+type Props = {
+  children: React.ReactNode;
+};
+
+export default function DashBoardLayout({ children }: Props) {
   const { data: session, status } = useSession();
+  const userRole = session?.user?.userInfo?.role as ROLES;
 
   if (status === 'loading') {
     return (
@@ -24,37 +22,18 @@ export default function DashBoardLayout({ children }: { children: React.ReactNod
       />
     );
   }
-  return themeConfig(
-    <section>
-      <Layout className='layout'>
-        <Layout
-          className='site_layout m_h'
-          hasSider
-        >
-          <Sider
-            width={255}
-            theme='light'
-            className='sidebar'
-            // collapsible
-            // collapsed={collapsed}
-            // onCollapse={value => setCollapsed(value)}
-          >
-            <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} />
-          </Sider>
-          <Content className='site_layout_background'>
-            <Suspense
-              fallback={
-                <Loader
-                  fullScreen
-                  spinning
-                />
-              }
-            >
-              {children}
-            </Suspense>
-          </Content>
-        </Layout>
-      </Layout>
-    </section>
-  );
+  // Choose the layout based on the user's role
+  const getLayout = () => {
+    switch (userRole) {
+      case ROLES.SUPER_ADMIN:
+        return <LayoutSuperAdmin>{children}</LayoutSuperAdmin>;
+      case ROLES.ADMIN:
+        return <LayoutAdmin>{children}</LayoutAdmin>;
+      default:
+        // Default layout for other roles
+        return <div>Lỗi rồi fix đi</div>;
+    }
+  };
+
+  return <>{getLayout()}</>;
 }
