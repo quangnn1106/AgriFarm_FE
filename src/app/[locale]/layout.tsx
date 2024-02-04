@@ -20,6 +20,7 @@ type Props = {
 export default function LocaleLayout({ children, params: { locale } }: Props) {
   // unstable_setRequestLocale(locale);
   const messages = useMessages();
+
   return (
     <html
       lang={locale}

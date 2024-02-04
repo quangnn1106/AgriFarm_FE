@@ -13,6 +13,8 @@ type Props = {
 
 const Loader = (props: Props) => {
   const { spinning, fullScreen } = props;
+  console.log('render loader');
+
   return loaderTheme(
     <Spin
       spinning={spinning}
@@ -21,4 +23,4 @@ const Loader = (props: Props) => {
   );
 };
 
-export default Loader;
+export default React.memo(Loader);
