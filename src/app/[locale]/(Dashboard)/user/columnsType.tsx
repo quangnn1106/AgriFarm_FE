@@ -11,7 +11,7 @@ import {
   TableColumnsType
 } from 'antd';
 import {
-  EditOutlined,
+  CheckOutlined,
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined
@@ -33,11 +33,11 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     width: 'max-content',
     fixed: 'left'
   },
-  {
-    title: 'Phone Number',
-    dataIndex: 'phone',
-    width: 'max-contentt'
-  },
+  // {
+  //   title: 'Phone Number',
+  //   dataIndex: 'phone',
+  //   width: 'max-contentt'
+  // },
   {
     title: 'Email',
     dataIndex: 'email',
@@ -61,14 +61,14 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     // onFilter: (value: string, record)=> record.address.startsWith(value),
     width: 'max-content'
   },
-  {
-    title: 'Site Code',
-    dataIndex: 'siteCode'
-  },
-  {
-    title: 'Site Name',
-    dataIndex: 'siteName'
-  },
+  // {
+  //   title: 'Site Code',
+  //   dataIndex: 'siteCode'
+  // },
+  // {
+  //   title: 'Site Name',
+  //   dataIndex: 'siteName'
+  // },
   // {
   //   title: 'Role',
   //   dataIndex: 'role_name',
@@ -146,11 +146,24 @@ export const userTableColumns: TableColumnsType<UserModel> = [
             label: (
               <a
                 onClick={() => {
-                  onUpdateUser();
+                  Modal.confirm({
+                    title: 'Are you want to approve this user ?',
+                    centered: true,
+                    width: '400px',
+                    onOk: () => {
+                      onUpdateUser();
+                    },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    )
+                  });
                 }}
               >
                 <Space>
-                  <EditOutlined /> Update
+                  <CheckOutlined /> Approve
                 </Space>
               </a>
             ),
