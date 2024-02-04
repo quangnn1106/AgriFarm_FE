@@ -5,7 +5,6 @@ import styles from '../../../disease.module.scss';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 
-const cx = classNames.bind(styles);
 const { RangePicker } = DatePicker;
 interface SearchConditionFormProps {
     handleKeyword: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -17,6 +16,7 @@ interface SearchConditionFormProps {
     handleDate,
     searchAction,
     }: SearchConditionFormProps): ReactElement => {
+    const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
     const buttonItemLayout = {
         wrapperCol: { span: 8, offset: 8 },

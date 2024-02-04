@@ -1,16 +1,21 @@
 import React from 'react';
-import { Col, Row, Table } from 'antd';
+import { Col, Row, Select, Table } from 'antd';
 import { useTranslations } from 'next-intl';
 import classNames from 'classnames/bind';
 import styles from '../../../disease.module.scss';
-import { diagnosticDetailModel } from '../../model/diagnosticDetailModel';
 
 interface TableComponentProps {
     data: any;
+    handleSel: (value: string) => void;
 }
-const cx = classNames.bind(styles);
-const DetailComponent: React.FC<TableComponentProps> = ({ data }) => {
+const DetailComponent: React.FC<TableComponentProps> = ({ data , handleSel}) => {
+    const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
+    const fbStatus = [
+        {value: 'stt_0' , label: t('pending')},
+        {value: 'stt_1' , label: t('approve')},
+        {value: 'stt_2' , label: t('reject')}
+    ];
     return (
         <div className={cx('dd')}>
             <Row className={cx('dd__row')}>
@@ -40,30 +45,19 @@ const DetailComponent: React.FC<TableComponentProps> = ({ data }) => {
                 </Col>
                 <Col span={8}></Col>
             </Row>
-            <Row className={cx('dd__row')}>
+            <Row>
                 <Col span={4}>
                     <label className={cx('dd__label')}>{t('lbl_feedback')}</label>
                 </Col>
                 <Col span={12}>
-                    <p className={cx('dd__content')}>{data.feedback}</p>
-                </Col>
-                <Col span={8}></Col>
-            </Row>
-            <Row className={cx('dd__row')}>
-                <Col span={4}>
-                    <label className={cx('dd__label')}>{t('lbl_feedback_status')}</label>
-                </Col>
-                <Col span={12}>
-                    <p className={cx('dd__content')}>{data.feedbackStatus}</p>
-                </Col>
-                <Col span={8}></Col>
-            </Row>
-            <Row className={cx('dd__row')}>
-                <Col span={4}>
-                    <label className={cx('dd__label')}>{t('lbl_feedback_content')}</label>
-                </Col>
-                <Col span={12}>
-                    <p className={cx('dd__content')}>{data.feedback}</p>
+                    <Row className={cx('dd__row')} style={{margin: 0}}>
+                        <Col span={6}>{t('lbl_feedback_status')}</Col>
+                        <Col span={12}><Select onChange={handleSel} defaultValue={`stt_${data.feedbackStatus}`} options={fbStatus} style={{width: "50%"}}/></Col>
+                    </Row>
+                    <Row className={cx('dd__row')} style={{margin: 0}}>
+                        <Col span={6}>{t('lbl_feedback_content')}</Col>
+                        <Col span={12}><p className={cx('dd__content')}>{data.feedback}</p></Col>
+                    </Row>
                 </Col>
                 <Col span={8}></Col>
             </Row>

@@ -91,7 +91,16 @@
     "lbl_description" : "Mô tả",
     "lbl_feedback" : "Phản hồi",
     "lbl_feedback_status" : "Trạng thái phản hồi",
+    "pending" : "Chờ xử lý",
+    "approve" : "Đã xử lý",
+    "reject" : "Từ chối",
     "lbl_feedback_content" : "Nội dung phản hồi",
-    "lbl_user" : "Người sử dụng (Id)"
+    "lbl_user" : "Người sử dụng (Id)",
+    "save_btn" : "Lưu",
+    "back_btn" : "Quay về",
+    "message_update_ok" : "Cập nhật thành công",
+    "message_update_fail" : "Cập nhật không thành công",
+    "update_feedback_status" : "Cập nhật trạng thái phản hồi",
+    "close" : "Đóng"
   }
 }

@@ -7,14 +7,25 @@
     border-top: 2px solid #CFD0D2;
 }
 .disease__btn {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background: #4caf4f !important;
+    margin: 10px;
     min-width: 8rem;
 }
+.disease__btn--save {
+    background: #4caf4f !important;
+}
+.disease__btn--back {
+    background: #ffffff !important;
+    border: 1px solid #4caf4f !important;
+    color: #4caf4f !important;
+}
 .disease__searchBtn {
-    background: #4caf4f !important;;
+    background: #4caf4f !important;
     width: 10rem;
+}
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 // Disagnostic detail
 .dd {
