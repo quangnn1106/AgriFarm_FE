@@ -1,6 +1,7 @@
 //style list page
 .table_style {
     :global {
+
         // ant-table-ping-right.ant-table-fixed-column.ant-table-scroll-horizontal.ant-table-has-fix-left.ant-table-has-fix-right {
         //     border: 1px solid #F2F3F5 !important;
         // }
@@ -36,12 +37,45 @@
 
 }
 
+// style button upload image
+.upload-image-btn {
+    :global {
+        .ant-upload-select {
+            width: fit-content !important;
+            height: fit-content !important;
+        }
+        .ant-upload-list.ant-upload-list-picture-card {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .ant-upload-list-item-container {
+            width: 180px !important;
+            height: 180px !important;
+        }
+    }
+    
+}
+
+.color-input-disable{
+    :global {
+        input.ant-input.ant-input-disabled {
+            color: #000000 !important;
+        }
+        span.ant-select-selection-item {
+            color: #000000 !important;
+        }
+    }
+}
+
+input.ant-input.ant-input-disabled {
+    color: #000000;
+}
+
+
 .search-btn-box {
     :global {
-        // .ant-btn-primary.ant-input-search-button {
-        //     background: #009A29;
-        // }
-
         .ant-btn-primary.ant-input-search-button:hover {
             opacity: 0.6;
         }
@@ -52,11 +86,12 @@
     height: fit-content;
     width: fit-content;
     border: none !important;
+
     span {
         svg {
             color: #009A29;
         }
-    } 
+    }
 }
 
 
@@ -105,11 +140,18 @@
 
 //Style profile page
 
-.group-info-label  {
-    padding-left: 24px;
+.group-info-label {
+    padding-left: 0px;
     font-weight: 500;
 }
 
 .padding-input {
     padding: 8px 30px;
+}
+
+.btn-right {
+    margin-left: auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
