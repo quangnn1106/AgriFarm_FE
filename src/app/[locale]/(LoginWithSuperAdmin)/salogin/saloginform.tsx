@@ -2,7 +2,7 @@
 // client component vs server component
 import { useEffect, useState } from 'react';
 import { Form, Input, Button, Space, Row, Col, ConfigProvider, Flex } from 'antd';
-import styles from '@/app/[locale]/(SuperAdmin)/salogin/sa-auth.module.scss';
+import styles from '@/app/[locale]/(LoginWithSuperAdmin)/salogin/sa-auth.module.scss';
 
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
