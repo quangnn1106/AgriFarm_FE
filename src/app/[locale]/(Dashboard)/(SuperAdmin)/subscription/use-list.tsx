@@ -99,6 +99,7 @@ const UserList: React.FC = () => {
               <Table
                 loading={isFetching}
                 rowKey={'id'}
+                bordered
                 rowSelection={{
                   type: 'checkbox',
                   ...checkRowSelection

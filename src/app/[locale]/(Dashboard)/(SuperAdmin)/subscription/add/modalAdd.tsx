@@ -1,59 +1,25 @@
 'use client';
-import { Col, Form, Input, Modal, Row, notification } from 'antd';
+import { Col, ConfigProvider, Form, Input, Modal, Row, notification } from 'antd';
 
 import styles from '../add/add.module.scss';
 import TextArea from 'antd/es/input/TextArea';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import LabelFormItem from '../component/LabelFormItem';
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 }
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 }
-  }
-};
-
-const AddUser = ({
-  params
-}: {
-  params: { visible: boolean; onCancel: () => void };
-}) => {
+import LabelFormItem from '../components/LabelFormItem';
+import ModalCustom from '@/components/ModalCustom/ModalCustom';
+import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
+import classNames from 'classnames/bind';
+import FormRegisterValues from '@/types/register';
+import { registerAsyncApi } from '@/redux/features/common-slice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useEffect, useState } from 'react';
+import { STATUS_ACCEPTED } from '@/constants/https';
+const cx = classNames.bind(styles);
+const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void } }) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
-//   const useInstance = UseAxiosAuth();
-
-//   const onFinish = (values: any) => {
-//     const addUserBody: AddUser = {
-//       ...values,
-//       is_active: true,
-//       status: 'string'
-//     };
-//     useInstance
-//       .post('/accounts/', addUserBody)
-//       .then(data => {
-//         if (data.status === 201) {
-//           // Assuming 201 indicates successful creation
-//           openNotification('top', 'has been created successfully!', 'success');
-//           params.onCancel();
-//           form.resetFields();
-//         } else {
-//           openNotification(
-//             'top',
-//             'has been created failed! Please try again later',
-//             'error'
-//           );
-//           params.onCancel();
-//           form.resetFields();
-//         }
-//       })
-//       .catch(e => {
-//         console.error(e);
-//       });
-//   };
+  const { userRegister } = useAppSelector(state => state.authReducer);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const openNotification = (
     placement: NotificationPlacement,
@@ -61,35 +27,54 @@ const AddUser = ({
     type: 'success' | 'error'
   ) => {
     api[type]({
-      message: `Account ${status}`,
+      message: `New Admin ${status}`,
       placement,
       duration: 2
     });
   };
 
+  const handleRegister = async (data: FormRegisterValues) => {
+    console.log('data register: ', data);
+    const actionAsyncThunk = registerAsyncApi(data);
+    dispatch(actionAsyncThunk);
+    if (userRegister?.status === STATUS_ACCEPTED) {
+      // Assuming 201 indicates successful creation
+      console.log('susscess create admmin');
+
+      openNotification('top', 'has been created successfully!', 'success');
+      params.onCancel();
+      form.resetFields();
+    } else {
+      openNotification('top', 'has been created failed! Please try again later', 'error');
+      params.onCancel();
+      form.resetFields();
+    }
+  };
+
   return (
-    <Modal
-      open={params.visible}
-      title='Add new user'
-      width='80%'
-      style={{ top: 40, maxWidth: 1000 }}
-      keyboard
-      onOk={form.submit}
-      onCancel={() => {
-        params.onCancel();
-        //openNotification('top', 'create process have been cancel!', 'error');
-      }}
-    >
+    <>
       {contextHolder}
-      <hr style={{ border: '1px solid #eee' }}></hr>
-      <Form
+      <ModalCustom
+        open={params.visible}
+        title='Add new Farm Admin'
+        width='50%'
+        style={{ top: 40, maxWidth: 1000 }}
+        keyboard
+        onOk={form.submit}
+        onCancel={() => {
+          params.onCancel();
+          //openNotification('top', 'create process have been cancel!', 'error');
+        }}
+      >
+        <hr style={{ border: '1px solid #eee' }}></hr>
+        {/* <Form
         {...formItemLayout}
         form={form}
         colon={false}
         scrollToFirstError
         style={{ overflowY: 'auto', maxHeight: 'calc(63vh)', marginTop: '50px' }}
       >
-        <Row style={{ paddingRight: '50px' }}>
+        <Row>
           <Col span={24}>
             <Form.Item
               name='firstName'
@@ -109,7 +94,7 @@ const AddUser = ({
               label={<LabelFormItem name='Last Name' />}
               rules={[
                 {
-                    required: true,
+                  required: true,
                   message: 'Please input Last Name!'
                 }
               ]}
@@ -121,7 +106,7 @@ const AddUser = ({
               label={<LabelFormItem name='User Name' />}
               rules={[
                 {
-                    required: true,
+                  required: true,
                   message: 'Please input User Name!'
                 }
               ]}
@@ -137,7 +122,6 @@ const AddUser = ({
               <Input.Password />
             </Form.Item>
 
-
             <Form.Item
               name='confirmPassword'
               label={<LabelFormItem name='Confirm Password' />}
@@ -145,11 +129,93 @@ const AddUser = ({
             >
               <Input.Password />
             </Form.Item>
-
           </Col>
         </Row>
-      </Form>
-    </Modal>
+      </Form> */}
+
+        <ConfigProvider
+          theme={{
+            components: {
+              Form: {
+                itemMarginBottom: 10,
+                verticalLabelPadding: '0 0 0',
+                labelFontSize: 12,
+                labelColor: 'rgb(133, 133, 133)'
+              }
+            }
+          }}
+        >
+          <Form
+            layout='vertical'
+            autoComplete='off'
+            form={form}
+            onFinish={handleRegister}
+          >
+            <Form.Item
+              name='email'
+              label='Email'
+              rules={[
+                { required: true },
+                {
+                  type: 'email',
+                  message: 'Email is not valid'
+                }
+              ]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='address'
+              label='Address'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='siteCode'
+              label='Farm code'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='siteName'
+              label='Farm Name'
+              rules={[{ required: true, message: 'Password is required' }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='firstName'
+              label='First Name'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='lastName'
+              label='Last name'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+
+            <Form.Item
+              name='phone'
+              label='Phone'
+              rules={[{ required: true }]}
+            >
+              <Input size='middle' />
+            </Form.Item>
+          </Form>
+        </ConfigProvider>
+      </ModalCustom>
+    </>
   );
 };
 export default AddUser;

@@ -16,7 +16,6 @@ import SAdminSider from '../../Layouts/SAdmin/Sider/SASider';
 export default function LayoutSuperAdmin({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { data: session, status } = useSession();
-  console.log('SuperAdmin Layout');
 
   // if (status === 'loading') {
   //   return (
