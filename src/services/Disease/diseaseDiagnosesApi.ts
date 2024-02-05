@@ -1,6 +1,6 @@
-import { UUID } from "crypto";
-import { diseaseModel } from "../model/disease-model"; 
+import { UUID } from "crypto"; 
 import { http } from '@/utils/config';
+import { diseaseModel } from "@/app/[locale]/(Dashboard)/(Disease)/disease-diagnotic/model/disease-model";
 
 const fetchDiseaseData = async (
     keyword: string,

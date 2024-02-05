@@ -31,7 +31,8 @@ export default function DashBoardLayout({ children }: Props) {
         return <LayoutAdmin>{children}</LayoutAdmin>;
       default:
         // Default layout for other roles
-        return <div>Lỗi rồi fix đi</div>;
+        //return <div>Lỗi rồi fix đi</div>;
+        return <LayoutSuperAdmin>{children}</LayoutSuperAdmin>;
     }
   };
 
