@@ -63,7 +63,12 @@
     "new_password": "New password: ",
     "confirm_password": "Confirm password: ",
     "PROFILE": "PROFILE",
-    "edit_information": "Edit Information"
+    "edit_information": "Edit Information",
+    "save_change": "Save Change",
+    "STATUS": "STATUS",
+    "terminated": "Terminated",
+    "suspended": "Suspended",
+    "active": "Active"
   },
   "Message": {
     "server_error": "Server Error Please Try Again!",

@@ -48,7 +48,7 @@ const SAdminSider = (props: Props) => {
       null,
       [
         getItem(<Link href={`/site`}>{t('site')}</Link>, `/site`, <FaMapLocationDot />),
-        getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
+        // getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
         getItem(
           <Link href={`/subscription`}>{t('subscription')}</Link>,
           `/subscription`,

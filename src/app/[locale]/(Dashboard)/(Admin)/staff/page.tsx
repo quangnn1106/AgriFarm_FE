@@ -1,6 +1,6 @@
 'use client';
 import styles from '../management-page.module.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import UserList from './use-list';
 import { Breadcrumb, Button, Cascader, ConfigProvider, Flex, Tooltip } from 'antd';
 import {
@@ -19,6 +19,7 @@ import { DatePicker, Space } from 'antd';
 import { Input } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import HomeButtonA from '@/components/HomeButton/home-button';
+import AddUser from './add/modalAdd';
 
 const { Search } = Input;
 
@@ -76,50 +77,67 @@ const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
 
 const UserManagement = (props: Props) => {
   const cx = classNames.bind(styles);
+
+  const [createState, setCreateState] = useState<boolean>(false);
+
   const onChange = (value: String[][]): void => {
     console.log(value);
   };
   return (
     <>
       <ConfigProvider
-            theme={{
-                components: {
-                  Button: {
-                        contentFontSizeLG: 24,
-                        fontWeight: 700,
-                        groupBorderColor: 'transparent',
-                        onlyIconSizeLG: 24,
-                        paddingBlockLG: 0,
-                        defaultBorderColor: 'transparent',
-                        defaultBg: 'transparent',
-                        defaultShadow: 'none',
-                        primaryShadow: 'none',
-                        linkHoverBg: 'transparent',
-                        paddingInlineLG: 24,
-                        defaultGhostBorderColor: 'transparent',
-                    }
-                }
-            }}
-        >
-          <Button
-        className={cx('home-btn')}
-        href='#' size={'large'}
+        theme={{
+          components: {
+            Button: {
+              contentFontSizeLG: 24,
+              fontWeight: 700,
+              groupBorderColor: 'transparent',
+              onlyIconSizeLG: 24,
+              paddingBlockLG: 0,
+              defaultBorderColor: 'transparent',
+              defaultBg: 'transparent',
+              defaultShadow: 'none',
+              primaryShadow: 'none',
+              linkHoverBg: 'transparent',
+              paddingInlineLG: 24,
+              defaultGhostBorderColor: 'transparent'
+            }
+          }
+        }}
       >
-        <HomeOutlined />
-        Farm Name
-      </Button>
-        </ConfigProvider>
+        <Button
+          className={cx('home-btn')}
+          href='#'
+          size={'large'}
+        >
+          <HomeOutlined />
+          Farm Name
+        </Button>
+      </ConfigProvider>
 
       <Breadcrumb style={{ margin: '0px 24px' }}>
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>User</Breadcrumb.Item>
       </Breadcrumb>
-      <Flex justify={'center'} align={'flex-start'} vertical className={cx('filter-box')}>
-        <Flex justify={'center'} align={'center'} className={cx('label-icon')} >
+      <Flex
+        justify={'center'}
+        align={'flex-start'}
+        vertical
+        className={cx('filter-box')}
+      >
+        <Flex
+          justify={'center'}
+          align={'center'}
+          className={cx('label-icon')}
+        >
           <HomeOutlined />
           <span>Filter</span>
         </Flex>
-        <Flex justify={'center'} align={'center'} className={cx('flex-space')} style={{width: '100%'}}
+        <Flex
+          justify={'center'}
+          align={'center'}
+          className={cx('flex-space')}
+          style={{ width: '100%' }}
         >
           <Cascader
             style={{ width: '40%' }}
@@ -182,8 +200,12 @@ const UserManagement = (props: Props) => {
           </Tooltip>
           <Tooltip title='Add new'>
             <Button
+              onClick={() => setCreateState(true)}
               className={cx('bg-btn')}
               icon={<PlusOutlined />}
+            />
+            <AddUser
+              params={{ visible: createState, onCancel: () => setCreateState(false) }}
             />
           </Tooltip>
         </Flex>
