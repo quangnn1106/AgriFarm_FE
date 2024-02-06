@@ -24,6 +24,7 @@ const LoginForm: React.FC = () => {
   const searchParams = useSearchParams();
 
   const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  console.log('call back url: ', callbackUrl.substring(callbackUrl.lastIndexOf('/')));
 
   const handleLogin = async (data: loginModel) => {
     try {
@@ -41,7 +42,7 @@ const LoginForm: React.FC = () => {
       if (!res?.error) {
         setError('');
 
-        router.push(callbackUrl);
+        router.push(callbackUrl.substring(callbackUrl.lastIndexOf('/')));
       } else {
         setError('Invalid User or password');
         console.log(error);

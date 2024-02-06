@@ -16,7 +16,6 @@ import AdminSider from '../../Layouts/Admin/Sider/AdminSider';
 export default function LayoutAdmin({ children }: { children: any }) {
   const [collapsed, setCollapsed] = useState(false);
   const { data: session, status } = useSession();
-  console.log('Admin Layout');
 
   // if (status === 'loading') {
   //   return (
