@@ -12,7 +12,8 @@ import FormRegisterValues from '@/types/register';
 import { registerAsyncApi } from '@/redux/features/common-slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
-import { STATUS_ACCEPTED } from '@/constants/https';
+import { STATUS_ACCEPTED, STATUS_CREATED, STATUS_OK } from '@/constants/https';
+import UseAxiosAuth from '@/utils/axiosClient';
 const cx = classNames.bind(styles);
 const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void } }) => {
   const [form] = Form.useForm();
@@ -20,7 +21,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
   const { userRegister } = useAppSelector(state => state.authReducer);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-
+  const http = UseAxiosAuth();
   const openNotification = (
     placement: NotificationPlacement,
     status: string,
@@ -33,22 +34,77 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
     });
   };
 
+  // useEffect(() => {
+  //   // if (userRegister?.status === STATUS_ACCEPTED) {
+  //   //   // Assuming 201 indicates successful creation
+  //   //   console.log('userRegister?.status: ', userRegister?.status);
+
+  //   //   console.log('susscess create admmin');
+
+  //   //   openNotification('top', 'has been created successfully!', 'success');
+  //   //   params.onCancel();
+  //   //   form.resetFields();
+  //   // } else {
+  //   //   console.log('failed failed create admmin');
+
+  //   //   openNotification('top', 'has been created failed! Please try again later', 'error');
+  //   //   params.onCancel();
+  //   //   form.resetFields();
+  //   // }
+  // }, [dispatch, form, params, userRegister]);
+
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
-    const actionAsyncThunk = registerAsyncApi(data);
-    dispatch(actionAsyncThunk);
-    if (userRegister?.status === STATUS_ACCEPTED) {
-      // Assuming 201 indicates successful creation
-      console.log('susscess create admmin');
+    const createAccountBody: FormRegisterValues = {
+      ...data,
+      paymentDetail: '123',
+      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
+    };
+    http
+      .post('/register/Registry/Post', createAccountBody)
+      .then(data => {
+        if (data) {
+          console.log('test data status succsess', data);
 
-      openNotification('top', 'has been created successfully!', 'success');
-      params.onCancel();
-      form.resetFields();
-    } else {
-      openNotification('top', 'has been created failed! Please try again later', 'error');
-      params.onCancel();
-      form.resetFields();
-    }
+          console.log('susscess create admmin');
+          // Assuming 201 indicates successful creation
+          openNotification('top', 'has been created successfully!', 'success');
+          params.onCancel();
+          form.resetFields();
+        }
+      })
+      .catch(e => {
+        console.error(e);
+        console.log('test data status', e?.response?.message as string);
+
+        openNotification(
+          'top',
+          'has been created failed! Please try again later',
+          'error'
+        );
+        params.onCancel();
+
+        form.resetFields();
+      });
+    // const actionAsyncThunk = registerAsyncApi(data);
+    // dispatch(actionAsyncThunk);
+
+    // if (userRegister?.status === STATUS_OK) {
+    //   // Assuming 201 indicates successful creation
+    //   console.log('userRegister?.status: ', userRegister?.status);
+
+    //   console.log('susscess create admmin');
+
+    //   openNotification('top', 'has been created successfully!', 'success');
+    //   params.onCancel();
+    //   form.resetFields();
+    // } else {
+    //   console.log('failed failed create admmin');
+
+    //   openNotification('top', 'has been created failed! Please try again later', 'error');
+    //   params.onCancel();
+    //   form.resetFields();
+    // }
   };
 
   return (

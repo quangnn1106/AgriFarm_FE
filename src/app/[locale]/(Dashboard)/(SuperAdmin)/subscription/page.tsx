@@ -2,16 +2,19 @@
 import styles from '../management-page.module.scss';
 import React, { useEffect, useState } from 'react';
 import UserList from './use-list';
+import { PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import BreadcrumbComponent from './components/Breadcrumb/breadCrumb';
 import FilterBox from './components/FilterBox/filterBox';
 import ActionBox from './components/Actions/actionBox';
-import { ConfigProvider, TableProps, theme, Layout, Table } from 'antd';
 
-import { Content } from 'antd/es/layout/layout';
+import { Button, ConfigProvider, Layout, Table, TableProps, theme } from 'antd';
+import AddUser from './add/modalAdd';
 import { UserModel } from './models/user-model';
 import UseAxiosAuth from '@/utils/axiosClient';
+import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
+
 const cx = classNames.bind(styles);
 
 type Props = {};
@@ -33,7 +36,6 @@ const UserManagement = (props: Props) => {
       const res = await http.get(`/register/registry/get`).then(res => {
         const registerList = res.data.data;
         console.log('registerList: ', registerList);
-
         setUsers(registerList);
         setIsFetching(false);
         //   setPagination({
@@ -42,7 +44,8 @@ const UserManagement = (props: Props) => {
         //   });
       });
     })();
-  }, [http]);
+  }, [http, createState]);
+  console.log(users);
 
   const handleDelete = (id: string) => {};
   const handleUpdate = async (id: string) => {
@@ -54,10 +57,6 @@ const UserManagement = (props: Props) => {
     setUpdateState(true);
   };
 
-  const {
-    token: { colorBgContainer, borderRadiusLG }
-  } = theme.useToken();
-
   const onChange: TableProps<UserModel>['onChange'] = (
     pagination,
     filters,
@@ -67,21 +66,36 @@ const UserManagement = (props: Props) => {
     console.log('params', pagination, filters, sorter, extra);
   };
 
+  const {
+    token: { colorBgContainer, borderRadiusLG }
+  } = theme.useToken();
+
   const checkRowSelection = {
     getCheckboxProps: (record: UserModel) => ({
       disabled: record.firstName === 'Disabled',
       name: record.firstName
     })
   };
+
   return (
     <>
       <BreadcrumbComponent />
       <FilterBox />
-      <ActionBox
-      // params={{ visible: createState, onCancel: () => setCreateState(false) }}
-      />
-      <UserList />
-      {/* <ConfigProvider
+
+      <ActionBox>
+        <Button
+          onClick={() => setCreateState(true)}
+          className={cx('bg-btn')}
+          icon={<PlusOutlined />}
+        />
+        <AddUser
+          params={{
+            visible: createState as boolean,
+            onCancel: () => setCreateState(false)
+          }}
+        />
+      </ActionBox>
+      <ConfigProvider
         theme={{
           components: {
             Table: {
@@ -106,6 +120,7 @@ const UserManagement = (props: Props) => {
               <Table
                 loading={isFetching}
                 rowKey={'id'}
+                bordered
                 rowSelection={{
                   type: 'checkbox',
                   ...checkRowSelection
@@ -130,7 +145,7 @@ const UserManagement = (props: Props) => {
             </Content>
           </Layout>
         </Content>
-      </ConfigProvider> */}
+      </ConfigProvider>
     </>
   );
 };

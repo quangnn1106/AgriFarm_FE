@@ -11,6 +11,8 @@ import logoutIcon from '@/assets/Images/logout.png';
 import styles from '../menuSider.module.scss';
 import { signOut, useSession } from 'next-auth/react';
 
+import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
+
 const cx = classNames.bind(styles);
 
 type Props = {};
@@ -36,7 +38,7 @@ export function getItem(
 // Function to generate user information group
 export function GetUserInfoGroup(): MenuItem {
   const handleSignOut = () => {
-    signOut();
+    signOut({ callbackUrl: SALOGIN_PATH });
   };
   const { data: session } = useSession();
 

@@ -2,9 +2,9 @@
 import styles from '../management-page.module.scss';
 
 import React, { useEffect, useState } from 'react';
-
+import { PlusOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
-import { ConfigProvider, Layout, Table, theme } from 'antd';
+import { Button, ConfigProvider, Layout, Table, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { UserModel } from './models/user-model';
 import { userTableColumns } from './columnsType';
@@ -12,10 +12,15 @@ import { userTableColumns } from './columnsType';
 import classNames from 'classnames/bind';
 
 import UseAxiosAuth from '@/utils/axiosClient';
+import ActionBox from './components/Actions/actionBox';
+import AddUser from './add/modalAdd';
+interface IProps {
+  registerList: UserModel[] | [];
+}
 
 const cx = classNames.bind(styles);
 
-const UserList: React.FC = () => {
+const UserList = ({ registerList }: IProps) => {
   const [createState, setCreateState] = useState<Boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
@@ -28,20 +33,26 @@ const UserList: React.FC = () => {
   const http = UseAxiosAuth();
 
   useEffect(() => {
-    (async () => {
-      const res = await http.get(`/register/registry/get`).then(res => {
-        const registerList = res.data.data;
-        console.log('registerList: ', registerList);
+    // (async () => {
+    //   const res = await http.get(`/register/registry/get`).then(res => {
+    //     const registerList = res.data.data;
+    //     console.log('registerList: ', registerList);
 
-        setUsers(registerList);
-        setIsFetching(false);
-        //   setPagination({
-        //     ...pagination,
-        //     total: res.data.count
-        //   });
-      });
-    })();
-  }, [http]);
+    //     setUsers(registerList);
+    //     setIsFetching(false);
+    //     //   setPagination({
+    //     //     ...pagination,
+    //     //     total: res.data.count
+    //     //   });
+    //   });
+    // })();
+
+    // setUsers(registerList);
+    // if (registerList) {
+    //   setIsFetching(false);
+    // }
+  }, [registerList]);
+  console.log(registerList);
 
   const handleDelete = (id: string) => {};
   const handleUpdate = async (id: string) => {
@@ -74,6 +85,19 @@ const UserList: React.FC = () => {
   };
   return (
     <>
+      <ActionBox>
+        <Button
+          onClick={() => setCreateState(true)}
+          className={cx('bg-btn')}
+          icon={<PlusOutlined />}
+        />
+        <AddUser
+          params={{
+            visible: createState as boolean,
+            onCancel: () => setCreateState(false)
+          }}
+        />
+      </ActionBox>
       <ConfigProvider
         theme={{
           components: {
@@ -105,7 +129,7 @@ const UserList: React.FC = () => {
                   ...checkRowSelection
                 }}
                 columns={userTableColumns}
-                dataSource={users?.map(user => ({
+                dataSource={registerList?.map(user => ({
                   ...user,
                   onDetails: () => handleDetails(user.id!),
                   onDelete: () => handleDelete(user.id!),

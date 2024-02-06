@@ -13,9 +13,11 @@ const { Search } = Input;
 const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
   console.log(info?.source, value);
 
-type Props = {};
+type Props = {
+  children: React.ReactNode;
+};
 
-const ActionBox = (props: Props) => {
+const ActionBox = ({ children }: Props) => {
   const [createState, setCreateState] = useState<boolean>(false);
   return (
     <>
@@ -49,14 +51,18 @@ const ActionBox = (props: Props) => {
             />
           </Tooltip>
           <Tooltip title='Add new'>
-            <Button
+            {/* <Button
               onClick={() => setCreateState(true)}
               className={cx('bg-btn')}
               icon={<PlusOutlined />}
             />
             <AddUser
-              params={{ visible: createState, onCancel: () => setCreateState(false) }}
-            />
+              params={{
+                visible: createState,
+                onCancel: () => setCreateState(false)
+              }}
+            /> */}
+            {children}
           </Tooltip>
         </Flex>
       </Flex>
