@@ -23,12 +23,12 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
 
   return (
     <html
-      lang={locale}
+      lang='vi'
       className={`${roboto.variable}`}
     >
       <ReduxProvider>
         <NextIntlClientProvider
-          locale={locale}
+          locale='vi'
           messages={messages}
         >
           <AntdRegistry>
