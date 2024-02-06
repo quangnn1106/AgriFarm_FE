@@ -7,14 +7,15 @@ import styles from '../disease.module.scss';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';
 import DetailComponent from './component/detail/detail';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import MapComponent from './component/map/map';
-import fetchDiseaseDetailData from './api/diseaseDiagnosesDetailApi';
-import diseaseDiagnosesUpdateFeedback from './api/diseaseDiagnosesUpdateApi';
 import ModalComponent from './component/modal/modal';
 import { STATUS_OK } from '@/constants/https';
+import fetchDiseaseDetailData from '@/services/Disease/diseaseDiagnosesDetailApi';
+import diseaseDiagnosesUpdateFeedback from '@/services/Disease/diseaseDiagnosesUpdateApi';
 
 const DiseaseDiagnoticDetail = () => {
+    const router = useRouter();
     const [msgUpdate, setMsgUpdate] = useState("");
     const [fbStatusVal, setFbStatusVal] = useState(1);
     const cx = classNames.bind(styles);
@@ -66,6 +67,7 @@ const DiseaseDiagnoticDetail = () => {
 
     const backAction = () => {
         console.log("Back action.....");
+        router.back();
     };
     const breadCrumb = [
         {
