@@ -47,4 +47,15 @@
         font-size: 16px;
         color: #373737;
     }
+    .dd__result {
+        .dd__row {
+            margin-left: 3rem;
+            .dd__content {
+                margin-left: 3rem;
+            }
+        }
+        .dd__result--label {
+            color: #ff4d4f !important;
+        }
+    }
 }

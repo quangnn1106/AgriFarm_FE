@@ -107,6 +107,18 @@
     "message_update_ok" : "Cập nhật thành công",
     "message_update_fail" : "Cập nhật không thành công",
     "update_feedback_status" : "Cập nhật trạng thái phản hồi",
-    "close" : "Đóng"
+    "close" : "Đóng",
+    "disease_diagnostic" : "Thực hiện chẩn đoán bệnh",
+    "land_name" : "Land name_vi",
+    "select_land" : "Select land_vi",
+    "enter_description_disease" : "Nhập mô tả triệu chứng bệnh",
+    "disease_diagnostic_fail" : "Chẩn đoán thất bại, vui lòng thử lại!",
+    "diagnostic_result" : "Kết quả chẩn đoán",
+    "lbl_disease_name" : "Disease name_vi",
+    "lbl_symptoms" : "Symtoms_vi",
+    "lbl_cause" : "Cause_vi",
+    "lbl_preventive_measures" : "Preventive measures_vi",
+    "lbl_suggest" : "Suggest",
+    "send_feedback" : "Send feedback_vi"
   }
 }

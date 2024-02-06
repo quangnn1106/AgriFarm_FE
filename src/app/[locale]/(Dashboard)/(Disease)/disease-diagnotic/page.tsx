@@ -21,42 +21,12 @@ const DiseaseDiagnotic = () => {
     const [apiData, setApiData] = useState<diseaseModel[]>([]);
     const t = useTranslations('Disease');
     
-    useEffect(() => {
-        // Lấy dữ liệu từ localStorage khi component được render
-        const conditionSearch = localStorage.getItem('conditionSearch');
-        if (conditionSearch) {
-            const condition = JSON.parse(conditionSearch);
-            setKeyword(condition[0]);
-            setDateFrom(condition[1]);
-            setDateTo(condition[2]);
-            returnSearchAction(keyword, dateFrom, dateTo);
-        }
-    }, [keyword, dateFrom, dateTo]);
-    
     const handleKeyword = (e : any) => {
         setKeyword(e.target.value);
     };
     const handleDate = (dates: any, dateStrings: any)  => {
         setDateFrom(dateStrings[0]);
         setDateTo(dateStrings[1]);
-    };
-    const returnSearchAction = async (keyword : string , dateFrom : string , dateTo : string ) => {
-        try {
-            setLoading(true);
-            const responseData = await fetchDiseaseData(keyword, dateFrom, dateTo);
-            setApiData(responseData);
-            localStorage.setItem('conditionSearch', JSON.stringify([keyword, dateFrom, dateTo]));
-            console.log('API Response:', responseData);
-        } catch (error: unknown) {
-            // Assert the type of error to be an instance of Error
-            if (error instanceof Error) {
-                throw new Error(`Error calling API: ${error.message}`);
-            } else {
-                throw new Error(`Unknown error occurred: ${error}`);
-            }
-        } finally {
-            setLoading(false);
-        }
     };
     const searchAction = async () => {
         try {
@@ -111,8 +81,7 @@ const DiseaseDiagnotic = () => {
             <SearchConditionForm 
                 handleDate={handleDate}
                 handleKeyword={handleKeyword}
-                searchAction={searchAction} 
-                keyword={keyword} dateFrom={dateFrom} dateTo={dateTo}
+                searchAction={searchAction}
             />
         </div>
         {/* Search result */}

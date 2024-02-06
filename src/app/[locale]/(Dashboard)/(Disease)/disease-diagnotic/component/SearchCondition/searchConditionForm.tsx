@@ -11,25 +11,17 @@ interface SearchConditionFormProps {
     handleKeyword: (e: ChangeEvent<HTMLInputElement>) => void;
     handleDate: (dates: any, dateStrings: any) => void;
     searchAction: () => void;
-    keyword: string;
-    dateFrom: string;
-    dateTo: string;
   }
   const SearchConditionForm: React.FC<SearchConditionFormProps> = ({
     handleKeyword,
     handleDate,
-    searchAction,
-    keyword,
-    dateFrom,
-    dateTo
+    searchAction
     }: SearchConditionFormProps): ReactElement => {
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
     const buttonItemLayout = {
         wrapperCol: { span: 8, offset: 8 },
     };
-    const setDateFrom = dateFrom != "" ? dayjs(dateFrom) : null;
-    const setDateTo = dateTo != "" ? dayjs(dateTo) : null;
     return (
         <Form
         labelCol={{ span: 8 }}
@@ -38,13 +30,12 @@ interface SearchConditionFormProps {
         >
             <Form.Item label={t('search_by_keyword')}>
                 <Input
-                value={keyword}
                 onChange={handleKeyword}
                 placeholder={t('keyword_text_placeholder')}
                 />
             </Form.Item>
             <Form.Item label={t('search_by_date')}>
-                <RangePicker value={[setDateFrom, setDateTo]} allowEmpty={[true, true]} placeholder={[t('start_date'),t('end_date')]} onChange={handleDate} />
+                <RangePicker allowEmpty={[true, true]} placeholder={[t('start_date'),t('end_date')]} onChange={handleDate} />
             </Form.Item>
             <Form.Item {...buttonItemLayout}>
                 <Button
