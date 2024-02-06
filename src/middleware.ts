@@ -13,7 +13,8 @@ const publicPages = [
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
-  SUCCESS_PATH
+  SUCCESS_PATH,
+  '/season'
 
   // (/secret requires auth)
 ];

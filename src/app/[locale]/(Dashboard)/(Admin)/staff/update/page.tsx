@@ -30,7 +30,7 @@ import { PlusOutlined, CameraOutlined, HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 // import styles from '../management-page.module.scss';
 import { useTranslations } from 'next-intl';
-import styles from '../../management-page.module.scss';
+import styles from '../../adminStyle.module.scss';
 import { Content } from 'antd/es/layout/layout';
 import { certificationTableColumn } from './certificationColumnType';
 import { CertificationModel } from '../models/certificationModel';

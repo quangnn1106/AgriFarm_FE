@@ -1,5 +1,5 @@
 'use client';
-import styles from '../management-page.module.scss';
+import styles from '../adminStyle.module.scss';
 import React, { useState } from 'react';
 import UserList from './use-list';
 import { Breadcrumb, Button, Cascader, ConfigProvider, Flex, Tooltip } from 'antd';

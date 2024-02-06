@@ -1,5 +1,5 @@
 'use client';
-import styles from '../management-page.module.scss';
+import styles from '../adminStyle.module.scss';
 
 import React, { useEffect, useState } from 'react';
 
