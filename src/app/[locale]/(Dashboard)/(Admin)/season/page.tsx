@@ -1,80 +1,114 @@
 'use client';
-import { useState } from "react";
-import SeasonTableComponent from "./component/Table/table";
-import { SeasonModel } from "./models/season-model";
-import UseAxiosAuth from "@/utils/axiosClient";
-import { ConfigProvider, Layout, Table, TableProps, theme } from "antd";
+import { useState } from 'react';
+import SeasonTableComponent from './component/Table/table';
+import { SeasonModel } from './models/season-model';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { ConfigProvider, Divider, Layout, Table, TableProps, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { seasonTableColumns } from "./component/Table/column-types";
+import { seasonTableColumns } from './component/Table/column-types';
 
 import styles from '../adminStyle.module.scss';
 import classNames from 'classnames/bind';
+import FilterSection from './component/FilterSection/filterSection';
 
 type Props = {};
 const SeasonManagement = (props: Props) => {
+  const cx = classNames.bind(styles);
 
-    const cx = classNames.bind(styles);
+  const [data, setData] = useState<SeasonModel[]>([]);
+  const [loading, setLoading] = useState(false);
 
-    const [data, setData] = useState<SeasonModel[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [createState, setCreateState] = useState<Boolean>(false);
+  const [updateState, setUpdateState] = useState<boolean>(false);
 
-    const [createState, setCreateState] = useState<Boolean>(false);
-    const [updateState, setUpdateState] = useState<boolean>(false);
-  
-    const [seasons, setSeasons] = useState<SeasonModel[]>([]);
-    const [userId, setUserId] = useState<string>('');
-  
-    const [filterUsers, setFilterUsers] = useState<SeasonModel[]>([]);
-    const [filterMode, setFilterMode] = useState<string>('updated_at');
-    const http = UseAxiosAuth();
+  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
+  const [userId, setUserId] = useState<string>('');
 
-    const handleDelete = (id: string) => {};
-const handleUpdate = async (id: string) => {
-  setUserId(id);
-  setUpdateState(true);
-};
-const handleDetails = async (id: string) => {
-  setUserId(id);
-  setUpdateState(true);
-};
+  const [filterUsers, setFilterUsers] = useState<SeasonModel[]>([]);
+  const [filterMode, setFilterMode] = useState<string>('updated_at');
+  const http = UseAxiosAuth();
 
-const {
-  token: { colorBgContainer, borderRadiusLG }
-} = theme.useToken();
+  const handleDelete = (id: string) => {};
+  const handleUpdate = async (id: string) => {
+    setUserId(id);
+    setUpdateState(true);
+  };
+  const handleDetails = async (id: string) => {
+    setUserId(id);
+    setUpdateState(true);
+  };
 
-const onChange: TableProps<SeasonModel>['onChange'] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+  const {
+    token: { colorBgContainer, borderRadiusLG }
+  } = theme.useToken();
 
-const checkRowSelection = {
-  getCheckboxProps: (record: SeasonModel) => ({
-    disabled: record.name === 'Disabled',
-    name: record.name
-  })
-};
+  const onChange: TableProps<SeasonModel>['onChange'] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
 
-    for (let i = 0; i < 20; i++ ) {
-        data.push({
-            id: "ID"+i,
-            name: "Spring",
-            startDate: "20/01/2024",
-            endDate: "20/4/2024",
-            status: "In progress",
-            land: []
-        })
-        if (i == 20) {
-            setLoading(false)
-        }
-    }
+  const checkRowSelection = {
+    getCheckboxProps: (record: SeasonModel) => ({
+      disabled: record.name === 'Disabled',
+      name: record.name
+    })
+  };
 
-    return (
-        <>
-        <ConfigProvider
+  for (let i = 0; i < 4; i++) {
+    data.push({
+      id: 'ID1' + i,
+      name: 'Spring',
+      startDate: '20/01/2024',
+      endDate: '20/4/2024',
+      status: 'Done',
+      land: []
+    });
+    data.push({
+      id: 'ID2' + i,
+      name: 'Spring',
+      startDate: '20/01/2024',
+      endDate: '20/4/2024',
+      status: 'Cancel',
+      land: []
+    });
+    data.push({
+      id: 'ID3' + i,
+      name: 'Spring',
+      startDate: '20/01/2024',
+      endDate: '20/4/2024',
+      status: 'Pending',
+      land: []
+    });
+    data.push({
+      id: 'ID4' + i,
+      name: 'Spring',
+      startDate: '20/01/2024',
+      endDate: '20/4/2024',
+      status: 'In progress',
+      land: []
+    });
+  }
+
+  return (
+    <>
+      <Divider
+        orientation='left'
+        plain
+      >
+        Search condition
+      </Divider>
+      <FilterSection></FilterSection>
+      <Divider
+        orientation='left'
+        plain
+      >
+        Search result
+      </Divider>
+      <ConfigProvider
         theme={{
           components: {
             Table: {
@@ -99,6 +133,7 @@ const checkRowSelection = {
               <Table
                 loading={loading}
                 rowKey={'id'}
+                bordered
                 rowSelection={{
                   type: 'checkbox',
                   ...checkRowSelection
@@ -124,7 +159,7 @@ const checkRowSelection = {
           </Layout>
         </Content>
       </ConfigProvider>
-        </>
-    )
+    </>
+  );
 };
 export default SeasonManagement;

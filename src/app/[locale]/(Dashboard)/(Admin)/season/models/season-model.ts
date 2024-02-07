@@ -20,3 +20,4 @@ export type RiceVariety = {
     id?: string | '';
     name?: string |'';
 }
+

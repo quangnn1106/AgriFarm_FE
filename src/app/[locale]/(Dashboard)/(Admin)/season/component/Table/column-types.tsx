@@ -6,13 +6,18 @@ import {
   Space,
   Button,
   Switch,
-  Tag
+  Tag,
+  ConfigProvider,
+  Popconfirm
 } from 'antd';
 import {
   CheckOutlined,
   DeleteOutlined,
   EllipsisOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  EditOutlined,
+  QuestionCircleOutlined,
+  WarningOutlined
 } from '@ant-design/icons';
 
 import { SeasonModel } from '../../models/season-model';
@@ -27,7 +32,30 @@ export const seasonTableColumns: TableColumnsType<SeasonModel> = [
   {
     title: 'Status',
     dataIndex: 'status',
-    width: 'max-content'
+    width: 'max-content',
+    render: (_, { status }) => {
+      let color = '';
+      if (status == 'In progress') {
+        color = 'processing';
+      } else if (status == 'Pending') {
+        color = 'warning';
+      } else if (status == 'Done') {
+        color = 'success';
+      } else if (status == 'Cancel') {
+        color = 'error';
+      } else {
+        color = '';
+      }
+      return (
+          <Tag
+            color={color}
+            bordered={false}
+          >
+            {status}
+          </Tag>
+        
+      );
+    }
   },
   {
     title: 'Start Date',
@@ -78,7 +106,7 @@ export const seasonTableColumns: TableColumnsType<SeasonModel> = [
                   }}
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Details
+                  <EditOutlined /> Update
                   </Space>
                 </a>
               ),
@@ -95,6 +123,8 @@ export const seasonTableColumns: TableColumnsType<SeasonModel> = [
                     title: 'Do you really want to delete this season ?',
                     centered: true,
                     width: '400px',
+                    icon: <WarningOutlined style={{color: 'red'}}/>,
+                    
                     onOk: () => {
                         onRemoveSeason();
                     },
