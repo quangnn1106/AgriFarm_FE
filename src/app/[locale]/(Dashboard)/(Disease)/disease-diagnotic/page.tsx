@@ -11,6 +11,7 @@ import TableComponent from './component/Table/table';
 import { diseaseModel } from './model/disease-model';
 import fetchDiseaseDataForExport from '@/services/Disease/exportDiseaseDiagnosesApi';
 import fetchDiseaseData from '@/services/Disease/diseaseDiagnosesApi';
+import { useRouter } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 const DiseaseDiagnotic = () => {
@@ -20,7 +21,8 @@ const DiseaseDiagnotic = () => {
     const [dateTo, setDateTo] = useState('');
     const [apiData, setApiData] = useState<diseaseModel[]>([]);
     const t = useTranslations('Disease');
-    
+    const router = useRouter();
+
     const handleKeyword = (e : any) => {
         setKeyword(e.target.value);
     };
@@ -72,6 +74,9 @@ const DiseaseDiagnotic = () => {
             console.error('Error calling API:', error);
         }
     };
+    const handleDiagnoses = () => {
+        router.push("/disease-diagnotic-add");
+    }
     return (
     <Content style={{ padding: '30px 48px' }}>
         <h1 className={cx('disease__title')}>{t('diagnostic')}</h1>
@@ -93,6 +98,7 @@ const DiseaseDiagnotic = () => {
                 icon={<PlusOutlined />} 
                 size='large'
                 className={cx('disease__btn')}
+                onClick={handleDiagnoses}
             >
                 {t('add_diagnosis')}
             </Button>
