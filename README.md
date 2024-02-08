@@ -42,7 +42,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## How to run json server
 1. Create or choose the exist json fake db like `db.test.json`.
-2 Then in root command line run:
+
+2. Then in root command line run:
 ```bash
 npx json-server --watch db.test.json --port 8089
 ``` 
