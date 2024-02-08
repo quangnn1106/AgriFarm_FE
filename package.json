@@ -34,6 +34,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "json-server": "^1.0.0-alpha.23",
     "sass": "^1.69.5",
     "typescript": "^5"
   },

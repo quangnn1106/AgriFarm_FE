@@ -1,0 +1,33 @@
+{
+  "accounts": {
+    "data": {
+      "id": "3296f408-bc62-48da-aaaf-15f49dd03b46",
+      "firstName": "Admin",
+      "lastName": "Owner",
+      "email": "owner01@farmer",
+      "avatar": null,
+      "identificationCard": null,
+      "phoneNumber": null,
+      "address": null,
+      "gender": null,
+      "education": null,
+      "isLockout": false,
+      "role": "Admin",
+      "dob": null,
+      "onboarding": "2024/02/05",
+      "certificates": []
+    },
+    "status": 200,
+    "message": null
+  },
+  "anything": [
+    {
+      "name": "name...",
+      "age": 100
+    },
+    {
+      "name": "name...",
+      "age": 100
+    }
+  ]
+}
