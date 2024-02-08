@@ -41,14 +41,14 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## How to run json server
-    1. Create or choose the exist json fake db like `db.test.json`.
-    2 Then in root command line run:
-    ```bash
-    npx json-server --watch db.test.json --port 8089
-    ``` 
-    3. Then you can try with the url: `http://localhost:9898/accounts`.
-    
-    Now you can create and run your own fake server. Good luck! :3
+1. Create or choose the exist json fake db like `db.test.json`.
+2 Then in root command line run:
+```bash
+npx json-server --watch db.test.json --port 8089
+``` 
+3. Then you can try with the url: `http://localhost:9898/accounts`.
+
+Now you can create and run your own fake server. Good luck! :3
 
 
 
