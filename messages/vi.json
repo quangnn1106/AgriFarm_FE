@@ -119,6 +119,14 @@
     "lbl_cause" : "Cause_vi",
     "lbl_preventive_measures" : "Preventive measures_vi",
     "lbl_suggest" : "Suggest",
-    "send_feedback" : "Send feedback_vi"
+    "send_feedback" : "Send feedback_vi",
+    "disease_info" : "Disease Info_vi",
+    "disease_info_edit" : "Disease Info Edit_vi",
+    "disease_name" : "Disease Name_vi",
+    "disease_symptoms" : "Symptoms_vi",
+    "disease_cause" : "Cause_vi",
+    "disease_preventive_measures" : "Preventive measures_vi",
+    "disease_suggest" : "Suggest_vi",
+    "msg_disease_name_require" : "Vui lòng nhập tên bệnh!"
   }
 }

@@ -1,0 +1,11 @@
+.ck-toolbar {
+    background-color: #F2F4F7 !important;
+    border-bottom: none !important;
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+}
+.ck-content {
+    border-top: none !important;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
