@@ -1,4 +1,4 @@
-import { diseaseDiagnosticDef } from '@/app/[locale]/(Dashboard)/(Disease)/disease-diagnotic-add/model/diseaseDiagnosticModel';
+import { diseaseDiagnosticDef } from '@/app/[locale]/(Dashboard)/(Disease)/diagnostic-add/model/diseaseDiagnosticModel';
 import { http } from '@/utils/config';
 
 const diseaseDiagnosesAddApi = async (data : diseaseDiagnosticDef) => {

@@ -104,6 +104,9 @@
     "lbl_user" : "Người sử dụng (Id)",
     "save_btn" : "Lưu",
     "back_btn" : "Quay về",
+    "edit_btn" : "Sửa",
+    "delete_btn" : "Xóa",
+    "add_btn" : "Thêm",
     "message_update_ok" : "Cập nhật thành công",
     "message_update_fail" : "Cập nhật không thành công",
     "update_feedback_status" : "Cập nhật trạng thái phản hồi",
@@ -127,6 +130,15 @@
     "disease_cause" : "Cause_vi",
     "disease_preventive_measures" : "Preventive measures_vi",
     "disease_suggest" : "Suggest_vi",
-    "msg_disease_name_require" : "Vui lòng nhập tên bệnh!"
+    "msg_disease_name_require" : "Vui lòng nhập tên bệnh!",
+    "edit_disease_info" : "Cập nhật thông tin bệnh",
+    "add_disease_info" : "Thêm thông tin bệnh",
+    "msg_add_disease_info_fail" : "Thêm thông tin bệnh thất bại",
+    "msg_add_disease_info_ok" : "Thêm thông tin bệnh thành công",
+    "disease_info_detail" : "Disease info detail_vi",
+    "select_disease_name" : "Chọn tên bệnh",
+    "delete_title" : "Xóa",
+    "msg_confirm_delete" : "Do you want to delete_vi",
+    "cancel_btn" : "Hủy"
   }
 }
