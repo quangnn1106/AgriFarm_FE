@@ -1,6 +1,5 @@
 'use client'
 import { Content } from 'antd/es/layout/layout';
-import 'react-quill/dist/quill.snow.css';
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
