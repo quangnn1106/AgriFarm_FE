@@ -46,6 +46,13 @@ const DiseaseInfoForm = () => {
         try {
             const responseData = await diseaseInfoDetailApi(id);
             setDiseaseInfoDeatail(responseData.data);
+            if (responseData.data != null) {
+                setDiseaseName(responseData.data.diseaseName);
+                setEditorDataSymptoms(responseData.data.symptoms);
+                setEditorDataCause(responseData.data.cause);
+                setEditorDataPreventiveMeasures(responseData.data.preventiveMeasures);
+                setEditorDataSuggest(responseData.data.suggest);
+            }
         } catch (error) {
             console.error('Error calling API:', error);
         }
