@@ -5,11 +5,12 @@ import classNames from 'classnames/bind';
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import Editor from "ckeditor5-custom-build/build/ckeditor";
+//import Editor from "ckeditor5-custom-build/build/ckeditor";
 import "./editor.custom.css";
 import ModalComponent from "../modal/modal";
 import { STATUS_OK } from "@/constants/https";
 import diseaseInfoAdd from "@/services/Disease/diseaseInfoAddApi";
+import Editor from "@/CKEditor5/build/ckeditor";
 
 interface DiseaseInfo {
     diseaseName: string;
