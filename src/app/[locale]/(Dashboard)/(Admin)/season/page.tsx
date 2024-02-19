@@ -3,9 +3,22 @@ import { useState } from 'react';
 import SeasonTableComponent from './component/Table/table';
 import { SeasonModel } from './models/season-model';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { ConfigProvider, Divider, Layout, Table, TableProps, theme } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  ConfigProvider,
+  Divider,
+  Flex,
+  Layout,
+  Table,
+  TableProps,
+  Tooltip,
+  theme
+} from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { seasonTableColumns } from './component/Table/column-types';
+
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 
 import styles from '../adminStyle.module.scss';
 import classNames from 'classnames/bind';
@@ -95,70 +108,119 @@ const SeasonManagement = (props: Props) => {
 
   return (
     <>
-      <Divider
-        orientation='left'
-        plain
-      >
-        Search condition
-      </Divider>
-      <FilterSection></FilterSection>
-      <Divider
-        orientation='left'
-        plain
-      >
-        Search result
-      </Divider>
-      <ConfigProvider
-        theme={{
-          components: {
-            Table: {
-              cellPaddingBlock: 8,
-              headerSortHoverBg: '#F2F3F5',
-              borderColor: '#F2F3F5',
-              headerBg: '#F2F3F5',
-              rowHoverBg: '#F2F3F5'
+      <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
             }
-          }
-        }}
-      >
-        <Content style={{ padding: '0px' }}>
-          <Layout
-            style={{
-              padding: '0px 0',
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG
-            }}
+          }}
+        >
+          <Button
+            className={cx('home-btn')}
+            href='#'
+            size={'large'}
           >
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <Table
-                loading={loading}
-                rowKey={'id'}
-                bordered
-                rowSelection={{
-                  type: 'checkbox',
-                  ...checkRowSelection
-                }}
-                columns={seasonTableColumns}
-                dataSource={data?.map(season => ({
-                  ...season,
-                  onDetails: () => handleDetails(season.id!),
-                  onDelete: () => handleDelete(season.id!),
-                  onUpdate: () => handleUpdate(season.id!)
-                }))}
-                onChange={onChange}
-                pagination={{
-                  showTotal: total => `Total ${total} Items`,
-                  showSizeChanger: true,
-                  pageSizeOptions: ['10', '20', '30'],
-                  total: seasons.length
-                }}
-                scroll={{ x: 'max-content' }}
-                className={cx('table_style')}
-              />
-            </Content>
-          </Layout>
-        </Content>
-      </ConfigProvider>
+            <HomeOutlined />
+            Farm Name
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb style={{ margin: '0px 24px' }}>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>Season</Breadcrumb.Item>
+        </Breadcrumb>
+
+        <Divider
+          orientation='left'
+          plain
+        >
+          Search condition
+        </Divider>
+        <FilterSection></FilterSection>
+        <Divider
+          orientation='left'
+          plain
+        >
+          Search result
+        </Divider>
+        <Flex
+          justify={'flex-end'}
+          align={'center'}
+          className={cx('flex-space')}
+          style={{paddingRight: '24px'}}
+        >
+          <Tooltip title='Add new'>
+            <Button
+              className={cx('bg-btn')}
+              icon={<PlusOutlined />}
+            />
+          </Tooltip>
+        </Flex>
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                cellPaddingBlock: 8,
+                headerSortHoverBg: '#F2F3F5',
+                borderColor: '#F2F3F5',
+                headerBg: '#F2F3F5',
+                rowHoverBg: '#F2F3F5'
+              }
+            }
+          }}
+        >
+          <Content style={{ padding: '0px' }}>
+            <Layout
+              style={{
+                padding: '0px 0',
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG
+              }}
+            >
+              <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                <Table
+                  loading={loading}
+                  rowKey={'id'}
+                  bordered
+                  rowSelection={{
+                    type: 'checkbox',
+                    ...checkRowSelection
+                  }}
+                  columns={seasonTableColumns}
+                  dataSource={data?.map(season => ({
+                    ...season,
+                    onDetails: () => handleDetails(season.id!),
+                    onDelete: () => handleDelete(season.id!),
+                    onUpdate: () => handleUpdate(season.id!)
+                  }))}
+                  onChange={onChange}
+                  pagination={{
+                    showTotal: total => `Total ${total} Items`,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['10', '20', '30'],
+                    total: seasons.length
+                  }}
+                  scroll={{ x: 'max-content' }}
+                  className={cx('table_style')}
+                />
+              </Content>
+            </Layout>
+          </Content>
+        </ConfigProvider>
+      </Content>
     </>
   );
 };
