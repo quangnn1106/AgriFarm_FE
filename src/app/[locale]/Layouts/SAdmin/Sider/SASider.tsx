@@ -18,9 +18,11 @@ import {
 } from '../../MainLayout/MenuSider/Models/menuItemsUser';
 const cx = classNames.bind(styles);
 
-type Props = {};
+type Props = {
+  path: string;
+};
 
-const SAdminSider = (props: Props) => {
+const SAdminSider = ({ path }: Props) => {
   const t = useTranslations('Nav');
   const items: MenuProps['items'] = [
     GetUserInfoGroup(),
@@ -75,7 +77,10 @@ const SAdminSider = (props: Props) => {
   ];
   return (
     <>
-      <MenuSider items={items} />
+      <MenuSider
+        path={path}
+        items={items}
+      />
     </>
   );
 };

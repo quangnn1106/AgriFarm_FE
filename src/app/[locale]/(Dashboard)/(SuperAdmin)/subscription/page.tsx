@@ -8,49 +8,102 @@ import BreadcrumbComponent from './components/Breadcrumb/breadCrumb';
 import FilterBox from './components/FilterBox/filterBox';
 import ActionBox from './components/Actions/actionBox';
 
-import { Button, ConfigProvider, Layout, Table, TableProps, theme } from 'antd';
+import {
+  Button,
+  ConfigProvider,
+  Layout,
+  Table,
+  TableProps,
+  notification,
+  theme
+} from 'antd';
 import AddUser from './add/modalAdd';
 import { UserModel } from './models/user-model';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
+import getStaffsService from '@/services/Admin/getStaffsService';
+import Staffs from '@/types/staffs';
+import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
+import { AxiosInstance } from 'axios';
 
 const cx = classNames.bind(styles);
 
 type Props = {};
 
 const UserManagement = (props: Props) => {
-  const [createState, setCreateState] = useState<Boolean>(false);
+  const [createState, setCreateState] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
-  const [users, setUsers] = useState<UserModel[]>([]);
+  const [users, setUsers] = useState<UserModel[] | []>([]);
+  const [api, contextHolder] = notification.useNotification();
   const [userId, setUserId] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   const [filterUsers, setFilterUsers] = useState<UserModel[]>([]);
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
-
+  const fetchSubscription = async (http: AxiosInstance) => {
+    try {
+      const responseData = await fetchRegisterForm(http);
+      //console.log(responseData);
+      setUsers(responseData?.data);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API Subscription:', error);
+    }
+  };
   useEffect(() => {
-    (async () => {
-      const res = await http.get(`/register/registry/get`).then(res => {
-        const registerList = res.data.data;
-        console.log('registerList: ', registerList);
-        setUsers(registerList);
-        setIsFetching(false);
-        //   setPagination({
-        //     ...pagination,
-        //     total: res.data.count
-        //   });
-      });
-    })();
-  }, [http, createState]);
-  console.log(users);
+    // (async () => {
+    //   const res = await http.get(`/register/registry/get`).then(res => {
+    //     const registerList = res.data.data;
+    //     //          console.log('registerList: ', registerList);
+    //     setUsers(registerList);
+    //     setIsFetching(false);
+    //     //   setPagination({
+    //     //     ...pagination,
+    //     //     total: res.data.count
+    //     //   });
+    //   });
+    // })();
+    fetchSubscription(http);
+  }, [createState, http]);
+
+  // console.log(users);
 
   const handleDelete = (id: string) => {};
-  const handleUpdate = async (id: string) => {
-    setUserId(id);
-    setUpdateState(true);
+  const handleApproved = async (id: string) => {
+    // setUserId(id);
+    // setUpdateState(true);
+    console.log('user id: ', id);
+    const updateRaw: any = {
+      decison: 1,
+      notes: '123'
+    };
+    setIsFetching(true);
+    await http
+      .put(`/register/registry/put`, updateRaw, {
+        params: {
+          id: id
+        }
+      })
+      .then(data => {
+        api.success({
+          message: 'Register Form has been approved successfully!',
+          placement: 'top',
+          duration: 2
+        });
+        fetchSubscription(http);
+      })
+      .catch(err => {
+        api.error({
+          message: 'Approved not successfully! checked',
+          placement: 'top',
+          duration: 2
+        });
+        setIsFetching(false);
+        console.log('invalid data', err);
+      });
   };
   const handleDetails = async (id: string) => {
     setUserId(id);
@@ -79,6 +132,7 @@ const UserManagement = (props: Props) => {
 
   return (
     <>
+      {contextHolder}
       <BreadcrumbComponent />
       <FilterBox />
 
@@ -90,7 +144,7 @@ const UserManagement = (props: Props) => {
         />
         <AddUser
           params={{
-            visible: createState as boolean,
+            visible: createState,
             onCancel: () => setCreateState(false)
           }}
         />
@@ -130,7 +184,7 @@ const UserManagement = (props: Props) => {
                   ...user,
                   onDetails: () => handleDetails(user.id!),
                   onDelete: () => handleDelete(user.id!),
-                  onUpdate: () => handleUpdate(user.id!)
+                  onUpdate: () => handleApproved(user.id!)
                 }))}
                 onChange={onChange}
                 pagination={{
