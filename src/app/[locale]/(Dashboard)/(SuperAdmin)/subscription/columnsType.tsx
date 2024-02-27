@@ -122,7 +122,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
         id: string,
         onDetailsUser: () => void,
         onRemoveUser: () => void,
-        onUpdateUser: () => void
+        onApprovedUser: () => void
       ): MenuProps['items'] => {
         return [
           {
@@ -151,7 +151,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                     centered: true,
                     width: '400px',
                     onOk: () => {
-                      onUpdateUser();
+                      onApprovedUser();
                     },
                     footer: (_, { OkBtn, CancelBtn }) => (
                       <>

@@ -7,16 +7,15 @@ const { Content, Sider } = Layout;
 
 import themeConfig from '@/lib/theme/themeConfig';
 
-import { useSession } from 'next-auth/react';
-import RenderSideBar from '../../Layouts/MainLayout/MenuSider/RenderSideBar';
-import { ROLES } from '@/constants/roles';
+
+
+
 import Loader from '@/components/Loader/Loader';
 import SAdminSider from '../../Layouts/SAdmin/Sider/SASider';
+import { usePathname } from '@/navigation';
 
 export default function LayoutSuperAdmin({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const { data: session, status } = useSession();
-
+  const pathName = usePathname();
   // if (status === 'loading') {
   //   return (
   //     <Loader
@@ -40,7 +39,7 @@ export default function LayoutSuperAdmin({ children }: { children: React.ReactNo
           // onCollapse={value => setCollapsed(value)}
         >
           {/* <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} /> */}
-          <SAdminSider />
+          <SAdminSider path={pathName} />
         </Sider>
         <Content className='site_layout_background'>
           <Suspense
