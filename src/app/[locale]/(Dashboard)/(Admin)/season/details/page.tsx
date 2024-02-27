@@ -27,6 +27,8 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
 import TitleHeader from '../component/TitleHeader/tiltle-header';
+import { seasonTableColumns } from '../component/Table/column-types';
+import { Land } from '../models/season-model';
 
 type Props = {};
 const SeaSonDetails = (props: Props) => {
@@ -38,6 +40,30 @@ const SeaSonDetails = (props: Props) => {
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
+
+  const checkRowSelection = {
+    getCheckboxProps: (record: Land) => ({
+      disabled: record.name === 'Disabled',
+      name: record.name
+    })
+  };
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<Land[]>([]);
+
+  for (let i =0; i<20; i++) {
+    data.push({
+      id: 'ID' + i,
+      name: 'LandA',
+      square: '38',
+      description: 'ABC',
+      riceVariety : 'Tai Nguyen'
+    })
+    // id?: string | '';  
+    // name?: string | '';
+    // square?: string | '';
+    // description?: string | '';
+    // riceVariety?: RiceVariety;
+  }
 
   return (
     <>
@@ -119,7 +145,7 @@ const SeaSonDetails = (props: Props) => {
           >
             <Form.Item
               style={{
-                maxWidth: '40%',
+                maxWidth: '100%',
                 margin: '0px 0px 8px 0px',
                 padding: '0px 24px',
                 width: '100%',
@@ -127,13 +153,18 @@ const SeaSonDetails = (props: Props) => {
                 justifyContent: 'space-between'
               }}
             >
-              <label>Start:</label>
-              <DatePicker onChange={onChange} />
+              <Flex
+                align='center'
+                justify='space-between'
+              >
+                <label>Start:</label>
+                <DatePicker onChange={onChange} />
+              </Flex>
             </Form.Item>
 
             <Form.Item
               style={{
-                maxWidth: '40%',
+                maxWidth: '100%',
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px',
                 width: '100%',
@@ -141,12 +172,18 @@ const SeaSonDetails = (props: Props) => {
                 justifyContent: 'space-between'
               }}
             >
-              <label>End:</label>
-              <DatePicker onChange={onChange} />
+              <Flex
+                align='center'
+                justify='space-between'
+              >
+                <label>End:</label>
+                <DatePicker onChange={onChange} />
+              </Flex>
             </Form.Item>
           </Flex>
 
           <label>Land & Rice variety</label>
+          <Flex align='center' justify='flex-start' gap={20} style={{padding: '12px 0px'}}>
           <Button
             type='primary'
             icon={<PlusOutlined />}
@@ -160,6 +197,36 @@ const SeaSonDetails = (props: Props) => {
           >
             Delete
           </Button>
+          </Flex>
+          <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                cellPaddingBlock: 8,
+                headerSortHoverBg: '#F2F3F5',
+                borderColor: '#F2F3F5',
+                headerBg: '#F2F3F5',
+                rowHoverBg: '#F2F3F5'
+              }
+            }
+          }}
+        >
+          <Table
+                  loading={loading}
+                  rowKey={'id'}
+                  bordered
+                  rowSelection={{
+                    type: 'checkbox',
+                    ...checkRowSelection
+                  }}
+                  scroll={{ x: 'max-content' }}
+                  className={cx('table_style')}
+                  dataSource={data?.map(land => ({
+                    ...land
+                  }))}
+                />
+
+        </ConfigProvider>
         </Form>
       </Content>
     </>

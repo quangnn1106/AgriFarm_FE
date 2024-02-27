@@ -16,7 +16,7 @@ export type Land = {
     name?: string | '';
     square?: string | '';
     description?: string | '';
-    riceVarietyID?: RiceVariety;
+    riceVariety?: string | '';
 }
 
 export type RiceVariety = {
