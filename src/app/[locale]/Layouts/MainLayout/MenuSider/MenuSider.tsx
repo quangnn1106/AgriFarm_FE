@@ -35,23 +35,7 @@ function getItem(
   } as MenuItem;
 }
 
-// const items: MenuItem[] = [
-//   getItem(<Link href={'/statistic'}>Home</Link>, '/statistic', <HomeOutlined />),
-//   getItem(<Link href={'/lead'}>Lead</Link>, '/lead', <NotificationOutlined />),
-//   getItem(<Link href={'/contact'}>Contacts</Link>, '/contact', <UserOutlined />),
-//   getItem(<Link href={'/account'}>Account</Link>, '/account', <TeamOutlined />),
-//   getItem(
-//     <Link href={'/opportunity'}>Opportunity</Link>,
-//     '/opportunity',
-//     <DollarOutlined />
-//   ),
-//   getItem(<Link href={'/task'}>Tasks</Link>, '/task', <CheckCircleOutlined />),
-//   getItem(<Link href={'/meeting'}>Meeting</Link>, '/meeting', <MessageOutlined />),
-//   getItem(<Link href={'/content'}>Content</Link>, '/content', <MessageOutlined />),
-//   getItem(<Link href={'/calls'}>Calls</Link>, '/calls', <PhoneOutlined />),
-//   getItem(<Link href={'/service'}>Services</Link>, '/service', <LikeOutlined />),
-//   getItem(<Link href={'/products'}>Products</Link>, '/products', <NotificationOutlined />)
-// ];
+
 type Props = {
   items: MenuItem[];
   path : string

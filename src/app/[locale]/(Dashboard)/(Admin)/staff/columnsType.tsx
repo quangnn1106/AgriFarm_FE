@@ -1,15 +1,5 @@
-import { ColumnsType } from 'antd/es/table';
 import { UserModel } from './models/user-model';
-import {
-  Dropdown,
-  MenuProps,
-  Modal,
-  Space,
-  Button,
-  Switch,
-  Tag,
-  TableColumnsType
-} from 'antd';
+import { Dropdown, MenuProps, Modal, Space, Button, Tag, TableColumnsType } from 'antd';
 import {
   CheckOutlined,
   DeleteOutlined,
@@ -33,73 +23,42 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     width: 'max-content',
     fixed: 'left'
   },
-  // {
-  //   title: 'Phone Number',
-  //   dataIndex: 'phone',
-  //   width: 'max-contentt'
-  // },
+  {
+    title: 'Site Code',
+    dataIndex: 'siteCode'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+
+    width: 'max-content'
+  },
+  {
+    title: 'Phone Number',
+    dataIndex: 'phoneNumber',
+    width: 'max-content'
+  },
   {
     title: 'Email',
     dataIndex: 'email',
     width: 'max-content'
   },
+
   {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London'
-      },
-      {
-        text: 'New York',
-        value: 'New York'
-      }
-    ],
-    // filterMode: 'tree',
-    // filterSearch: true,
-    // onFilter: (value: string, record)=> record.address.startsWith(value),
+    title: 'Role',
+    dataIndex: 'role',
+
     width: 'max-content'
   },
-  // {
-  //   title: 'Site Code',
-  //   dataIndex: 'siteCode'
-  // },
-  // {
-  //   title: 'Site Name',
-  //   dataIndex: 'siteName'
-  // },
-  // {
-  //   title: 'Role',
-  //   dataIndex: 'role_name',
-  //   filters: [
-  //     {
-  //       text: 'Admin',
-  //       value: 'Admin'
-  //     },
-  //     {
-  //       text: 'Manager',
-  //       value: 'Manager'
-  //     },
-  //     {
-  //       text: 'Member',
-  //       value: 'Member'
-  //     }
-  //   ],
-  //   // filterMode: 'tree',
-  //   // filterSearch: true,
-  //   // onFilter: (value: string, record)=> record.role_name.startsWith(value),
-  //   width: 'max-content'
-  // },
   {
-    title: 'Is Approve',
-    dataIndex: 'isApprove',
+    title: 'Status',
+    dataIndex: 'isLockout',
     sorter: true,
     // filterMode: 'tree',
     // onFilter: (value: boolean, record)=> record.is_active.,
-    render: (_, { isApprove }) => {
-      let color = isApprove === 1 ? 'blue' : 'grey';
-      let key = isApprove === 1 ? 'Approved' : 'Waiting';
+    render: (_, { isLockout }) => {
+      let color = isLockout == false ? 'red' : 'green';
+      let key = isLockout == true ? 'Lockout' : 'Active';
       return (
         <Tag
           color={color}

@@ -75,20 +75,30 @@
     "email_error": "Email Exist Please Try Again!"
   },
   "Disease": {
-    "diagnostic" : "Diagnostic",
-    "search_condition" : "Search condition",
-    "search_result" : "Search result",
-    "keyword_text_placeholder" : "Search by description, feedback, disease name,...",
-    "start_date" : "Start date",
-    "end_date" : "End date",
-    "search_by_date" : "Date",
-    "search_by_keyword" : "Keyword",
-    "search_btn" : "Search",
-    "add_diagnosis" : "Diagnosis",
-    "export_excel" : "Export",
-    "col_name_predict" : "Predict result",
-    "col_name_description" : "Description",
-    "col_name_feedback" : "Feedback",
-    "col_name_date" : "Date"
+    "diagnostic": "Diagnostic",
+    "search_condition": "Search condition",
+    "search_result": "Search result",
+    "keyword_text_placeholder": "Search by description, feedback, disease name,...",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "search_by_date": "Date",
+    "search_by_keyword": "Keyword",
+    "search_btn": "Search",
+    "add_diagnosis": "Diagnosis",
+    "export_excel": "Export",
+    "col_name_predict": "Predict result",
+    "col_name_description": "Description",
+    "col_name_feedback": "Feedback",
+    "col_name_date": "Date"
+  },
+  "FormRegister": {
+    "title_add": "Add new Farm Admin",
+    "title_update": "Update Farm Admin",
+    "address_form": "Address",
+    "farm_code": "Farm Code",
+    "farm_name": "Farm Name",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "phone_number": "Phone Number"
   }
 }

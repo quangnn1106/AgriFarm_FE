@@ -73,7 +73,7 @@ const AdminSider = ({ path }: Props) => {
     { type: 'divider' },
 
     getItem(`${t('farm_resource')}`, 'farm resources', <FaClipboardUser />, [
-      getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
+      getItem(<Link href={`/staff`}>{t('user')}</Link>, `/staff`, <FaUser />),
       getItem(<Link href={`/role`}>{t('user_role')}</Link>, `/role`, <FaClipboardUser />),
       getItem(
         <Link href={`/certificate`}>{t('user_cer')}</Link>,

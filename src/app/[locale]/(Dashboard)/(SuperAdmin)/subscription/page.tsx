@@ -1,7 +1,7 @@
 'use client';
 import styles from '../management-page.module.scss';
 import React, { useEffect, useState } from 'react';
-import UserList from './use-list';
+
 import { PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import BreadcrumbComponent from './components/Breadcrumb/breadCrumb';
@@ -22,10 +22,12 @@ import { UserModel } from './models/user-model';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
-import getStaffsService from '@/services/Admin/getStaffsService';
-import Staffs from '@/types/staffs';
+
 import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
 import { AxiosInstance } from 'axios';
+import UpdateFormRegis from './update/ModalUpdate';
+import { approvedRegisterForm } from '@/services/SuperAdmin/approvedFormRegis';
+import { STATUS_NOT_FOUND } from '@/constants/https';
 
 const cx = classNames.bind(styles);
 
@@ -37,7 +39,7 @@ const UserManagement = (props: Props) => {
 
   const [users, setUsers] = useState<UserModel[] | []>([]);
   const [api, contextHolder] = notification.useNotification();
-  const [userId, setUserId] = useState<string>('');
+  const [formModal, setFormModal] = useState<UserModel>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   const [filterUsers, setFilterUsers] = useState<UserModel[]>([]);
@@ -67,7 +69,7 @@ const UserManagement = (props: Props) => {
     //   });
     // })();
     fetchSubscription(http);
-  }, [createState, http]);
+  }, [createState, http, formModal]);
 
   // console.log(users);
 
@@ -81,32 +83,49 @@ const UserManagement = (props: Props) => {
       notes: '123'
     };
     setIsFetching(true);
-    await http
-      .put(`/register/registry/put`, updateRaw, {
-        params: {
-          id: id
-        }
-      })
-      .then(data => {
-        api.success({
-          message: 'Register Form has been approved successfully!',
-          placement: 'top',
-          duration: 2
-        });
-        fetchSubscription(http);
-      })
-      .catch(err => {
-        api.error({
-          message: 'Approved not successfully! checked',
-          placement: 'top',
-          duration: 2
-        });
-        setIsFetching(false);
-        console.log('invalid data', err);
+    const responseData = await approvedRegisterForm(http, id);
+    if (responseData?.status !== STATUS_NOT_FOUND) {
+      api.success({
+        message: 'Register Form has been approved successfully!',
+        placement: 'top',
+        duration: 2
       });
+      fetchSubscription(http);
+    } else {
+      api.error({
+        message: 'Approved not successfully! checked',
+        placement: 'top',
+        duration: 2
+      });
+      setIsFetching(false);
+      console.log('invalid data', responseData?.message);
+    }
+    // await http
+    //   .put(`/register/registry/put`, updateRaw, {
+    //     params: {
+    //       id: id
+    //     }
+    //   })
+    //   .then(data => {
+    //     api.success({
+    //       message: 'Register Form has been approved successfully!',
+    //       placement: 'top',
+    //       duration: 2
+    //     });
+    //     fetchSubscription(http);
+    //   })
+    //   .catch(err => {
+    //     api.error({
+    //       message: 'Approved not successfully! checked',
+    //       placement: 'top',
+    //       duration: 2
+    //     });
+    //     setIsFetching(false);
+    //     console.log('invalid data', err);
+    //   });
   };
-  const handleDetails = async (id: string) => {
-    setUserId(id);
+  const handleDetails = async (record: UserModel) => {
+    setFormModal(record);
     setUpdateState(true);
   };
 
@@ -149,6 +168,13 @@ const UserManagement = (props: Props) => {
           }}
         />
       </ActionBox>
+      <UpdateFormRegis
+        params={{
+          visible: updateState,
+          onCancel: () => setUpdateState(false),
+          dataRow: formModal
+        }}
+      />
       <ConfigProvider
         theme={{
           components: {
@@ -179,10 +205,33 @@ const UserManagement = (props: Props) => {
                   type: 'checkbox',
                   ...checkRowSelection
                 }}
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: event => {
+                      console.log('record row onCLick: ', record);
+                      console.log('event row onCLick: ', event);
+                      const target = event.target as HTMLElement;
+                      const isWithinLink = target.tagName === 'A' || target.closest('a');
+
+                      const isWithinAction =
+                        target.closest('td')?.classList.contains('ant-table-cell') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-selection-column') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-cell-fix-right');
+
+                      if (isWithinAction && !isWithinLink) {
+                        handleDetails(record);
+                      }
+                    } // click row
+                  };
+                }}
                 columns={userTableColumns}
                 dataSource={users?.map(user => ({
                   ...user,
-                  onDetails: () => handleDetails(user.id!),
+                  //onDetails: () => handleDetails(user.id!),
                   onDelete: () => handleDelete(user.id!),
                   onUpdate: () => handleApproved(user.id!)
                 }))}

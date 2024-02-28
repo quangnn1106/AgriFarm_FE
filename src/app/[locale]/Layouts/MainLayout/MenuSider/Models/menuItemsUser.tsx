@@ -12,6 +12,7 @@ import styles from '../menuSider.module.scss';
 import { signOut, useSession } from 'next-auth/react';
 
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
+import { ROLES } from '@/constants/roles';
 
 const cx = classNames.bind(styles);
 
@@ -37,10 +38,25 @@ export function getItem(
 
 // Function to generate user information group
 export function GetUserInfoGroup(): MenuItem {
-  const handleSignOut = () => {
-    signOut({ callbackUrl: SALOGIN_PATH });
-  };
   const { data: session } = useSession();
+  const userRole = session?.user?.userInfo?.role as ROLES;
+
+  const handleSignOut = () => {
+    switch (userRole) {
+      case ROLES.SUPER_ADMIN:
+        signOut({ callbackUrl: SALOGIN_PATH });
+
+        break;
+      case ROLES.ADMIN:
+        signOut({ callbackUrl: LOGIN_PATH });
+
+        break;
+      default:
+        signOut({ callbackUrl: LOGIN_PATH });
+
+        break;
+    }
+  };
 
   const t = useTranslations('Nav');
   return getItem(

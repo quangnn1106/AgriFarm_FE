@@ -17,15 +17,15 @@ const getStaffsService: (
   siteId?: string | null,
   http?: AxiosInstance | null
 ) => Promise<HttpResponseCommon<Staffs[]>> = async (siteId, http) => {
-  // const http = UseAxiosAuth();
+
   const res = await http?.get(`/user/staffs/get`, {
     params: {
       siteId: siteId
     },
-    headers: {
-      pageSize: 4,
-      pageNumber: 1
-    }
+    // headers: {
+    //   pageSize: 4,
+    //   pageNumber: 1
+    // }
   });
   console.log('response staffsService: ', res);
   return res?.data;
