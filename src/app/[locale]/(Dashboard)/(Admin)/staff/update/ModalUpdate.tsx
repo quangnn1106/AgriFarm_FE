@@ -74,25 +74,7 @@ const UpdateFormRegis = ({
 
         form.resetFields();
       });
-    // const actionAsyncThunk = registerAsyncApi(data);
-    // dispatch(actionAsyncThunk);
 
-    // if (userRegister?.status === STATUS_OK) {
-    //   // Assuming 201 indicates successful creation
-    //   console.log('userRegister?.status: ', userRegister?.status);
-
-    //   console.log('susscess create admmin');
-
-    //   openNotification('top', 'has been created successfully!', 'success');
-    //   params.onCancel();
-    //   form.resetFields();
-    // } else {
-    //   console.log('failed failed create admmin');
-
-    //   openNotification('top', 'has been created failed! Please try again later', 'error');
-    //   params.onCancel();
-    //   form.resetFields();
-    // }
   };
 
   return (

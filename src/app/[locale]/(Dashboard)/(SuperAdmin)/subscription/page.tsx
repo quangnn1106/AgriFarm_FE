@@ -77,11 +77,7 @@ const UserManagement = (props: Props) => {
   const handleApproved = async (id: string) => {
     // setUserId(id);
     // setUpdateState(true);
-    console.log('user id: ', id);
-    const updateRaw: any = {
-      decison: 1,
-      notes: '123'
-    };
+  
     setIsFetching(true);
     const responseData = await approvedRegisterForm(http, id);
     if (responseData?.status !== STATUS_NOT_FOUND) {

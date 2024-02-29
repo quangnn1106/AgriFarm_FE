@@ -22,12 +22,13 @@ import { UserModel } from './models/user-model';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
-import getStaffsService from '@/services/Admin/getStaffsService';
+import { getStaffsService } from '@/services/Admin/getStaffsService';
 import Staffs from '@/types/staffs';
 import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
 import { AxiosInstance } from 'axios';
 import UpdateFormRegis from './update/ModalUpdate';
 import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -47,7 +48,8 @@ const UserManagement = (props: Props) => {
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
   const sideId = session?.user.userInfo.siteId;
-
+  const router = useRouter();
+  const pathName = usePathname();
   const fetchStaff = async (http: AxiosInstance, sideId?: string) => {
     try {
       const responseData = await getStaffsService(sideId, http);
@@ -69,34 +71,8 @@ const UserManagement = (props: Props) => {
     // setUserId(id);
     // setUpdateState(true);
     console.log('user id: ', id);
-    const updateRaw: any = {
-      decison: 1,
-      notes: '123'
-    };
+
     setIsFetching(true);
-    // await http
-    //   .put(`/register/registry/put`, updateRaw, {
-    //     params: {
-    //       id: id
-    //     }
-    //   })
-    //   .then(data => {
-    //     api.success({
-    //       message: 'Register Form has been approved successfully!',
-    //       placement: 'top',
-    //       duration: 2
-    //     });
-    //     fetchStaff(http);
-    //   })
-    //   .catch(err => {
-    //     api.error({
-    //       message: 'Approved not successfully! checked',
-    //       placement: 'top',
-    //       duration: 2
-    //     });
-    //     setIsFetching(false);
-    //     console.log('invalid data', err);
-    //   });
   };
   const handleDetails = async (record: UserModel) => {
     setFormModal(record);
@@ -184,26 +160,8 @@ const UserManagement = (props: Props) => {
                     onClick: event => {
                       console.log('record row onCLick: ', record);
                       console.log('event row onCLick: ', event);
-                      const target = event.target as HTMLElement;
-                      const isWithinLink = target.tagName === 'A' || target.closest('a');
-
-                      const isWithinAction =
-                        target.closest('td')?.classList.contains('ant-table-cell') &&
-                        !target
-                          .closest('td')
-                          ?.classList.contains('ant-table-selection-column') &&
-                        !target
-                          .closest('td')
-                          ?.classList.contains('ant-table-cell-fix-right');
-
-                      if (isWithinAction && !isWithinLink) {
-                        handleDetails(record);
-                      }
-                    }, // click row
-                    onDoubleClick: event => {}, // double click row
-                    onContextMenu: event => {}, // right button click row
-                    onMouseEnter: event => {}, // mouse enter row
-                    onMouseLeave: event => {} // mouse leave row
+                      router.push(`${pathName}/update/${record.id}`);
+                    }
                   };
                 }}
                 columns={userTableColumns}

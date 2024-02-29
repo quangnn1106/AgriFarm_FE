@@ -7,7 +7,7 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
-import Admin from '@/types/admin';
+
 
 export const userTableColumns: TableColumnsType<UserModel> = [
   // {
@@ -57,7 +57,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     // filterMode: 'tree',
     // onFilter: (value: boolean, record)=> record.is_active.,
     render: (_, { isLockout }) => {
-      let color = isLockout == false ? 'red' : 'green';
+      let color = isLockout == false ? 'green' : 'red';
       let key = isLockout == true ? 'Lockout' : 'Active';
       return (
         <Tag
