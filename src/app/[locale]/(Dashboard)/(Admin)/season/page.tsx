@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SeasonTableComponent from './component/Table/table';
 import { SeasonModel } from './models/season-model';
 import UseAxiosAuth from '@/utils/axiosClient';
@@ -23,6 +23,7 @@ import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
 import classNames from 'classnames/bind';
 import FilterSection from './component/FilterSection/filterSection';
+import getListSeasonApi from '@/services/Admin/Season/getSeasonsApi';
 
 type Props = {};
 const SeasonManagement = (props: Props) => {
@@ -40,6 +41,19 @@ const SeasonManagement = (props: Props) => {
   const [filterUsers, setFilterUsers] = useState<SeasonModel[]>([]);
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const res = await getListSeasonApi();
+      setData(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDelete = (id: string) => {};
   const handleUpdate = async (id: string) => {
@@ -71,40 +85,6 @@ const SeasonManagement = (props: Props) => {
     })
   };
 
-  for (let i = 0; i < 4; i++) {
-    data.push({
-      id: 'ID1' + i,
-      name: 'Spring',
-      startDate: '20/01/2024',
-      endDate: '20/4/2024',
-      status: 'Done',
-      land: []
-    });
-    data.push({
-      id: 'ID2' + i,
-      name: 'Spring',
-      startDate: '20/01/2024',
-      endDate: '20/4/2024',
-      status: 'Cancel',
-      land: []
-    });
-    data.push({
-      id: 'ID3' + i,
-      name: 'Spring',
-      startDate: '20/01/2024',
-      endDate: '20/4/2024',
-      status: 'Pending',
-      land: []
-    });
-    data.push({
-      id: 'ID4' + i,
-      name: 'Spring',
-      startDate: '20/01/2024',
-      endDate: '20/4/2024',
-      status: 'In progress',
-      land: []
-    });
-  }
 
   return (
     <>
@@ -160,7 +140,7 @@ const SeasonManagement = (props: Props) => {
           justify={'flex-end'}
           align={'center'}
           className={cx('flex-space')}
-          style={{paddingRight: '24px'}}
+          style={{ paddingRight: '24px' }}
         >
           <Tooltip title='Add new'>
             <Button

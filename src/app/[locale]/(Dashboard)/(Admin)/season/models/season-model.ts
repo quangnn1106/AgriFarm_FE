@@ -5,7 +5,7 @@ export type SeasonModel = {
     endDate?: string | '';
     status?: string | '';
     description?: string | '';
-    land?: Land[];
+    landID?: string[] | '';
     onDelete?: () => void;
     onUpdate?: () => void;
     onDetails?: () => void;
@@ -16,7 +16,7 @@ export type Land = {
     name?: string | '';
     square?: string | '';
     description?: string | '';
-    riceVariety?: string | '';
+    riceVarietyID: string | '';
 }
 
 export type RiceVariety = {

@@ -22,13 +22,15 @@ import { HomeOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import styles from '../../adminStyle.module.scss';
 import classNames from 'classnames/bind';
 import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
 import TitleHeader from '../component/TitleHeader/tiltle-header';
 import { seasonTableColumns } from '../component/Table/column-types';
 import { Land } from '../models/season-model';
+import fetchListLandData from '@/services/Admin/Land/getLandsApi';
+import { LandAndRiceVarietyColumns } from './LandAndRiceVarietyColumn/column-types';
 
 type Props = {};
 const SeaSonDetails = (props: Props) => {
@@ -50,20 +52,19 @@ const SeaSonDetails = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Land[]>([]);
 
-  for (let i =0; i<20; i++) {
-    data.push({
-      id: 'ID' + i,
-      name: 'LandA',
-      square: '38',
-      description: 'ABC',
-      riceVariety : 'Tai Nguyen'
-    })
-    // id?: string | '';  
-    // name?: string | '';
-    // square?: string | '';
-    // description?: string | '';
-    // riceVariety?: RiceVariety;
-  }
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const res = await fetchListLandData();
+      setData(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   return (
     <>
@@ -214,6 +215,7 @@ const SeaSonDetails = (props: Props) => {
           <Table
                   loading={loading}
                   rowKey={'id'}
+                  columns={LandAndRiceVarietyColumns}
                   bordered
                   rowSelection={{
                     type: 'checkbox',
