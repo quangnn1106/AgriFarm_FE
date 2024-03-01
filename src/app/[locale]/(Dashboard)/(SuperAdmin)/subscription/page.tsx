@@ -37,7 +37,7 @@ const UserManagement = (props: Props) => {
   const [createState, setCreateState] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
-  const [users, setUsers] = useState<UserModel[] | []>([]);
+  const [users, setUsers] = useState<UserModel[] | [] | undefined>([]);
   const [api, contextHolder] = notification.useNotification();
   const [formModal, setFormModal] = useState<UserModel>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -77,7 +77,7 @@ const UserManagement = (props: Props) => {
   const handleApproved = async (id: string) => {
     // setUserId(id);
     // setUpdateState(true);
-  
+
     setIsFetching(true);
     const responseData = await approvedRegisterForm(http, id);
     if (responseData?.status !== STATUS_NOT_FOUND) {
@@ -236,7 +236,7 @@ const UserManagement = (props: Props) => {
                   showTotal: total => `Total ${total} Items`,
                   showSizeChanger: true,
                   pageSizeOptions: ['10', '20', '30'],
-                  total: users.length
+                  total: users?.length
                 }}
                 scroll={{ x: 'max-content' }}
                 className={cx('table_style')}

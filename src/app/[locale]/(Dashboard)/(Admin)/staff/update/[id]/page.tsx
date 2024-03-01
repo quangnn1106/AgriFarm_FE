@@ -138,30 +138,30 @@ const UpdateUser = ({
   const [updateState, setUpdateState] = useState<boolean>(false);
 
   const [staffsDetail, setStaffDetail] = useState<StaffsDetails | undefined>();
-  const [gender, setGender] = useState<number>(staffsDetail?.gender as number);
-  console.log('staffsDetail?.gender as number: ', staffsDetail?.gender as number);
+  // const [gender, setGender] = useState<number>(staffsDetail?.gender as number);
+  // console.log('staffsDetail?.gender as number: ', staffsDetail?.gender as number);
 
-  const handleChangeGender = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
+  // const handleChangeGender = (e: RadioChangeEvent) => {
+  //   console.log('radio checked', e.target.value);
 
-    setGender(e.target.value);
-  };
+  //   setGender(e.target.value);
+  // };
   const [userId, setUserId] = useState<string>('');
   const fetchStaffsDetails = async (
     http: AxiosInstance,
     sideId?: string,
-    userId?: string
+    userId?: string,
+    form?: FormInstance
   ) => {
     try {
       const responseData = await getStaffsServiceDetails(sideId, http, userId);
       if (responseData.status === STATUS_OK) {
-        console.log('status ok');
-        setStaffDetail(responseData?.data);
-        console.log('stafff detail: ', responseData?.data?.id);
+        console.log('status ok: ', responseData?.data);
+        setStaffDetail(responseData?.data as StaffsDetails);
+        //  console.log('stafff detail: ', responseData?.data?.id) ;
 
-        form.setFieldsValue({
-          ...responseData?.data,
-          role: responseData.data.role
+        form?.setFieldsValue({
+          ...responseData?.data
         });
       }
       setIsFetching(false);
@@ -170,11 +170,11 @@ const UpdateUser = ({
     }
   };
   useEffect(() => {
-    fetchStaffsDetails(http, sideId, params.id);
+    fetchStaffsDetails(http, sideId, params.id, form);
   }, [form, http, params.id, sideId]);
 
   const handleDelete = (id: string) => {};
-  const handleUpdate = async (id: string) => {
+  const handleUpdateStaffs = async (id: string) => {
     setUserId(id);
     setUpdateState(true);
   };
@@ -275,6 +275,7 @@ const UpdateUser = ({
             colon={false}
             name='updateStaffs'
             disabled={!componentDisabled}
+            onFinish={handleUpdateStaffs}
             // style={{ maxWidth: 600 }
           >
             <Row>
@@ -488,7 +489,7 @@ const UpdateUser = ({
                 >
                   <label>{t('gender')}</label>
                   <Radio.Group
-                    onChange={handleChangeGender}
+                    //  onChange={handleChangeGender}
                     value={staffsDetail?.gender}
                   >
                     <Radio value={2}>{t('male')}</Radio>
@@ -549,8 +550,8 @@ const UpdateUser = ({
             dataSource={data.map(certification => ({
               ...certification,
               onDetails: () => handleDetails(certification.id),
-              onDelete: () => handleDelete(certification.id),
-              onUpdate: () => handleUpdate(certification.id)
+              onDelete: () => handleDelete(certification.id)
+              // onUpdate: () => handleUpdate(certification.id)
             }))}
             onChange={onChange}
             pagination={{

@@ -26,7 +26,7 @@ import { getStaffsService } from '@/services/Admin/getStaffsService';
 import Staffs from '@/types/staffs';
 import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
 import { AxiosInstance } from 'axios';
-import UpdateFormRegis from './update/ModalUpdate';
+
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from '@/navigation';
 
@@ -54,7 +54,7 @@ const UserManagement = (props: Props) => {
     try {
       const responseData = await getStaffsService(sideId, http);
       //console.log(responseData);
-      setUsers(responseData?.data);
+      setUsers(responseData?.data as Staffs[]);
       setIsFetching(false);
     } catch (error) {
       console.error('Error calling API Staffs:', error);
@@ -118,13 +118,7 @@ const UserManagement = (props: Props) => {
           }}
         />
       </ActionBox>
-      <UpdateFormRegis
-        params={{
-          visible: updateState,
-          onCancel: () => setUpdateState(false),
-          dataRow: formModal
-        }}
-      />
+
       <ConfigProvider
         theme={{
           components: {

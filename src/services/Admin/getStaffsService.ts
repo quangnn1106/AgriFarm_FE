@@ -1,10 +1,7 @@
-import { STATUS_OK } from '@/constants/https';
 import HttpResponseCommon from '@/types/response';
 import Staffs from '@/types/staffs';
-import { StaffsDetails } from '@/types/staffs-detail';
-import { FormInstance } from 'antd';
-
 import { AxiosInstance } from 'axios';
+import StaffsDetails from '@/types/staffs-detail';
 
 // import { http } from '@/utils/config';
 export interface Pagination {
@@ -37,7 +34,11 @@ export const getStaffsServiceDetails: (
   siteId?: string | null,
   http?: AxiosInstance | null,
   userId?: string | null
-) => Promise<HttpResponseCommon<StaffsDetails | []>> = async (siteId, http, userId) => {
+) => Promise<HttpResponseCommon<StaffsDetails | [] | undefined>> = async (
+  siteId,
+  http,
+  userId
+) => {
   const res = await http?.get(`/user/staffs/get`, {
     params: {
       siteId: siteId,
@@ -49,6 +50,6 @@ export const getStaffsServiceDetails: (
     // }
   });
 
-  console.log('response getStaffsServiceDetails: ', res);
+  console.log('response getStaffsServiceDetails: ', res?.data);
   return res?.data;
 };
