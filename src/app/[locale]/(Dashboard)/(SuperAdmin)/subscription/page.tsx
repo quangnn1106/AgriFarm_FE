@@ -37,7 +37,7 @@ const UserManagement = (props: Props) => {
   const [createState, setCreateState] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
-  const [users, setUsers] = useState<UserModel[] | [] | undefined>([]);
+  const [users, setUsers] = useState<UserModel[] | []>([]);
   const [api, contextHolder] = notification.useNotification();
   const [formModal, setFormModal] = useState<UserModel>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -49,7 +49,7 @@ const UserManagement = (props: Props) => {
     try {
       const responseData = await fetchRegisterForm(http);
       //console.log(responseData);
-      setUsers(responseData?.data);
+      setUsers(responseData?.data as UserModel[]);
       setIsFetching(false);
     } catch (error) {
       console.error('Error calling API Subscription:', error);

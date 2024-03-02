@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 
-
 export const userTableColumns: TableColumnsType<UserModel> = [
   // {
   //   title: 'ID',
@@ -23,14 +22,13 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     width: 'max-content',
     fixed: 'left'
   },
-  {
-    title: 'Site Code',
-    dataIndex: 'siteCode'
-  },
+  // {
+  //   title: 'Site Code',
+  //   dataIndex: 'siteCode'
+  // },
   {
     title: 'Address',
     dataIndex: 'address',
-
     width: 'max-content'
   },
   {

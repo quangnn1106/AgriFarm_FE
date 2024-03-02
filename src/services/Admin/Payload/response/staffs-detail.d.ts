@@ -11,7 +11,7 @@ export default interface StaffsDetails {
   education: string;
   isLockout: boolean;
   role: string;
-  dob: string;
+  dob?: string | null;
   onboarding: string;
   certificates?: any[] | [];
 }

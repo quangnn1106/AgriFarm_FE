@@ -4,7 +4,7 @@ import { DOMAIN } from './config';
 import axios from 'axios';
 import { signOut, useSession } from 'next-auth/react';
 import { redirect, usePathname, useRouter } from 'next/navigation';
-import { LOGIN_PATH } from '@/constants/routes';
+
 export const axiosAuth = axios.create({
   baseURL: DOMAIN,
   headers: { 'Content-Type': 'application/json' },

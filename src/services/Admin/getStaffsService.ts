@@ -1,7 +1,7 @@
 import HttpResponseCommon from '@/types/response';
-import Staffs from '@/types/staffs';
+import Staffs from '@/services/Admin/Payload/response/staffs';
 import { AxiosInstance } from 'axios';
-import StaffsDetails from '@/types/staffs-detail';
+import StaffsDetails from '@/services/Admin/Payload/response/staffs-detail';
 
 // import { http } from '@/utils/config';
 export interface Pagination {

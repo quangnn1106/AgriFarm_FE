@@ -35,14 +35,11 @@ function getItem(
   } as MenuItem;
 }
 
-
 type Props = {
   items: MenuItem[];
-  path : string
+  path: string;
 };
 const MenuSider = ({ items, path }: Props) => {
-
-
   const [current, setCurrent] = useState(`${path}`);
   console.log(path);
 

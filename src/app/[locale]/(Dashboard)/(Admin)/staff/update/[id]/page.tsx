@@ -18,11 +18,13 @@ import {
   Table,
   Tag,
   Tooltip,
-  Upload
+  Upload,
+  notification
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import type {
+  DatePickerProps,
   FormInstance,
   RadioChangeEvent,
   TableProps,
@@ -40,12 +42,17 @@ import { certificationTableColumn } from '../certificationColumnType';
 import { CertificationModel } from '../../models/certificationModel';
 import { AxiosInstance } from 'axios';
 import { getStaffsServiceDetails } from '@/services/Admin/getStaffsService';
-import StaffsDetails from '@/types/staffs-detail';
+import StaffsDetails from '@/services/Admin/Payload/response/staffs-detail';
 dayjs.extend(customParseFormat);
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { STATUS_OK } from '@/constants/https';
 import Image from 'next/image';
+import { updateStaffService } from '@/services/Admin/updateStaffService';
+import { updateStaffPayLoad } from '@/services/Admin/Payload/request/update-staff';
+import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
+import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
+import { NotificationPlacement } from 'antd/es/notification/interface';
 
 const { TextArea } = Input;
 
@@ -87,7 +94,21 @@ const UpdateUser = ({
   const [form] = Form.useForm();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const t = useTranslations('UserManagement');
+  const tM = useTranslations('Message');
+
   const http = UseAxiosAuth();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (
+    placement: NotificationPlacement,
+    status: string,
+    type: 'success' | 'error'
+  ) => {
+    api[type]({
+      message: `Admin ${status}`,
+      placement,
+      duration: 2
+    });
+  };
 
   //Upload image
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -134,9 +155,6 @@ const UpdateUser = ({
     }
   ]);
 
-  const [createState, setCreateState] = useState<Boolean>(false);
-  const [updateState, setUpdateState] = useState<boolean>(false);
-
   const [staffsDetail, setStaffDetail] = useState<StaffsDetails | undefined>();
   // const [gender, setGender] = useState<number>(staffsDetail?.gender as number);
   // console.log('staffsDetail?.gender as number: ', staffsDetail?.gender as number);
@@ -146,41 +164,64 @@ const UpdateUser = ({
 
   //   setGender(e.target.value);
   // };
-  const [userId, setUserId] = useState<string>('');
-  const fetchStaffsDetails = async (
-    http: AxiosInstance,
-    sideId?: string,
-    userId?: string,
-    form?: FormInstance
-  ) => {
-    try {
-      const responseData = await getStaffsServiceDetails(sideId, http, userId);
-      if (responseData.status === STATUS_OK) {
-        console.log('status ok: ', responseData?.data);
-        setStaffDetail(responseData?.data as StaffsDetails);
-        //  console.log('stafff detail: ', responseData?.data?.id) ;
 
-        form?.setFieldsValue({
-          ...responseData?.data
-        });
-      }
-      setIsFetching(false);
-    } catch (error) {
-      console.error('Error calling API Staffs:', error);
-    }
-  };
   useEffect(() => {
-    fetchStaffsDetails(http, sideId, params.id, form);
-  }, [form, http, params.id, sideId]);
+    const fetchStaffsDetails = async (
+      http: AxiosInstance,
+      sideId?: string,
+      userId?: string,
+      form?: FormInstance
+    ) => {
+      try {
+        const responseData = await getStaffsServiceDetails(sideId, http, userId);
+        if (responseData.status === STATUS_OK) {
+          console.log('status ok: ', responseData?.data);
+          setStaffDetail(responseData?.data as StaffsDetails);
+          //  console.log('stafff detail: ', responseData?.data?.id) ;
 
-  const handleDelete = (id: string) => {};
-  const handleUpdateStaffs = async (id: string) => {
-    setUserId(id);
-    setUpdateState(true);
-  };
-  const handleDetails = async (id: string) => {
-    setUserId(id);
-    setUpdateState(true);
+          form?.setFieldsValue({
+            ...responseData?.data,
+            isLockout: staffsDetail?.isLockout == true ? 'Lockout' : 'Active',
+            onboarding: dayjs(`${staffsDetail?.onboarding}`, dateFormat),
+            dob: staffsDetail?.dob ? dayjs(`${staffsDetail?.dob}`, dateFormat) : ''
+          });
+        }
+        setIsFetching(false);
+      } catch (error) {
+        console.error('Error calling API Staffs:', error);
+      }
+    };
+
+    fetchStaffsDetails(http, sideId, params.id, form);
+  }, [
+    form,
+    http,
+    params.id,
+    sideId,
+    staffsDetail?.dob,
+    staffsDetail?.isLockout,
+    staffsDetail?.onboarding
+  ]);
+
+  const handleUpdateStaffs = async (value: updateStaffPayLoad) => {
+    // const updatePayload: updateStaffPayLoad = {
+    //   ...value
+    // };
+    //console.log('value update: ', updatePayload);
+    setIsFetching(true);
+    const res = await updateStaffService(http, params.id, value);
+    if (res.data) {
+      setIsFetching(false);
+      openNotification('top', `${tM('update_susses')}`, 'success');
+
+      console.log('update staff success', res.status);
+    } else {
+      openNotification('top', `${tM('update_error')}`, 'error');
+
+      console.log('update staff fail', res.status);
+    }
+    // setUserId(id);
+    // setUpdateState(true);
   };
 
   const onChange: TableProps<CertificationModel>['onChange'] = (
@@ -219,6 +260,8 @@ const UpdateUser = ({
 
   return (
     <>
+      {contextHolder}
+
       <ConfigProvider
         theme={{
           components: {
@@ -273,14 +316,18 @@ const UpdateUser = ({
             // wrapperCol={{ span: 14 }}
             form={form}
             colon={false}
+            layout='vertical'
             name='updateStaffs'
+            {...formItemLayout}
             disabled={!componentDisabled}
             onFinish={handleUpdateStaffs}
+
             // style={{ maxWidth: 600 }
           >
             <Row>
               <Col
-                span={12}
+                xs={24}
+                sm={12}
                 style={{ maxWidth: '100%' }}
               >
                 <label className={cx('group-info-label')}>{t('PROFILE_IMAGE')}</label>
@@ -329,8 +376,9 @@ const UpdateUser = ({
                   </Upload>
                 </Form.Item>
 
-                <label className={cx('group-info-label')}>{t('STATUS')}</label>
                 <Form.Item
+                  label={<TitleLabelFormItem name={t('STATUS')}></TitleLabelFormItem>}
+                  name='isLockout'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -338,23 +386,14 @@ const UpdateUser = ({
                   }}
                   className={cx('padding-input', 'color-input-disable')}
                 >
-                  {/* <Select>
-                    <Select.Option value='active'>{t('active')}</Select.Option>
-                    <Select.Option value='suspended'>{t('suspended')}</Select.Option>
-                    <Select.Option value='terminated'>{t('terminated')}</Select.Option>
-                  </Select> */}
                   <Input
                     disabled
-                    value={staffsDetail?.isLockout == true ? 'Lockout' : 'Active'}
+                    //value={staffsDetail?.isLockout == true ? 'Lockout' : 'Active'}
                   />
-                  {/* <Tag
-                    key={staffsDetail?.isLockout == true ? 'Lockout' : 'Active'}
-                    color={staffsDetail?.isLockout == false ? 'green' : 'red'}
-                  /> */}
                 </Form.Item>
 
-                <label className={cx('group-info-label')}>{t('ROLE')}</label>
                 <Form.Item
+                  label={<TitleLabelFormItem name={t('ROLE')}></TitleLabelFormItem>}
                   name='role'
                   style={{
                     maxWidth: '90%',
@@ -363,16 +402,12 @@ const UpdateUser = ({
                   }}
                   className={cx('padding-input', 'color-input-disable')}
                 >
-                  {/* <Select>
-                    <Select.Option value='admin'>{t('admin')}</Select.Option>
-                    <Select.Option value='manager'>{t('manager')}</Select.Option>
-                    <Select.Option value='member'>{t('member')}</Select.Option>
-                  </Select> */}
                   <Input disabled />
                 </Form.Item>
 
-                <label className={cx('group-info-label')}>{t('ONBOARDING')}</label>
                 <Form.Item
+                  name='onboarding'
+                  label={<TitleLabelFormItem name={t('ONBOARDING')}></TitleLabelFormItem>}
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -380,43 +415,36 @@ const UpdateUser = ({
                   }}
                 >
                   <DatePicker
-                    value={dayjs(`${staffsDetail?.onboarding}`, dateFormat)}
+                    disabled
                     format={dateFormat}
                   />
                 </Form.Item>
-
-                {/* <label className={cx('group-info-label')}>{t('CHANGE_PASSWORD')}</label>
                 <Form.Item
                   style={{
                     maxWidth: '90%',
-                    margin: '0px 0px 8px 0px',
+                    margin: '30px 0px 8px 0px',
                     padding: '0px 20px'
                   }}
-                  className={cx('color-input-disable')}
                 >
-                  <label>{t('new_password')}</label>
-                  <Input />
+                  <Button
+                    className={cx('bg-btn')}
+                    htmlType='submit'
+                    type='primary'
+                    loading={isFetching}
+                  >
+                    {t('save_change')}
+                  </Button>
                 </Form.Item>
-
-                <Form.Item
-                  style={{
-                    maxWidth: '90%',
-                    margin: '0px 0px 8px 0px',
-                    padding: '0px 20px'
-                  }}
-                  className={cx('color-input-disable')}
-                >
-                  <label>{t('confirm_password')}</label>
-                  <Input />
-                </Form.Item> */}
               </Col>
-              <Col span={12}>
-                <label className={cx('group-info-label')}>
-                  {t('GENERAL_INFORMATION')}
-                </label>
+              <Col
+                xs={24}
+                sm={12}
+              >
+                <TitleLabelFormItem name={t('GENERAL_INFORMATION')} />
 
                 <Form.Item
                   name='firstName'
+                  label='First Name'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -424,10 +452,11 @@ const UpdateUser = ({
                   }}
                   className={cx('color-input-disable')}
                 >
-                  <label>{t('first_name')}</label>
-                  <Input value={staffsDetail?.firstName} />
+                  <Input />
                 </Form.Item>
                 <Form.Item
+                  name='lastName'
+                  label='Last Name'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -435,62 +464,91 @@ const UpdateUser = ({
                   }}
                   className={cx('color-input-disable')}
                 >
-                  <label>{t('last_name')}</label>
-                  <Input value={staffsDetail?.lastName} />
-                </Form.Item>
-
-                <Form.Item
-                  style={{
-                    maxWidth: '90%',
-                    margin: '0px 0px 8px 0px',
-                    padding: '0px 20px'
-                  }}
-                  className={cx('color-input-disable')}
-                >
-                  <label>{t('phone_number')}</label>
-                  <Input value={staffsDetail?.phoneNumber} />
+                  <Input />
                 </Form.Item>
 
                 <Form.Item
+                  label={t('phone')}
+                  name='phoneNumber'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
                     padding: '0px 20px'
                   }}
+                  rules={[
+                    {
+                      pattern: /^(\+84|0)([0-9]{9,10})$/, // Vietnamese phone number pattern
+                      message: 'Invalid phone number! Please enter a valid phone number.'
+                    }
+                  ]}
                   className={cx('color-input-disable')}
                 >
-                  <label>{t('email')}</label>
-                  <Input value={staffsDetail?.email} />
-                </Form.Item>
-                <Form.Item
-                  style={{
-                    maxWidth: '90%',
-                    margin: '0px 0px 8px 0px',
-                    padding: '0px 20px'
-                  }}
-                  className={cx('color-input-disable')}
-                >
-                  <label>{t('date_of_birth')}</label>
-                  <DatePicker
-                    value={dayjs(`${staffsDetail?.dob}`, dateFormat)}
-                    format={dateFormat}
-                  />
+                  <Input />
                 </Form.Item>
 
                 <Form.Item
+                  label='Email'
+                  name='email'
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  name='identificationCard'
+                  label={t('identity_card')}
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name='education'
+                  label={t('education')}
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name='dob'
+                  label='Date of Birth'
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                >
+                  <DatePicker format={dateFormat} />
+                </Form.Item>
+
+                <Form.Item
+                  label='Gender'
                   name='gender'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
                     padding: '0px 20px'
                   }}
-                  initialValue={0}
                   className={cx('color-input-disable')}
                 >
-                  <label>{t('gender')}</label>
                   <Radio.Group
-                    //  onChange={handleChangeGender}
-                    value={staffsDetail?.gender}
+                  //  onChange={handleChangeGender}
+                  //value={staffsDetail?.gender}
                   >
                     <Radio value={2}>{t('male')}</Radio>
                     <Radio value={1}>{t('female')}</Radio>
@@ -498,6 +556,7 @@ const UpdateUser = ({
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
+                  label={t('Addressed')}
                   name='address'
                   style={{
                     maxWidth: '90%',
@@ -505,20 +564,13 @@ const UpdateUser = ({
                     padding: '0px 20px'
                   }}
                 >
-                  <label>{t('address')}</label>
                   <TextArea
-                    value={staffsDetail?.address}
+                    // value={staffsDetail?.address}
                     rows={4}
                   />
                 </Form.Item>
               </Col>
             </Row>
-            <Button
-              className={cx('bg-btn')}
-              style={{ marginBottom: 12 }}
-            >
-              {t('save_change')}
-            </Button>
           </Form>
         </Spin>
 
@@ -548,9 +600,9 @@ const UpdateUser = ({
           <Table
             columns={certificationTableColumn}
             dataSource={data.map(certification => ({
-              ...certification,
-              onDetails: () => handleDetails(certification.id),
-              onDelete: () => handleDelete(certification.id)
+              ...certification
+              // onDetails: () => handleDetails(certification.id),
+              // onDelete: () => handleDelete(certification.id)
               // onUpdate: () => handleUpdate(certification.id)
             }))}
             onChange={onChange}

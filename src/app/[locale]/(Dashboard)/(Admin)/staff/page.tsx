@@ -23,7 +23,7 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
 import { getStaffsService } from '@/services/Admin/getStaffsService';
-import Staffs from '@/types/staffs';
+import Staffs from '@/services/Admin/Payload/response/staffs';
 import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
 import { AxiosInstance } from 'axios';
 
@@ -50,6 +50,7 @@ const UserManagement = (props: Props) => {
   const sideId = session?.user.userInfo.siteId;
   const router = useRouter();
   const pathName = usePathname();
+  
   const fetchStaff = async (http: AxiosInstance, sideId?: string) => {
     try {
       const responseData = await getStaffsService(sideId, http);
@@ -160,10 +161,10 @@ const UserManagement = (props: Props) => {
                 }}
                 columns={userTableColumns}
                 dataSource={users?.map(user => ({
-                  ...user,
+                  ...user
                   //onDetails: () => handleDetails(user.id!),
-                  onDelete: () => handleDelete(user.id!),
-                  onUpdate: () => handleApproved(user.id!)
+                  // onDelete: () => handleDelete(user.id!),
+                  // onUpdate: () => handleApproved(user.id!)
                 }))}
                 onChange={onChange}
                 pagination={{
