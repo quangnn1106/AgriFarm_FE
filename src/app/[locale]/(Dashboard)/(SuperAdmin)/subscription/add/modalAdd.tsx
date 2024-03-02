@@ -2,22 +2,24 @@
 import { Col, ConfigProvider, Form, Input, Modal, Row, notification } from 'antd';
 
 import styles from '../add/add.module.scss';
-import TextArea from 'antd/es/input/TextArea';
+
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import LabelFormItem from '../components/LabelFormItem';
+
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
-import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
+
 import classNames from 'classnames/bind';
 import FormRegisterValues from '@/types/register';
-import { registerAsyncApi } from '@/redux/features/common-slice';
+
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
-import { STATUS_ACCEPTED, STATUS_CREATED, STATUS_OK } from '@/constants/https';
 import UseAxiosAuth from '@/utils/axiosClient';
+import { useTranslations } from 'next-intl';
 const cx = classNames.bind(styles);
 const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void } }) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const t = useTranslations('FormRegister');
+  const msg = useTranslations('Message');
   const { userRegister } = useAppSelector(state => state.authReducer);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -223,7 +225,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='address'
-              label='Address'
+              label={t('address_form')}
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -231,7 +233,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='siteCode'
-              label='Farm code'
+              label={t('farm_code')}
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -239,7 +241,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='siteName'
-              label='Farm Name'
+              label={t('farm_name')}
               rules={[{ required: true, message: 'Password is required' }]}
             >
               <Input size='middle' />
@@ -247,7 +249,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='firstName'
-              label='First Name'
+              label={t('first_name')}
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -255,7 +257,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='lastName'
-              label='Last name'
+              label={t('last_name')}
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -263,7 +265,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
 
             <Form.Item
               name='phone'
-              label='Phone'
+              label={t('phone_number')}
               rules={[{ required: true }]}
             >
               <Input size='middle' />

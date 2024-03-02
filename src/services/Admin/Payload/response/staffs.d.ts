@@ -2,8 +2,9 @@ export default interface Staffs {
   id: string;
   firstName: string;
   lastName: string;
-  avatarImg: null;
-  phoneNumber: null;
-  email: string;
+  avatarImg?: string | null;
+  phoneNumber?: string | null;
+  address?: string;
+  email?: string;
   role: string;
 }
