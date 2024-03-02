@@ -1,16 +1,17 @@
-import { http } from '@/utils/config';
+import { AxiosInstance } from 'axios';
 
 const diseaseDiagnosesUpdateFeedback = async (
+    http: AxiosInstance | null,
     id: any,
     feedbackStatus: number
     ) => {
     try {
-        const response = await http.put('/disease/disease-diagnoses/edit-status-feedback', {
+        const response = await http?.put('/disease/disease-diagnoses/edit-status-feedback', {
                 id: id,
                 feedbackStatus: feedbackStatus
         });
   
-        const responseData = response.data;
+        const responseData = response?.data;
 
         return responseData;
     } catch (error: unknown) {

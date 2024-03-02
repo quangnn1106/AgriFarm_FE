@@ -13,6 +13,8 @@ import ModalComponent from './component/modal/modal';
 import { STATUS_OK } from '@/constants/https';
 import fetchDiseaseDetailData from '@/services/Disease/diseaseDiagnosesDetailApi';
 import diseaseDiagnosesUpdateFeedback from '@/services/Disease/diseaseDiagnosesUpdateApi';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { AxiosInstance } from 'axios';
 
 const DiseaseDiagnosticDetail = () => {
     const router = useRouter();
@@ -23,13 +25,20 @@ const DiseaseDiagnosticDetail = () => {
     const id = useSearchParams().get("id");
     const [dataDetail, setDataDetail] = useState();
     const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
-    useEffect(()=> {
-        diseaseDetail(id);
-    },[id]);
+    const http = UseAxiosAuth();
 
-    const diseaseDetail = async (id : any) => {
+    useEffect(()=> {
+        diseaseDetail(http, id);
+    },[http,id]);
+    
+    const handleChangeSel = (value: string) => {
+        console.log(value);
+        setFbStatusVal(parseInt(value.split("_")[1]));
+    };
+
+    const diseaseDetail = async (http : AxiosInstance | null, id : any) => {
         try {
-            const responseData = await fetchDiseaseDetailData(id);
+            const responseData = await fetchDiseaseDetailData(http, id);
             console.log(responseData);
             setFbStatusVal(responseData.data.feedbackStatus);
             setDataDetail(responseData.data);
@@ -37,16 +46,11 @@ const DiseaseDiagnosticDetail = () => {
             console.error('Error calling API:', error);
         }
     };
-    
-    const handleChangeSel = (value: string) => {
-        console.log(value);
-        setFbStatusVal(parseInt(value.split("_")[1]));
-    };
 
     const saveAction = async () => {
         console.log("Save action.....");
         try {
-            const res = await diseaseDiagnosesUpdateFeedback(id, fbStatusVal);
+            const res = await diseaseDiagnosesUpdateFeedback(http, id, fbStatusVal);
             if (res.statusCode == STATUS_OK) {
                 setMsgUpdate(t('message_update_ok'));
             } else {

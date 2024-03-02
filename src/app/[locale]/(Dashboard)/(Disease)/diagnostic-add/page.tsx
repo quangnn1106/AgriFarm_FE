@@ -13,6 +13,9 @@ import ModalComponent from "./component/modal/modal";
 import { STATUS_OK } from "@/constants/https";
 import plantDiseaseInfoApi from "@/services/Disease/plantDiseaseInfoApi";
 import diseaseDiagnosesUpdateFbApi from "@/services/Disease/diseaseDiagnosesUpdateFbApi";
+import UseAxiosAuth from '@/utils/axiosClient';
+import { AxiosInstance } from 'axios';
+import { useSession } from "next-auth/react";
 
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
@@ -29,18 +32,41 @@ const DiseaseDiagnosticAdd = () => {
     const [diagnoeseId, setDiagnoeseId] = useState("");
     const [plantDisease, setPlantDisease] = useState<plantDiseaseDef>();
     const [feedback, setFeedback] = useState("");
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+    const http = UseAxiosAuth();
+    const { data: session, status } = useSession();
+
     useEffect(() => {
-        getListLand();
-    },[]);
+        getListLand(http, session?.user?.userInfo.siteId as string);
+        getLocation();
+    },[http, session?.user?.userInfo.siteId]);
     // get list land
-    const getListLand = async () => {
+    const getListLand = async (http: AxiosInstance | null, siteId : string) => {
         try {
-            const res = await getListLandApi();
+            const res = await getListLandApi(http, siteId);
             setListLand(res);
         } catch (error) {
             console.log(error)
         }
     }
+    
+    // location
+    const getLocation = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              setLatitude(position.coords.latitude);
+              setLongitude(position.coords.longitude);
+            },
+            error => {
+              console.error('Error getting geolocation:', error);
+            }
+          );
+        } else {
+          console.error('Geolocation is not supported by this browser.');
+        }
+    };
     // Call api AI disease
     const submitAction = async () => {
         try {
@@ -54,18 +80,18 @@ const DiseaseDiagnosticAdd = () => {
                 plantDiseaseId: diseaseId,
                 description: description,
                 feedback: "",
-                location: "10.0123469,105.7331374",
+                location: `${latitude},${longitude}`,
                 createBy: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 landId: selLand,
             };
 
-            const res = await diseaseDiagnosesAddApi(diseaseDiagnostic);
+            const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
             if (res.statusCode != STATUS_OK) {
                 setMsgAdd(t('disease_diagnostic_fail'));
                 setDisplayModalAdd(true);
             } else {
                 setDiagnoeseId(res.data.id);
-                const responseData = await plantDiseaseInfoApi(diseaseId);
+                const responseData = await plantDiseaseInfoApi(http, diseaseId);
                 if (responseData.statusCode == STATUS_OK) {
                     setPlantDisease(responseData.data);
                 }
@@ -89,7 +115,7 @@ const DiseaseDiagnosticAdd = () => {
     const sendFeedback = async () => {
         try {
             setLoadings(true);
-            const res = await diseaseDiagnosesUpdateFbApi(diagnoeseId, feedback);
+            const res = await diseaseDiagnosesUpdateFbApi(http, diagnoeseId, feedback);
             console.log(res);
         } catch (error) {
             console.log(error);

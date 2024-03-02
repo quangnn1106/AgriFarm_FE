@@ -1,4 +1,4 @@
-import { http } from '@/utils/config';
+import { AxiosInstance } from 'axios';
 
 interface DiseaseInfo {
     id: string;
@@ -9,10 +9,11 @@ interface DiseaseInfo {
     suggest: string;
 }
 const diseaseInfoEdit = async (
+    http: AxiosInstance | null,
     dataEdit : DiseaseInfo
     ) => {
     try {
-        const response = await http.put('/disease/disease-info/edit-disease', {
+        const response = await http?.put('/disease/disease-info/edit-disease', {
             id : dataEdit.id,
             diseaseName: dataEdit.diseaseName,
             symptoms: dataEdit.symptoms,
@@ -21,7 +22,7 @@ const diseaseInfoEdit = async (
             suggest: dataEdit.suggest,
         });
   
-        const responseData = response.data;
+        const responseData = response?.data;
 
         return responseData;
     } catch (error: unknown) {

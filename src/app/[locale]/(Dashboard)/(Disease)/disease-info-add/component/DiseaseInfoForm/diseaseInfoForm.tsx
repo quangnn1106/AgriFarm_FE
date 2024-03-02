@@ -10,6 +10,7 @@ import './editor.custom.css';
 import ModalComponent from '../modal/modal';
 import { STATUS_OK } from '@/constants/https';
 import diseaseInfoAdd from '@/services/Disease/diseaseInfoAddApi';
+import UseAxiosAuth from '@/utils/axiosClient';
 
 interface DiseaseInfo {
   diseaseName: string;
@@ -32,6 +33,7 @@ const DiseaseInfoForm = () => {
   const [loadings, setLoadings] = useState<boolean>(false);
   const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
   const [msgUpdate, setMsgUpdate] = useState('');
+  const http = UseAxiosAuth();
 
   const handleOnchangeDiseaseName = (e: any) => {
     setDiseaseName(e.target.value);
@@ -62,7 +64,7 @@ const DiseaseInfoForm = () => {
         preventiveMeasures: editorDataPreventiveMeasures,
         suggest: editorDataSuggest
       };
-      const res = await diseaseInfoAdd(dataEdit);
+      const res = await diseaseInfoAdd(http, dataEdit);
       if (res.statusCode == STATUS_OK) {
         setMsgUpdate(t('msg_add_disease_info_ok'));
       } else {
