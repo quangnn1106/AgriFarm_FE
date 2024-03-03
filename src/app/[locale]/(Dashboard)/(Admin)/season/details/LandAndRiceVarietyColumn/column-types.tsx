@@ -1,8 +1,10 @@
-'use client'
-import { TableColumnsType } from 'antd';
+/* eslint-disable react-hooks/rules-of-hooks */
+
+'use client';
+import { TableColumnsType, Tag } from 'antd';
 import { Land, RiceVariety } from '../../models/season-model';
 import fetchRiceVarietyDetails from '@/services/Admin/RiceVariety/getRiceVarietyDetail';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
   export const LandAndRiceVarietyColumns: TableColumnsType<Land> = [
@@ -15,18 +17,34 @@ import { useEffect, useState } from 'react';
       title: 'Rice Variety',
       dataIndex: 'riceVarietyID',
       width: 'max-content',
-      render: (_, { riceVarietyID }) => {
+      render: async (_, { riceVarietyID }) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const [riceVariety, setRiceVariety] = useState<RiceVariety | null>(null);
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          // Fetch rice variety details when riceVarietyID changes
-          fetchRiceVarietyDetails(riceVarietyID).then(data => setRiceVariety(data));
-        }, [riceVarietyID]);
-
-        return riceVariety ? <p>{riceVariety.name}</p> : null;
-      },
+        const [riceVarietyName, setRiceVarietyName] = useState<string | undefined>("Chua chon");  
+        const [loading, setLoading] = useState<boolean>(true);
+        try {
+           await fetchRiceVarietyDetails(riceVarietyID)
+          .then(res => setRiceVarietyName(res.name))
+          .finally(()=> {
+            setLoading(false); 
+          });
+          if (!loading) {
+            return (
+              <Tag>
+                 {riceVarietyName}
+              </Tag>
+            );
+          }  
+          
+        } catch (error) {
+          console.error('Error calling API Subscription:', error);
+        }
+        console.log(riceVarietyName);
+        return (
+          <Tag>
+             Chua chon
+          </Tag>
+        );
+      }
     },
   ];
 

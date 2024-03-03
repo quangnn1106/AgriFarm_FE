@@ -4,28 +4,10 @@ import { RiceVariety } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/se
 const fetchListRiceVarietyData = async () => {
     try {
         const riceVarietyList : RiceVariety[] = [];
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 10; i++) {
             riceVarietyList.push({
-                id: 'IDA1',
+                id: 'IDA'+i,
                 name: 'Tai Nguyen',
-                type: 'Short',
-                description: '3 months'
-            });
-            riceVarietyList.push({
-                id: 'IDA2',
-                name: 'ST25',
-                type: 'Short',
-                description: '3 months'
-            });
-            riceVarietyList.push({
-                id: 'IDA3',
-                name: 'Thom lai',
-                type: 'Short',
-                description: '2.5 months'
-            });
-            riceVarietyList.push({
-                id: 'IDA'+i+3,
-                name: 'ST24',
                 type: 'Short',
                 description: '3 months'
             });

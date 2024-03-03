@@ -1,14 +1,21 @@
 
-import { RiceVariety } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model";
+import { Land, RiceVariety } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model";
 import fetchListRiceVarietyData from "./getRiceVarietyApi";
 
-const fetchRiceVarietyDetails = async ( id : any): Promise<RiceVariety> => {
+const fetchRiceVarietyDetails:( id : any) => Promise<RiceVariety> = async (id) => {
     try {
         const listRiceVariety = await fetchListRiceVarietyData();
-        let item: RiceVariety = {};
+        let item: RiceVariety = {
+            "id":"",
+            "name":"",
+            "description":"",
+            "type":""};
         listRiceVariety.forEach(element => {
-            if (element.id?.includes(id)) {
-                item = element;
+            if (element.id == id) {
+                item.id = element.id;
+                item.name = element.name;
+                item.type = element.type;
+                item.description = element.description;
             }   
         });
         return item;
@@ -18,6 +25,7 @@ const fetchRiceVarietyDetails = async ( id : any): Promise<RiceVariety> => {
             throw new Error(`Error calling API: ${error.message}`);
         } else {
             throw new Error(`Unknown error occurred: ${error}`);
+            
         }
     }
 }
