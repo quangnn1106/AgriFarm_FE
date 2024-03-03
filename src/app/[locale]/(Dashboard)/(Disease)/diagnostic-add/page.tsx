@@ -28,7 +28,6 @@ const DiseaseDiagnosticAdd = () => {
     const [displayModalAdd, setDisplayModalAdd] = useState(false);
     const [msgAdd, setMsgAdd] = useState("");
     const [diagnosticRs, setDiagnosticRs] = useState(false);
-    const [plantDiseaseId, setPlantDiseaseId] = useState("");
     const [diagnoeseId, setDiagnoeseId] = useState("");
     const [plantDisease, setPlantDisease] = useState<plantDiseaseDef>();
     const [feedback, setFeedback] = useState("");
@@ -74,8 +73,7 @@ const DiseaseDiagnosticAdd = () => {
             console.log("Call api ....");
             // Api response
             // const resFromAI = ...
-            const diseaseId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
-            setPlantDiseaseId(diseaseId);
+            const diseaseId = "9b4f4630-f1be-46be-af89-f72f0f536844";
             const diseaseDiagnostic : diseaseDiagnosticDef = {
                 plantDiseaseId: diseaseId,
                 description: description,
@@ -165,25 +163,25 @@ const DiseaseDiagnosticAdd = () => {
                                     <label className={cx('dd__label')}>{t('lbl_symptoms')}</label>
                                 </Row>
                                 <Row className={cx('dd__row')}>
-                                    <p className={cx('dd__content')}>{plantDisease.symptoms}</p>
+                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.symptoms}}></div>
                                 </Row>
                                 <Row className={cx('dd__row')}>
                                     <label className={cx('dd__label')}>{t('lbl_cause')}</label>
                                 </Row>
                                 <Row className={cx('dd__row')}>
-                                    <p className={cx('dd__content')}>{plantDisease.cause}</p>
+                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.cause}}></div>
                                 </Row>
                                 <Row className={cx('dd__row')}>
                                     <label className={cx('dd__label')}>{t('lbl_preventive_measures')}</label>
                                 </Row>
                                 <Row className={cx('dd__row')}>
-                                    <p className={cx('dd__content')}>{plantDisease.preventiveMeasures}</p>
+                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.preventiveMeasures}}></div>
                                 </Row>
                                 <Row className={cx('dd__row')}>
                                     <label className={cx('dd__label')}>{t('lbl_suggest')}</label>
                                 </Row>
                                 <Row className={cx('dd__row')}>
-                                    <p className={cx('dd__content')}>{plantDisease.suggest}</p>
+                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.suggest}}></div>
                                 </Row>
                                 <Row className={cx('dd__row')}>
                                     <label className={cx('dd__label')}>{t('lbl_feedback')}</label>

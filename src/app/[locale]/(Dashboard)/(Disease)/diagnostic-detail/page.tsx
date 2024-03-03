@@ -39,7 +39,6 @@ const DiseaseDiagnosticDetail = () => {
     const diseaseDetail = async (http : AxiosInstance | null, id : any) => {
         try {
             const responseData = await fetchDiseaseDetailData(http, id);
-            console.log(responseData);
             setFbStatusVal(responseData.data.feedbackStatus);
             setDataDetail(responseData.data);
         } catch (error) {

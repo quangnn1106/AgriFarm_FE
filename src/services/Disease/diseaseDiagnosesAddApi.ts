@@ -1,18 +1,24 @@
 import { diseaseDiagnosticDef } from '@/app/[locale]/(Dashboard)/(Disease)/diagnostic-add/model/diseaseDiagnosticModel';
 import { AxiosInstance } from 'axios';
 
+interface params {
+    [key : string] : string
+}
 const diseaseDiagnosesAddApi = async (
     http: AxiosInstance | null,
     data : diseaseDiagnosticDef) => {
     try {
-        const response = await http?.post('/disease/disease-diagnoses/add', {
+        const params : params = {
             plantDiseaseId: data.plantDiseaseId,
             description: data.description,
             feedback: data.feedback,
             location: data.location,
-            createBy: data.createBy,
-            // landId: data.landId
-        });
+            createBy: data.createBy
+        };
+        if (data.landId) {
+            params.landId =  data.landId;
+        }
+        const response = await http?.post('/disease/disease-diagnoses/add', params);
 
         return response?.data;
     } catch (error: unknown) {
