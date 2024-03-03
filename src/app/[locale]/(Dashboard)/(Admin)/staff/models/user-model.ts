@@ -1,18 +1,13 @@
-import { Solution } from '@/types/admin';
-
 export type UserModel = {
-  id?: string | '';
-  firstName?: string | '';
-  lastName?: string | '';
-  phone?: string | '';
+  id: string | '';
+  firstName: string | '';
+  lastName: string | '';
+  avatarImg?: string | null;
+  phoneNumber?: string | null;
+  address?: string | null;
   email?: string | '';
-  address?: string | '';
-  siteCode?: string | '';
-  siteName?: string | '';
-  isApprove?: number | 0;
-  solution: Solution;
-  cost?: number | 0;
-  paymentDetail?: string | '';
+  role: string | '';
+  isLockout?: boolean;
   onDelete?: () => void;
   onUpdate?: () => void;
   onDetails?: () => void;
