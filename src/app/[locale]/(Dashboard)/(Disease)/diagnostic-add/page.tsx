@@ -16,6 +16,7 @@ import diseaseDiagnosesUpdateFbApi from "@/services/Disease/diseaseDiagnosesUpda
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import { useSession } from "next-auth/react";
+import axios from 'axios';
 
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
@@ -73,29 +74,41 @@ const DiseaseDiagnosticAdd = () => {
             console.log("Call api ....");
             // Api response
             // const resFromAI = ...
-            const diseaseId = "9b4f4630-f1be-46be-af89-f72f0f536844";
-            const diseaseDiagnostic : diseaseDiagnosticDef = {
-                plantDiseaseId: diseaseId,
-                description: description,
-                feedback: "",
-                location: `${latitude},${longitude}`,
-                createBy: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                landId: selLand,
-            };
-
-            const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
-            if (res.statusCode != STATUS_OK) {
-                setMsgAdd(t('disease_diagnostic_fail'));
-                setDisplayModalAdd(true);
-            } else {
-                setDiagnoeseId(res.data.id);
-                const responseData = await plantDiseaseInfoApi(http, diseaseId);
-                if (responseData.statusCode == STATUS_OK) {
-                    setPlantDisease(responseData.data);
-                }
-                setMsgAdd("");
-                setDiagnosticRs(true);
-            }
+            const url = `${process.env.NEXT_PUBLIC_AI_API}/get_disease`;
+            axios.post(url, {
+                Description: description
+            })
+                .then(async response => {
+                    console.log(response.data);
+                    const diseaseId = response.data.result;
+                    const diseaseDiagnostic : diseaseDiagnosticDef = {
+                        plantDiseaseId: diseaseId,
+                        description: description,
+                        feedback: "",
+                        location: `${latitude},${longitude}`,
+                        createBy: session?.user?.userInfo.id as string,
+                        landId: selLand,
+                    };
+        
+                    const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
+                    if (res.statusCode != STATUS_OK) {
+                        setMsgAdd(t('disease_diagnostic_fail'));
+                        setDisplayModalAdd(true);
+                    } else {
+                        setDiagnoeseId(res.data.id);
+                        const responseData = await plantDiseaseInfoApi(http, diseaseId);
+                        if (responseData.statusCode == STATUS_OK) {
+                            setPlantDisease(responseData.data);
+                        }
+                        setMsgAdd("");
+                        setDiagnosticRs(true);
+                    }
+                    
+                })
+                .catch(error => {
+                    // Xử lý lỗi nếu có
+                    console.error("Lỗi khi gửi yêu cầu:", error);
+            });
         } catch (error) {
             console.log(error);
             setMsgAdd(t('disease_diagnostic_fail'));
