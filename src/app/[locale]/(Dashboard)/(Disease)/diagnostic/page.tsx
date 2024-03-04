@@ -12,6 +12,8 @@ import { diseaseModel } from './model/disease-model';
 import fetchDiseaseDataForExport from '@/services/Disease/exportDiseaseDiagnosesApi';
 import fetchDiseaseData from '@/services/Disease/diseaseDiagnosesApi';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import UseAxiosAuth from '@/utils/axiosClient';
 
 const cx = classNames.bind(styles);
 const DiseaseDiagnostic = () => {
@@ -22,6 +24,7 @@ const DiseaseDiagnostic = () => {
     const [apiData, setApiData] = useState<diseaseModel[]>([]);
     const t = useTranslations('Disease');
     const router = useRouter();
+    const http = UseAxiosAuth();
 
     const handleKeyword = (e : any) => {
         setKeyword(e.target.value);
@@ -33,10 +36,9 @@ const DiseaseDiagnostic = () => {
     const searchAction = async () => {
         try {
             setLoading(true);
-            const responseData = await fetchDiseaseData(keyword, dateFrom, dateTo);
+            const responseData = await fetchDiseaseData(http, keyword, dateFrom, dateTo);
             setApiData(responseData);
             localStorage.setItem('conditionSearch', JSON.stringify([keyword, dateFrom, dateTo]));
-            console.log('API Response:', responseData);
         } catch (error: unknown) {
             // Assert the type of error to be an instance of Error
             if (error instanceof Error) {
@@ -50,7 +52,7 @@ const DiseaseDiagnostic = () => {
     };
     const exportExcel = async () => {
         try {
-            const responseData = await fetchDiseaseDataForExport(keyword, dateFrom, dateTo);
+            const responseData = await fetchDiseaseDataForExport(http, keyword, dateFrom, dateTo);
             const binaryString = window.atob(responseData.data);
             const uint8Array = new Uint8Array(binaryString.length);
 

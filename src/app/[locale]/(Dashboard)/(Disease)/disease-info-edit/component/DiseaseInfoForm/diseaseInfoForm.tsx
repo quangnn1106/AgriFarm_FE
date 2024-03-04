@@ -11,6 +11,8 @@ import diseaseInfoEdit from '@/services/Disease/diseaseInfoEdit';
 import diseaseInfoDetailApi from '@/services/Disease/diseaseInfoDetailApi';
 import ModalComponent from '../modal/modal';
 import { STATUS_OK } from '@/constants/https';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { AxiosInstance } from 'axios';
 
 interface DiseaseInfo {
   id: string;
@@ -36,16 +38,18 @@ const DiseaseInfoForm = () => {
   const [diseaseInfoDeatail, setDiseaseInfoDeatail] = useState<DiseaseInfo | null>(null);
   const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
   const [msgUpdate, setMsgUpdate] = useState('');
+  const http = UseAxiosAuth();
+
   useEffect(() => {
     if (id == null) {
       return;
     }
-    getDiseaseInfo(id);
-  }, [id]);
+    getDiseaseInfo(http, id);
+  }, [http, id]);
 
-  const getDiseaseInfo = async (id: string) => {
+  const getDiseaseInfo = async (http: AxiosInstance | null ,id: string) => {
     try {
-      const responseData = await diseaseInfoDetailApi(id);
+      const responseData = await diseaseInfoDetailApi(http, id);
       setDiseaseInfoDeatail(responseData.data);
       if (responseData.data != null) {
         setDiseaseName(responseData.data.diseaseName);
@@ -88,7 +92,7 @@ const DiseaseInfoForm = () => {
         preventiveMeasures: editorDataPreventiveMeasures,
         suggest: editorDataSuggest
       };
-      const res = await diseaseInfoEdit(dataEdit);
+      const res = await diseaseInfoEdit(http, dataEdit);
       if (res.statusCode == STATUS_OK) {
         setMsgUpdate(t('message_update_ok'));
       } else {
