@@ -71,9 +71,6 @@ const DiseaseDiagnosticAdd = () => {
     const submitAction = async () => {
         try {
             setLoadings(true);
-            console.log("Call api ....");
-            // Api response
-            // const resFromAI = ...
             const url = `${process.env.NEXT_PUBLIC_AI_API}/get_disease`;
             axios.post(url, {
                 Description: description
@@ -106,8 +103,7 @@ const DiseaseDiagnosticAdd = () => {
                     
                 })
                 .catch(error => {
-                    // Xử lý lỗi nếu có
-                    console.error("Lỗi khi gửi yêu cầu:", error);
+                    console.error(error);
             });
         } catch (error) {
             console.log(error);
