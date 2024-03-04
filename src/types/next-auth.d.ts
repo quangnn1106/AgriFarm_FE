@@ -27,6 +27,7 @@ export type Contents = {
 };
 
 export type UserInfo = {
+  id: string;
   userName: string;
   fullName: string;
   email: string;
