@@ -2,6 +2,7 @@
 export const LOGIN_PATH = '/login',
   REGISTER_PATH = '/register',
   SUCCESS_PATH = '/success',
+  ERROR_PATH = '/error',
   SALOGIN_PATH = '/salogin';
 
 // private paths
