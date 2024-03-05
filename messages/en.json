@@ -79,6 +79,14 @@
         "add_error": "Add error",
         "update_error": "Update"
     },
+    "Result": {
+        "regis_success": "Sign Up Success",
+        "regis_error": "registration failed",
+        "subTitle_success": "You already have an account, the system will automatically approve within 5 minutes",
+        "subTitle_error": "Please check and modify the following information before resubmitting.",
+        "btn_redToLogin": "Go to the login page",
+        "btn_redToRegis": "Return to registration form"
+    },
     "Disease": {
         "diagnostic": "Diagnostic",
         "search_condition": "Search condition",
