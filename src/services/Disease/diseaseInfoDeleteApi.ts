@@ -1,16 +1,17 @@
-import { http } from '@/utils/config';
+import { AxiosInstance } from 'axios';
 
 const diseaseInfoDeleteApi = async (
+    http: AxiosInstance | null,
     id: string
     ) => {
     try {
-        const response = await http.delete('/disease/disease-info/delete', {
+        const response = await http?.delete('/disease/disease-info/delete', {
             params: {
                 id: id
             }
         });
   
-        const responseData = response.data;
+        const responseData = response?.data;
 
         return responseData;
     } catch (error: unknown) {

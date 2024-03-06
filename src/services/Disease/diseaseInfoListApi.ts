@@ -1,10 +1,12 @@
-import { http } from '@/utils/config';
+import { AxiosInstance } from 'axios';
 
-const diseaseInfoListApi = async () => {
+const diseaseInfoListApi = async (
+    http: AxiosInstance | null
+    ) => {
     try {
-        const response = await http.get('/disease/disease-info/get');
+        const response = await http?.get('/disease/disease-info/get');
   
-        const responseData = response.data;
+        const responseData = response?.data;
 
         return responseData;
     } catch (error: unknown) {

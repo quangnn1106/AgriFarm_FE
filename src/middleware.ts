@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server';
 // export { default } from 'next-auth/middleware';
 import createMiddleware from 'next-intl/middleware';
 import {
+  ERROR_PATH,
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
@@ -14,6 +15,7 @@ const publicPages = [
   REGISTER_PATH,
   SALOGIN_PATH,
   SUCCESS_PATH,
+  ERROR_PATH,
   '/season',
   '/season/details',
   '/season/add',

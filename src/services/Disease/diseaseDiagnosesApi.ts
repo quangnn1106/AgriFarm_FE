@@ -1,14 +1,14 @@
-import { UUID } from "crypto"; 
-import { http } from '@/utils/config';
 import { diseaseModel } from "@/app/[locale]/(Dashboard)/(Disease)/diagnostic/model/disease-model";
+import { AxiosInstance } from 'axios';
 
 const fetchDiseaseData = async (
+    http: AxiosInstance | null,
     keyword: string,
     dateFrom: string,
     dateTo: string
     ) => {
     try {
-        const response = await http.get('/disease/disease-diagnoses/get', {
+        const response = await http?.get('/disease/disease-diagnoses/get', {
             params: {
                 keyword: keyword,
                 searchDateFrom: dateFrom,
@@ -17,7 +17,7 @@ const fetchDiseaseData = async (
             }
         });
   
-        const responseData = response.data;
+        const responseData = response?.data;
         const normalizedData: diseaseModel[] = responseData['data'].map(
             (item: any, index: number) => ({
                 key : item.id,

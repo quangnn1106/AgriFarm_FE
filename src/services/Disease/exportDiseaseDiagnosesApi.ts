@@ -1,12 +1,13 @@
-import { http } from "@/utils/config";
+import { AxiosInstance } from 'axios';
 
 const fetchDiseaseDataForExport = async (
+    http: AxiosInstance | null,
     keyword: string,
     dateFrom: string,
     dateTo: string
     ) => {
     try {
-        const response = await http.get('/disease/disease-diagnoses/download', {
+        const response = await http?.get('/disease/disease-diagnoses/download', {
             params: {
                 keyword: keyword,
                 searchDateFrom: dateFrom,
@@ -14,8 +15,7 @@ const fetchDiseaseDataForExport = async (
                 perPage: '20',
             }
         });
-        console.log(response.data);
-        return response.data;
+        return response?.data;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error
         if (error instanceof Error) {

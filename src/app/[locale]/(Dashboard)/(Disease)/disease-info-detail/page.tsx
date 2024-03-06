@@ -13,7 +13,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import diseaseInfoListApi from "@/services/Disease/diseaseInfoListApi";
 import diseaseInfoDeleteApi from "@/services/Disease/diseaseInfoDeleteApi";
 import { STATUS_OK } from "@/constants/https";
-
+import UseAxiosAuth from '@/utils/axiosClient';
+import { AxiosInstance } from 'axios';
 
 interface DiseaseInfo {
     id: string;
@@ -35,12 +36,14 @@ const DetailPage = () => {
     const [diseaseInfoDetail, setDiseaseInfoDetail] = useState<DiseaseInfo | null>(null);
     const [diseaseId, setDiseaseId] = useState("");
     const [optionDiseaseName, setOptionDiseaseName] = useState<Array<SelectDiseaseName>>([]);
-    useEffect(() => {
-        getDiseaseInfoList().catch(console.error);
-    },[]);
+    const http = UseAxiosAuth();
 
-    const getDiseaseInfoList = async () => {
-        const responseData = await diseaseInfoListApi();
+    useEffect(() => {
+        getDiseaseInfoList(http).catch(console.error);
+    },[http]);
+
+    const getDiseaseInfoList = async (http: AxiosInstance | null,) => {
+        const responseData = await diseaseInfoListApi(http);
         const options : SelectDiseaseName[] = responseData.data.map((item : DiseaseInfo) => {
             return {
                 value: item.id,
@@ -51,7 +54,7 @@ const DetailPage = () => {
     }
     const getDiseaseInfo = async (id : string) => {
         try {
-            const responseData = await diseaseInfoDetailApi(id);
+            const responseData = await diseaseInfoDetailApi(http, id);
             setDiseaseInfoDetail(responseData.data);
             console.log(responseData);
         } catch (error) {
@@ -73,11 +76,11 @@ const DetailPage = () => {
     const deleteAction = async () => {
         console.log("Delete action.....");
         try {
-            const responseData = await diseaseInfoDeleteApi(diseaseId);
+            const responseData = await diseaseInfoDeleteApi(http, diseaseId);
             if (responseData.statusCode == STATUS_OK) {
                 showMessageSuccess();
                 setDiseaseInfoDetail(null);
-                getDiseaseInfoList().catch(console.error);
+                getDiseaseInfoList(http).catch(console.error);
             } else {
                 showMessageError();
             }
