@@ -105,7 +105,8 @@
     "col_name_predict": "Predict result",
     "col_name_description": "Description",
     "col_name_feedback": "Feedback",
-    "col_name_date": "Date"
+    "col_name_date": "Date",
+    "message_disease_diagnostic" : "Kết quả chẩn đoán không phát hiện bệnh! Vui lòng mô tả lại!"
   },
   "FormRegister": {
     "title_add": "Add new Farm Admin",

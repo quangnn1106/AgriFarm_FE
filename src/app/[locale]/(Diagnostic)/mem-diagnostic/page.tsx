@@ -86,7 +86,7 @@ const DiseaseDiagnosticAdd = () => {
                         createBy: session?.user?.userInfo.id as string,
                         landId: selLand,
                     };
-        
+
                     const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
                     if (diseaseId == "00000000-0000-0000-0000-000000000000") {
                         setMsgAdd(t('message_disease_diagnostic'));
