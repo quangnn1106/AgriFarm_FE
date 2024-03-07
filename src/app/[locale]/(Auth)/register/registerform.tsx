@@ -11,7 +11,13 @@ import { LOGIN_PATH, SUCCESS_PATH } from '@/constants/routes';
 import FormRegisterValues from '@/types/register';
 import { useTranslations } from 'next-intl';
 import { MessageError } from '@/constants/message';
-import { STATUS_ACCEPTED, STATUS_SERVER_ERROR } from '@/constants/https';
+import {
+  STATUS_ACCEPTED,
+  STATUS_BAD_REQUEST,
+  STATUS_NOT_FOUND,
+  STATUS_SERVER_ERROR
+} from '@/constants/https';
+import Admin from '@/types/admin';
 
 const cx = classNames.bind(styles);
 
@@ -21,17 +27,47 @@ const RegisterForm: React.FC = () => {
   const t = useTranslations('Message');
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string>('');
+  const [errorEmail, setErrorEmail] = useState<string>('');
+  const [errorFCode, setErrorFCode] = useState<string>('');
+  const [errorFName, setErrorFName] = useState<string>('');
+  const handleSetStateError = async () => {
+    setErrorEmail('');
+    setErrorFCode('');
+    setErrorFName('');
+  };
+
   useEffect(() => {
     if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
       setError('');
+      setErrorEmail('');
+      setErrorFCode('');
+      setErrorFName('');
       router.push(SUCCESS_PATH);
+
+      const eeee = userRegister?.data as Admin;
+      console.log('eeee', eeee.id);
     }
-    if (userRegister?.status === STATUS_SERVER_ERROR) {
+    if (userRegister?.status === STATUS_BAD_REQUEST) {
       const messageError = userRegister?.message as string;
-      if (messageError === MessageError.EMAIL_EXIST) {
-        setError(t('email_error'));
-      } else setError(t('server_error'));
+      //setError(t('allErrorRegis').replace(/\./g, '.\n'));
+      if (messageError.includes(MessageError.FARM_NAME_EXIST)) {
+        setErrorFName(t('farmName_error'));
+        setErrorFCode('');
+        setErrorEmail('');
+      }
+
+      if (messageError.includes(MessageError.FARM_CODE_EXIST)) {
+        setErrorFCode(t('farmCode_error'));
+        setErrorEmail('');
+        setErrorFName('');
+      }
+
+      if (messageError.includes(MessageError.EMAIL_EXIST)) {
+        setErrorEmail(t('email_error'));
+        setErrorFCode('');
+        setErrorFName('');
+      }
     }
   }, [userRegister, router, dispatch, t]);
 
@@ -83,8 +119,12 @@ const RegisterForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorEmail && <p className={cx('auth__error')}>{errorEmail}</p>}
 
             <Form.Item
               name='address'
@@ -99,16 +139,24 @@ const RegisterForm: React.FC = () => {
               label='Farm code'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorFCode && <p className={cx('auth__error')}>{errorFCode}</p>}
 
             <Form.Item
               name='siteName'
               label='Farm Name'
               rules={[{ required: true, message: 'Password is required' }]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorFName && <p className={cx('auth__error')}>{errorFName}</p>}
 
             <Form.Item
               name='firstName'

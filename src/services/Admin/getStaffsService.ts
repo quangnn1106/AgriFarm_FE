@@ -26,7 +26,7 @@ export const getStaffsService: (
     //   pageNumber: 1
     // }
   });
-  console.log('response staffsService: ', res);
+  //console.log('response staffsService: ', res);
   return res?.data;
 };
 
@@ -50,6 +50,6 @@ export const getStaffsServiceDetails: (
     // }
   });
 
-  console.log('response getStaffsServiceDetails: ', res?.data);
+ // console.log('response getStaffsServiceDetails: ', res?.data);
   return res?.data;
 };

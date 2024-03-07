@@ -8,27 +8,9 @@ import HttpResponseCommon from '@/types/response';
 import Admin, { Solution } from '@/types/admin';
 import { register } from '@/services/authService';
 
-export interface UserState {
-  userRegister: HttpResponseCommon<Admin> | null;
-}
-
-// export interface UserLoginResponse {
-//   data: {
-//     id: string;
-//     firstName: string;
-//     lastName: string;
-//     phone: string;
-//     email: string;
-//     address: string;
-//     siteCode: string;
-//     siteName: string;
-//     isApprove: number;
-//     solution: Solution;
-//     cost: number;
-//     paymentDetail: string;
-//   };
-//   status: string;
-// }
+export type UserState = {
+  userRegister: HttpResponseCommon<Admin | [] | undefined> | null;
+};
 
 const initialState: UserState = {
   userRegister: {
@@ -54,7 +36,7 @@ const initialState: UserState = {
     },
 
     status: 0,
-    message: null
+    message: ''
   }
 };
 
@@ -104,15 +86,15 @@ export const registerAsyncApi = createAppAsyncThunk(
     const userRegister: FormRegisterValues = {
       ...values,
       paymentDetail: 'custom default',
-      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
+      solutionId: 'e43d372f-1ad5-46bd-b950-a95419211c0e'
     };
-    const response: HttpResponseCommon<Admin> = await register(userRegister);
+    const response = await register(userRegister);
     if (response && response.status === 202) {
       console.log('data resp register: ', response);
 
       return response;
     }
-    if (response && response.status === 500) {
+    if (response && response.status === 400) {
       console.log('ấdasdasdasdass', response.message);
 
       return response;

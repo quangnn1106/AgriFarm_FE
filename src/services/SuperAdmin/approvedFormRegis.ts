@@ -11,11 +11,15 @@ export const approvedRegisterForm: (
     decison: 1,
     notes: '123'
   };
-  const res = await http?.put(`/register/registry/put`, updateRaw, {
-    params: {
-      id: userId
-    }
-  });
-  // console.log('/register/registry/put ', res);
-  return res?.data;
+  try {
+    const res = await http?.put(`/register/registry/put`, updateRaw, {
+      params: {
+        id: userId
+      }
+    });
+    // console.log('/register/registry/put ', res);
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+  }
 };

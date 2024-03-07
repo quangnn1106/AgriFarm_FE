@@ -1,5 +1,5 @@
 export default interface Admin {
-  id?: string | '';
+  id?: string | null;
   firstName?: string | '';
   lastName?: string | '';
   phone?: string | '';

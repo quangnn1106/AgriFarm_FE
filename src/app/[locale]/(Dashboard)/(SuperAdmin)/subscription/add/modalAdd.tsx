@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useTranslations } from 'next-intl';
+import { SolutionId } from '@/constants/requestConst';
 const cx = classNames.bind(styles);
 const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void } }) => {
   const [form] = Form.useForm();
@@ -60,7 +61,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
     const createAccountBody: FormRegisterValues = {
       ...data,
       paymentDetail: '123',
-      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
+      solutionId: SolutionId
     };
     http
       .post('/register/Registry/Post', createAccountBody)
