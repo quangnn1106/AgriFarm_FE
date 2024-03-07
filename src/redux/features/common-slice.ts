@@ -104,7 +104,7 @@ export const registerAsyncApi = createAppAsyncThunk(
     const userRegister: FormRegisterValues = {
       ...values,
       paymentDetail: 'custom default',
-      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
+      solutionId: 'e43d372f-1ad5-46bd-b950-a95419211c0e'
     };
     const response: HttpResponseCommon<Admin> = await register(userRegister);
     if (response && response.status === 202) {
@@ -112,7 +112,7 @@ export const registerAsyncApi = createAppAsyncThunk(
 
       return response;
     }
-    if (response && response.status === 500) {
+    if (response && response.status === 400) {
       console.log('ấdasdasdasdass', response.message);
 
       return response;

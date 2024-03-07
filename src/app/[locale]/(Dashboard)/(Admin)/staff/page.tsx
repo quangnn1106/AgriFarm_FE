@@ -47,13 +47,13 @@ const UserManagement = (props: Props) => {
   const [filterUsers, setFilterUsers] = useState<Staffs[]>([]);
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
-  const sideId = session?.user.userInfo.siteId;
+  const siteId = session?.user.userInfo.siteId;
   const router = useRouter();
   const pathName = usePathname();
-  
-  const fetchStaff = async (http: AxiosInstance, sideId?: string) => {
+
+  const fetchStaff = async (http: AxiosInstance, siteId?: string) => {
     try {
-      const responseData = await getStaffsService(sideId, http);
+      const responseData = await getStaffsService(siteId, http);
       //console.log(responseData);
       setUsers(responseData?.data as Staffs[]);
       setIsFetching(false);
@@ -62,8 +62,8 @@ const UserManagement = (props: Props) => {
     }
   };
   useEffect(() => {
-    fetchStaff(http, sideId);
-  }, [createState, http, formModal, sideId]);
+    fetchStaff(http, siteId);
+  }, [createState, http, formModal, siteId]);
 
   // console.log(users);
 
@@ -114,6 +114,7 @@ const UserManagement = (props: Props) => {
         />
         <AddUser
           params={{
+            siteId: siteId ,
             visible: createState,
             onCancel: () => setCreateState(false)
           }}

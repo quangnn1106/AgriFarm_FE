@@ -43,7 +43,7 @@ const LoginForm: React.FC = () => {
       console.log('data: ', data.siteCode);
       setLoading(true);
       const res = await signIn('credentials', {
-        sideCode: data?.siteCode as string,
+        // siteCode: data?.siteCode as string,
         userName: data?.userName as string,
         password: data?.password as string,
         redirect: false,
