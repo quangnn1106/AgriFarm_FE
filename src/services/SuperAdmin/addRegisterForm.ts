@@ -3,8 +3,7 @@ import FormRegisterValues from '@/types/register';
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 
-
-export const addStaffService: (
+export const addRegisterForm: (
   http: AxiosInstance | null,
   siteId?: string,
   addPayLoad?: FormRegisterValues

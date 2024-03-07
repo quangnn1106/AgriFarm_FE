@@ -80,6 +80,7 @@ const UserManagement = (props: Props) => {
 
     setIsFetching(true);
     const responseData = await approvedRegisterForm(http, id);
+
     if (responseData?.status !== STATUS_NOT_FOUND) {
       api.success({
         message: 'Register Form has been approved successfully!',
