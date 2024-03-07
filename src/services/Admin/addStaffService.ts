@@ -1,25 +1,24 @@
 import HttpResponseCommon from '@/types/response';
-
 import { AxiosInstance } from 'axios';
 import Staffs from './Payload/response/staffs';
-import { updateStaffPayLoad } from './Payload/request/update-staff';
+import { AddStaffPayLoad } from './Payload/request/add-staff';
 
-export const updateStaffService: (
+export const addStaffService: (
   http: AxiosInstance | null,
-  userId?: string,
-  updatePayLoad?: updateStaffPayLoad
+  siteId?: string,
+  addPayLoad?: AddStaffPayLoad
 ) => Promise<HttpResponseCommon<Staffs | [] | undefined>> = async (
   http,
-  userId,
-  updatePayLoad
+  siteId,
+  addPayLoad
 ) => {
   try {
-    const res = await http?.put(`/user/staffs/edit`, updatePayLoad, {
+    const res = await http?.post(`/user/staffs/add-new-staff`, addPayLoad, {
       params: {
-        id: userId
+        siteId: siteId
       }
     });
-   // console.log('/user/staffs/edit ', res);
+    console.log('/user/staffs/add-new-staff ', res);
     return res?.data;
   } catch (error) {
     console.log('error ', error);

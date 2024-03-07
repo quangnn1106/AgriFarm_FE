@@ -1,5 +1,5 @@
 'use client';
-import { Col, ConfigProvider, Form, Input, Modal, Row, notification } from 'antd';
+import { ConfigProvider, Form, Input, notification } from 'antd';
 
 import styles from '../add/add.module.scss';
 
@@ -14,12 +14,20 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useTranslations } from 'next-intl';
+import { addStaffService } from '@/services/Admin/addStaffService';
+import { STATUS_CREATED } from '@/constants/https';
+import { AddStaffPayLoad } from '@/services/Admin/Payload/request/add-staff';
+
 const cx = classNames.bind(styles);
-const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void } }) => {
+const AddUser = ({
+  params
+}: {
+  params: { siteId: string | undefined; visible: boolean; onCancel: () => void };
+}) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
-  const t = useTranslations('FormRegister');
-  const msg = useTranslations('Message');
+  const t = useTranslations('AddStaff');
+  const tM = useTranslations('Message');
   const { userRegister } = useAppSelector(state => state.authReducer);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -36,77 +44,21 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
     });
   };
 
-  // useEffect(() => {
-  //   // if (userRegister?.status === STATUS_ACCEPTED) {
-  //   //   // Assuming 201 indicates successful creation
-  //   //   console.log('userRegister?.status: ', userRegister?.status);
+  const handleRegister = async (data: AddStaffPayLoad) => {
+    console.log('data add staff: ', data);
 
-  //   //   console.log('susscess create admmin');
-
-  //   //   openNotification('top', 'has been created successfully!', 'success');
-  //   //   params.onCancel();
-  //   //   form.resetFields();
-  //   // } else {
-  //   //   console.log('failed failed create admmin');
-
-  //   //   openNotification('top', 'has been created failed! Please try again later', 'error');
-  //   //   params.onCancel();
-  //   //   form.resetFields();
-  //   // }
-  // }, [dispatch, form, params, userRegister]);
-
-  const handleRegister = async (data: FormRegisterValues) => {
-    console.log('data register: ', data);
-    const createAccountBody: FormRegisterValues = {
-      ...data,
-      paymentDetail: '123',
-      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
-    };
-    http
-      .post('/register/Registry/Post', createAccountBody)
-      .then(data => {
-        if (data) {
-          console.log('test data status succsess', data);
-
-          console.log('susscess create admmin');
-          // Assuming 201 indicates successful creation
-          openNotification('top', 'has been created successfully!', 'success');
-          params.onCancel();
-          form.resetFields();
-        }
-      })
-      .catch(e => {
-        console.error(e);
-        console.log('test data status', e?.response?.message as string);
-
-        openNotification(
-          'top',
-          'has been created failed! Please try again later',
-          'error'
-        );
-        params.onCancel();
-
-        form.resetFields();
-      });
-    // const actionAsyncThunk = registerAsyncApi(data);
-    // dispatch(actionAsyncThunk);
-
-    // if (userRegister?.status === STATUS_OK) {
-    //   // Assuming 201 indicates successful creation
-    //   console.log('userRegister?.status: ', userRegister?.status);
-
-    //   console.log('susscess create admmin');
-
-    //   openNotification('top', 'has been created successfully!', 'success');
-    //   params.onCancel();
-    //   form.resetFields();
-    // } else {
-    //   console.log('failed failed create admmin');
-
-    //   openNotification('top', 'has been created failed! Please try again later', 'error');
-    //   params.onCancel();
-    //   form.resetFields();
-    // }
+    const res = await addStaffService(http, params.siteId, data);
+    if (res?.data || res?.status === STATUS_CREATED) {
+      openNotification('top', `${tM('update_susses')}`, 'success');
+      params.onCancel();
+      form.resetFields();
+      console.log('update staff success', res?.status);
+    } else {
+      openNotification('top', `${tM('update_error')}`, 'error');
+      params.onCancel();
+      form.resetFields();
+      console.log('update staff fail', res?.status);
+    }
   };
 
   return (
@@ -114,7 +66,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
       {contextHolder}
       <ModalCustom
         open={params.visible}
-        title='Add new Farm Admin'
+        title={t('title_add')}
         width='50%'
         style={{ top: 40, maxWidth: 1000 }}
         keyboard
@@ -125,71 +77,6 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
         }}
       >
         <hr style={{ border: '1px solid #eee' }}></hr>
-        {/* <Form
-        {...formItemLayout}
-        form={form}
-        colon={false}
-        scrollToFirstError
-        style={{ overflowY: 'auto', maxHeight: 'calc(63vh)', marginTop: '50px' }}
-      >
-        <Row>
-          <Col span={24}>
-            <Form.Item
-              name='firstName'
-              label={<LabelFormItem name='First Name' />}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input First Name!'
-                }
-              ]}
-            >
-              <Input className={styles.bigblue} />
-            </Form.Item>
-
-            <Form.Item
-              name='lastName'
-              label={<LabelFormItem name='Last Name' />}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input Last Name!'
-                }
-              ]}
-            >
-              <Input className={styles.bigblue} />
-            </Form.Item>
-            <Form.Item
-              name='userName'
-              label={<LabelFormItem name='User Name' />}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input User Name!'
-                }
-              ]}
-            >
-              <Input className={styles.bigblue} />
-            </Form.Item>
-
-            <Form.Item
-              name='password'
-              label={<LabelFormItem name='Password' />}
-              rules={[{ required: true, message: 'Password is required' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name='confirmPassword'
-              label={<LabelFormItem name='Confirm Password' />}
-              rules={[{ required: true, message: 'Confirm Password is required' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form> */}
 
         <ConfigProvider
           theme={{
@@ -210,13 +97,13 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
             onFinish={handleRegister}
           >
             <Form.Item
-              name='email'
+              name='userName'
               label='Email'
               rules={[
-                { required: true },
+                { required: true, message: `${t('required_mess')}` },
                 {
                   type: 'email',
-                  message: 'Email is not valid'
+                  message: `${t('email_valid')}`
                 }
               ]}
             >
@@ -224,33 +111,9 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
             </Form.Item>
 
             <Form.Item
-              name='address'
-              label={t('address_form')}
-              rules={[{ required: true }]}
-            >
-              <Input size='middle' />
-            </Form.Item>
-
-            <Form.Item
-              name='siteCode'
-              label={t('farm_code')}
-              rules={[{ required: true }]}
-            >
-              <Input size='middle' />
-            </Form.Item>
-
-            <Form.Item
-              name='siteName'
-              label={t('farm_name')}
-              rules={[{ required: true, message: 'Password is required' }]}
-            >
-              <Input size='middle' />
-            </Form.Item>
-
-            <Form.Item
               name='firstName'
               label={t('first_name')}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: `${t('required_mess')}` }]}
             >
               <Input size='middle' />
             </Form.Item>
@@ -258,17 +121,41 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
             <Form.Item
               name='lastName'
               label={t('last_name')}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: `${t('required_mess')}` }]}
             >
               <Input size='middle' />
             </Form.Item>
 
             <Form.Item
-              name='phone'
-              label={t('phone_number')}
-              rules={[{ required: true }]}
+              name='password'
+              label={t('password')}
+              rules={[{ required: true, message: `${t('required_mess')}` }]}
             >
-              <Input size='middle' />
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              name='confirmPassword'
+              label={t('pass_confirm')}
+              dependencies={['password']}
+              validateTrigger='onBlur'
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: `${t('required_mess')}`
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error(`${t('pass_confirmError')}`));
+                  }
+                })
+              ]}
+            >
+              <Input.Password />
             </Form.Item>
           </Form>
         </ConfigProvider>
