@@ -17,6 +17,7 @@ import {
   STATUS_NOT_FOUND,
   STATUS_SERVER_ERROR
 } from '@/constants/https';
+import Admin from '@/types/admin';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +35,7 @@ const RegisterForm: React.FC = () => {
     setErrorFCode('');
     setErrorFName('');
   };
+
   useEffect(() => {
     if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
@@ -42,6 +44,9 @@ const RegisterForm: React.FC = () => {
       setErrorFCode('');
       setErrorFName('');
       router.push(SUCCESS_PATH);
+
+      const eeee = userRegister?.data as Admin;
+      console.log('eeee', eeee.id);
     }
     if (userRegister?.status === STATUS_BAD_REQUEST) {
       const messageError = userRegister?.message as string;
