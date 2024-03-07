@@ -7,6 +7,6 @@ export default interface FormRegisterValues {
   address?: string;
   siteCode?: string;
   siteName?: string;
-  solutionId?: string | '45aa6629-5e67-4c70-aa9c-eed4e82e7da6';
+  solutionId?: string | '';
   paymentDetail?: string | '';
 }

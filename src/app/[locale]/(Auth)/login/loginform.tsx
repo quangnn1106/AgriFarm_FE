@@ -12,6 +12,8 @@ import { useSearchParams } from 'next/navigation';
 import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
 import { Link, useRouter } from '@/navigation';
 import { hasDuplicate } from '@/utils/checkUrl';
+import { useAppSelector } from '@/redux/hooks';
+import Admin from '@/types/admin';
 
 const cx = classNames.bind(styles);
 
@@ -43,7 +45,7 @@ const LoginForm: React.FC = () => {
       console.log('data: ', data.siteCode);
       setLoading(true);
       const res = await signIn('credentials', {
-        sideCode: data?.siteCode as string,
+        // siteCode: data?.siteCode as string,
         userName: data?.userName as string,
         password: data?.password as string,
         redirect: false,

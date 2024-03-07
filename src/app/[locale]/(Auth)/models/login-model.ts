@@ -1,5 +1,5 @@
 export type loginModel = {
-  siteCode: string;
+  siteCode?: string;
   userName: string;
   password: string;
 };

@@ -74,6 +74,9 @@
     "Message": {
         "server_error": "Lỗi máy chủ vui lòng thử lại",
         "email_error": "Email đã tồn tại vui lòng thử lại",
+        "farmCode_error": "Mã của nông trại đã tồn tại vui lòng thử lại",
+        "farmName_error": "Tên của nông trại đã tồn tại vui lòng thử lại",
+        "allErrorRegis": "Farm Name already exists. Farm Code already exists. Email already exists.",
         "add_susses": "Thêm thành công",
         "update_susses": "Cập nhật thành công",
         "add_error": "Thêm thất bại",
@@ -86,7 +89,6 @@
         "subTitle_error": "Vui lòng kiểm tra và sửa đổi các thông tin sau trước khi gửi lại.",
         "btn_redToLogin": "Đi đến trang đăng nhập",
         "btn_redToRegis": "Trở lại trang đăng ký"
-
     },
     "Disease": {
         "diagnostic": "Chẩn đoán bệnh trên lúa dựa trên mô tả triệu chứng",
@@ -164,5 +166,15 @@
         "last_name": "Tên: ",
         "phone_number": "Số điện thoại: ",
         "address_form": "Địa chỉ: "
+    },
+    "AddStaff": {
+        "title_add": "Thêm mới chủ nông trại",
+        "first_name": "Họ và chữ đệm: ",
+        "last_name": "Tên: ",
+        "password": "Mật khẩu",
+        "pass_confirm": "Nhập lại mật khẩu",
+        "pass_confirmError": "Mật khẩu nhập lại không khớp",
+        "required_mess": "Nhập trường bắt buộc",
+        "email_valid": "Sai định dạng email"
     }
 }
