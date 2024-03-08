@@ -13,8 +13,8 @@ export const RiceVarietyColumns: TableColumnsType<RiceVariety> = [
         width: 'max-content',
     },
     {
-        title: 'Type',
-        dataIndex: 'type',
+        title: 'Stock',
+        dataIndex: 'stock',
         width: 'max-content',
     },
     {

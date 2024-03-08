@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import { useEffect, useState } from 'react';
 import SeasonTableComponent from './component/Table/table';
@@ -24,45 +25,75 @@ import styles from '../adminStyle.module.scss';
 import classNames from 'classnames/bind';
 import FilterSection from './component/FilterSection/filterSection';
 import getListSeasonApi from '@/services/Admin/Season/getSeasonsApi';
+import { usePathname, useRouter } from '@/navigation';
+import { AxiosInstance } from 'axios';
+import { useSession } from 'next-auth/react';
+
 
 type Props = {};
 const SeasonManagement = (props: Props) => {
+//style 
   const cx = classNames.bind(styles);
 
-  const [data, setData] = useState<SeasonModel[]>([]);
-  const [loading, setLoading] = useState(false);
+// get id user
+  const { data: session } = useSession();
+  const sideId = session?.user.userInfo.siteId;
 
+// list
+  const [loading, setLoading] = useState(true);
+  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
+//  details
+  const [seasonId, setSeasonId] = useState<string>('');
+// action add, update, filter
   const [createState, setCreateState] = useState<Boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
-
-  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
-  const [userId, setUserId] = useState<string>('');
-
   const [filterUsers, setFilterUsers] = useState<SeasonModel[]>([]);
   const [filterMode, setFilterMode] = useState<string>('updated_at');
+
   const http = UseAxiosAuth();
 
-  useEffect(() => {
-    getData();
-  }, []);
+// Navigation
+  const router = useRouter();
+  const pathName = usePathname();
 
-  const getData = async () => {
+
+// Get list Season Data
+  const getDataListSeason = async (http: AxiosInstance, sideId?: string) => {
     try {
-      const res = await getListSeasonApi();
-      setData(res);
+      const responseData = await getListSeasonApi(sideId, http);
+      setSeasons(responseData.data as SeasonModel[]);
+      console.log(responseData.data);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error('Error calling API getListSeasons:', error);
     }
   };
+  useEffect(() => {
+    getDataListSeason(http, sideId);
+  }, [createState, http, sideId]);
+
+  // const fetchStaff = async (http: AxiosInstance, sideId?: string) => {
+  //   try {
+  //     const responseData = await getStaffsService(sideId, http);
+  //     //console.log(responseData);
+  //     setUsers(responseData?.data as Staffs[]);
+  //     setIsFetching(false);
+  //   } catch (error) {
+  //     console.error('Error calling API Staffs:', error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchStaff(http, sideId);
+  // }, [createState, http, formModal, sideId]);
 
   const handleDelete = (id: string) => {};
   const handleUpdate = async (id: string) => {
-    setUserId(id);
+    setSeasonId(id);
     setUpdateState(true);
   };
   const handleDetails = async (id: string) => {
-    setUserId(id);
-    setUpdateState(true);
+    setSeasonId(id);
+    router.push(`${pathName}/details/${id}`);
   };
 
   const {
@@ -80,8 +111,8 @@ const SeasonManagement = (props: Props) => {
 
   const checkRowSelection = {
     getCheckboxProps: (record: SeasonModel) => ({
-      disabled: record.name === 'Disabled',
-      name: record.name
+      disabled: record.title === 'Disabled',
+      name: record.title
     })
   };
 
@@ -180,7 +211,7 @@ const SeasonManagement = (props: Props) => {
                     ...checkRowSelection
                   }}
                   columns={seasonTableColumns}
-                  dataSource={data?.map(season => ({
+                  dataSource={seasons?.map(season => ({
                     ...season,
                     onDetails: () => handleDetails(season.id!),
                     onDelete: () => handleDelete(season.id!),

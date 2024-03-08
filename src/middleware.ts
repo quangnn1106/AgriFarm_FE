@@ -18,6 +18,7 @@ const publicPages = [
   ERROR_PATH,
   '/season',
   '/season/details',
+  '/season/details/ID1',
   '/season/add',
   '/subscription'
 

@@ -9,12 +9,12 @@ const fetchRiceVarietyDetails:( id : any) => Promise<RiceVariety> = async (id) =
             "id":"",
             "name":"",
             "description":"",
-            "type":""};
+            "stock":""};
         listRiceVariety.forEach(element => {
             if (element.id == id) {
                 item.id = element.id;
                 item.name = element.name;
-                item.type = element.type;
+                item.stock = element.stock;
                 item.description = element.description;
             }   
         });

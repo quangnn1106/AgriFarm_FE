@@ -115,6 +115,7 @@ const AddSeason = ({
               pageSize: 5
             }}
             rowKey='id'
+            style={{width:'100%'}}
           ></Table>
           <br />
           <Search
@@ -136,6 +137,7 @@ const AddSeason = ({
               pageSize: 5
             }}
             rowKey='id'
+            style={{width:'100%'}}
           ></Table>
         </Modal>
       </ConfigProvider>

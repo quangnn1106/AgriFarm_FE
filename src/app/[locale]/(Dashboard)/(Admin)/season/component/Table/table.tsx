@@ -70,8 +70,8 @@ const onChange: TableProps<SeasonModel>['onChange'] = (
 
 const checkRowSelection = {
   getCheckboxProps: (record: SeasonModel) => ({
-    disabled: record.name === 'Disabled',
-    name: record.name
+    disabled: record.title === 'Disabled',
+    name: record.title
   })
 };
 return (

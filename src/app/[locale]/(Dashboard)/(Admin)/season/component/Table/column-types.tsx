@@ -25,46 +25,46 @@ import { SeasonModel } from '../../models/season-model';
 export const seasonTableColumns: TableColumnsType<SeasonModel> = [
   {
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'title',
     width: 'max-content',
     fixed: 'left'
   },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: 'max-content',
-    render: (_, { status }) => {
-      let color = '';
-      if (status == 'In progress') {
-        color = 'processing';
-      } else if (status == 'Pending') {
-        color = 'warning';
-      } else if (status == 'Done') {
-        color = 'success';
-      } else if (status == 'Cancel') {
-        color = 'error';
-      } else {
-        color = '';
-      }
-      return (
-          <Tag
-            color={color}
-            bordered={false}
-          >
-            {status}
-          </Tag>
+  // {
+  //   title: 'Status',
+  //   dataIndex: 'status',
+  //   width: 'max-content',
+  //   render: (_, { status }) => {
+  //     let color = '';
+  //     if (status == 'In progress') {
+  //       color = 'processing';
+  //     } else if (status == 'Pending') {
+  //       color = 'warning';
+  //     } else if (status == 'Done') {
+  //       color = 'success';
+  //     } else if (status == 'Cancel') {
+  //       color = 'error';
+  //     } else {
+  //       color = '';
+  //     }
+  //     return (
+  //         <Tag
+  //           color={color}
+  //           bordered={false}
+  //         >
+  //           {status}
+  //         </Tag>
         
-      );
-    }
-  },
+  //     );
+  //   }
+  // },
   {
     title: 'Start Date',
-    dataIndex: 'startDate',
+    dataIndex: 'startIn',
     width: 'max-content'
   },
   {
     title: 'End Date',
-    dataIndex: 'startDate',
+    dataIndex: 'endIn',
     width: 'max-content'
   },
   {

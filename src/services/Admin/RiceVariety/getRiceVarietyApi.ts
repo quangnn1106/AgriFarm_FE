@@ -8,8 +8,8 @@ const fetchListRiceVarietyData = async () => {
             riceVarietyList.push({
                 id: 'IDA'+i,
                 name: 'Tai Nguyen',
-                type: 'Short',
-                description: '3 months'
+                stock: 20,
+                description: 'Bạn hãy trồng lúa này trong 3 tháng, sẽ được hạt gạo thơm, dẻo ngon nhất Việt Nam'
             });
         }
         return riceVarietyList;

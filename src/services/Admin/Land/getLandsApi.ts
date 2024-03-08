@@ -9,17 +9,15 @@ const fetchListLandData = async () => {
             landList.push({
               id: 'ID' + i,
               name: 'LandA',
-              square: '38',
+              square: 38,
               description: 'ABC',
-              riceVarietyID : 'IDA1'
             });
           }
           landList.push({
             id: 'IDX',
             name: 'LandX',
-            square: '38',
+            square: 35,
             description: 'ABC',
-            riceVarietyID : 'IDA2'
           })
 
         return landList;

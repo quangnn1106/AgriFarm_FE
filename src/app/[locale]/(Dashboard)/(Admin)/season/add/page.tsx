@@ -28,10 +28,11 @@ import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
 import TitleHeader from '../component/TitleHeader/tiltle-header';
 import { seasonTableColumns } from '../component/Table/column-types';
-import { Land } from '../models/season-model';
+import { Land, Product } from '../models/season-model';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
-import { LandAndRiceVarietyColumns } from '../details/LandAndRiceVarietyColumn/column-types';
+import { LandAndRiceVarietyColumns } from '../details/[id]/LandAndRiceVarietyColumn/column-types';
 import AddSeason from './component/add-land-and-rice-variety-modal';
+import fetchListProductData from '@/services/Admin/Product/getProductsApi';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
@@ -45,26 +46,26 @@ const SeasonCreate = (props: Props) => {
   };
 
   const checkRowSelection = {
-    getCheckboxProps: (record: Land) => ({
+    getCheckboxProps: (record: Product) => ({
       disabled: record.name === 'Disabled',
       name: record.name
     })
   };
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<Land[]>([]);
+  const [data, setData] = useState<Product[]>([]);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
-  const getData = async () => {
-    try {
-      const res = await fetchListLandData();
-      setData(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getData = async () => {
+  //   try {
+  //     const res = await fetchListProductData();
+  //     setData(res);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // handle add season action
   const [createState, setCreateState] = useState<boolean>(false);
@@ -149,7 +150,8 @@ const SeasonCreate = (props: Props) => {
             >
               <Flex
                 align='center'
-                justify='space-between'
+                justify='center'
+                gap={10}
               >
                 <label>Start:</label>
                 <DatePicker onChange={onChange} />
@@ -168,7 +170,8 @@ const SeasonCreate = (props: Props) => {
             >
               <Flex
                 align='center'
-                justify='space-between'
+                justify='center'
+                gap={10}
               >
                 <label>End:</label>
                 <DatePicker onChange={onChange} />
