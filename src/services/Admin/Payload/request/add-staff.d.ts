@@ -1,10 +1,8 @@
 export interface AddStaffPayLoad {
   firstName: string;
   lastName: string;
-  identificationCard: string;
+  userName: string;
   phoneNumber: string;
-  address: string;
-  gender: number;
-  education: string;
-  dob: string;
+  password: string;
+  confirmPassword: string;
 }
