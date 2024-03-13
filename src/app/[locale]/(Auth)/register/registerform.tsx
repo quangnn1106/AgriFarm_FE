@@ -37,6 +37,8 @@ const RegisterForm: React.FC = () => {
     setErrorEmail('');
     setErrorFCode('');
     setErrorFName('');
+    const messageError = userRegister?.message as string;
+    console.log('messageError', messageError);
   };
   useEffect(() => {
     if (userRegister?.status === STATUS_ACCEPTED) {
@@ -67,6 +69,7 @@ const RegisterForm: React.FC = () => {
 
       if (messageError.includes(MessageError.EMAIL_EXIST)) {
         setErrorEmail(t('email_error'));
+
         setErrorFCode('');
         setErrorFName('');
       }
@@ -75,6 +78,8 @@ const RegisterForm: React.FC = () => {
 
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
+    console.log('errorEmail: ', errorEmail);
+
     const actionAsyncThunk = registerAsyncApi(data);
     dispatch(actionAsyncThunk);
     console.log("Start api thanh toan");
