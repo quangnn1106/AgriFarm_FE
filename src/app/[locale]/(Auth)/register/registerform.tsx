@@ -18,6 +18,8 @@ import {
   STATUS_SERVER_ERROR
 } from '@/constants/https';
 import Admin from '@/types/admin';
+import UseAxiosAuth from '@/utils/axiosClient';
+import paymentApi from '@/services/Payment/paymentApi';
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +29,7 @@ const RegisterForm: React.FC = () => {
   const t = useTranslations('Message');
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string>('');
+  const http = UseAxiosAuth();
   const [errorEmail, setErrorEmail] = useState<string>('');
   const [errorFCode, setErrorFCode] = useState<string>('');
   const [errorFName, setErrorFName] = useState<string>('');
@@ -37,7 +40,6 @@ const RegisterForm: React.FC = () => {
     const messageError = userRegister?.message as string;
     console.log('messageError', messageError);
   };
-
   useEffect(() => {
     if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
@@ -80,6 +82,10 @@ const RegisterForm: React.FC = () => {
 
     const actionAsyncThunk = registerAsyncApi(data);
     dispatch(actionAsyncThunk);
+    console.log("Start api thanh toan");
+    const res = await paymentApi(http);
+    console.log(res);
+    window.location.href = res?.data.paymentUrl;
   };
 
   return (
