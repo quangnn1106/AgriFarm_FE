@@ -2,12 +2,17 @@
 
 'use client';
 import { TableColumnsType, Tag } from 'antd';
-import { Land, Product, RiceVariety } from '../../../models/season-model';
-import fetchRiceVarietyDetails from '@/services/Admin/RiceVariety/getRiceVarietyDetailApi';
+import { Land, Product, RiceVariety } from '../../models/season-model';
+// import fetchRiceVarietyDetails from '@/services/Admin/RiceVariety/getRiceVarietyDetailApi';
 import React, { useEffect, useState } from 'react';
 
 
   export const LandAndRiceVarietyColumns: TableColumnsType<Product> = [
+    {
+      title: 'Land Name',
+      dataIndex: 'id',
+      hidden:true
+    },
     {
       title: 'Land Name',
       dataIndex: 'land',

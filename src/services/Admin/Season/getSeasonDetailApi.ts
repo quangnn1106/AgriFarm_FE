@@ -1,33 +1,29 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { Land, RiceVariety, Season, SeasonModel } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model";
+import SeasonModelDetail, { Land, RiceVariety, Season, SeasonModel } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model";
 import getListSeasonApi from "./getSeasonsApi";
 import { useSession } from "next-auth/react";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { useState } from "react";
+import { AxiosInstance } from "axios";
+import HttpResponseCommon from "@/types/response";
 
-const getSeasonDetailApi:( id : any) => Promise<SeasonModel> = async (id) => {
-    // get id user
-  const { data: session } = useSession();
-  const sideId = session?.user.userInfo.siteId;
-  const http = UseAxiosAuth();
-
-  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
+const getSeasonDetailApi:(
+    http?: AxiosInstance | null,
+    seasonId?: string | null) => Promise<HttpResponseCommon<SeasonModelDetail  | [] | undefined>> = async (http, seasonId) => {
 
     try {
-        const responseData = await getListSeasonApi(sideId, http);
-        setSeasons(responseData?.data as SeasonModel[]);
-        let item: SeasonModel = {};
-        seasons.forEach(element => {
-            if (element.id == id) {
-                item.id = element.id;
-                item.title = element.description;
-                item.startIn = element.startIn;
-                item.endIn = element.endIn;
-                item.description = element.description;
-            }   
-        });
-        return item;
+        const responseData = await http?.get(`/cult/seasons/get`, {
+            params: {
+              id: seasonId,
+            }
+            // headers: {
+            //   pageSize: 4,
+            //   pageNumber: 1
+            // }
+          });
+          //console.log('response seasonDetail: ', responseData?.data.data);
+        return responseData?.data;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error
         if (error instanceof Error) {

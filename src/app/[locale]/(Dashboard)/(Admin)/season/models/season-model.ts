@@ -1,20 +1,35 @@
 export type SeasonModel = {
     id? : string | '';
     title?: string | '';
+    description?: string | '';
     startIn?: string | '';
     endIn?: string | '';
-    description?: string | '';
     onDelete?: () => void;
     onUpdate?: () => void;
     onDetails?: () => void;
 }
 
-export type Land = {
-    id?: string | '';  
-    name?: string | '';
-    square?: number | '';
-    description?: string | '';
+export default interface SeasonModelDetail {
+    id? : string;
+    title?: string;
+    description?: string;
+    startIn?: string;
+    endIn?: string;
 }
+
+export type Land = {
+    id: string
+    siteId: string
+    siteName: string
+    description: string
+    name: string
+    positions: Position[]
+}
+
+export interface Position {
+    lat: number
+    long: number
+  }
 
 export type RiceVariety = {
     id?: string | '';
@@ -29,7 +44,7 @@ export type Product = {
     totalQuantity?: number | '';
     quantity?: number | '';
     land: LandProd;
-    seed: RiceVarietyPro;
+    seed: SeedPro;
     season: Season;
 }
 
@@ -38,7 +53,7 @@ export type LandProd = {
     name?: string | '';
 }
 
-export type RiceVarietyPro = {
+export type SeedPro = {
     id?: string | '';
     name?: string |'';
 }
@@ -48,4 +63,20 @@ export type Season = {
     name?: string | '';
 }
 
-
+export interface Seed {
+    id: string
+    stock: number
+    unitPrice: number
+    measureUnit: string
+    name: string
+    description: string
+    notes: string
+    properties: Property[]
+  }
+  
+  export interface Property {
+    name: string
+    value: number
+    unit: string
+  }
+  

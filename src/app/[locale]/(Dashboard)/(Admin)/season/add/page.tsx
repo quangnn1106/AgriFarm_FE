@@ -30,9 +30,9 @@ import TitleHeader from '../component/TitleHeader/tiltle-header';
 import { seasonTableColumns } from '../component/Table/column-types';
 import { Land, Product } from '../models/season-model';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
-import { LandAndRiceVarietyColumns } from '../details/[id]/LandAndRiceVarietyColumn/column-types';
-import AddSeason from './component/add-land-and-rice-variety-modal';
+import { LandAndRiceVarietyColumns } from '../details/LandAndRiceVarietyColumn/column-types';
 import fetchListProductData from '@/services/Admin/Product/getProductsApi';
+import AddProductSeason from '../component/AddProductModal/add-land-and-rice-variety-modal';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
@@ -193,12 +193,13 @@ const SeasonCreate = (props: Props) => {
             >
               Add
             </Button>
-            <AddSeason
+            {/* <AddProductSeason
               params={{
+  
                 visible: createState,
                 onCancel: () => setCreateState(false)
               }}
-            ></AddSeason>
+            ></AddProductSeason> */}
 
             {/* <Button
           onClick={() => setCreateState(true)}

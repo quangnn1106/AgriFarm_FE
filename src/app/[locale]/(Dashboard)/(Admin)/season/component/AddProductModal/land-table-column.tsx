@@ -1,22 +1,22 @@
 import { Radio, Table, TableColumnProps, TableColumnsType } from "antd";
-import { Land, RiceVariety } from "../../models/season-model";
+import { Land } from "../../models/season-model";
 
-export const RiceVarietyColumns: TableColumnsType<RiceVariety> = [
+export const LandColumns: TableColumnsType<Land> = [
     {
         title: 'ID',
         dataIndex: 'id',
         hidden: true
     },
     {
-        title: 'Name',
+        title: 'Land Name',
         dataIndex: 'name',
         width: 'max-content',
     },
-    {
-        title: 'Stock',
-        dataIndex: 'stock',
-        width: 'max-content',
-    },
+    // {
+    //     title: 'Square',
+    //     dataIndex: 'square',
+    //     width: 'max-content',
+    // },
     {
         title: 'Description',
         dataIndex: 'description',
@@ -28,4 +28,3 @@ export const RiceVarietyColumns: TableColumnsType<RiceVariety> = [
         width: 'max-content',
     }
 ];
-
