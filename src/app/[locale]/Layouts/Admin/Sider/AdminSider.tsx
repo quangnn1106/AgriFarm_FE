@@ -86,8 +86,8 @@ const AdminSider = ({ path }: Props) => {
     getItem(`${t('activities')}`, 'activities', <FaClipboardList />, [
       getItem(<Link href={`/risk`}>{t('risk')}</Link>, `/risk`, <WarningOutlined />),
       getItem(
-        <Link href={`/activity`}>{t('activity')}</Link>,
-        `/activity`,
+        <Link href={`/activities`}>{t('activity')}</Link>,
+        `/activities`,
         <FaClipboardList />
       ),
       getItem(
