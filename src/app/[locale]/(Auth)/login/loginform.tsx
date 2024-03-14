@@ -23,12 +23,12 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
-
-  const callbackUrl =
-    hasDuplicate(searchParams.get('callbackUrl') || '') === true
-      ? searchParams.get('callbackUrl')?.substring(3)
-      : searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-  console.log('call back url123: ', callbackUrl?.substring(1));
+  const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  // const callbackUrl =
+  //   hasDuplicate(searchParams.get('callbackUrl') || '') === true
+  //     ? searchParams.get('callbackUrl')?.substring(3)
+  //     : searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  // console.log('call back url123: ', callbackUrl?.substring(1));
   // const handleDupicate = hasDuplicate(callbackUrl as string);
   // if (handleDupicate) {
   //   console.log('12312331213');

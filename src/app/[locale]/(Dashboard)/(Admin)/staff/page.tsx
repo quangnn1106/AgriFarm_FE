@@ -22,9 +22,9 @@ import { UserModel } from './models/user-model';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
-import { getStaffsService } from '@/services/Admin/getStaffsService';
-import Staffs from '@/services/Admin/Payload/response/staffs';
-import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
+import { getStaffsService } from '@/services/Admin/Staffs/getStaffsService';
+import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
+
 import { AxiosInstance } from 'axios';
 
 import { useSession } from 'next-auth/react';
@@ -114,7 +114,7 @@ const UserManagement = (props: Props) => {
         />
         <AddUser
           params={{
-            siteId: siteId ,
+            siteId: siteId,
             visible: createState,
             onCancel: () => setCreateState(false)
           }}

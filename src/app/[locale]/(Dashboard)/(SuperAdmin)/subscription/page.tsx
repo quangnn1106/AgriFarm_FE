@@ -23,10 +23,10 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { Content } from 'antd/es/layout/layout';
 import { userTableColumns } from './columnsType';
 
-import { fetchRegisterForm } from '@/services/SuperAdmin/getFormService';
+import { fetchRegisterForm } from '@/services/SuperAdmin/RegisterForm/getFormService';
 import { AxiosInstance } from 'axios';
 import UpdateFormRegis from './update/ModalUpdate';
-import { approvedRegisterForm } from '@/services/SuperAdmin/approvedFormRegis';
+import { approvedRegisterForm } from '@/services/SuperAdmin/RegisterForm/approvedFormRegis';
 import { STATUS_NOT_FOUND } from '@/constants/https';
 
 const cx = classNames.bind(styles);
