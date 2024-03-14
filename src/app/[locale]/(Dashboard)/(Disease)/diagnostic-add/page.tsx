@@ -89,6 +89,7 @@ const DiseaseDiagnosticAdd = () => {
                         setMsgAdd(t('disease_diagnostic_fail'));
                         setDisplayModalAdd(true);
                     } else {
+                        let isForEachComplete = false; // Khởi tạo biến cờ
                         let listDisease: TabsProps['items'] = [];
                         diseaseId.forEach(async (element: string, index: number) => {
                             const diseaseDiagnostic : diseaseDiagnosticDef = {
@@ -103,6 +104,7 @@ const DiseaseDiagnosticAdd = () => {
                             if (res.statusCode != STATUS_OK) {
                                 setMsgAdd(t('disease_diagnostic_fail'));
                                 setDisplayModalAdd(true);
+                                return;
                             } else {
                                 setDiagnoeseId(res.data.id);
                                 const responseData = await plantDiseaseInfoApi(http, element);
@@ -128,10 +130,22 @@ const DiseaseDiagnosticAdd = () => {
                                 setMsgAdd("");
                                 setDiagnosticRs(true);
                             }
+                            // Kiểm tra xem đã chạy hết vòng lặp chưa
+                            if (index === diseaseId.length - 1) {
+                                isForEachComplete = true;
+                            }
                         });
-                        if (listDisease.length == 0) {
-                            setPlantDisease(null);
-                        }
+                        // Sau khi vòng lặp kết thúc, kiểm tra và thực hiện đoạn mã
+                        const checkCompletionInterval = setInterval(() => {
+                            if (isForEachComplete) {
+                                clearInterval(checkCompletionInterval); // Dừng interval
+                                if (listDisease == undefined || listDisease.length == 0) {
+                                    setMsgAdd(t('disease_diagnostic_fail'));
+                                    setDisplayModalAdd(true);
+                                    setPlantDisease(null);
+                                }
+                            }
+                        }, 100); // Kiểm tra mỗi 100ms
                         setItemsDisease(listDisease);
                     }
                     
