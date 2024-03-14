@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import styles from '../../../management-page.module.scss';
+import styles from '../../../../(SuperAdmin)/management-page.module.scss';
 
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
