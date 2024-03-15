@@ -22,10 +22,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
     width: 'max-content',
     fixed: 'left'
   },
-  // {
-  //   title: 'Site Code',
-  //   dataIndex: 'siteCode'
-  // },
+
   {
     title: 'Name',
     dataIndex: 'name',
@@ -33,15 +30,20 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
   },
 
   {
-    title: 'Role',
-    dataIndex: 'role',
+    title: 'Avatar',
+    dataIndex: 'avatar',
 
+    width: 'max-content'
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
     width: 'max-content'
   },
   {
     title: 'Status',
     dataIndex: 'isLockout',
-    sorter: true,
+
     // filterMode: 'tree',
     // onFilter: (value: boolean, record)=> record.is_active.,
     render: (_, { isActive }) => {

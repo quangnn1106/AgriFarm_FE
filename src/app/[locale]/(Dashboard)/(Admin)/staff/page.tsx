@@ -113,7 +113,7 @@ const UserManagement = (props: Props) => {
           icon={<PlusOutlined />}
         />
         <AddUser
-          params={{
+          params={{ 
             siteId: siteId,
             visible: createState,
             onCancel: () => setCreateState(false)

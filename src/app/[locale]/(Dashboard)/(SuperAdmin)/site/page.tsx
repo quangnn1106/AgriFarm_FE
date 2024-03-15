@@ -3,11 +3,17 @@
 import * as React from 'react';
 
 import MapboxMap from '@/components/MapBox/mapbox';
-import { Col, ConfigProvider, Flex, Layout, Row, Table, theme } from 'antd';
-import Map, { Marker } from 'react-map-gl';
+import { Button, Col, ConfigProvider, Flex, Layout, Row, Table, theme } from 'antd';
+import Map, {
+  FullscreenControl,
+  GeolocateControl,
+  Marker,
+  NavigationControl,
+  ScaleControl
+} from 'react-map-gl';
 import styles from './site.module.scss';
 import SearchConditionForm from './components/SearchCondition/searchConditionForm';
-
+import { PlusOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import classNames from 'classnames/bind';
 import BreadcrumbComponent from '../subscription/components/Breadcrumb/breadCrumb';
@@ -22,7 +28,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import MapBoxReact from '@/components/MapBox/mapBoxReact';
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
-import useGeolocation from '@/utils/getlocaiton';
+
+import { useRouter } from '@/navigation';
+import { SITE_MAP_ADD_PATH } from '@/constants/routes';
+import GeocoderControl from '@/components/MapBox/geocoder-controll';
 
 type Props = {};
 interface CenterState {
@@ -36,7 +45,10 @@ const SitePage = (props: Props) => {
   const [map, setMap] = React.useState<mapboxgl.Map>();
   const [sites, setSites] = React.useState<Sites[] | []>([]);
   const t = useTranslations('Disease');
+  const t2 = useTranslations('Button');
+
   const http = UseAxiosAuth();
+  const router = useRouter();
   const [viewState, setViewState] = React.useState<CenterState>({
     latitude: 9.99763360283688,
     longitude: 105.7125548348531,
@@ -105,8 +117,9 @@ const SitePage = (props: Props) => {
   //     )),
   //   [sites]
   // );
-
-  console.log('long lat: ', sites);
+  const handleAddSite = () => {
+    router.push(SITE_MAP_ADD_PATH);
+  };
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -114,16 +127,8 @@ const SitePage = (props: Props) => {
   return (
     <>
       <Content>
-        {/* <div>
-        <MapboxMap
-        // initialOptions={{ center: [38.0983, 55.7038] }}
-        //onMapLoaded={setMap}
-        // initialOptions={{ center: [38.0983, 55.7038] }}
-        // onMapLoaded={handleMapLoading}
-        />
-      </div> */}
         <BreadcrumbComponent />
-        {latitude}
+
         <Map
           // {...viewState}
           //   onMove={evt => setViewState(evt.viewState)}
@@ -132,17 +137,26 @@ const SitePage = (props: Props) => {
             longitude: 105.7125548348531,
             zoom: 7
           }}
-          style={{ width: '100%', height: '400px' }}
+          style={{ width: '100%', height: '400px', margin: '25px 0' }}
           mapStyle='mapbox://styles/mapbox/streets-v11'
           mapboxAccessToken={MAPBOX_TOKEN}
         >
-          {sites.map((city, index) =>
+          <GeocoderControl
+            mapboxAccessToken={MAPBOX_TOKEN}
+            position='top-right'
+          />
+          <GeolocateControl position='top-left' />
+          <FullscreenControl position='top-left' />
+          <NavigationControl position='top-left' />
+          <ScaleControl />
+          {sites?.map((city, index) =>
             city.positions.length > 0 ? (
               <Marker
                 key={index}
                 longitude={city?.positions[0]?.long || 0}
                 latitude={city?.positions[0]?.lat || 0}
                 color='red'
+                anchor='bottom'
                 // onClick={e => {
                 //   // If we let the click event propagates to the map, it will immediately close the popup
                 //   // with `closeOnClick: true`
@@ -150,27 +164,17 @@ const SitePage = (props: Props) => {
                 //   setPopupInfo(city);
                 // }}
               >
-                {city?.siteCode ? city?.siteCode : '123'}
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Pin />{' '}
+                    <span className='red'>{city?.siteCode ? city?.siteCode : ''}</span>
+                  </div>
+                </>
               </Marker>
             ) : (
               ''
             )
           )}
-
-          {/* <Marker
-            longitude={viewState?.longitude as number}
-            latitude={viewState?.latitude as number}
-            color='red'
-
-            // onClick={e => {
-            //   // If we let the click event propagates to the map, it will immediately close the popup
-            //   // with `closeOnClick: true`
-            //   e.originalEvent.stopPropagation();
-            //   setPopupInfo(city);
-            // }}
-          >
-            <p>name</p>
-          </Marker> */}
         </Map>
 
         <ColoredLine text={t('search_condition')} />
@@ -205,6 +209,22 @@ const SitePage = (props: Props) => {
               }}
             >
               <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                <Flex
+                  gap='small'
+                  wrap='wrap'
+                  className={cx('btn_row')}
+                >
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    icon={<PlusOutlined />}
+                    size='large'
+                    // className={cx('disease__btn')}
+                    onClick={handleAddSite}
+                  >
+                    {t2('btn_add')}
+                  </Button>
+                </Flex>
                 <Table
                   loading={false}
                   rowKey={'id'}
@@ -266,7 +286,7 @@ interface ColoredLineProps {
   text: string;
 }
 const ColoredLine: React.FC<ColoredLineProps> = ({ text }) => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
+  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 25 }}>
     <div
       className={cx('disease__line')}
       style={{ flex: 1 }}

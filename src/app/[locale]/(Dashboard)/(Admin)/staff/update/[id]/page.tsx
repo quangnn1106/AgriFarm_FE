@@ -34,7 +34,7 @@ import type {
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { PlusOutlined, CameraOutlined, HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
-// import styles from '../management-page.module.scss';
+
 import { useTranslations } from 'next-intl';
 import styles from '../../../management-page.module.scss';
 import { Content } from 'antd/es/layout/layout';
@@ -42,17 +42,19 @@ import { certificationTableColumn } from '../certificationColumnType';
 import { CertificationModel } from '../../models/certificationModel';
 import { AxiosInstance } from 'axios';
 import { getStaffsServiceDetails } from '@/services/Admin/Staffs/getStaffsService';
-import StaffsDetails from '@/services/Admin/Payload/response/staffs-detail';
+
 dayjs.extend(customParseFormat);
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { STATUS_OK } from '@/constants/https';
 import Image from 'next/image';
 import { updateStaffService } from '@/services/Admin/Staffs/updateStaffService';
-import { updateStaffPayLoad } from '@/services/Admin/Payload/request/update-staff';
+
 import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
 import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
 import { NotificationPlacement } from 'antd/es/notification/interface';
+import StaffsDetails from '@/services/Admin/Staffs/Payload/response/staffs-detail';
+import { updateStaffPayLoad } from '@/services/Admin/Staffs/Payload/request/update-staff';
 
 const { TextArea } = Input;
 

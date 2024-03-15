@@ -5,11 +5,14 @@ import styles from '../../../management-page.module.scss';
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
+import { DASH_BOARD_PATH } from '@/constants/routes';
+import { usePathname } from '@/navigation';
 
 const cx = classNames.bind(styles);
 type Props = {};
 
 const BreadcrumbComponent = (props: Props) => {
+  const path = usePathname();
   return (
     <>
       <ConfigProvider
@@ -42,10 +45,23 @@ const BreadcrumbComponent = (props: Props) => {
         </Button>
       </ConfigProvider>
 
-      <Breadcrumb style={{ margin: '0px 24px' }}>
+      {/* <Breadcrumb style={{ margin: '0px 24px' }}>
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>User</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
+
+      <Breadcrumb
+        style={{ margin: '0px 24px' }}
+        items={[
+          {
+            href: DASH_BOARD_PATH,
+            title: 'Statistic'
+          },
+          {
+            title: path.substring(1).toLocaleUpperCase()
+          }
+        ]}
+      />
     </>
   );
 };
