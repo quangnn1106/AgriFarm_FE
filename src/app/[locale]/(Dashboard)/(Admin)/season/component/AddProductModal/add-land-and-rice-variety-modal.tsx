@@ -1,4 +1,4 @@
-'use client'
+'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
 import { LandColumns } from './land-table-column';
@@ -14,23 +14,33 @@ import { SearchProps } from 'antd/es/input/Search';
 import { useSession } from 'next-auth/react';
 import { AxiosInstance } from 'axios';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { CreateProductDto, createProductApi } from '@/services/Admin/Product/postProductApi';
+import {
+  CreateProductDto,
+  createProductApi
+} from '@/services/Admin/Product/postProductApi';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { NextIntlClientProvider, useTranslations } from 'next-intl';
-import { ProductProvider, useProductContext } from '@/services/Admin/Product/serviceProductsData';
+import {
+  ProductProvider,
+  useProductContext
+} from '@/services/Admin/Product/serviceProductsData';
 import { STATUS_CREATED } from '@/constants/https';
-
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setProductsAction } from '@/redux/features/season-slice';
+import { useSelector } from 'react-redux';
 
 const AddProductSeason = ({
   params
 }: {
-  params: { seasonId: string | undefined ; visible: boolean; onCancel: () => void };
+  params: { seasonId: string | undefined; visible: boolean; onCancel: () => void };
 }) => {
-
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
+  const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
+  //const { productGlobal } = useSelector(state => state.productsReducer.productGlobal);
+  const dispatch = useAppDispatch();
 
   // Get land list data
   const [lands, setLands] = useState<Land[]>([]);
@@ -56,7 +66,7 @@ const AddProductSeason = ({
   const [loadingSeedData, setLoadingSeedData] = useState(true);
   useEffect(() => {
     getRiceVarietyData(http, siteId);
-  }, [http, siteId]);
+  }, [http, siteId, productGlobal]);
 
   const getRiceVarietyData = async (http: AxiosInstance, siteId?: string) => {
     try {
@@ -90,25 +100,24 @@ const AddProductSeason = ({
     console.log(info?.source, value);
 
   //list products of season
-  const [products, setProducts] = useState<CreateProductDto[] | undefined>([]);
+  const [productList, setProducts] = useState<CreateProductDto[] | undefined>([]);
   const [selectedLands, setSelectedLands] = useState<LandProd[] | undefined>();
   const [selectedSeed, setSelectedSeed] = useState<SeedPro | null>();
 
-
-  //handle row selection 
+  //handle row selection
   const landRowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: LandProd[]) => {
       setSelectedLands(selectedRows);
     }
-  }
+  };
 
   const seedRowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: SeedPro[]) => {
-      selectedRows.forEach(function (value){
-        setSelectedSeed(value)
-      })
+      selectedRows.forEach(function (value) {
+        setSelectedSeed(value);
+      });
     }
-  }
+  };
 
   const openNotification = (
     placement: NotificationPlacement,
@@ -120,49 +129,69 @@ const AddProductSeason = ({
       placement,
       duration: 2
     });
-  }; 
-  
+  };
+
   //Handle cancel
   const onModalOK = () => {
-    selectedLands?.forEach( function (value) {
-      products?.push({
+    setProducts([]);
+    selectedLands?.forEach(function (value) {
+      productList?.push({
         land: {
-          id : value?.id,
+          id: value?.id,
           name: value?.name
         },
         seed: {
           id: selectedSeed?.id,
           name: selectedSeed?.name
         }
-      })
-    });
-
-    
-    try {
-      products?.forEach(async function (value: CreateProductDto | undefined) {
-        const res = await createProductApi(http, params?.seasonId, value)
-        if (res?.data || res?.status === STATUS_CREATED) {
-          openNotification('top', `${tM('update_susses')}`, 'success');
-          params.onCancel();
-          form.resetFields();
-          console.log('update staff success', res.status);
-        } else {
-          openNotification('top', `${tM('update_error')}`, 'error');
-          params.onCancel();
-          form.resetFields();
-          console.log('update staff fail', res.status);
-        }
       });
+    });
+    const alo = setProductsAction(productList);
+    dispatch(alo);
 
+    console.log('test redux', productGlobal);
 
-      
-    } catch (error) {
-      console.error("Error occurred while updating season:", error);
-    }
-    
-    console.log(products);
+    // try {
+    //   productList?.forEach(async function (value: CreateProductDto | undefined) {
+    //     console.log('value:',value)
+    //     const res = await createProductApi(http, params?.seasonId, value);
+    //     if (res?.data || res?.status === STATUS_CREATED) {
+    //       openNotification('top', `${tM('update_susses')}`, 'success');
+    //       params.onCancel();
+
+    //       console.log('update staff success', res.status);
+    //     } else {
+    //       openNotification('top', `${tM('update_error')}`, 'error');
+    //       params.onCancel();
+  
+    //       console.log('update staff fail', res.status);
+    //     }
+    //   });
+
+       console.log('My Test: ',productList)
+
+      // productGlobal?.map(async (items, index) => {
+      //   console.log('item: ', items);
+      //   const res = await createProductApi(http, params?.seasonId, items);
+      //   if (res?.data || res?.status === STATUS_CREATED) {
+      //     openNotification('top', `${tM('update_susses')}`, 'success');
+      //     params.onCancel();
+          
+      //     console.log('update staff success', res.status);
+      //   } else {
+      //     openNotification('top', `${tM('update_error')}`, 'error');
+      //     params.onCancel();
+          
+      //     console.log('update staff fail', res.status);
+      //   }
+      // });
+    // } catch (error) {
+    //   console.error('Error occurred while updating season:', error);
+    // }
+
+    console.log('test redux', productGlobal);
     params.onCancel();
-  }
+  };
 
   // const { products , updateProducts } = useProductContext();
   //   updateProducts(products);
@@ -170,10 +199,9 @@ const AddProductSeason = ({
   //   console.log(products);
   //   console.log(updateProducts(products));
 
-
   return (
     <>
-     {contextHolder}
+      {contextHolder}
       <ConfigProvider
         theme={{
           components: {
@@ -200,7 +228,7 @@ const AddProductSeason = ({
           <Search
             placeholder='Input search text'
             onSearch={onSearchRiceVariety}
-            style={{ width: '50%', marginBottom:'1rem' }}
+            style={{ width: '50%', marginBottom: '1rem' }}
             enterButton
             className={cx('search-btn-box')}
           />
@@ -217,13 +245,13 @@ const AddProductSeason = ({
               pageSize: 5
             }}
             rowKey='id'
-            style={{width:'100%'}}
+            style={{ width: '100%' }}
           ></Table>
           <br />
           <Search
             placeholder='Input search text'
             onSearch={onSearchRiceVariety}
-            style={{ width: '50%', marginBottom:'1rem' }}
+            style={{ width: '50%', marginBottom: '1rem' }}
             enterButton
             className={cx('search-btn-box')}
           />
@@ -240,7 +268,7 @@ const AddProductSeason = ({
               pageSize: 5
             }}
             rowKey='id'
-            style={{width:'100%'}}
+            style={{ width: '100%' }}
           ></Table>
         </Modal>
       </ConfigProvider>

@@ -48,6 +48,7 @@ import { UpdateSeasonDto, updateSeasonApi } from '@/services/Admin/Season/update
 import { locales } from '@/navigation';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import AddProductSeason from '../../component/AddProductModal/add-land-and-rice-variety-modal';
+import { useAppSelector } from '@/redux/hooks';
 
 type Props = {};
 const SeaSonDetails = ({
@@ -65,6 +66,9 @@ const SeaSonDetails = ({
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
+
+  const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
+  console.log('Product: ',productGlobal);
 
 
   //delete product
