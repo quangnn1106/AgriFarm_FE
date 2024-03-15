@@ -37,7 +37,7 @@ import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { LandAndRiceVarietyColumns } from '../LandAndRiceVarietyColumn/column-types';
 import fetchListProductData from '@/services/Admin/Product/getProductsApi';
 import { AxiosInstance } from 'axios';
-import { STATUS_OK } from '@/constants/https';
+import { STATUS_CREATED, STATUS_OK } from '@/constants/https';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import getSeasonDetailApi from '@/services/Admin/Season/getSeasonDetailApi';
@@ -49,6 +49,7 @@ import { locales } from '@/navigation';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import AddProductSeason from '../../component/AddProductModal/add-land-and-rice-variety-modal';
 import { useAppSelector } from '@/redux/hooks';
+import { CreateProductDto, createProductApi } from '@/services/Admin/Product/postProductApi';
 
 type Props = {};
 const SeaSonDetails = ({
@@ -87,6 +88,8 @@ const SeaSonDetails = ({
   const [products, setProducts] = useState<Product[] | undefined>([]);
   // const [formModal, setFormModal] = useState<any>(any);
   const [loadingProductsData, setLoadingProductsData] = useState(true);
+
+  const [newProducts, setNewProducts] = useState<CreateProductDto[] | undefined>([]);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
@@ -158,7 +161,30 @@ const SeaSonDetails = ({
     getSeasonDetailsData(http, params.id, form);
     getListProductData(http, params.id);
 
-  }, [http, params.id, form, seasonDetail?.startIn, seasonDetail?.endIn, createState]); 
+  }, [http, params.id, form, seasonDetail?.startIn, seasonDetail?.endIn, createState, productGlobal]); 
+
+  //handle create product 
+  const onModalOK = () => {
+       try {
+        console.log('New:',newProducts);
+        productGlobal?.map(async (items, index) => {
+          console.log('item: ', items);
+          const res = await createProductApi(http, params.id, items);
+          if (res?.data || res?.status === STATUS_CREATED) {
+            openNotification('top', `${tM('update_susses')}`, 'success');
+            setCreateState(false);
+            
+            console.log('update staff success', res.status);
+          } else {
+            openNotification('top', `${tM('update_error')}`, 'error');
+            setCreateState(false);
+            console.log('update staff fail', res.status);
+          }
+    });
+    } catch (error) {
+      console.error('Error occurred while updating season:', error);
+    }
+  }
 
   //handle update season
   const onFinish = async (value: UpdateSeasonDto) => {
@@ -348,7 +374,9 @@ const SeaSonDetails = ({
               params={{
                 seasonId: params.id,
                 visible: createState,
-                onCancel: () => setCreateState(false)
+                onCancel: () => setCreateState(false),
+                onModalOK: onModalOK,
+                products: newProducts
               }}
             ></AddProductSeason>
               <Button
@@ -401,6 +429,7 @@ const SeaSonDetails = ({
                     htmlType='submit'
                     type='primary'
                     loading={isFetching}
+                    onClick={onModalOK}
                   >
                     {t('save_change')}
                   </Button>

@@ -29,16 +29,26 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setProductsAction } from '@/redux/features/season-slice';
 import { useSelector } from 'react-redux';
 
+// interface Properties {
+
+// }
+
 const AddProductSeason = ({
   params
 }: {
-  params: { seasonId: string | undefined; visible: boolean; onCancel: () => void };
+  params: 
+  { 
+    seasonId: string | undefined; 
+    visible: boolean; 
+    onCancel: () => void;
+    onModalOK: () => void; 
+    products: CreateProductDto[] | undefined
+  };
 }) => {
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
-  const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
   //const { productGlobal } = useSelector(state => state.productsReducer.productGlobal);
   const dispatch = useAppDispatch();
 
@@ -66,7 +76,7 @@ const AddProductSeason = ({
   const [loadingSeedData, setLoadingSeedData] = useState(true);
   useEffect(() => {
     getRiceVarietyData(http, siteId);
-  }, [http, siteId, productGlobal]);
+  }, [http, siteId]);
 
   const getRiceVarietyData = async (http: AxiosInstance, siteId?: string) => {
     try {
@@ -100,7 +110,7 @@ const AddProductSeason = ({
     console.log(info?.source, value);
 
   //list products of season
-  const [productList, setProducts] = useState<CreateProductDto[] | undefined>([]);
+  // const [productList, setProducts] = useState<CreateProductDto[] | undefined>([]);
   const [selectedLands, setSelectedLands] = useState<LandProd[] | undefined>();
   const [selectedSeed, setSelectedSeed] = useState<SeedPro | null>();
 
@@ -132,10 +142,10 @@ const AddProductSeason = ({
   };
 
   //Handle cancel
-  const onModalOK = () => {
-    setProducts([]);
+  const addProducts = () => {
+    params.products=[];
     selectedLands?.forEach(function (value) {
-      productList?.push({
+      params.products?.push({
         land: {
           id: value?.id,
           name: value?.name
@@ -146,52 +156,14 @@ const AddProductSeason = ({
         }
       });
     });
-    const alo = setProductsAction(productList);
+    const alo = setProductsAction(params.products);
     dispatch(alo);
 
-    console.log('test redux', productGlobal);
-
-    // try {
-    //   productList?.forEach(async function (value: CreateProductDto | undefined) {
-    //     console.log('value:',value)
-    //     const res = await createProductApi(http, params?.seasonId, value);
-    //     if (res?.data || res?.status === STATUS_CREATED) {
-    //       openNotification('top', `${tM('update_susses')}`, 'success');
-    //       params.onCancel();
-
-    //       console.log('update staff success', res.status);
-    //     } else {
-    //       openNotification('top', `${tM('update_error')}`, 'error');
-    //       params.onCancel();
-  
-    //       console.log('update staff fail', res.status);
-    //     }
-    //   });
-
-       console.log('My Test: ',productList)
-
-      // productGlobal?.map(async (items, index) => {
-      //   console.log('item: ', items);
-      //   const res = await createProductApi(http, params?.seasonId, items);
-      //   if (res?.data || res?.status === STATUS_CREATED) {
-      //     openNotification('top', `${tM('update_susses')}`, 'success');
-      //     params.onCancel();
-          
-      //     console.log('update staff success', res.status);
-      //   } else {
-      //     openNotification('top', `${tM('update_error')}`, 'error');
-      //     params.onCancel();
-          
-      //     console.log('update staff fail', res.status);
-      //   }
-      // });
-    // } catch (error) {
-    //   console.error('Error occurred while updating season:', error);
-    // }
-
-    console.log('test redux', productGlobal);
+    
     params.onCancel();
-  };
+    // params.onModalOK();
+  }
+  
 
   // const { products , updateProducts } = useProductContext();
   //   updateProducts(products);
@@ -219,7 +191,7 @@ const AddProductSeason = ({
           title='Add new season'
           open={params.visible}
           onCancel={params.onCancel}
-          onOk={onModalOK}
+          onOk={addProducts}
           okText='Add'
           cancelText='Cancel'
           centered={true}
