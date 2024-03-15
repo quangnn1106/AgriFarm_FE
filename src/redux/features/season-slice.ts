@@ -4,15 +4,16 @@ import {
 } from '@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
+import { CreateProductDto } from '@/services/Admin/Product/postProductApi';
 
 export type LandAndSeedResponse = {
-  productGlobal: payLoadResponse[] | null | undefined;
+  productGlobal: CreateProductDto[] | null | undefined;
 };
 
-export type payLoadResponse = {
-  land: LandProd | null;
-  seed: SeedPro | null | undefined;
-};
+// export type payLoadResponse = {
+//   land: LandProd | null;
+//   seed: SeedPro | null | undefined;
+// };
 
 // export type ProductState = {
 //   land: LandProd | null;
@@ -34,9 +35,11 @@ const products = createSlice({
   reducers: {
     setProductsAction: (
       state: LandAndSeedResponse,
-      action: PayloadAction<payLoadResponse>
+      action: PayloadAction<CreateProductDto[] | undefined>
     ) => {
-      state.productGlobal?.push(action.payload);
+      // state.productGlobal?.push(action.payload);
+      state.productGlobal = action.payload;
+
     }
   }
 });

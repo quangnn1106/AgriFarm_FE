@@ -27,6 +27,7 @@ import {
 import { STATUS_CREATED } from '@/constants/https';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setProductsAction } from '@/redux/features/season-slice';
+import { useSelector } from 'react-redux';
 
 const AddProductSeason = ({
   params
@@ -37,7 +38,8 @@ const AddProductSeason = ({
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
-  const { productGlobal } = useAppSelector(state => state.productsReducer);
+  const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
+  //const { productGlobal } = useSelector(state => state.productsReducer.productGlobal);
   const dispatch = useAppDispatch();
 
   // Get land list data
@@ -64,7 +66,7 @@ const AddProductSeason = ({
   const [loadingSeedData, setLoadingSeedData] = useState(true);
   useEffect(() => {
     getRiceVarietyData(http, siteId);
-  }, [http, siteId]);
+  }, [http, siteId, productGlobal]);
 
   const getRiceVarietyData = async (http: AxiosInstance, siteId?: string) => {
     try {
@@ -98,7 +100,7 @@ const AddProductSeason = ({
     console.log(info?.source, value);
 
   //list products of season
-  const [products, setProducts] = useState<CreateProductDto[] | undefined>([]);
+  const [productList, setProducts] = useState<CreateProductDto[] | undefined>([]);
   const [selectedLands, setSelectedLands] = useState<LandProd[] | undefined>();
   const [selectedSeed, setSelectedSeed] = useState<SeedPro | null>();
 
@@ -131,18 +133,9 @@ const AddProductSeason = ({
 
   //Handle cancel
   const onModalOK = () => {
+    setProducts([]);
     selectedLands?.forEach(function (value) {
-      // products?.push({
-      //   land: {
-      //     id: value?.id,
-      //     name: value?.name
-      //   },
-      //   seed: {
-      //     id: selectedSeed?.id,
-      //     name: selectedSeed?.name
-      //   }
-      // });
-      const alo = setProductsAction({
+      productList?.push({
         land: {
           id: value?.id,
           name: value?.name
@@ -152,44 +145,49 @@ const AddProductSeason = ({
           name: selectedSeed?.name
         }
       });
-      dispatch(alo);
     });
+    const alo = setProductsAction(productList);
+    dispatch(alo);
 
-    try {
-      // productGlobal?.forEach(async function (value: CreateProductDto | undefined) {
-      //   const res = await createProductApi(http, params?.seasonId, value);
+    console.log('test redux', productGlobal);
+
+    // try {
+    //   productList?.forEach(async function (value: CreateProductDto | undefined) {
+    //     console.log('value:',value)
+    //     const res = await createProductApi(http, params?.seasonId, value);
+    //     if (res?.data || res?.status === STATUS_CREATED) {
+    //       openNotification('top', `${tM('update_susses')}`, 'success');
+    //       params.onCancel();
+
+    //       console.log('update staff success', res.status);
+    //     } else {
+    //       openNotification('top', `${tM('update_error')}`, 'error');
+    //       params.onCancel();
+  
+    //       console.log('update staff fail', res.status);
+    //     }
+    //   });
+
+       console.log('My Test: ',productList)
+
+      // productGlobal?.map(async (items, index) => {
+      //   console.log('item: ', items);
+      //   const res = await createProductApi(http, params?.seasonId, items);
       //   if (res?.data || res?.status === STATUS_CREATED) {
       //     openNotification('top', `${tM('update_susses')}`, 'success');
       //     params.onCancel();
-      //     form.resetFields();
+          
       //     console.log('update staff success', res.status);
       //   } else {
       //     openNotification('top', `${tM('update_error')}`, 'error');
       //     params.onCancel();
-      //     form.resetFields();
+          
       //     console.log('update staff fail', res.status);
       //   }
-      // });:
-
-      productGlobal?.map(async (items, index) => {
-        console.log('item: ', items);
-
-        // const res = await createProductApi(http, params?.seasonId, items);
-        // if (res?.data || res?.status === STATUS_CREATED) {
-        //   openNotification('top', `${tM('update_susses')}`, 'success');
-        //   params.onCancel();
-        //   form.resetFields();
-        //   console.log('update staff success', res.status);
-        // } else {
-        //   openNotification('top', `${tM('update_error')}`, 'error');
-        //   params.onCancel();
-        //   form.resetFields();
-        //   console.log('update staff fail', res.status);
-        // }
-      });
-    } catch (error) {
-      console.error('Error occurred while updating season:', error);
-    }
+      // });
+    // } catch (error) {
+    //   console.error('Error occurred while updating season:', error);
+    // }
 
     console.log('test redux', productGlobal);
     params.onCancel();
