@@ -17,14 +17,14 @@ import React, { useEffect, useState } from 'react';
       title: 'Land Name',
       dataIndex: 'land',
       width: 'max-content',
-      render: (_, productItem) => `${productItem.land.name}`,
+      render: (_, productItem) => `${productItem.land?.name}`,
       
     },
     {
       title: 'Rice Variety',
       dataIndex: 'riceVarietyID',
       width: 'max-content',
-      render: (_, productItem) => `${productItem.seed.name}`,
+      render: (_, productItem) => `${productItem.seed?.name}`,
     },
   ];
 

@@ -40,16 +40,15 @@ const AddProductSeason = ({
   { 
     seasonId: string | undefined; 
     visible: boolean; 
-    onCancel: () => void;
-    onModalOK: () => void; 
-    products: CreateProductDto[] | undefined
+    onCancel: () => void; 
+    isUpdate: boolean;
   };
 }) => {
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
-  //const { productGlobal } = useSelector(state => state.productsReducer.productGlobal);
+  
   const dispatch = useAppDispatch();
 
   // Get land list data
@@ -110,9 +109,11 @@ const AddProductSeason = ({
     console.log(info?.source, value);
 
   //list products of season
-  // const [productList, setProducts] = useState<CreateProductDto[] | undefined>([]);
+  const [products, setProducts] = useState<CreateProductDto[] | undefined>([]);
   const [selectedLands, setSelectedLands] = useState<LandProd[] | undefined>();
   const [selectedSeed, setSelectedSeed] = useState<SeedPro | null>();
+
+  const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
 
   //handle row selection
   const landRowSelection = {
@@ -141,11 +142,12 @@ const AddProductSeason = ({
     });
   };
 
-  //Handle cancel
-  const addProducts = () => {
-    params.products=[];
+  //Handle OK action 
+  
+  const onHandleOK = () => {
+    setProducts([]);
     selectedLands?.forEach(function (value) {
-      params.products?.push({
+      products?.push({
         land: {
           id: value?.id,
           name: value?.name
@@ -156,20 +158,31 @@ const AddProductSeason = ({
         }
       });
     });
-    const alo = setProductsAction(params.products);
-    dispatch(alo);
+    dispatch(setProductsAction(products)) ;
+    console.log('Product current: ',productGlobal);
+    if (params.isUpdate) {
+      try {
+        products?.map( async (item, idx) => {
+          const res = await createProductApi(http, params.seasonId, item);
+            if (res?.data || res?.status === STATUS_CREATED) {
+              openNotification('top', `${tM('update_susses')}`, 'success');
+              params.onCancel();
+              
+              console.log('update staff success', res.status);
+            } else {
+              openNotification('top', `${tM('update_error')}`, 'error');
+              params.onCancel();
+              console.log('update staff fail', res.status);
+            }
+        })
 
-    
-    params.onCancel();
-    // params.onModalOK();
+    } catch (error) {
+      console.error('Error occurred while updating season:', error);
+    }
+    } else {
+      params.onCancel();
+    }
   }
-  
-
-  // const { products , updateProducts } = useProductContext();
-  //   updateProducts(products);
-
-  //   console.log(products);
-  //   console.log(updateProducts(products));
 
   return (
     <>
@@ -191,7 +204,7 @@ const AddProductSeason = ({
           title='Add new season'
           open={params.visible}
           onCancel={params.onCancel}
-          onOk={addProducts}
+          onOk={onHandleOK}
           okText='Add'
           cancelText='Cancel'
           centered={true}

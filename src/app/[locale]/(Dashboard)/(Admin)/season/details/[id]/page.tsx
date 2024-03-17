@@ -51,8 +51,7 @@ import AddProductSeason from '../../component/AddProductModal/add-land-and-rice-
 import { useAppSelector } from '@/redux/hooks';
 import { CreateProductDto, createProductApi } from '@/services/Admin/Product/postProductApi';
 
-type Props = {};
-const SeaSonDetails = ({
+const SeasonDetails = ({
   params
 }: {
   params: { id: string; visible: boolean; onCancel: () => void };
@@ -69,8 +68,6 @@ const SeaSonDetails = ({
   };
 
   const productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
-  console.log('Product: ',productGlobal);
-
 
   //delete product
   const [deletedProds, setDeletedProds] = useState<Product[] | undefined>([])
@@ -88,8 +85,6 @@ const SeaSonDetails = ({
   const [products, setProducts] = useState<Product[] | undefined>([]);
   // const [formModal, setFormModal] = useState<any>(any);
   const [loadingProductsData, setLoadingProductsData] = useState(true);
-
-  const [newProducts, setNewProducts] = useState<CreateProductDto[] | undefined>([]);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
@@ -125,9 +120,6 @@ const SeaSonDetails = ({
     }
   };
 
-  // useEffect(() => {
-  // }, [http, params.id, createState]);
-
   // fetch Season details getSeasonDetailApi
   const [seasonDetail, setSeasonDetail] = useState<SeasonModelDetail | undefined>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -161,30 +153,7 @@ const SeaSonDetails = ({
     getSeasonDetailsData(http, params.id, form);
     getListProductData(http, params.id);
 
-  }, [http, params.id, form, seasonDetail?.startIn, seasonDetail?.endIn, createState, productGlobal]); 
-
-  //handle create product 
-  const onModalOK = () => {
-       try {
-        console.log('New:',newProducts);
-        productGlobal?.map(async (items, index) => {
-          console.log('item: ', items);
-          const res = await createProductApi(http, params.id, items);
-          if (res?.data || res?.status === STATUS_CREATED) {
-            openNotification('top', `${tM('update_susses')}`, 'success');
-            setCreateState(false);
-            
-            console.log('update staff success', res.status);
-          } else {
-            openNotification('top', `${tM('update_error')}`, 'error');
-            setCreateState(false);
-            console.log('update staff fail', res.status);
-          }
-    });
-    } catch (error) {
-      console.error('Error occurred while updating season:', error);
-    }
-  }
+  }, [http, params.id, form, seasonDetail?.startIn, seasonDetail?.endIn, products]); 
 
   //handle update season
   const onFinish = async (value: UpdateSeasonDto) => {
@@ -370,13 +339,13 @@ const SeaSonDetails = ({
               >
                 Add
               </Button>
+              
               <AddProductSeason
               params={{
                 seasonId: params.id,
                 visible: createState,
                 onCancel: () => setCreateState(false),
-                onModalOK: onModalOK,
-                products: newProducts
+                isUpdate: true
               }}
             ></AddProductSeason>
               <Button
@@ -387,6 +356,7 @@ const SeaSonDetails = ({
                 Delete
               </Button>
             </Flex>
+            
             {/* <ConfigProvider
           theme={{
             components: {
@@ -429,7 +399,6 @@ const SeaSonDetails = ({
                     htmlType='submit'
                     type='primary'
                     loading={isFetching}
-                    onClick={onModalOK}
                   >
                     {t('save_change')}
                   </Button>
@@ -442,4 +411,4 @@ const SeaSonDetails = ({
     </>
   );
 };
-export default SeaSonDetails;
+export default SeasonDetails;

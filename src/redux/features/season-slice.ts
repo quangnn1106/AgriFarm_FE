@@ -6,6 +6,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
 import { CreateProductDto } from '@/services/Admin/Product/postProductApi';
 
+
 export type LandAndSeedResponse = {
   productGlobal: CreateProductDto[] | null | undefined;
 };
@@ -29,19 +30,19 @@ const initialState: LandAndSeedResponse = {
   ]
 };
 
+
 const products = createSlice({
   name: 'productsReducer',
   initialState,
   reducers: {
     setProductsAction: (
-      state: LandAndSeedResponse,
-      action: PayloadAction<CreateProductDto[] | undefined>
+      state =  initialState,
+      action
     ) => {
       // state.productGlobal?.push(action.payload);
       state.productGlobal = action.payload;
-
     }
-  }
+  },
 });
 
 export const { setProductsAction } = products.actions;

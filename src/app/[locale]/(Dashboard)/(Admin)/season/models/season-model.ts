@@ -39,12 +39,12 @@ export type RiceVariety = {
 }
 
 export type Product = {
-    id? : string | '';
+    id? : string;
     name?: string | '';
     totalQuantity?: number | '';
     quantity?: number | '';
-    land: LandProd;
-    seed: SeedPro;
+    land: LandProd | null;
+    seed: SeedPro | null;
     season: Season;
 }
 

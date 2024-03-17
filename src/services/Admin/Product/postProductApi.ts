@@ -12,7 +12,7 @@ import { cookies } from 'next/headers';
 
 export type CreateProductDto = {
   land: LandProd | null;
-  seed: SeedPro | null | undefined;
+  seed: SeedPro | null ;
 };
 
 export const createProductApi: (
