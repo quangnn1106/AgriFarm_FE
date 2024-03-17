@@ -28,7 +28,11 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
     dataIndex: 'name',
     width: 'max-content'
   },
-
+  {
+    title: 'Site Code',
+    dataIndex: 'siteCode',
+    width: 'max-content'
+  },
   {
     title: 'Avatar',
     dataIndex: 'avatar',

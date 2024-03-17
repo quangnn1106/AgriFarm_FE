@@ -15,7 +15,6 @@ import styles from './site.module.scss';
 import SearchConditionForm from './components/SearchCondition/searchConditionForm';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import classNames from 'classnames/bind';
 import BreadcrumbComponent from '../subscription/components/Breadcrumb/breadCrumb';
 import { Content } from 'antd/es/layout/layout';
 import { sitesTableColumns } from './columnsType';
@@ -23,13 +22,15 @@ import { Sites } from '@/services/SuperAdmin/Site/payload/response/sites';
 import { AxiosInstance } from 'axios';
 import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
 import UseAxiosAuth from '@/utils/axiosClient';
+import classNames from 'classnames/bind';
+
 const cx = classNames.bind(styles);
-import 'mapbox-gl/dist/mapbox-gl.css';
+
 import MapBoxReact from '@/components/MapBox/mapBoxReact';
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
 
-import { useRouter } from '@/navigation';
+import { usePathname, useRouter } from '@/navigation';
 import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 
@@ -46,6 +47,7 @@ const SitePage = (props: Props) => {
   const [sites, setSites] = React.useState<Sites[] | []>([]);
   const t = useTranslations('Disease');
   const t2 = useTranslations('Button');
+  const path = usePathname();
 
   const http = UseAxiosAuth();
   const router = useRouter();
@@ -127,7 +129,7 @@ const SitePage = (props: Props) => {
   return (
     <>
       <Content>
-        <BreadcrumbComponent />
+        <BreadcrumbComponent subPath={path} />
 
         <Map
           // {...viewState}
@@ -166,8 +168,7 @@ const SitePage = (props: Props) => {
               >
                 <>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Pin />{' '}
-                    <span className='red'>{city?.siteCode ? city?.siteCode : ''}</span>
+                    <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
                   </div>
                 </>
               </Marker>
@@ -272,7 +273,7 @@ const SitePage = (props: Props) => {
                   //   total: users?.length
                   // }}
                   scroll={{ x: 'max-content' }}
-                  className={cx('table_style')}
+                  className='table_style'
                 />
               </Content>
             </Layout>

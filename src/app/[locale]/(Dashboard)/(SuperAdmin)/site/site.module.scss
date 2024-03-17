@@ -11,59 +11,19 @@
     margin-bottom: 20px;
 }
 
-//style list page
-.table_style {
-    :global {
-
-        // ant-table-ping-right.ant-table-fixed-column.ant-table-scroll-horizontal.ant-table-has-fix-left.ant-table-has-fix-right {
-        //     border: 1px solid #F2F3F5 !important;
-        // }
-        td.ant-table-cell.ant-table-selection-column.ant-table-cell-fix-left {
-            border-left: 1px solid #F2F3F5;
-        }
-
-        td.ant-table-cell.ant-table-cell-fix-right.ant-table-cell-fix-right-first {
-            border-right: 1px solid #F2F3F5;
-        }
-    }
-
-    ::-webkit-scrollbar {
-        width: 0;
-        height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #A5D6A7;
-        border-radius: 4px;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #84da87;
-    }
-}
-
 // style button upload image
 .upload-image-btn {
-    :global {
+     :global {
         .ant-upload-select {
             width: fit-content !important;
             height: fit-content !important;
         }
-
         .ant-upload-list.ant-upload-list-picture-card {
             align-items: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
-
         .ant-upload-list-item-container {
             width: 180px !important;
             height: 180px !important;
@@ -72,11 +32,10 @@
 }
 
 .color-input-disable {
-    :global {
+     :global {
         input.ant-input.ant-input-disabled {
             color: #000000 !important;
         }
-
         span.ant-select-selection-item {
             color: #000000 !important;
         }
@@ -88,7 +47,7 @@ input.ant-input.ant-input-disabled {
 }
 
 .search-btn-box {
-    :global {
+     :global {
         .ant-btn-primary.ant-input-search-button:hover {
             opacity: 0.6;
         }
@@ -99,7 +58,6 @@ input.ant-input.ant-input-disabled {
     height: fit-content;
     width: fit-content;
     border: none !important;
-
     span {
         svg {
             color: #009A29;

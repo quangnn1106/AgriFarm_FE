@@ -8,7 +8,7 @@ const pinStyle = {
   stroke: 'none'
 };
 
-function Pin({ size = 20 }) {
+function Pin({ size = 25 }) {
   return (
     <svg
       height={size}

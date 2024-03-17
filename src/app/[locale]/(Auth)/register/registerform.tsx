@@ -20,6 +20,7 @@ import {
 import Admin from '@/types/admin';
 import UseAxiosAuth from '@/utils/axiosClient';
 import paymentApi from '@/services/Payment/paymentApi';
+import { AxiosInstance } from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -40,14 +41,24 @@ const RegisterForm: React.FC = () => {
     const messageError = userRegister?.message as string;
     console.log('messageError', messageError);
   };
+
   useEffect(() => {
+    // const processPayment = async (http: AxiosInstance) => {
+    //   console.log('Start api thanh toan');
+    //   const res = await paymentApi(http);
+    //   console.log(res);
+    //   window.location.href = res?.data.paymentUrl;
+    //   //   router.push(res?.data?.paymentUrl);
+    // };
+
     if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
       setError('');
       setErrorEmail('');
       setErrorFCode('');
       setErrorFName('');
-      router.push(SUCCESS_PATH);
+      //  processPayment(http);
+      //  router.push(SUCCESS_PATH);
 
       const eeee = userRegister?.data as Admin;
       console.log('eeee', eeee.id);
@@ -74,7 +85,7 @@ const RegisterForm: React.FC = () => {
         setErrorFName('');
       }
     }
-  }, [userRegister, router, dispatch, t]);
+  }, [userRegister, router, dispatch, t, http]);
 
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
@@ -82,7 +93,7 @@ const RegisterForm: React.FC = () => {
 
     const actionAsyncThunk = registerAsyncApi(data);
     dispatch(actionAsyncThunk);
-    console.log("Start api thanh toan");
+    console.log('Start api thanh toan');
     const res = await paymentApi(http);
     console.log(res);
     window.location.href = res?.data.paymentUrl;

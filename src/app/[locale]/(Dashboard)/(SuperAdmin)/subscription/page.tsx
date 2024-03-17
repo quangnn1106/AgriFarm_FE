@@ -240,7 +240,7 @@ const UserManagement = (props: Props) => {
                   total: users?.length
                 }}
                 scroll={{ x: 'max-content' }}
-                className={cx('table_style')}
+                className='table_style'
               />
             </Content>
           </Layout>
