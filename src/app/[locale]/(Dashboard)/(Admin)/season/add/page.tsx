@@ -20,7 +20,7 @@ import {
   notification,
   theme
 } from 'antd';
-import { HomeOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, MinusOutlined, SaveOutlined } from '@ant-design/icons';
 
 import styles from '../../adminStyle.module.scss';
 import classNames from 'classnames/bind';
@@ -47,6 +47,9 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { setProductsAction } from '@/redux/features/season-slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { getURL } from 'next/dist/shared/lib/utils';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
@@ -55,8 +58,10 @@ const SeasonCreate = (props: Props) => {
   const tM = useTranslations('Message');
 
   const http = UseAxiosAuth();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
 
-  const [loadingProducts, setLoadingProducts] = useState<boolean>(false);
   const [productRenders, setProductRenders] = useState<Product[] | undefined>([]);
   const [productRenderTemps, setProductRenderTemps] = useState<Product[] | undefined>([]);
   const [createProducts, setCreatedProducts] = useState<
@@ -64,80 +69,65 @@ const SeasonCreate = (props: Props) => {
   >([]);
 
   const [createState, setCreateState] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
   let productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
+  //breadcrumb
+  // const HOMEURL = getURL();
+  const breadCrumb = [
+    {
+        title: <Link href={`/`}>Home</Link>
+    },
+    {
+        title: <Link href={`/season`}>Season</Link>
+    },
+    {
+        title: 'Add'
+    }
+];
 
   //form
   const [form] = Form.useForm();
   const dateFormat = 'YYYY/MM/DD';
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+  //handle change date picker
+  const handleChangeStartIn: DatePickerProps['onChange'] = (date, dateString) => {
   };
-
-
-
-  //handle delete product item
-  const [deletedProducts, setDeletedProducts] = useState<Product[] | undefined>([]);
-  const [deleteState, setDeleteState] = useState<boolean>(false);
-  const [deletedIds, setDeleteIds] = useState<React.Key[]>([]);
-
-  const checkRowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: Product[]) => {
-      console.log('Key: ',selectedRowKeys);
-      setDeleteIds(selectedRowKeys);
-    if (productRenderTemps !== undefined) {
-      setProductRenderTemps(productRenderTemps?.filter(item => !selectedRowKeys?.includes(item.id ? item.id : '')));
-    }
-    // console.log('Product temp render row select: ', productRenderTemps);
-    }
+  const handleChangeEndIn: DatePickerProps['onChange'] = (date, dateString) => {
   };
-
 
   const ResetData = () => {
     setCreatedProducts([]) 
   }
 
+  //handle delete product item
+  const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
 
+
+  const checkRowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Product[]) => {
+      if (selectedRowKeys.length > 0) {
+        setDeleteBtnState(false);
+      } else {
+        setDeleteBtnState(true);
+      }
+      if (productRenderTemps !== undefined) {
+        setProductRenderTemps(productRenderTemps?.filter(item => !selectedRowKeys?.includes(item.id ? item.id : '')));
+      }
+    }
+  };
 
   const onDelete = () => {
-
-
-    // console.log(deletedIds.toLocaleString());
-    // deletedIds.map((item, idx) => {
-    //   setProductRenderTemps(productRenderTemps?.filter(prodItem => prodItem.id !== item));
-    //ResetData();
-    // })
-    console.log('Product temp render: ', productRenderTemps);
-    
-    // setProductRenders(productRenderTemps);
-    
-    console.log('Product render: ', productRenders);
-    
-    // productRenderTemps?.map((item, idx) => {
-    //   createProducts?.push({
-    //     land: item.land,
-    //     seed: item.seed
-    //   });
-    // });
-    //  if (productRenderTemps !== undefined) {
-    //   setProductRenderTemps(productRenderTemps?.filter(item => !deletedIds?.includes(item.id ? item.id : '')));
-    // }
-    console.log('Product temp render row select: ', productRenderTemps);
-
     updateData(productRenderTemps);
-    console.log('create product: ', createProducts);
-    
     setDeleteState(false);
+    setDeleteBtnState(true)
   }
-  
 
+
+  // handle add product item
   const handleAddProducts = () => {
     if (productGlobal?.length !== 0) {
       productGlobal?.map((item, idx) => {
-        console.log('item', item);
         if (item.land?.id) {
           console.log('a');
           productRenderTemps?.push({
@@ -151,19 +141,13 @@ const SeasonCreate = (props: Props) => {
           });
         }
       });
-      // form?.setFieldValue('cultivationDetail',createProducts);
-      // return productRenderTemps;
-      console.log('My 1: ', productRenderTemps);
       updateData(productRenderTemps);
     };
-    //dispatch(setProductsAction([]));
-    console.log('Products global:',productGlobal);
   };
 
   const updateData = (productsTemp: Product[] | undefined) => {
     ResetData();
     productsTemp?.map((item, idx) => {
-      // createProducts?.filter(itemCreate => itemCreate.land?.id == item.land?.id);
       createProducts?.push({
         land: item.land,
         seed: item.seed
@@ -184,7 +168,6 @@ const SeasonCreate = (props: Props) => {
   }, [productGlobal]);
 
   //notification
-
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (
     placement: NotificationPlacement,
@@ -192,7 +175,7 @@ const SeasonCreate = (props: Props) => {
     type: 'success' | 'error'
   ) => {
     api[type]({
-      message: `Admin ${status}`,
+      message: `${status}`,
       placement,
       duration: 2
     });
@@ -204,11 +187,11 @@ const SeasonCreate = (props: Props) => {
     try {
       const res = await createSeasonApi(http, value);
       if (res.data) {
-        openNotification('top', `${tM('update_susses')}`, 'success');
+        openNotification('top', `Create successfully`, 'success');
 
         console.log('create staff success', res.status);
       } else {
-        openNotification('top', `${tM('update_error')}`, 'error');
+        openNotification('top', `Create fail`, 'error');
 
         console.log('create staff fail', res.status);
       }
@@ -216,6 +199,12 @@ const SeasonCreate = (props: Props) => {
       console.error('Error occurred while updating season:', error);
     }
   };
+
+  //handle change title
+  const [seasonTitle, setSeasonTitle] = useState<string>('');
+  const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSeasonTitle(e.target.value);
+  }
 
   return (
     <>
@@ -247,15 +236,15 @@ const SeasonCreate = (props: Props) => {
             size={'large'}
           >
             <HomeOutlined />
-            Farm Name
+            {siteName}
           </Button>
         </ConfigProvider>
-        <Breadcrumb style={{ margin: '0px 24px' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
+          {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
           <Breadcrumb.Item>Season</Breadcrumb.Item>
-          <Breadcrumb.Item>Details</Breadcrumb.Item>
+          <Breadcrumb.Item>Details</Breadcrumb.Item> */}
         </Breadcrumb>
-        <TitleHeader title={'Spring Details'}></TitleHeader>
+        <TitleHeader title={seasonTitle}></TitleHeader>
 
         <Form
           form={form}
@@ -272,8 +261,9 @@ const SeasonCreate = (props: Props) => {
             }}
             className={cx('color-input-disable')}
             label='Title'
+            rules={[{ required: true, message: 'Please input season title!' }]} 
           >
-            <Input />
+            <Input value={seasonTitle} onChange={handleChangeTitle}/>
           </Form.Item>
           <Form.Item
             style={{
@@ -302,9 +292,10 @@ const SeasonCreate = (props: Props) => {
                 justifyContent: 'space-between'
               }}
               name='startIn'
-                label={<label>Start </label>}
+              label={<label>Start </label>}
+              rules={[{ required: true, message: 'Please select start date!' }]} 
             >
-                <DatePicker onChange={onChange} format={dateFormat}/>
+                <DatePicker onChange={handleChangeStartIn} format={dateFormat}/>
              
             </Form.Item>
 
@@ -320,13 +311,14 @@ const SeasonCreate = (props: Props) => {
                 // label={<TitleLabelFormItem name='End: '></TitleLabelFormItem>}
                 name='endIn'
                 label={<label>End </label>}
+                rules={[{ required: true, message: 'Please select end date!' }]} 
               >
                 {/* <Flex
                   align='center'
                   justify='center'
                   gap={10}
                 > */}
-                  <DatePicker onChange={onChange} format={dateFormat}/>
+                  <DatePicker onChange={handleChangeEndIn} format={dateFormat}/>
                 {/* </Flex> */}
               </Form.Item>
           </Flex>
@@ -358,6 +350,7 @@ const SeasonCreate = (props: Props) => {
               danger
               icon={<MinusOutlined />}
               onClick={() => {setDeleteState(true)}}
+              disabled={deleteBtnState}
             >
               Delete
             </Button>
@@ -378,7 +371,6 @@ const SeasonCreate = (props: Props) => {
             }}
           >
             <Table
-              loading={loadingProducts}
               rowKey={'id'}
               columns={LandAndRiceVarietyColumns}
               bordered
@@ -406,6 +398,7 @@ const SeasonCreate = (props: Props) => {
               className={cx('bg-btn')}
               htmlType='submit'
               type='primary'
+              icon={<SaveOutlined />}
             >
               Submit
             </Button>
