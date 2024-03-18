@@ -22,6 +22,7 @@ import {
 
 import { SeasonModel } from '../../models/season-model';
 
+
 export const seasonTableColumns: TableColumnsType<SeasonModel> = [
   {
     title: 'Name',
@@ -122,9 +123,12 @@ export const seasonTableColumns: TableColumnsType<SeasonModel> = [
                   Modal.confirm({
                     title: 'Do you really want to delete this season ?',
                     centered: true,
-                    width: '400px',
+                    width: '40%',
                     icon: <WarningOutlined style={{color: 'red'}}/>,
-                    
+                    closable:true,
+                    cancelText: 'Cancel',
+                    okText: 'Yes',
+                    okButtonProps: {type: 'primary', danger:true},
                     onOk: () => {
                         onRemoveSeason();
                     },

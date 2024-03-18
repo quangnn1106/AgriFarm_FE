@@ -240,9 +240,6 @@ const SeasonCreate = (props: Props) => {
           </Button>
         </ConfigProvider>
         <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
-          {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>Season</Breadcrumb.Item>
-          <Breadcrumb.Item>Details</Breadcrumb.Item> */}
         </Breadcrumb>
         <TitleHeader title={seasonTitle}></TitleHeader>
 
@@ -355,7 +352,7 @@ const SeasonCreate = (props: Props) => {
               Delete
             </Button>
             <Modal title="Confirm Delete Product" open={deleteState} onOk={onDelete} 
-            onCancel={() => {setDeleteState(false)}}></Modal>
+            onCancel={() => {setDeleteState(false)}} centered={true}></Modal>
           </Flex>
           <ConfigProvider
             theme={{

@@ -149,3 +149,10 @@ p {
         justify-content: center;
     }
 }
+
+.cancel-btn {
+    .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+        color: #009A29;
+        border-color:  #009A29;
+    }
+}
