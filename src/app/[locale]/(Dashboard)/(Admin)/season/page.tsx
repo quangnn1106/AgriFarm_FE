@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import { useEffect, useState } from 'react';
-import SeasonTableComponent from './component/Table/table';
 import { SeasonModel } from './models/season-model';
 import UseAxiosAuth from '@/utils/axiosClient';
 import {
@@ -18,7 +17,7 @@ import {
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { seasonTableColumns } from './component/Table/column-types';
+
 
 import { HomeOutlined, PlusOutlined, MinusOutlined,WarningOutlined } from '@ant-design/icons';
 
@@ -32,11 +31,16 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { deleteSeasonApi } from '@/services/Admin/Season/deleteSeasonApi';
 
+import { useTranslations } from "next-intl";
+import { SeasonTableColumns } from './component/Table/column-types';
+
 
 type Props = {};
 const SeasonManagement = (props: Props) => {
 //style 
   const cx = classNames.bind(styles);
+
+  const t = useTranslations('Season');
 
 // get id user
   const { data: session } = useSession();
@@ -64,10 +68,10 @@ const SeasonManagement = (props: Props) => {
   // const HOMEURL = getURL();
   const breadCrumb = [
     {
-        title: <Link href={`/`}>Home</Link>
+        title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-        title: <Link href={`/season`}>Season</Link>
+        title: <Link href={`/season`}>{t('season')}</Link>
     }
 ];
 
@@ -81,9 +85,8 @@ const SeasonManagement = (props: Props) => {
       console.error('Error calling API getListSeasons:', error);
     }
   };
-  useEffect(() => {
-    getDataListSeason(http, sideId);
-  }, [ http, sideId, seasons]);
+
+
 
   //handle delete season
   const [deleteState, setDeleteState] = useState<boolean>(false);
@@ -96,6 +99,7 @@ const SeasonManagement = (props: Props) => {
   const deleteSeason = async (http: AxiosInstance, seasonId?: string) => {
     try {
       const res = await deleteSeasonApi(http, seasonId);
+      getDataListSeason(http, sideId);
     } catch (error) {
       console.error('Error calling API Delete Season:', error);
     }
@@ -119,6 +123,10 @@ const SeasonManagement = (props: Props) => {
     setDeleteBtnState(true);
   }
 
+  useEffect(() => {
+    getDataListSeason(http, sideId);
+  }, [ http, sideId, deleteBtnState]);
+
   const handleUpdate = async (id: string) => {
     // setSeasonId(id);
     // setUpdateState(true);
@@ -141,7 +149,6 @@ const SeasonManagement = (props: Props) => {
   ) => {
     console.log('params', pagination, filters, sorter, extra);
   };
-
 
 
   return (
@@ -184,14 +191,14 @@ const SeasonManagement = (props: Props) => {
           plain
           style={{margin: '0px'}}
         >
-          Search condition
+          {t('search_condition')}
         </Divider>
         <FilterSection></FilterSection>
         <Divider
           orientation='left'
           plain
         >
-          Search result
+          {t('search_result')}
         </Divider>
         <Flex
           justify={'flex-end'}
@@ -199,7 +206,7 @@ const SeasonManagement = (props: Props) => {
           className={cx('flex-space')}
           style={{ paddingRight: '24px' }}
         >
-          <Tooltip title='Delete'>
+          <Tooltip title={t('delete')}>
             <Button
               type='primary'
               danger
@@ -209,17 +216,18 @@ const SeasonManagement = (props: Props) => {
             />
             {/* {<WarningOutlined style={{color: 'red'}}/><p>Do you really want to delete this season ?</p>} */}
             <Modal 
-            title={<div><WarningOutlined style={{color: 'red', paddingRight: '4px'}}/><span>Do you really want to delete this season ?</span></div>} 
+            title={<div><WarningOutlined style={{color: 'red', paddingRight: '4px'}}/><span>{t('delete_confirm_sentence')}</span></div>} 
             open={deleteState} onOk={deleteMultiple} 
             onCancel={() => {setDeleteState(false)}} 
             centered={true}
-            okText="Yes"
+            cancelText={t('cancel')}
+            okText={t('yes')}
             okButtonProps={{type: 'primary', danger:true}}
             >
 
             </Modal>
           </Tooltip>
-          <Tooltip title='Add new'>
+          <Tooltip title={t('add_new')}>
             <Button
               className={cx('bg-btn')}
               icon={<PlusOutlined/>}
@@ -257,7 +265,7 @@ const SeasonManagement = (props: Props) => {
                     type: 'checkbox',
                     ...checkRowSelection
                   }}
-                  columns={seasonTableColumns}
+                  columns={SeasonTableColumns()}
                   dataSource={seasons?.map(season => ({
                     ...season,
                     onDetails: () => handleDetails(season.id!),

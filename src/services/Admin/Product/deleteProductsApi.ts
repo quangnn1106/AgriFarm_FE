@@ -1,7 +1,7 @@
 
 import { AxiosInstance } from "axios";
 
-export const deleteProduct = async ( http: AxiosInstance | null, productId?: string | undefined ) => {
+export const deleteProductApi = async ( http: AxiosInstance | null, productId?: string | undefined ) => {
     try {
         const res = await http?.delete(`cult/products/delete`, {
           params: {

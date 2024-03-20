@@ -30,7 +30,6 @@ import { use, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
 import TitleHeader from '../component/TitleHeader/tiltle-header';
-import { seasonTableColumns } from '../component/Table/column-types';
 import { Land, Product } from '../models/season-model';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { LandAndRiceVarietyColumns } from '../details/LandAndRiceVarietyColumn/column-types';
@@ -50,12 +49,15 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { getURL } from 'next/dist/shared/lib/utils';
+import { redirect } from 'next/navigation';
+import { useRouter } from '@/navigation';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
-  const t = useTranslations('UserManagement');
+  const t = useTranslations('Season');
   const cx = classNames.bind(styles);
   const tM = useTranslations('Message');
+  const router = useRouter();
 
   const http = UseAxiosAuth();
   const { data: session } = useSession();
@@ -75,13 +77,13 @@ const SeasonCreate = (props: Props) => {
   // const HOMEURL = getURL();
   const breadCrumb = [
     {
-        title: <Link href={`/`}>Home</Link>
+        title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-        title: <Link href={`/season`}>Season</Link>
+        title: <Link href={`/season`}>{t('season')}</Link>
     },
     {
-        title: 'Add'
+        title: t('Add_new')
     }
 ];
 
@@ -156,6 +158,7 @@ const SeasonCreate = (props: Props) => {
     form?.setFieldValue('cultivationDetail',createProducts);
     setProductRenders(productsTemp);
 
+
   }
 
   useEffect(() => {
@@ -187,14 +190,17 @@ const SeasonCreate = (props: Props) => {
     try {
       const res = await createSeasonApi(http, value);
       if (res.data) {
-        openNotification('top', `Create successfully`, 'success');
+        openNotification('top', t('Create_successfully'), 'success');
 
         console.log('create staff success', res.status);
       } else {
-        openNotification('top', `Create fail`, 'error');
+        openNotification('top', t('Create_fail'), 'error');
 
         console.log('create staff fail', res.status);
+
       }
+      router.push(`/season`);
+      console.log(router.push(`/season`));
     } catch (error) {
       console.error('Error occurred while updating season:', error);
     }
@@ -257,8 +263,8 @@ const SeasonCreate = (props: Props) => {
               padding: '0px 0px'
             }}
             className={cx('color-input-disable')}
-            label='Title'
-            rules={[{ required: true, message: 'Please input season title!' }]} 
+            label={t('Title')}
+            rules={[{ required: true, message: t('Please_input_season_title!') }]} 
           >
             <Input value={seasonTitle} onChange={handleChangeTitle}/>
           </Form.Item>
@@ -269,12 +275,12 @@ const SeasonCreate = (props: Props) => {
               padding: '0px 0px'
             }}
             name='description'
-            label='Description'
+            label={t('Description')}
           >
             <TextArea rows={4} />
           </Form.Item>
 
-          <label>Period</label>
+          <label>{t('Period')}</label>
           <Flex
             align='center'
             justify='space-between'
@@ -289,8 +295,8 @@ const SeasonCreate = (props: Props) => {
                 justifyContent: 'space-between'
               }}
               name='startIn'
-              label={<label>Start </label>}
-              rules={[{ required: true, message: 'Please select start date!' }]} 
+              label={<label>{t('Start')}</label>}
+              rules={[{ required: true, message: t('Please_select_start_date!') }]} 
             >
                 <DatePicker onChange={handleChangeStartIn} format={dateFormat}/>
              
@@ -307,8 +313,8 @@ const SeasonCreate = (props: Props) => {
                 }}
                 // label={<TitleLabelFormItem name='End: '></TitleLabelFormItem>}
                 name='endIn'
-                label={<label>End </label>}
-                rules={[{ required: true, message: 'Please select end date!' }]} 
+                label={<label>{t('End')}</label>}
+                rules={[{ required: true, message: t('Please_select_end_date!') }]} 
               >
                 {/* <Flex
                   align='center'
@@ -320,7 +326,7 @@ const SeasonCreate = (props: Props) => {
               </Form.Item>
           </Flex>
 
-          <label>Land & Rice variety</label>
+          <label>{t('Land_&_Seed')}</label>
           <Flex
             align='center'
             justify='flex-start'
@@ -332,7 +338,7 @@ const SeasonCreate = (props: Props) => {
               onClick={() => setCreateState(true)}
               icon={<PlusOutlined />}
             >
-              Add
+              {t('Add')}
             </Button>
             <AddProductSeason
               params={{
@@ -351,8 +357,8 @@ const SeasonCreate = (props: Props) => {
             >
               Delete
             </Button>
-            <Modal title="Confirm Delete Product" open={deleteState} onOk={onDelete} 
-            onCancel={() => {setDeleteState(false)}} centered={true}></Modal>
+            <Modal title={t('delete_product_confirm')} open={deleteState} onOk={onDelete} 
+            onCancel={() => {setDeleteState(false)}} centered={true} okText={t('Yes')} cancelText={t('Cancel')}></Modal>
           </Flex>
           <ConfigProvider
             theme={{
@@ -369,7 +375,7 @@ const SeasonCreate = (props: Props) => {
           >
             <Table
               rowKey={'id'}
-              columns={LandAndRiceVarietyColumns}
+              columns={LandAndRiceVarietyColumns()}
               bordered
               rowSelection={{
                 type: 'checkbox',
@@ -397,7 +403,7 @@ const SeasonCreate = (props: Props) => {
               type='primary'
               icon={<SaveOutlined />}
             >
-              Submit
+              {t('Submit')}
             </Button>
           </Form.Item>
         </Form>

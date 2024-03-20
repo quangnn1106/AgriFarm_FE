@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
-import { LandColumns } from './land-table-column';
+import { LandColumn } from './land-table-column';
 import { Land, LandProd, RiceVariety, Seed, SeedPro } from '../../models/season-model';
 import React, { useEffect, useState } from 'react';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
@@ -48,6 +48,7 @@ const AddProductSeason = ({
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
+  const t = useTranslations('Season');
   
   const dispatch = useAppDispatch();
 
@@ -165,16 +166,15 @@ const AddProductSeason = ({
         products?.map( async (item, idx) => {
           const res = await createProductApi(http, params.seasonId, item);
             if (res?.data || res?.status === STATUS_CREATED) {
-              openNotification('top', `${tM('update_susses')}`, 'success');
               params.onCancel();
-              
               console.log('update staff success', res.status);
             } else {
               openNotification('top', `${tM('update_error')}`, 'error');
               params.onCancel();
               console.log('update staff fail', res.status);
             }
-        })
+        });
+        openNotification('top', `${tM('update_susses')}`, 'success');
 
     } catch (error) {
       console.error('Error occurred while updating season:', error);
@@ -201,17 +201,17 @@ const AddProductSeason = ({
         }}
       >
         <Modal
-          title='Add new season'
+          title={t('Add_new_product')}
           open={params.visible}
           onCancel={params.onCancel}
           onOk={onHandleOK}
-          okText='Add'
-          cancelText='Cancel'
+          okText={t('Add')}
+          cancelText={t('Cancel')}
           centered={true}
           width={'fit-content'}
         >
           <Search
-            placeholder='Input search text'
+            placeholder={t('Input_search_text')}
             onSearch={onSearchRiceVariety}
             style={{ width: '50%', marginBottom: '1rem' }}
             enterButton
@@ -219,7 +219,7 @@ const AddProductSeason = ({
           />
           <Table
             dataSource={seeds}
-            columns={RiceVarietyColumns}
+            columns={RiceVarietyColumns()}
             loading={loadingSeedData}
             rowSelection={{
               type: 'radio',
@@ -234,7 +234,7 @@ const AddProductSeason = ({
           ></Table>
           <br />
           <Search
-            placeholder='Input search text'
+            placeholder={t('Input_search_text')}
             onSearch={onSearchRiceVariety}
             style={{ width: '50%', marginBottom: '1rem' }}
             enterButton
@@ -242,7 +242,7 @@ const AddProductSeason = ({
           />
           <Table
             dataSource={lands}
-            columns={LandColumns}
+            columns={LandColumn()}
             loading={loadingLandData}
             rowSelection={{
               type: 'checkbox',
