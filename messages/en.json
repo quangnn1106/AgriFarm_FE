@@ -177,5 +177,26 @@
       "pass_confirmError": "The new password that you entered do not match!",
       "required_mess": "Required Fields",
       "email_valid": "Email is not valid"
+    },
+    "common": {
+      "btn_add": "Add",
+      "btn_delete": "Delete"
+    },
+    "Services": {
+      "RiskAsm": {
+        "label": {
+          "single": "Single Choice",
+          "multi": "Multi Choice",
+          "text": "Text",
+          "photo": "Photos",
+          "file": "Files",
+          "required": "Required",
+          "must": "Must",
+          "text-placeholder": "Enter content"
+        },
+        "message": {
+
+        }
+      }
     }
 }

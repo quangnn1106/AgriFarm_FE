@@ -1,0 +1,29 @@
+.single-choice-btn__addrec {
+    background: #E53835 !important;
+}
+.risk-item {
+    .risk-item__wrap {
+        min-height: 300px;
+        .single-choice__wrap {
+            margin-left: 45px;
+            .row {
+                margin-top: 10px;
+            }
+        }
+        .must {
+            margin: 20px;
+        }
+        .delete-item {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .must-checkbox {
+            margin-left: 30px;
+        }
+    }
+    .risk-item-radio__mg {
+        margin: 20px;
+    }
+    .title {
+    }
+}
