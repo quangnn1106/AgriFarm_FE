@@ -1,0 +1,34 @@
+.pad_col {
+    padding: 0 94px;
+}
+
+.btn-pos {
+    top: 46vh;
+    right: 11px;
+    position: absolute !important;
+    outline: none;
+    //position: relative;
+    //display: inline-block;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    background-image: none;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    user-select: none;
+    touch-action: manipulation;
+    color: rgba(0, 0, 0, 0.88);
+}
+
+.primary-btn {
+    color: #fff;
+    background: #009a29;
+    box-shadow: 0 2px 0 rgba(5, 97, 13, 0.24);
+    font-size: 16px;
+    line-height: 1.5;
+    height: 32px;
+    padding: 3px 15px;
+    border-radius: 6px;
+}

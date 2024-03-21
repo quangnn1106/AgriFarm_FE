@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 
 const useGeolocation = () => {
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [latitude, setLatitude] = React.useState<number | null>(null);
+  const [longitude, setLongitude] = React.useState<number | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -23,7 +23,7 @@ const useGeolocation = () => {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     getLocation();
   }, []); // Run only once on component mount
 
