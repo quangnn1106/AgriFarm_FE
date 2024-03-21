@@ -18,7 +18,7 @@ export const addRegisterForm: (
         siteId: siteId
       }
     });
-    console.log('/register/Registry/Post', res);
+    //console.log('/register/Registry/Post', res);
     return res?.data;
   } catch (error) {
     console.log('error ', error);
