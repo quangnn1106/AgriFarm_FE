@@ -1,7 +1,6 @@
 'use client';
-//import { useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
-
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import MapboxMap from '@/components/MapBox/mapbox';
 import { Button, Col, ConfigProvider, Flex, Layout, Row, Table, theme } from 'antd';
 import Map, {
@@ -33,6 +32,7 @@ import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
 import { usePathname, useRouter } from '@/navigation';
 import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
+import Loader from '@/components/Loader/Loader';
 
 type Props = {};
 interface CenterState {
@@ -42,8 +42,9 @@ interface CenterState {
 }
 const SitePage = (props: Props) => {
   const [fetching, setIsFetching] = React.useState(true);
-  const handleMapLoading = () => setIsFetching(false);
-  const [map, setMap] = React.useState<mapboxgl.Map>();
+  const [loadingMap, setLoading] = React.useState(true);
+  const handleMapLoading = () => setLoading(false);
+
   const [sites, setSites] = React.useState<Sites[] | []>([]);
   const t = useTranslations('Disease');
   const t2 = useTranslations('Button');
@@ -51,38 +52,6 @@ const SitePage = (props: Props) => {
 
   const http = UseAxiosAuth();
   const router = useRouter();
-  const [viewState, setViewState] = React.useState<CenterState>({
-    latitude: 9.99763360283688,
-    longitude: 105.7125548348531,
-    zoom: 14
-  });
-  const [latitude, setLatitude] = React.useState<number | null>(null);
-  const [longitude, setLongitude] = React.useState<number | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
-
-  // const getLocation = () => {
-  //   if (navigator.geolocation) {
-  //     navigator?.geolocation?.getCurrentPosition(
-  //       position => {
-  //         setViewState(prevState => ({
-  //           ...prevState,
-  //           latitude: position.coords.latitude
-  //         }));
-  //         setViewState(prevState => ({
-  //           ...prevState,
-  //           longitude: position.coords.longitude
-  //         }));
-  //       },
-  //       error => {
-  //         console.error('Error getting geolocation:', error);
-  //         setError('Error getting geolocation');
-  //       }
-  //     );
-  //   } else {
-  //     console.error('Geolocation is not supported by this browser.');
-  //     setError('Geolocation is not supported by this browser.');
-  //   }
-  // };
 
   const fetchSites = async (http: AxiosInstance) => {
     try {
@@ -99,26 +68,33 @@ const SitePage = (props: Props) => {
     fetchSites(http);
   }, [http]);
 
-  // const pins = useMemo(
-  //   () =>
-  //     sites.map((city, index) => (
-  //       <Marker
-  //         key={city.name}
-  //         longitude={city?.positions[0]?.long}
-  //         latitude={city?.positions[0]?.lat}
-  //         anchor='bottom'
-  //         // onClick={e => {
-  //         //   // If we let the click event propagates to the map, it will immediately close the popup
-  //         //   // with `closeOnClick: true`
-  //         //   e.originalEvent.stopPropagation();
-  //         //   setPopupInfo(city);
-  //         // }}
-  //       >
-  //         <Pin />
-  //       </Marker>
-  //     )),
-  //   [sites]
-  // );
+  const pinsPositions = useMemo(() => {
+    return sites?.map((city, index) =>
+      city.positions.length > 0 ? (
+        <Marker
+          key={index}
+          longitude={city?.positions[0]?.long || 0}
+          latitude={city?.positions[0]?.lat || 0}
+          color='red'
+          anchor='bottom'
+          // onClick={e => {
+          //   // If we let the click event propagates to the map, it will immediately close the popup
+          //   // with `closeOnClick: true`
+          //   e.originalEvent.stopPropagation();
+          //   setPopupInfo(city);
+          // }}
+        >
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
+            </div>
+          </>
+        </Marker>
+      ) : (
+        ''
+      )
+    );
+  }, [sites]);
   const handleAddSite = () => {
     router.push(SITE_MAP_ADD_PATH);
   };
@@ -131,17 +107,10 @@ const SitePage = (props: Props) => {
       <Content>
         <BreadcrumbComponent subPath={path} />
 
-        <Map
-          // {...viewState}
-          //   onMove={evt => setViewState(evt.viewState)}
-          initialViewState={{
-            latitude: 9.99763360283688,
-            longitude: 105.7125548348531,
-            zoom: 7
-          }}
-          style={{ width: '100%', height: '400px', margin: '25px 0' }}
-          mapStyle='mapbox://styles/mapbox/streets-v11'
-          mapboxAccessToken={MAPBOX_TOKEN}
+        <MapBoxReact
+          onLoaded={handleMapLoading}
+          loadingMap={loadingMap}
+          zoom={8}
         >
           <GeocoderControl
             mapboxAccessToken={MAPBOX_TOKEN}
@@ -151,32 +120,8 @@ const SitePage = (props: Props) => {
           <FullscreenControl position='top-left' />
           <NavigationControl position='top-left' />
           <ScaleControl />
-          {sites?.map((city, index) =>
-            city.positions.length > 0 ? (
-              <Marker
-                key={index}
-                longitude={city?.positions[0]?.long || 0}
-                latitude={city?.positions[0]?.lat || 0}
-                color='red'
-                anchor='bottom'
-                // onClick={e => {
-                //   // If we let the click event propagates to the map, it will immediately close the popup
-                //   // with `closeOnClick: true`
-                //   e.originalEvent.stopPropagation();
-                //   setPopupInfo(city);
-                // }}
-              >
-                <>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
-                  </div>
-                </>
-              </Marker>
-            ) : (
-              ''
-            )
-          )}
-        </Map>
+          {pinsPositions}
+        </MapBoxReact>
 
         <ColoredLine text={t('search_condition')} />
         <div>
@@ -227,7 +172,7 @@ const SitePage = (props: Props) => {
                   </Button>
                 </Flex>
                 <Table
-                  loading={false}
+                  loading={fetching}
                   rowKey={'id'}
                   bordered
                   // rowSelection={{
@@ -252,9 +197,10 @@ const SitePage = (props: Props) => {
                             .closest('td')
                             ?.classList.contains('ant-table-cell-fix-right');
 
-                        // if (isWithinAction && !isWithinLink) {
-                        //   handleDetails(record);
-                        // }
+                        if (isWithinAction && !isWithinLink) {
+                          // handleDetails(record);
+                          router.push(`${path}/update/${record.id}`);
+                        }
                       } // click row
                     };
                   }}

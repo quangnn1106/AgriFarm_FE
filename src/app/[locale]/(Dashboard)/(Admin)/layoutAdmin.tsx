@@ -35,6 +35,8 @@ export default function LayoutAdmin({ children }: { children: any }) {
           width={255}
           theme='light'
           className='sidebar'
+          breakpoint='lg'
+          collapsedWidth='100'
           collapsible
           // collapsed={collapsed}
           // onCollapse={value => setCollapsed(value)}

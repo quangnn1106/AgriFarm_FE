@@ -177,7 +177,7 @@ const UpdateUser = ({
       try {
         const responseData = await getStaffsServiceDetails(sideId, http, userId);
         if (responseData.status === STATUS_OK) {
-          console.log('status ok: ', responseData?.data);
+        //  console.log('status ok: ', responseData?.data);
           setStaffDetail(responseData?.data as StaffsDetails);
           //  console.log('stafff detail: ', responseData?.data?.id) ;
 

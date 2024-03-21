@@ -13,17 +13,19 @@
 
 // style button upload image
 .upload-image-btn {
-     :global {
+    :global {
         .ant-upload-select {
             width: fit-content !important;
             height: fit-content !important;
         }
+
         .ant-upload-list.ant-upload-list-picture-card {
             align-items: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
+
         .ant-upload-list-item-container {
             width: 180px !important;
             height: 180px !important;
@@ -32,10 +34,11 @@
 }
 
 .color-input-disable {
-     :global {
+    :global {
         input.ant-input.ant-input-disabled {
             color: #000000 !important;
         }
+
         span.ant-select-selection-item {
             color: #000000 !important;
         }
@@ -47,7 +50,7 @@ input.ant-input.ant-input-disabled {
 }
 
 .search-btn-box {
-     :global {
+    :global {
         .ant-btn-primary.ant-input-search-button:hover {
             opacity: 0.6;
         }
@@ -58,6 +61,7 @@ input.ant-input.ant-input-disabled {
     height: fit-content;
     width: fit-content;
     border: none !important;
+
     span {
         svg {
             color: #009A29;
@@ -123,4 +127,13 @@ input.ant-input.ant-input-disabled {
     display: flex !important;
     align-items: center;
     justify-content: center;
+}
+
+.loading-style {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: -webkit-linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184));
+    background: -moz-linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184));
+    background: linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184), 0.9);
 }

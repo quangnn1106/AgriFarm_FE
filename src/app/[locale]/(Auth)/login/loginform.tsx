@@ -8,9 +8,9 @@ import classNames from 'classnames/bind';
 import { loginModel } from '../models/login-model';
 import Loading from '@/components/LoadingBtn/Loading';
 import { signIn, useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
-import { Link, useRouter } from '@/navigation';
+import { Link } from '@/navigation';
 import { hasDuplicate } from '@/utils/checkUrl';
 
 const cx = classNames.bind(styles);
@@ -23,12 +23,12 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
-  //const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-  const callbackUrl =
-    hasDuplicate(searchParams.get('callbackUrl') || '') === true
-      ? searchParams.get('callbackUrl')?.substring(3)
-      : searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-  console.log('call back url123: ', callbackUrl?.substring(1));
+  const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  // const callbackUrl =
+  //   hasDuplicate(searchParams.get('callbackUrl') || '') === true
+  //     ? searchParams.get('callbackUrl')?.substring(3)
+  //     : searchParams.get('callbackUrl') || DASH_BOARD_PATH;
+  // console.log('call back url123: ', callbackUrl?.substring(1));
   //const handleDupicate = hasDuplicate(callbackUrl as string);
 
   const handleLogin = async (data: loginModel) => {

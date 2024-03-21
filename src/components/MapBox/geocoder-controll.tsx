@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useControl, Marker, MarkerProps, ControlPosition } from 'react-map-gl';
+import {
+  useControl,
+  Marker,
+  MarkerProps,
+  ControlPosition,
+  MarkerDragEvent
+} from 'react-map-gl';
 import MapboxGeocoder, { GeocoderOptions } from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 type GeocoderControlProps = Omit<
@@ -9,17 +15,32 @@ type GeocoderControlProps = Omit<
 > & {
   mapboxAccessToken?: string;
   marker?: boolean | Omit<MarkerProps, 'longitude' | 'latitude'>;
-  position: ControlPosition;
+  displayMarker?: boolean;
+  position?: ControlPosition;
   onLoading?: (e: object) => void;
   onResults?: (e: object) => void;
   onResult?: (e: object) => void;
   onError?: (e: object) => void;
+  onMarkerDragStart?: (event: MarkerDragEvent) => void;
+  onMarkerDrag?: (event: MarkerDragEvent) => void;
+  onMarkerDragEnd?: (event: MarkerDragEvent) => void;
+  latFromUpdate?: number;
+  lngFromUpdate?: number;
 };
 
+const defaultProps: Partial<GeocoderControlProps> = {
+  //marker: true,
+  onLoading: () => {},
+  onResults: () => {},
+  onResult: () => {},
+  onError: () => {},
+  onMarkerDragStart: () => {},
+  onMarkerDrag: () => {},
+  onMarkerDragEnd: () => {}
+};
 /* eslint-disable complexity,max-statements */
-export default function GeocoderControl(props: GeocoderControlProps) {
+const GeocoderControl = (props: GeocoderControlProps) => {
   const [marker, setMarker] = useState<any>(null);
-
   const geocoder = useControl<MapboxGeocoder>(
     () => {
       const ctrl = new MapboxGeocoder({
@@ -27,37 +48,56 @@ export default function GeocoderControl(props: GeocoderControlProps) {
         marker: false,
         accessToken: props.mapboxAccessToken as string
       });
+
+      ctrl.on('loading', (event: any) => {
+        props.onLoading && props.onLoading(event);
+        console.log('loadingGeo: ', event);
+      });
       // @ts-ignore (TS2339) private member
 
-      ctrl.on('loading', props.onLoading);
-      // @ts-ignore (TS2339) private member
+      // ctrl.on('results', props.onResults);
+      console.log('props marker', props.marker);
 
-      ctrl.on('results', props.onResults);
+      ctrl.on('results', (event: any) => {
+        props.onResults && props.onResults(event);
+      });
       ctrl.on('result', evt => {
-        // @ts-ignore (TS2339) private member
-
-        props.onResult(evt);
+        //props.onResult(evt);
+        props.onResult && props.onResult(evt);
 
         const { result } = evt;
+
         const location =
           result &&
           (result.center ||
             (result.geometry?.type === 'Point' && result.geometry.coordinates));
         if (location && props.marker) {
+          console.log('if true');
+
           setMarker(
             <Marker
-              {...(props.marker as any)}
+              {...(props.marker as GeocoderControlProps)}
+              draggable
               longitude={location[0]}
               latitude={location[1]}
+              onDragStart={props.onMarkerDragStart}
+              onDrag={props.onMarkerDrag}
+              onDragEnd={props.onMarkerDragEnd}
             />
           );
         } else {
+          console.log('else falsy else falsyelse falsyelse falsyelse falsyelse falsy');
+
           setMarker(null);
         }
       });
       // @ts-ignore (TS2339) private member
 
-      ctrl.on('error', props.onError);
+      //   ctrl.on('error', props.onError);
+
+      ctrl.on('error', (event: any) => {
+        props.onError && props.onError(event);
+      });
       return ctrl;
     },
     {
@@ -120,15 +160,22 @@ export default function GeocoderControl(props: GeocoderControlProps) {
     //   geocoder.setWorldview(props.worldview);
     // }
   }
-  return marker;
-}
+  console.log('props marker', marker);
 
+  return marker ? marker : '';
+};
+
+GeocoderControl.defaultProps = defaultProps;
+export default GeocoderControl;
 const noop = () => {};
 
-GeocoderControl.defaultProps = {
-  marker: true,
-  onLoading: noop,
-  onResults: noop,
-  onResult: noop,
-  onError: noop
-};
+// GeocoderControl.defaultProps = {
+//   marker: true,
+//   onLoading: noop,
+//   onResults: noop,
+//   onResult: noop,
+//   onError: noop,
+//   onMarkerDragStart: noop,
+//   onMarkerDrag: noop,
+//   onMarkerDragEnd: noop
+// };
