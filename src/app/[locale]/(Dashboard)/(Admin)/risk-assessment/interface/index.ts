@@ -1,6 +1,6 @@
 
 export interface RiskItemDef {
-    riskItemTitle: string;
+    riskItemTile: string;
     riskItemDiv: number;
     riskItemType: number;
     riskItemContent: string;

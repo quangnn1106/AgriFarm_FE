@@ -8,6 +8,9 @@ import { useTranslations } from "next-intl";
 import { ItemModeValue } from "../enum";
 import SingleChoice from "./SingleChoice/SingleChoice";
 import MultiChoice from "./MultiChoice/MultiChoice";
+import ItemText from "./Text/Text";
+import UploadImage from "./Image/Upload";
+import type { CheckboxProps } from 'antd';
 
 interface RiskItem {
     onRadioChange: (indexItem: number, value: number) => void;
@@ -16,6 +19,7 @@ interface RiskItem {
     itemMode: number;
     indexItem: number;
     handleRiskItemsTitle: (indexItem: number, value: string) => void;
+    onCheckboxChange: (indexItem: number, value: number) => void;
 }
 // Single choice
 const RiskItem: React.FC<RiskItem> = ({
@@ -24,14 +28,15 @@ const RiskItem: React.FC<RiskItem> = ({
         itemMode,
         handleDeleteItem,
         indexItem,
-        handleRiskItemsTitle
+        handleRiskItemsTitle,
+        onCheckboxChange
     }: RiskItem): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const tMsg = useTranslations('Services.RiskAsm.message');
   const [readioSel, setReadioSel] = useState(itemMode);
-  const handleOnchangeTitle = (e : any) => {
+  const handleOnchangeTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     handleRiskItemsTitle(indexItem, e.target.value);
   }
 
@@ -39,17 +44,30 @@ const RiskItem: React.FC<RiskItem> = ({
     setReadioSel(e.target.value);
     onRadioChange(indexItem, e.target.value);
   }
+  const handleOnchangeMust: CheckboxProps['onChange'] = (e) => {
+    onCheckboxChange(indexItem, e.target.checked ? 1 : 0);
+  };
   return (
     <>
       <div className={cx('risk-item')}>
         <fieldset className={cx('risk-item__wrap')}>
-          <legend><TextArea cols={45} rows={3} className={cx('title')} onChange={handleOnchangeTitle}></TextArea></legend>
+          <legend>
+            <TextArea
+              defaultValue={tLbl('title_default_text').replace('%ITEM%', indexItem.toString())}
+              maxLength={300}
+              cols={70}
+              rows={4}
+              className={cx('title')}
+              onChange={handleOnchangeTitle}
+              style={{resize: 'none'}}
+              placeholder={tLbl('risk_title_placeholder')}
+            />
+          </legend>
             <Radio.Group onChange={handleOnchangeRadio} value={readioSel} className={cx('risk-item-radio__mg')}>
                 <Radio value={1}>{tLbl('single')}</Radio>
                 <Radio value={2}>{tLbl('multi')}</Radio>
                 <Radio value={3}>{tLbl('text')}</Radio>
                 <Radio value={4}>{tLbl('photo')}</Radio>
-                <Radio value={5}>{tLbl('file')}</Radio>
             </Radio.Group>
             {readioSel == ItemModeValue.SINGLE_CHOICE ? (
               <>
@@ -61,22 +79,18 @@ const RiskItem: React.FC<RiskItem> = ({
               </>
             ) : readioSel == ItemModeValue.TEXT ? (
               <>
-                <div>Textttttt</div>
+              <ItemText handleEnterContent={handleRiskItems} idxItem={indexItem}/>
               </>
             ) : readioSel == ItemModeValue.PHOTOS ? (
               <>
-                <div>Photossssss</div>
-              </>
-            ): readioSel == ItemModeValue.FILES ? (
-              <>
-                <div>Filesssssssssssss</div>
+                <UploadImage></UploadImage>
               </>
             ) : (
               <></>
             )}
             <div className={cx('must')}>
               <span>{tLbl('must')}:</span><br/>
-              <Checkbox className={cx('must-checkbox')}>{tLbl('required')}</Checkbox>
+              <Checkbox className={cx('must-checkbox')} onChange={handleOnchangeMust}>{tLbl('required')}</Checkbox>
             </div>
             <div className={cx('delete-item')}>
                   <Button type="primary" className={cx('single-choice-btn__addrec')} onClick={() => handleDeleteItem(indexItem)}>{tCom('btn_delete')}</Button>

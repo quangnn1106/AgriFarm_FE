@@ -46,7 +46,7 @@ const MultiChoice: React.FC<ItemSingleChoice> = ({
         {rows.map((_, index) => {
           return (
           <Row className={cx('row')} key={index}>
-            <Col span={6}><Input style={{width: "70%"}} placeholder={`${tLbl('text-placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input></Col>
+            <Col span={6}><Input style={{width: "70%"}} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input></Col>
             <Col span={18}>
                 <Flex gap="small">
                   <Button type="primary" onClick={handleAddRow}>{tCom('btn_add')}</Button>

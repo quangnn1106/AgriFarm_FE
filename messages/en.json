@@ -180,11 +180,15 @@
     },
     "common": {
       "btn_add": "Add",
-      "btn_delete": "Delete"
+      "btn_delete": "Delete",
+      "btn_back": "Back",
+      "btn_save": "Save"
     },
     "Services": {
       "RiskAsm": {
         "label": {
+          "risk_assessment": "Risk Assessement",
+          "risk_assessment_add": "Risk Assessement Add",
           "single": "Single Choice",
           "multi": "Multi Choice",
           "text": "Text",
@@ -192,10 +196,25 @@
           "file": "Files",
           "required": "Required",
           "must": "Must",
-          "text-placeholder": "Enter content"
+          "text_placeholder": "Enter content",
+          "risk_name": "Risk Name",
+          "risk_description": "Risk Description",
+          "risk_is_draft": "Is Draft",
+          "basic_information": "Basic Information",
+          "item_list": "Item List",
+          "btn_add_new_item": "Add item",
+          "btn_create_new_item": "Create new item",
+          "risk_title_placeholder": "Enter the title of the risk assessment item",
+          "title_default_text": "Risk assessment item No.%ITEM%",
+          "basic": "Basic",
+          "advance": "Advance"
         },
         "message": {
-
+          "msg_upload_img": "You can only upload JPG/PNG file!",
+          "msg_max_size_img": "Image must smaller than 2MB!",
+          "msg_max_upload_img": "You can upload up to 3 images!",
+          "msg_required": "Please input your %ITEM%!",
+          "msg_add_success": "Add success!"
         }
       }
     }
