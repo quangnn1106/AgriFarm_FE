@@ -35,7 +35,9 @@
         "rice_culti": "Nhật ký canh tác lúa",
         "GBG_checklist": "Tiêu chuẩn Global G.A.P",
         "subscription": "Quản lý gói đăng ký",
-        "logout": "Đăng xuất   "
+        "logout": "Đăng xuất   ",
+        "t_content": "Chủ đề tập huấn",
+        "training": "Tập huấn"
     },
     "LocaleSwitcher": {
         "switchLocale": "Convert {locale, select, vi {vi} "
