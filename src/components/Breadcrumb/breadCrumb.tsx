@@ -1,21 +1,19 @@
 'use client';
 import React from 'react';
-import styles from '../../../management-page.module.scss';
 
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import classNames from 'classnames/bind';
+
 import { DASH_BOARD_PATH } from '@/constants/routes';
-import { usePathname } from '@/navigation';
+
 import { capitalizeFirstLetter } from '@/utils/upercaseFirstLetter';
 
-const cx = classNames.bind(styles);
 type Props = {
   subPath?: string;
   subPath2?: string;
 };
 
-const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
+const BreadcrumbArgiFarm = ({ subPath, subPath2 }: Props) => {
   return (
     <>
       <ConfigProvider
@@ -39,7 +37,7 @@ const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
         }}
       >
         <Button
-          className={cx('home-btn')}
+          className='home-btn'
           href='#'
           size={'large'}
         >
@@ -61,11 +59,9 @@ const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
             title: 'Statistic'
           },
           {
-            href: subPath,
             title: capitalizeFirstLetter(subPath || '')
           },
           {
-            href: subPath2,
             title: capitalizeFirstLetter(subPath2 || '')
           }
         ]}
@@ -74,4 +70,4 @@ const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
   );
 };
 
-export default BreadcrumbComponent;
+export default BreadcrumbArgiFarm;

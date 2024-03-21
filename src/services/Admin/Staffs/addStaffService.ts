@@ -1,7 +1,7 @@
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
-import Staffs from './Payload/response/staffs';
-import { AddStaffPayLoad } from './Payload/request/add-staff';
+import Staffs from '../Staffs/Payload/response/staffs';
+import { AddStaffPayLoad } from '../Staffs/Payload/request/add-staff';
 
 export const addStaffService: (
   http: AxiosInstance | null,

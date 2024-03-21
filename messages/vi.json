@@ -84,6 +84,9 @@
         "add_error": "Thêm thất bại",
         "update_error": "Cập nhật thất bại"
     },
+    "Button": {
+        "btn_add": "Thêm Mới"
+    },
     "Result": {
         "regis_success": "Đăng ký thành công",
         "regis_error": "Đăng ký thất bại",
