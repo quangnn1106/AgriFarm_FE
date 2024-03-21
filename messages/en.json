@@ -72,23 +72,26 @@
         "active": "Active"
     },
     "Message": {
-      "server_error": "Server Error Please Try Again!",
-      "email_error": "Email Exist Please Try Again!",
-      "farmCode_error": "Farm Code Exist Please Try Again!",
-      "farmName_error": "Farm Name Exist Please Try Again!",
-      "allErrorRegis": "Farm Name already exists. Farm Code already exists. Email already exists.",
-      "add_susses": "Add success",
-      "update_susses": "Update success",
-      "add_error": "Add error",
-      "update_error": "Update"
+        "server_error": "Server Error Please Try Again!",
+        "email_error": "Email Exist Please Try Again!",
+        "farmCode_error": "Farm Code Exist Please Try Again!",
+        "farmName_error": "Farm Name Exist Please Try Again!",
+        "allErrorRegis": "Farm Name already exists. Farm Code already exists. Email already exists.",
+        "add_susses": "Add success",
+        "update_susses": "Update success",
+        "add_error": "Add error",
+        "update_error": "Update"
+    },
+    "Button": {
+        "btn_add": "Add"
     },
     "Result": {
-      "regis_success": "Sign Up Success",
-      "regis_error": "registration failed",
-      "subTitle_success": "You already have an account, the system will automatically approve within 5 minutes",
-      "subTitle_error": "Please check and modify the following information before resubmitting.",
-      "btn_redToLogin": "Go to the login page",
-      "btn_redToRegis": "Return to registration form"
+        "regis_success": "Sign Up Success",
+        "regis_error": "registration failed",
+        "subTitle_success": "You already have an account, the system will automatically approve within 5 minutes",
+        "subTitle_error": "Please check and modify the following information before resubmitting.",
+        "btn_redToLogin": "Go to the login page",
+        "btn_redToRegis": "Return to registration form"
     },
     "Disease": {
         "diagnostic": "Diagnostic",
@@ -158,24 +161,24 @@
         "cancel_btn": "Cancel"
     },
     "FormRegister": {
-      "title_add": "Add new Farm Admin",
-      "title_update": "Update Farm Admin",
-      "address_form": "Address",
-      "farm_code": "Farm Code",
-      "farm_name": "Farm Name",
-      "first_name": "First Name",
-      "last_name": "Last Name",
-      "phone_number": "Phone Number"
+        "title_add": "Add new Farm Admin",
+        "title_update": "Update Farm Admin",
+        "address_form": "Address",
+        "farm_code": "Farm Code",
+        "farm_name": "Farm Name",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "phone_number": "Phone Number"
     },
     "AddStaff": {
-      "title_add": "Add new Farm Admin",
-      "first_name": "First Name",
-      "last_name": "Last Name",
-      "password": "Password",
-      "pass_confirm": "Confirm Password",
-      "pass_confirmError": "The new password that you entered do not match!",
-      "required_mess": "Required Fields",
-      "email_valid": "Email is not valid"
+        "title_add": "Add new Farm Admin",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "password": "Password",
+        "pass_confirm": "Confirm Password",
+        "pass_confirmError": "The new password that you entered do not match!",
+        "required_mess": "Required Fields",
+        "email_valid": "Email is not valid"
     },
     "Season": {
       "home": "Home",

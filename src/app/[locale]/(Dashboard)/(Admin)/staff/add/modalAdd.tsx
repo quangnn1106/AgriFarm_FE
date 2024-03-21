@@ -14,9 +14,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useTranslations } from 'next-intl';
-import { addStaffService } from '@/services/Admin/addStaffService';
+import { addStaffService } from '@/services/Admin/Staffs/addStaffService';
 import { STATUS_CREATED } from '@/constants/https';
-import { AddStaffPayLoad } from '@/services/Admin/Payload/request/add-staff';
+import { AddStaffPayLoad } from '@/services/Admin/Staffs/Payload/request/add-staff';
 
 const cx = classNames.bind(styles);
 const AddUser = ({

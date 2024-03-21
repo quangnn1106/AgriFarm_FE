@@ -32,7 +32,10 @@ export default function LayoutSuperAdmin({ children }: { children: React.ReactNo
           width={255}
           theme='light'
           className='sidebar'
-          // collapsible
+          breakpoint='lg'
+          collapsedWidth='100'
+          collapsible
+
           // collapsed={collapsed}
           // onCollapse={value => setCollapsed(value)}
         >
