@@ -207,7 +207,9 @@
           "risk_title_placeholder": "Enter the title of the risk assessment item",
           "title_default_text": "Risk assessment item No.%ITEM%",
           "basic": "Basic",
-          "advance": "Advance"
+          "advance": "Advance",
+          "draft": "Draft",
+          "publish": "Publish"
         },
         "message": {
           "msg_upload_img": "You can only upload JPG/PNG file!",
