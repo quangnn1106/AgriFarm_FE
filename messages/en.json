@@ -189,6 +189,7 @@
         "label": {
           "risk_assessment": "Risk Assessement",
           "risk_assessment_add": "Risk Assessement Add",
+          "risk_assessment_detail": "Risk Assessement Detail",
           "single": "Single Choice",
           "multi": "Multi Choice",
           "text": "Text",

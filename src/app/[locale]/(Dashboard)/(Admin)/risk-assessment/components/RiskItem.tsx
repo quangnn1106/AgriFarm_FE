@@ -51,7 +51,7 @@ const RiskItem: React.FC<RiskItem> = ({
     <>
       <div className={cx('risk-item')}>
         <fieldset className={cx('risk-item__wrap')}>
-          <legend>
+          <legend style={{width: '50%', border: 'none'}}>
             <TextArea
               defaultValue={tLbl('title_default_text').replace('%ITEM%', indexItem.toString())}
               maxLength={300}
