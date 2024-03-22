@@ -7,7 +7,8 @@ import { useTranslations } from 'next-intl';
 
 
 export function LandColumn() {
-    const t = useTranslations('Season');
+    const t = useTranslations('Common');
+    const tSeason = useTranslations('Season')
     const landTableColumn: TableColumnsType<Land> = [
         {
             title: 'ID',
@@ -15,7 +16,7 @@ export function LandColumn() {
             hidden: true
         },
         {
-            title: t('Land_name'),
+            title: tSeason('Land_name'),
             dataIndex: 'name',
             width: 'max-content',
         },

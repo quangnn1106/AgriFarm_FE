@@ -40,7 +40,8 @@ const SeasonManagement = (props: Props) => {
 //style 
   const cx = classNames.bind(styles);
 
-  const t = useTranslations('Season');
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
 
 // get id user
   const { data: session } = useSession();
@@ -71,7 +72,7 @@ const SeasonManagement = (props: Props) => {
         title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-        title: <Link href={`/season`}>{t('season')}</Link>
+        title: <Link href={`/season`}>{tSeason('season')}</Link>
     }
 ];
 
@@ -216,7 +217,7 @@ const SeasonManagement = (props: Props) => {
             />
             {/* {<WarningOutlined style={{color: 'red'}}/><p>Do you really want to delete this season ?</p>} */}
             <Modal 
-            title={<div><WarningOutlined style={{color: 'red', paddingRight: '4px'}}/><span>{t('delete_confirm_sentence')}</span></div>} 
+            title={<div><WarningOutlined style={{color: 'red', paddingRight: '4px'}}/><span>{tSeason('delete_confirm_sentence')}</span></div>} 
             open={deleteState} onOk={deleteMultiple} 
             onCancel={() => {setDeleteState(false)}} 
             centered={true}

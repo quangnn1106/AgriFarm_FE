@@ -17,7 +17,7 @@ import { HomeOutlined, SearchOutlined } from '@ant-design/icons';
 import type { SearchProps } from 'antd/es/input/Search';
 
 import styles from '../../../adminStyle.module.scss';
-import seasonStyle from '../../seasonStyle.module.scss';
+import seasonStyle from '../../seedStyle.module.scss';
 
 import classNames from 'classnames/bind';
 import Search from 'antd/es/input/Search';
@@ -44,8 +44,6 @@ const FilterSection = () => {
   type CheckboxValueType = GetProp<typeof Checkbox.Group, 'value'>[number];
 
   const CheckboxGroup = Checkbox.Group;
-
-  const plainOptions = [t('In_progress'), t('Done'), t('Cancel'), t('Pending')];
 
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>();
   const onChange = (list: CheckboxValueType[]) => {
@@ -89,28 +87,6 @@ const FilterSection = () => {
               placeholder={t('Input_search_text')}
               style={{ width: '50%' }}
             ></Input>
-          </Form.Item>
-          <Form.Item
-            label={t('Date_of_execution')}
-            name='dateRange'
-          >
-            <RangePicker
-              defaultValue={[
-                dayjs('2015/01/01', dateFormat),
-                dayjs('2015/01/01', dateFormat)
-              ]}
-              format={dateFormat}
-            />
-          </Form.Item>
-          <Form.Item
-            label={t('Status')}
-            name='status'
-          >
-            <CheckboxGroup
-              options={plainOptions}
-              value={checkedList}
-              onChange={onChange}
-            />
           </Form.Item>
           <Form.Item label=''>
             <Flex

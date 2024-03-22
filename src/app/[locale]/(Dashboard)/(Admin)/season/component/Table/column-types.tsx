@@ -25,7 +25,8 @@ import { SeasonModel } from '../../models/season-model';
 import { useTranslations } from 'next-intl';
 
  export function SeasonTableColumns() {
-  const t = useTranslations('Season');
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
   const seasonTableColumn: TableColumnsType<SeasonModel> = [
     {
       title: t('Name'),
@@ -123,7 +124,7 @@ import { useTranslations } from 'next-intl';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title: t('delete_confirm_sentence'),
+                      title: tSeason('delete_confirm_sentence'),
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

@@ -54,7 +54,8 @@ import { useRouter } from '@/navigation';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
-  const t = useTranslations('Season');
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
   const cx = classNames.bind(styles);
   const tM = useTranslations('Message');
   const router = useRouter();
@@ -264,7 +265,7 @@ const SeasonCreate = (props: Props) => {
             }}
             className={cx('color-input-disable')}
             label={t('Title')}
-            rules={[{ required: true, message: t('Please_input_season_title!') }]} 
+            rules={[{ required: true, message: tSeason('Please_input_season_title!') }]} 
           >
             <Input value={seasonTitle} onChange={handleChangeTitle}/>
           </Form.Item>
@@ -326,7 +327,7 @@ const SeasonCreate = (props: Props) => {
               </Form.Item>
           </Flex>
 
-          <label>{t('Land_&_Seed')}</label>
+          <label>{tSeason('Land_&_Seed')}</label>
           <Flex
             align='center'
             justify='flex-start'

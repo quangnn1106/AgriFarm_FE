@@ -49,7 +49,8 @@ const AddProductSeason = ({
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
-  const t = useTranslations('Season');
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
   
   const dispatch = useAppDispatch();
 
@@ -202,7 +203,7 @@ const AddProductSeason = ({
         }}
       >
         <Modal
-          title={t('Add_new_product')}
+          title={tSeason('Add_new_product')}
           open={params.visible}
           onCancel={params.onCancel}
           onOk={onHandleOK}
