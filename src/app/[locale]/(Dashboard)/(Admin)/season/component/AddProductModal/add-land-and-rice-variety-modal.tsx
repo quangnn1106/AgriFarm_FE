@@ -2,11 +2,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
 import { LandColumn } from './land-table-column';
-import { Land, LandProd, RiceVariety, Seed, SeedPro } from '../../models/season-model';
+import { Land, LandProd, RiceVariety, SeedPro } from '../../models/season-model';
 import React, { useEffect, useState } from 'react';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { ConfigProvider, Form, Input, Modal, Table, notification } from 'antd';
-import fetchListRiceVarietyData from '@/services/Admin/RiceVariety/getRiceVarietyApi';
 import { RiceVarietyColumns } from './rice-variety-table-column';
 import classNames from 'classnames';
 import styles from '../../../../(SuperAdmin)/management-page.module.scss';
@@ -28,6 +27,8 @@ import { STATUS_CREATED } from '@/constants/https';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setProductsAction } from '@/redux/features/season-slice';
 import { useSelector } from 'react-redux';
+import getSeedsApi from '@/services/Admin/Seed/getSeedsApi';
+import { Seed } from '../../../seed/models/seed-models';
 
 // interface Properties {
 
@@ -80,7 +81,7 @@ const AddProductSeason = ({
 
   const getRiceVarietyData = async (http: AxiosInstance, siteId?: string) => {
     try {
-      const res = await fetchListRiceVarietyData(siteId, http);
+      const res = await getSeedsApi(siteId, http);
       setSeeds(res.data as Seed[]);
       setLoadingSeedData(false);
     } catch (error) {
