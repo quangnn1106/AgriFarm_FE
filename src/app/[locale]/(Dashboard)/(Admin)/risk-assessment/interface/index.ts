@@ -1,3 +1,5 @@
+import { isDraft } from "@reduxjs/toolkit";
+
 export interface RiskItemDef {
     riskItemTile: string;
     riskItemDiv: number;
@@ -27,4 +29,20 @@ export interface RiskMasterResponseDef {
     riskDescription: string;
     isDraft: boolean;
     riskItems: RiskItemResponseDef[]
+}
+
+export interface SearchConditionDef {
+    keyword?: string;
+    isDraft?: boolean;
+    perPage?: number;
+    pageId?: number;
+}
+
+export interface RiskMasterListDef {
+    key: string;
+    id: string;
+    riskName: string;
+    riskDescription: string;
+    isDraft: boolean;
+    createdDate: string;
 }

@@ -13,7 +13,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from '@/utils/axiosClient';
 import riskAssessmentAddApi from '@/services/RiskAssessment/riskAssessmentAddApi';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 interface ItemContentDef {
   [key: number] : string;
@@ -21,7 +20,7 @@ interface ItemContentDef {
 interface ColoredLineProps {
   text: string;
 }
-const Add = () => {
+const Edit = () => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -36,7 +35,6 @@ const Add = () => {
     const { data: session } = useSession();
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
-    const router = useRouter();
 
     const handleInputRiskName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRiskName(e.target.value);
@@ -167,7 +165,6 @@ const Add = () => {
     }
     const backAction = () => {
       console.log("backAction ...");
-      router.push('/risk-assessment/list');
     }
   return(
     <>
@@ -282,9 +279,9 @@ const Add = () => {
   )
 }
 
-const AddApp: React.FC = () => (
+const EditApp: React.FC = () => (
   <App>
-    <Add />
+    <Edit />
   </App>
 );
-export default Add;
+export default EditApp;

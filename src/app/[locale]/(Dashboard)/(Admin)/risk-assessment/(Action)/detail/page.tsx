@@ -90,7 +90,7 @@ const Detail = () => {
             {contextHolder}
             {/* Basic */}
         <Content style={{ padding: '30px 48px' }}>
-            <h2 className={cx('disease__title')}>{tLbl('risk_assessment_detail')}</h2>
+            <h2>{tLbl('risk_assessment_detail')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
             {riskData && (
