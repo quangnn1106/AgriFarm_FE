@@ -1,7 +1,7 @@
 import HttpResponseCommon from '@/types/response';
-import Staffs from '@/services/Admin/Payload/response/staffs';
+import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
 import { AxiosInstance } from 'axios';
-import StaffsDetails from '@/services/Admin/Payload/response/staffs-detail';
+import StaffsDetails from '@/services/Admin/Staffs/Payload/response/staffs-detail';
 
 // import { http } from '@/utils/config';
 export interface Pagination {
@@ -50,6 +50,6 @@ export const getStaffsServiceDetails: (
     // }
   });
 
- // console.log('response getStaffsServiceDetails: ', res?.data);
+  // console.log('response getStaffsServiceDetails: ', res?.data);
   return res?.data;
 };

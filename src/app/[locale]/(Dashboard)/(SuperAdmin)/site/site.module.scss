@@ -6,3 +6,134 @@
 .disease__line {
     border-top: 2px solid #CFD0D2;
 }
+
+.btn_row {
+    margin-bottom: 20px;
+}
+
+// style button upload image
+.upload-image-btn {
+    :global {
+        .ant-upload-select {
+            width: fit-content !important;
+            height: fit-content !important;
+        }
+
+        .ant-upload-list.ant-upload-list-picture-card {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .ant-upload-list-item-container {
+            width: 180px !important;
+            height: 180px !important;
+        }
+    }
+}
+
+.color-input-disable {
+    :global {
+        input.ant-input.ant-input-disabled {
+            color: #000000 !important;
+        }
+
+        span.ant-select-selection-item {
+            color: #000000 !important;
+        }
+    }
+}
+
+input.ant-input.ant-input-disabled {
+    color: #000000;
+}
+
+.search-btn-box {
+    :global {
+        .ant-btn-primary.ant-input-search-button:hover {
+            opacity: 0.6;
+        }
+    }
+}
+
+.home-btn {
+    height: fit-content;
+    width: fit-content;
+    border: none !important;
+
+    span {
+        svg {
+            color: #009A29;
+        }
+    }
+}
+
+.bg-btn {
+    background: #009A29 !important;
+    color: #ffffff !important;
+}
+
+.bg-btn:hover {
+    color: #ffffff !important;
+    background: #009A29 !important;
+    border: #009A29 !important;
+    opacity: 0.6 !important;
+}
+
+.label-icon {
+    color: #009A29;
+    width: fit-content;
+    font-size: 16px;
+    font-weight: 700;
+    gap: 8px;
+    padding-left: 30px;
+}
+
+.flex-space {
+    gap: 12px;
+    padding: 16px;
+}
+
+.flex-center {
+    gap: 12px;
+    padding: 20px;
+}
+
+.flex-outline-space {
+    margin: 12px 24px;
+}
+
+.filter-box {
+    padding: 12px;
+    border: 1px solid #009A29;
+    border-radius: 12px;
+    margin: 12px 24px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
+
+//Style profile page
+.group-info-label {
+    padding-left: 0px;
+    font-weight: 500;
+}
+
+.padding-input {
+    padding: 8px 30px;
+}
+
+.btn-right {
+    margin-left: auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-style {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: -webkit-linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184));
+    background: -moz-linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184));
+    background: linear-gradient(45deg, rgba(152, 207, 195, 0.7), rgb(86, 181, 184), 0.9);
+}
