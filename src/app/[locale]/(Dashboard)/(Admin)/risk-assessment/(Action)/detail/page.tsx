@@ -117,7 +117,7 @@ const Detail = () => {
                                         const riskCtn = JSON.parse(item.riskItemContent);
                                         const radio = () => (
                                             Object.keys(riskCtn).map((index) => (
-                                                <Radio key={index} value={riskCtn[index]}>Testttt</Radio>
+                                                <Radio key={index} value={index}>{riskCtn[index]}</Radio>
                                             ))
                                         );
                                         return (
@@ -146,7 +146,7 @@ const Detail = () => {
                                         const riskCtn = JSON.parse(item.riskItemContent);
                                         const checkBox = () => (
                                             Object.keys(riskCtn).map((index) => (
-                                                <Checkbox key={index} value={riskCtn[index]}>Testttt</Checkbox>
+                                                <Checkbox key={index} value={riskCtn[index]}>{riskCtn[index]}</Checkbox>
                                             ))
                                         );
                                         return (
