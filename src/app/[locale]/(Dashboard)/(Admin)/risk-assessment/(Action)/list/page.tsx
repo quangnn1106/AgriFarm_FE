@@ -172,7 +172,9 @@ const List = () => {
         },
         {
             title: 'Risk Description',
-            dataIndex: 'riskDescription',
+            render: ((_,riskMaster) => (
+                <p style={{whiteSpace: 'pre'}}>{riskMaster.riskDescription}</p>
+            ))
         },
         {
             title: 'Is Draft',
@@ -193,7 +195,6 @@ const List = () => {
         },
         {
             title: '',
-            dataIndex: 'action',
             width: '5%',
             render: (_,riskMaster) => {
                 const renderItems = (
