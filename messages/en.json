@@ -158,7 +158,8 @@
         "select_disease_name": "Choose disease",
         "delete_title": "Delete",
         "msg_confirm_delete": "Do you want to delete",
-        "cancel_btn": "Cancel"
+        "cancel_btn": "Cancel",
+        "min_length": "Please enter description > 50 characters!"
     },
     "FormRegister": {
         "title_add": "Add new Farm Admin",
@@ -224,5 +225,50 @@
       "Submit": "Submit",
       "save_change": "Save change",
       "Add_new_product": "Add new product"
+    },
+    "common": {
+        "btn_add": "Add",
+        "btn_delete": "Delete",
+        "btn_back": "Back",
+        "btn_save": "Save",
+        "btn_submit": "Submit"
+      },
+      "Services": {
+        "RiskAsm": {
+          "label": {
+            "risk_assessment": "Risk Assessement",
+            "risk_assessment_add": "Risk Assessement Add",
+            "risk_assessment_detail": "Risk Assessement Detail",
+            "risk_assessment_impl": "Risk Assessment Implement",
+            "single": "Single Choice",
+            "multi": "Multi Choice",
+            "text": "Text",
+            "photo": "Photos",
+            "file": "Files",
+            "required": "Required",
+            "must": "Must",
+            "text_placeholder": "Enter content",
+            "risk_name": "Risk Name",
+            "risk_description": "Risk Description",
+            "risk_is_draft": "Is Draft",
+            "basic_information": "Basic Information",
+            "item_list": "Item List",
+            "btn_add_new_item": "Add item",
+            "btn_create_new_item": "Create new item",
+            "risk_title_placeholder": "Enter the title of the risk assessment item",
+            "title_default_text": "Risk assessment item No.%ITEM%",
+            "basic": "Basic",
+            "advance": "Advance",
+            "draft": "Draft",
+            "publish": "Publish"
+          },
+          "message": {
+            "msg_upload_img": "You can only upload JPG/PNG file!",
+            "msg_max_size_img": "Image must smaller than 2MB!",
+            "msg_max_upload_img": "You can upload up to 3 images!",
+            "msg_required": "Please input your %ITEM%!",
+            "msg_add_success": "Add success!"
+          }
+        }
     }
 }
