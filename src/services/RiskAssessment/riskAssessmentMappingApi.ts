@@ -1,15 +1,16 @@
 import { AxiosInstance } from 'axios';
 
-const riskAssessementDetailApi = async (
+const riskAssessmentMappingApi = async (
     http: AxiosInstance | null,
     id: string | null) => {
     try {
-        const response = await http?.get('/risk/risk-assessment/detail', {
+        const response = await http?.get('/risk/risk-assessment/get-list-mapping', {
             params: {
-                id: id,
+                taskId: id,
             }
         });
         const responseData = response?.data;
+        console.log(responseData);
         return responseData;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error
@@ -21,4 +22,4 @@ const riskAssessementDetailApi = async (
     }
 };
 
-export default riskAssessementDetailApi;
+export default riskAssessmentMappingApi;

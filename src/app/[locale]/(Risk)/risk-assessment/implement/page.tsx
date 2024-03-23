@@ -1,5 +1,5 @@
 'use client'
-import { App, Breadcrumb, Card, Checkbox, Collapse, Divider, Radio, Space, Tag, Upload, message } from "antd";
+import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Radio, Space, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
@@ -11,15 +11,16 @@ import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
 import Link from "next/link";
 import { Content } from "antd/es/layout/layout";
-import styles from "../../components/risk-assessment-style.module.scss";
+import styles from "../risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
-import { RiskMasterResponseDef } from "../../interface";
 import { DeleteTwoTone , PushpinTwoTone } from '@ant-design/icons';
-import { ItemModeValue } from "../../enum";
+import { RiskMasterResponseDef } from "../../../(Dashboard)/(Admin)/risk-assessment/interface";
+import { ItemModeValue } from "../../../(Dashboard)/(Admin)/risk-assessment/enum";
+import riskAssessmentMappingApi from "@/services/RiskAssessment/riskAssessmentMappingApi";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const Detail = () => {
+const Implement = () => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -27,11 +28,28 @@ const Detail = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const http = UseAxiosAuth();
-    const riskId = useSearchParams().get("id");
+    const taskId = useSearchParams().get("taskId");
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
+    const [riskMasterId, setRiskMasterId] = useState("");
     useEffect(() => {
-        getData(http, riskId);
-    },[http, riskId]);
+        getRiskMapping(http, taskId);
+        if (riskMasterId != "") {
+            getData(http, riskMasterId);
+        }
+    },[http, taskId, riskMasterId]);
+
+    const getRiskMapping = async (http : AxiosInstance | null, taskId : string | null) => {
+        try {
+            const responseData = await riskAssessmentMappingApi(http, taskId);
+            if (responseData.data[0]) {
+                const riskMasterId = responseData.data[0].riskMasterId;
+                setRiskMasterId(riskMasterId);
+            }
+            console.log(responseData);
+        } catch (error) {
+            console.error('Error calling API:', error);
+        }
+    }
     const getData = async (http : AxiosInstance | null, riskId : string | null) => {
         try {
             const responseData = await riskAssessementDetailApi(http, riskId);
@@ -82,7 +100,7 @@ const Detail = () => {
             title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
         },
         {
-            title: tLbl('risk_assessment_detail')
+            title: tLbl('risk_assessment_impl')
         }
       ];
     return (
@@ -90,7 +108,7 @@ const Detail = () => {
             {contextHolder}
             {/* Basic */}
         <Content style={{ padding: '30px 48px' }}>
-            <h2 className={cx('disease__title')}>{tLbl('risk_assessment_detail')}</h2>
+            <h2 className={cx('disease__title')}>{tLbl('risk_assessment_impl')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
             {riskData && (
@@ -111,7 +129,7 @@ const Detail = () => {
                         {/* Risk description */}
                         <Divider orientation="left" style={{fontSize: '15px'}}>{tLbl('item_list')}</Divider>
                         <Space direction="vertical" size={22} style={{width: '100%'}}>
-                            {riskData.riskItems.length > 0 ? (
+                            {riskData.riskItems?.length > 0 && riskData.isDraft == false ? (
                                 riskData.riskItems.map((item, index) => {
                                     if (item.riskItemType == ItemModeValue.SINGLE_CHOICE) {
                                         const riskCtn = JSON.parse(item.riskItemContent);
@@ -214,43 +232,34 @@ const Detail = () => {
                                 <></>
                             )}
                         </Space>
-                        {/* <Space direction="vertical" size={22} style={{flex: '1', margin: '20px 80px'}}>
-                            <Card title="Default size card" extra={<Tag color="#f50">Required</Tag>}>
-                                <Radio.Group>
-                                    <Space direction="vertical">
-                                        <Radio value={1}>Option A</Radio>
-                                        <Radio value={2}>Option B</Radio>
-                                        <Radio value={3}>Option C</Radio>
-                                    </Space>
-                                </Radio.Group>
-                            </Card>
-                            <Card title="Default size card">
-                                <Space direction="vertical">
-                                    <Checkbox>Checkbox1</Checkbox>
-                                    <Checkbox>Checkbox2</Checkbox>
-                                    <Checkbox>Checkbox3</Checkbox>
-                                </Space>
-                            </Card>
-                            <Card title="Default size card">
-                                <TextArea cols={45} rows={5} style={{resize: 'none'}}></TextArea>
-                            </Card>
-                            <Card title="Default size card">
-                                <Upload {...props} listType="picture-card">
-                                    {uploadButton}
-                                </Upload>
-                            </Card>
-                        </Space> */}
                     </div>
                 </div>
             )}
+            <Button
+                type='primary'
+                size='large'
+                className={`${cx('risk__btn')} ${cx('risk__btn--back')}`}
+                // onClick={backAction}
+            >
+                {tCom('btn_back')}
+            </Button>
+            <Button
+                type='primary'
+                htmlType='submit'
+                size='large'
+                className={`${cx('risk__btn')} ${cx('risk__btn--save')}`}
+                // loading={loadingBtn}
+            >
+                {tCom('btn_submit')}
+            </Button>
         </Content>
         </>
     )
 }
 
-const DetailApp: React.FC = () => (
+const ImplementApp: React.FC = () => (
     <App>
-      <Detail />
+      <Implement />
     </App>
   );
-  export default DetailApp;
+  export default ImplementApp;

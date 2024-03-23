@@ -185,7 +185,8 @@
         "btn_add": "Add",
         "btn_delete": "Delete",
         "btn_back": "Back",
-        "btn_save": "Save"
+        "btn_save": "Save",
+        "btn_submit": "Submit"
       },
       "Services": {
         "RiskAsm": {
@@ -193,6 +194,7 @@
             "risk_assessment": "Risk Assessement",
             "risk_assessment_add": "Risk Assessement Add",
             "risk_assessment_detail": "Risk Assessement Detail",
+            "risk_assessment_impl": "Risk Assessment Implement",
             "single": "Single Choice",
             "multi": "Multi Choice",
             "text": "Text",
