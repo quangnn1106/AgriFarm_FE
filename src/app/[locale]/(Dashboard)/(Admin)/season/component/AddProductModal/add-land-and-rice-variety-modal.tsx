@@ -37,11 +37,10 @@ import { Seed } from '../../../seed/models/seed-models';
 const AddProductSeason = ({
   params
 }: {
-  params: 
-  { 
-    seasonId: string | undefined; 
-    visible: boolean; 
-    onCancel: () => void; 
+  params: {
+    seasonId: string | undefined;
+    visible: boolean;
+    onCancel: () => void;
     isUpdate: boolean;
   };
 }) => {
@@ -51,7 +50,7 @@ const AddProductSeason = ({
   const tM = useTranslations('Message');
   const t = useTranslations('Common');
   const tSeason = useTranslations('Season');
-  
+
   const dispatch = useAppDispatch();
 
   // Get land list data
@@ -145,8 +144,8 @@ const AddProductSeason = ({
     });
   };
 
-  //Handle OK action 
-  
+  //Handle OK action
+
   const onHandleOK = () => {
     setProducts([]);
     selectedLands?.forEach(function (value) {
@@ -161,30 +160,29 @@ const AddProductSeason = ({
         }
       });
     });
-    dispatch(setProductsAction(products)) ;
-    console.log('Product current: ',productGlobal);
+    dispatch(setProductsAction(products));
+    console.log('Product current: ', productGlobal);
     if (params.isUpdate) {
       try {
-        products?.map( async (item, idx) => {
+        products?.map(async (item, idx) => {
           const res = await createProductApi(http, params.seasonId, item);
-            if (res?.data || res?.status === STATUS_CREATED) {
-              params.onCancel();
-              console.log('update staff success', res.status);
-            } else {
-              openNotification('top', `${tM('update_error')}`, 'error');
-              params.onCancel();
-              console.log('update staff fail', res.status);
-            }
+          if (res?.data || res?.status === STATUS_CREATED) {
+            params.onCancel();
+            console.log('update staff success', res.status);
+          } else {
+            openNotification('top', `${tM('update_error')}`, 'error');
+            params.onCancel();
+            console.log('update staff fail', res.status);
+          }
         });
         openNotification('top', `${tM('update_susses')}`, 'success');
-
-    } catch (error) {
-      console.error('Error occurred while updating season:', error);
-    }
+      } catch (error) {
+        console.error('Error occurred while updating season:', error);
+      }
     } else {
       params.onCancel();
     }
-  }
+  };
 
   return (
     <>

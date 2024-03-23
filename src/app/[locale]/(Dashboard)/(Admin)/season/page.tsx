@@ -45,7 +45,7 @@ const SeasonManagement = (props: Props) => {
 
 // get id user
   const { data: session } = useSession();
-  const sideId = session?.user.userInfo.siteId;
+  const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
 
@@ -77,9 +77,9 @@ const SeasonManagement = (props: Props) => {
 ];
 
 // Get list Season Data
-  const getDataListSeason = async (http: AxiosInstance, sideId?: string) => {
+  const getDataListSeason = async (http: AxiosInstance, siteId?: string) => {
     try {
-      const responseData = await getListSeasonApi(sideId, http);
+      const responseData = await getListSeasonApi(siteId, http);
       setSeasons(responseData.data as SeasonModel[]);
       setLoading(false);
     } catch (error) {
@@ -100,7 +100,7 @@ const SeasonManagement = (props: Props) => {
   const deleteSeason = async (http: AxiosInstance, seasonId?: string) => {
     try {
       const res = await deleteSeasonApi(http, seasonId);
-      getDataListSeason(http, sideId);
+      getDataListSeason(http, siteId);
     } catch (error) {
       console.error('Error calling API Delete Season:', error);
     }
@@ -125,8 +125,8 @@ const SeasonManagement = (props: Props) => {
   }
 
   useEffect(() => {
-    getDataListSeason(http, sideId);
-  }, [ http, sideId, deleteBtnState]);
+    getDataListSeason(http, siteId);
+  }, [ http, siteId, deleteBtnState]);
 
   const handleUpdate = async (id: string) => {
     // setSeasonId(id);

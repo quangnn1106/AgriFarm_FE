@@ -6,7 +6,10 @@ export interface Seed {
     name: string
     description: string
     notes: string
-    properties: Property[]
+    properties: Property[],
+    onDelete?: () => void;
+    onUpdate?: () => void;
+    onDetails?: () => void;
   }
   
   export interface Property {
