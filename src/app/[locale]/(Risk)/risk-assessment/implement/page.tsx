@@ -108,7 +108,7 @@ const Implement = () => {
             {contextHolder}
             {/* Basic */}
         <Content style={{ padding: '30px 48px' }}>
-            <h2 className={cx('disease__title')}>{tLbl('risk_assessment_impl')}</h2>
+            <h2>{tLbl('risk_assessment_impl')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
             {riskData && (
@@ -118,11 +118,6 @@ const Implement = () => {
                         <div style={{marginLeft:'10px'}}>
                             <span style={{color:'#A9976B', fontSize: '35px'}}>{riskData.riskName}</span>
                             <p style={{whiteSpace: 'pre'}}>{riskData.riskDescription}</p>
-                            {riskData.isDraft == true ? (
-                                <Tag icon={<DeleteTwoTone  style={{color: '#E53835'}}/>} color="success">{tLbl('draft')}</Tag>
-                            ) : (
-                                <Tag icon={<PushpinTwoTone />} color="success">{tLbl('publish')}</Tag>
-                            )}
                         </div>
                     </div>
                     <div>

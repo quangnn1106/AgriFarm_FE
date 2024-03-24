@@ -231,7 +231,12 @@
         "btn_delete": "Delete",
         "btn_back": "Back",
         "btn_save": "Save",
-        "btn_submit": "Submit"
+        "btn_submit": "Submit",
+        "btn_search": "Search",
+        "btn_detail": "Detail",
+        "btn_edit": "Edit",
+        "btn_cancel": "Cancel",
+        "btn_yes": "Yes"
       },
       "Services": {
         "RiskAsm": {
@@ -258,16 +263,24 @@
             "risk_title_placeholder": "Enter the title of the risk assessment item",
             "title_default_text": "Risk assessment item No.%ITEM%",
             "basic": "Basic",
-            "advance": "Advance",
+            "advance": "Risk Item",
             "draft": "Draft",
-            "publish": "Publish"
+            "publish": "Publish",
+            "search_condition": "Search Condition",
+            "search_result": "Search Result",
+            "search_by_keyword": "Keyword",
+            "keyword_text_placeholder": "Search by description, risk name,...",
+            "risk_create_date": "Create Date"
           },
           "message": {
             "msg_upload_img": "You can only upload JPG/PNG file!",
             "msg_max_size_img": "Image must smaller than 2MB!",
             "msg_max_upload_img": "You can upload up to 3 images!",
             "msg_required": "Please input your %ITEM%!",
-            "msg_add_success": "Add success!"
+            "msg_add_success": "Add success!",
+            "msg_confirm_delete":"Do you want to delete 「%ITEM%」?",
+            "msg_delete_success": "Delete success!",
+            "msg_delete_fail": "Delete fail!"
           }
         }
     }
