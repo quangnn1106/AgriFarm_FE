@@ -18,7 +18,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Axios, AxiosInstance } from 'axios';
 import getSeedDetailApi from '@/services/Admin/Seed/getSeedDetailApi';
 import { STATUS_OK } from '@/constants/https';
-import { Property, Seed, UpdateSeedDto } from '../../models/seed-models';
+import { CreateSeedDto, Property, Seed, UpdateSeedDto } from '../../models/seed-models';
 import { updateSeedApi, updateSeedPropertyApi } from '@/services/Admin/Seed/updateSeedApi';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 
@@ -35,7 +35,7 @@ const UpdateSeedFormDrawer = ({
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [formInfoCommon] = Form.useForm();
-  // const [formSeedProps] = Form.useForm();
+  const [formSeedProps] = Form.useForm();
   
 
   const http = UseAxiosAuth();
@@ -69,6 +69,8 @@ const UpdateSeedFormDrawer = ({
         formInfoCommon?.setFieldsValue({
           ...responseData?.data
         });
+        formSeedProps?.setFieldValue('properties', seedDetail?.properties);
+        
 
         // formSeedProps?.setFieldsValue({
         //   properties: seedDetail?.properties
@@ -132,6 +134,11 @@ const UpdateSeedFormDrawer = ({
     } catch (error) {
       console.log('Error: :  ', error);
     }
+  }
+
+  const onFinish = (valueA: UpdateSeedDto, valueB: Property[]) => {
+    saveInfoCommon(valueA);
+    saveSeedProps(valueB);
   }
 
   const InputUnit = (
@@ -222,7 +229,7 @@ const UpdateSeedFormDrawer = ({
           >
             <InputNumber addonAfter='VND'></InputNumber>
           </Form.Item> */}
-          {/* <Form
+           <Form
           disabled={!componentDisabled}
           form={formSeedProps}
           colon={false}
@@ -280,11 +287,11 @@ const UpdateSeedFormDrawer = ({
             noStyle
             shouldUpdate
           >
-            {() => (
+            {/* {() => (
               <Typography>
                 <pre>{JSON.stringify(formSeedProps.getFieldsValue(), null, 2)}</pre>
               </Typography>
-            )}
+            )} */}
           </Form.Item>
           <Button
             htmlType='submit'
@@ -293,7 +300,7 @@ const UpdateSeedFormDrawer = ({
           >
             Save
           </Button>
-          </Form> */}
+          </Form>
       </Spin>
     </>
   );

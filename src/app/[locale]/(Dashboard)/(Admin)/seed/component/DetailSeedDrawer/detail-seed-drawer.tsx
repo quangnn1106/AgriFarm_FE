@@ -101,8 +101,8 @@ const SeedDetailFormDrawer = ({
       console.log(updatedSeed);
 
       const res = await updateSeedApi(params.seedId, http, updatedSeed);
-      // const resProps = await updateSeedPropertyApi(params.seedId, http, updatedSeedProps);
-      if (res.data) {
+      const resProps = await updateSeedPropertyApi(params.seedId, http, updatedSeedProps);
+      if (res.data && resProps.data) {
         setIsFetching(false);
         openNotification('top', `${tM('update_susses')}`, 'success');
         
@@ -243,7 +243,7 @@ const SeedDetailFormDrawer = ({
             )}
           </Form.List>
 
-          <Form.Item
+          {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -252,14 +252,14 @@ const SeedDetailFormDrawer = ({
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
-          <Button
+          </Form.Item> */}
+          {/* <Button
             htmlType='submit'
             type='primary'
             loading={isFetching}
           >
             Save
-          </Button>
+          </Button> */}
         </Form>
       </Spin>
     </>

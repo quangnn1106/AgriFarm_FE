@@ -12,7 +12,7 @@ export const updateSeedApi: (
     UpdateSeedDto
 ) => {
     try {
-        const res = await http?.post(`seed/farm-seeds/put`, UpdateSeedDto, {
+        const res = await http?.put(`seed/farm-seeds/put`, UpdateSeedDto, {
             params: {
                 id: seedId
             }
@@ -39,7 +39,7 @@ export const updateSeedPropertyApi: (
     UpdateSeedPropertyDto
 ) => {
     try {
-        const res = await http?.post(`seed/seed-props/put`, UpdateSeedPropertyDto, {
+        const res = await http?.put(`seed/seed-props/put`, UpdateSeedPropertyDto, {
             params: {
                 seedId: seedId
             }
