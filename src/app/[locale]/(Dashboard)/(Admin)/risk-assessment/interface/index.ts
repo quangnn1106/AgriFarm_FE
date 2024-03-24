@@ -1,5 +1,3 @@
-import { isDraft } from "@reduxjs/toolkit";
-
 export interface RiskItemDef {
     riskItemTile: string;
     riskItemDiv: number;
