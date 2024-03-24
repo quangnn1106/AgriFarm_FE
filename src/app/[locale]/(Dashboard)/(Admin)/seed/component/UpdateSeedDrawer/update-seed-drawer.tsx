@@ -19,7 +19,10 @@ import { Axios, AxiosInstance } from 'axios';
 import getSeedDetailApi from '@/services/Admin/Seed/getSeedDetailApi';
 import { STATUS_OK } from '@/constants/https';
 import { CreateSeedDto, Property, Seed, UpdateSeedDto } from '../../models/seed-models';
-import { updateSeedApi, updateSeedPropertyApi } from '@/services/Admin/Seed/updateSeedApi';
+import {
+  updateSeedApi,
+  updateSeedPropertyApi
+} from '@/services/Admin/Seed/updateSeedApi';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 
 const UpdateSeedFormDrawer = ({
@@ -36,17 +39,16 @@ const UpdateSeedFormDrawer = ({
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [formInfoCommon] = Form.useForm();
   const [formSeedProps] = Form.useForm();
-  
 
   const http = UseAxiosAuth();
 
   const [seedDetail, setSeedDetail] = useState<Seed>();
-  const [updatedSeed, setUpdateSeed] = useState<UpdateSeedDto>()
-  const [updatedSeedProps, setUpdateSeedProps] = useState<Property[]>([])
+  const [updatedSeed, setUpdateSeed] = useState<UpdateSeedDto>();
+  const [updatedSeedProps, setUpdateSeedProps] = useState<Property[]>([]);
 
   useEffect(() => {
-    getSeedDetailData(http, params.seedId, formInfoCommon)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getSeedDetailData(http, params.seedId, formInfoCommon);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [http, params.seedId, formInfoCommon]);
 
   const getSeedDetailData = async (
@@ -62,15 +64,15 @@ const UpdateSeedFormDrawer = ({
 
         //const setData = setSeedDetail(responseData?.data as Seed);
 
-        console.log('Data',seedDetail);
+        console.log('Data', seedDetail);
         //form
-
 
         formInfoCommon?.setFieldsValue({
           ...responseData?.data
         });
-        formSeedProps?.setFieldValue('properties', seedDetail?.properties);
-        
+        formSeedProps?.setFieldsValue({
+          ...responseData?.data
+        });
 
         // formSeedProps?.setFieldsValue({
         //   properties: seedDetail?.properties
@@ -78,6 +80,9 @@ const UpdateSeedFormDrawer = ({
 
         console.log(formInfoCommon?.getFieldsValue);
       }
+      formSeedProps?.setFieldsValue({
+        properties: seedDetail?.properties
+      });
       setIsFetching(false);
     } catch (error) {
       console.log('Error: :  ', error);
@@ -97,15 +102,14 @@ const UpdateSeedFormDrawer = ({
     });
   };
 
-  const saveInfoCommon = async(value: UpdateSeedDto) => {
+  const saveInfoCommon = async (value: UpdateSeedDto) => {
     setIsFetching(true);
     try {
-      
       const res = await updateSeedApi(params.seedId, http, value);
       if (res.data) {
         setIsFetching(false);
         openNotification('top', `${tM('update_susses')}`, 'success');
-        
+
         console.log('update staff success', res.status);
       } else {
         openNotification('top', `${tM('update_error')}`, 'error');
@@ -115,16 +119,20 @@ const UpdateSeedFormDrawer = ({
     } catch (error) {
       console.log('Error: :  ', error);
     }
-  }
+  };
 
-  const saveSeedProps = async(value: Property[]) => {
+  const [seedProps, setSeedProps] = useState<Property[]>([]);
+
+  const saveSeedProps = async (props: Property[]) => {
+    console.log(props);
     setIsFetching(true);
+
     try {
-      const resProps = await updateSeedPropertyApi(params.seedId, http, value);
+      const resProps = await updateSeedPropertyApi(params.seedId, http, formInfoCommon.getFieldValue('properties'));
       if (resProps.data) {
         setIsFetching(false);
         openNotification('top', `${tM('update_susses')}`, 'success');
-        
+
         console.log('update staff success', resProps.status);
       } else {
         openNotification('top', `${tM('update_error')}`, 'error');
@@ -134,12 +142,12 @@ const UpdateSeedFormDrawer = ({
     } catch (error) {
       console.log('Error: :  ', error);
     }
-  }
+  };
 
-  const onFinish = (valueA: UpdateSeedDto, valueB: Property[]) => {
-    saveInfoCommon(valueA);
-    saveSeedProps(valueB);
-  }
+  // const onFinish = (valueA: UpdateSeedDto, valueB: Property[]) => {
+  //   saveInfoCommon(valueA);
+  //   saveSeedProps(valueB);
+  // }
 
   const InputUnit = (
     <Form.Item
@@ -205,9 +213,9 @@ const UpdateSeedFormDrawer = ({
           >
             Save
           </Button>
-          </Form>
+        </Form>
 
-          {/* <Form.Item
+        {/* <Form.Item
             name='stock'
             style={{
               maxWidth: '100%',
@@ -229,7 +237,7 @@ const UpdateSeedFormDrawer = ({
           >
             <InputNumber addonAfter='VND'></InputNumber>
           </Form.Item> */}
-           <Form
+        <Form
           disabled={!componentDisabled}
           form={formSeedProps}
           colon={false}
@@ -300,7 +308,7 @@ const UpdateSeedFormDrawer = ({
           >
             Save
           </Button>
-          </Form>
+        </Form>
       </Spin>
     </>
   );

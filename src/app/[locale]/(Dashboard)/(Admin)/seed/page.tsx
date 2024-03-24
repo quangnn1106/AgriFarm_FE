@@ -129,7 +129,7 @@ const SeedManagement = (props: Props) => {
 
   useEffect(() => {
     getListSeedsApi(http, siteId);
-  }, [http, siteId, openAddSeed, openSeedDetailDrawer]);
+  }, [http, siteId, openAddSeed, openSeedDetailDrawer, openSeedUpdateDrawer]);
 
   return (
     <>
