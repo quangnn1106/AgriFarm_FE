@@ -34,4 +34,5 @@ export type UserInfo = {
   siteId: string;
   siteCode: string;
   role: string;
+  siteName: string
 };

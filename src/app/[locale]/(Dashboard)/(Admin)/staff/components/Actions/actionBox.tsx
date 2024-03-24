@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Input, Button, Cascader, Flex, Tooltip } from 'antd';
 import { ImportOutlined, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { SearchProps } from 'antd/es/input/Search';
-import styles from '../../../management-page.module.scss';
+import styles from '../../../../(SuperAdmin)/management-page.module.scss';
 
 import AddUser from '../../add/modalAdd';
 import classNames from 'classnames/bind';

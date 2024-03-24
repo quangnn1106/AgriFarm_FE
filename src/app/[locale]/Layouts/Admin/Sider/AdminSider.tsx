@@ -110,8 +110,8 @@ const AdminSider = ({ path }: Props) => {
         
       ),
       getItem(
-        <Link href={`/cultivation`}>{t('culti')}</Link>,
-        `/cultivation`,
+        <Link href={`/season`}>{t('culti')}</Link>,
+        `/season`,
         <GiHighGrass />
       ),
       getItem(
