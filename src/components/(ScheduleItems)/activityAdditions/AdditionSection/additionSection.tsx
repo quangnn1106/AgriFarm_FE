@@ -14,6 +14,7 @@ import { Button } from 'antd';
 import { AxiosInstance } from 'axios';
 import TrainingAddition from '../viewer/TrainingDetail/trainingAddition';
 import TreatmentAddition from '../viewer/TreatmentDetail/treatmentAddition';
+import AssessmentAddition from '../viewer/AssessmentDetail/assessmentAddition';
 
 interface IProps {
   activityId: string;
@@ -67,7 +68,10 @@ export default function AdditionSection(props: IProps) {
         return (
           <>
             <div>Assessment section</div>
-            <Link href={`activities/${activityId}/assessment`}>Show more detail</Link>
+            <AssessmentAddition
+              activityId={activityId}
+              setIsFetching={setIsFetching}
+            />
           </>
         );
       default:

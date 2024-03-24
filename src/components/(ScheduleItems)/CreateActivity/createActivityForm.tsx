@@ -70,20 +70,8 @@ export default function CreateActivityForm(props: IProps) {
   ]);
   const [checklists, setChecklists] = useState([
     {
-      label: "None",
-      value: "none",
-    },
-    {
-      label: "01",
-      value: "01",
-    },
-    {
-      label: "02",
-      value: "02",
-    },
-    {
-      label: "03",
-      value: "03",
+      label: "Risk checklist 1",
+      value: "b24569c7-497c-42a4-b81e-be5b33e7531e",
     },
   ]);
   const [items, setItems] = useState([
@@ -112,15 +100,7 @@ export default function CreateActivityForm(props: IProps) {
     {
       label: "Spring",
       value: "9929dad3-61ae-49c7-a398-7995357dca1e",
-    },
-    {
-      label: "02",
-      value: "02",
-    },
-    {
-      label: "03",
-      value: "03",
-    },
+    }
   ]);
   const [lands, setLands] = useState([
     {
@@ -145,15 +125,7 @@ export default function CreateActivityForm(props: IProps) {
     {
       label: "Admin",
       value: "8c412e0d-4de2-48bc-9a5c-8482cad10dde",
-    },
-    {
-      label: "02",
-      value: "02",
-    },
-    {
-      label: "03",
-      value: "03",
-    },
+    }
   ]);
   const [workers, setWorkers] = useState([
     {

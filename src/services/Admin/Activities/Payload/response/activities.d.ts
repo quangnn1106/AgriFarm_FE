@@ -8,21 +8,25 @@ export interface ActivityResponse {
     id?: string;
     name?: string;
   };
-  workers:{
-    id?: string;
-    name?: string;
-  }[]|[]
-  inspectors:{
-    id?: string;
-    name?: string;
-  }[]|[]
+  workers:
+    | {
+        id?: string;
+        name?: string;
+      }[]
+    | [];
+  inspectors:
+    | {
+        id?: string;
+        name?: string;
+      }[]
+    | [];
   tag?: string;
   title?: string;
-  descriptions: ActivityDescription[]|[];
+  descriptions: ActivityDescription[] | [];
   isCompleted?: boolean;
   start?: Date;
   end?: Date;
-  addition?: Addition
+  addition?: Addition;
 }
 
 export interface ActivityDescription {
@@ -30,8 +34,17 @@ export interface ActivityDescription {
   value: string;
 }
 
-export interface Addition{
+export interface Addition {
   id: string;
   type: string;
   data: any;
+}
+
+export interface RiskAdditionResponse {
+  id: string;
+  checkList: {
+    id: string;
+    riskName: string;
+    riskDescription: string;
+  };
 }

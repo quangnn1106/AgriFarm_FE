@@ -17,6 +17,7 @@ export interface TreatmentDetail {
 }
 
 export interface AssessmentDetail {
+  id: string
   checklist: {
     id: string;
     name: string;

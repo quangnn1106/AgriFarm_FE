@@ -1,4 +1,4 @@
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activities';
+import { ActivityResponse, RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activities';
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 import {
@@ -62,10 +62,10 @@ export const getTreatmentDetailService: (
 export const getAssessmentDetailService: (
   activityId: string,
   http?: AxiosInstance | null
-) => Promise<HttpResponseCommon<AssessmentDetail>> = async (activityId, http) => {
-  const res = await http?.get(`${'/schedule/assessment'}/get`, {
+) => Promise<HttpResponseCommon<RiskAdditionResponse>> = async (activityId, http) => {
+  const res = await http?.get(`${'/risk/risk-assessment'}/get-by-task`, {
     params: {
-      activityId: activityId
+      taskId: activityId
     }
     // headers: {
     //   pageSize: 4,
