@@ -22,29 +22,31 @@ import seasonStyle from '../../seasonStyle.module.scss';
 import classNames from 'classnames/bind';
 import Search from 'antd/es/input/Search';
 import { useState } from 'react';
-
-const cx = classNames.bind(styles);
-const st = classNames.bind(seasonStyle);
-
-const { RangePicker } = DatePicker;
-
-dayjs.extend(customParseFormat);
-const dateFormat = 'YYYY/MM/DD';
-
-const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
-  console.log(info?.source, value);
+import { useTranslations } from 'next-intl';
 
 type Props = {
   children: React.ReactNode;
 };
 
-type CheckboxValueType = GetProp<typeof Checkbox.Group, 'value'>[number];
-
-const CheckboxGroup = Checkbox.Group;
-
-const plainOptions = ['In progress', 'Done', 'Cancel', 'Pending'];
-
 const FilterSection = () => {
+  const cx = classNames.bind(styles);
+  const st = classNames.bind(seasonStyle);
+  const t = useTranslations('Season');
+
+  const { RangePicker } = DatePicker;
+
+  dayjs.extend(customParseFormat);
+  const dateFormat = 'YYYY/MM/DD';
+
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
+    console.log(info?.source, value);
+
+  type CheckboxValueType = GetProp<typeof Checkbox.Group, 'value'>[number];
+
+  const CheckboxGroup = Checkbox.Group;
+
+  const plainOptions = [t('In_progress'), t('Done'), t('Cancel'), t('Pending')];
+
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>();
   const onChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
@@ -80,16 +82,16 @@ const FilterSection = () => {
           className={st('margin-form-item')}
         >
           <Form.Item
-            label='Key word'
+            label={t('keyword')}
             name='keyword'
           >
             <Input
-              placeholder='Input search text'
+              placeholder={t('Input_search_text')}
               style={{ width: '50%' }}
             ></Input>
           </Form.Item>
           <Form.Item
-            label='Date of execution'
+            label={t('Date_of_execution')}
             name='dateRange'
           >
             <RangePicker
@@ -101,7 +103,7 @@ const FilterSection = () => {
             />
           </Form.Item>
           <Form.Item
-            label='Status'
+            label={t('Status')}
             name='status'
           >
             <CheckboxGroup
@@ -119,7 +121,7 @@ const FilterSection = () => {
                 className={cx('bg-btn')}
                 icon={<SearchOutlined />}
               >
-                Search
+                {t('Search')}
               </Button>
             </Flex>
           </Form.Item>

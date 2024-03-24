@@ -5,7 +5,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { roboto } from '@/styles/base/font';
 import '../../styles/global.scss';
 import { Metadata } from 'next';
-
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 
 export const metadata: Metadata = {

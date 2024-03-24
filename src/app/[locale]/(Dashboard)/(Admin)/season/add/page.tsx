@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { Content } from 'antd/es/layout/layout';
 import {
@@ -12,67 +13,208 @@ import {
   Form,
   Input,
   Layout,
+  Modal,
   Table,
   TableProps,
   Tooltip,
+  notification,
   theme
 } from 'antd';
-import { HomeOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, MinusOutlined, SaveOutlined } from '@ant-design/icons';
 
 import styles from '../../adminStyle.module.scss';
 import classNames from 'classnames/bind';
 import Title from 'antd/es/typography/Title';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
 import TitleHeader from '../component/TitleHeader/tiltle-header';
-import { seasonTableColumns } from '../component/Table/column-types';
 import { Land, Product } from '../models/season-model';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { LandAndRiceVarietyColumns } from '../details/LandAndRiceVarietyColumn/column-types';
 import fetchListProductData from '@/services/Admin/Product/getProductsApi';
 import AddProductSeason from '../component/AddProductModal/add-land-and-rice-variety-modal';
+import { ProductsColumns } from './component/ProductsColumn/column-types';
+import { CreateProductDto } from '@/services/Admin/Product/postProductApi';
+import FormItem from 'antd/es/form/FormItem';
+import {
+  CreateSeasonDto,
+  createSeasonApi
+} from '@/services/Admin/Season/createSeasonApi';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { NotificationPlacement } from 'antd/es/notification/interface';
+import { setProductsAction } from '@/redux/features/season-slice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { getURL } from 'next/dist/shared/lib/utils';
+import { redirect } from 'next/navigation';
+import { useRouter } from '@/navigation';
 
 type Props = {};
 const SeasonCreate = (props: Props) => {
-  const t = useTranslations('UserManagement');
+  const t = useTranslations('Season');
   const cx = classNames.bind(styles);
+  const tM = useTranslations('Message');
+  const router = useRouter();
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
+  const http = UseAxiosAuth();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+  const [productRenders, setProductRenders] = useState<Product[] | undefined>([]);
+  const [productRenderTemps, setProductRenderTemps] = useState<Product[] | undefined>([]);
+  const [createProducts, setCreatedProducts] = useState<
+    CreateProductDto[] | undefined | null
+  >([]);
+
+  const [createState, setCreateState] = useState<boolean>(false);
+  let productGlobal = useAppSelector(state => state.productsReducer.productGlobal);
+
+  //breadcrumb
+  // const HOMEURL = getURL();
+  const breadCrumb = [
+    {
+        title: <Link href={`/`}>{t('home')}</Link>
+    },
+    {
+        title: <Link href={`/season`}>{t('season')}</Link>
+    },
+    {
+        title: t('Add_new')
+    }
+];
+
+  //form
+  const [form] = Form.useForm();
+  const dateFormat = 'YYYY/MM/DD';
+
+  //handle change date picker
+  const handleChangeStartIn: DatePickerProps['onChange'] = (date, dateString) => {
   };
+  const handleChangeEndIn: DatePickerProps['onChange'] = (date, dateString) => {
+  };
+
+  const ResetData = () => {
+    setCreatedProducts([]) 
+  }
+
+  //handle delete product item
+  const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
+
 
   const checkRowSelection = {
-    getCheckboxProps: (record: Product) => ({
-      disabled: record.name === 'Disabled',
-      name: record.name
-    })
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Product[]) => {
+      if (selectedRowKeys.length > 0) {
+        setDeleteBtnState(false);
+      } else {
+        setDeleteBtnState(true);
+      }
+      if (productRenderTemps !== undefined) {
+        setProductRenderTemps(productRenderTemps?.filter(item => !selectedRowKeys?.includes(item.id ? item.id : '')));
+      }
+    }
   };
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<Product[]>([]);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  const onDelete = () => {
+    updateData(productRenderTemps);
+    setDeleteState(false);
+    setDeleteBtnState(true)
+  }
 
-  // const getData = async () => {
-  //   try {
-  //     const res = await fetchListProductData();
-  //     setData(res);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  // handle add season action
-  const [createState, setCreateState] = useState<boolean>(false);
-  
+  // handle add product item
+  const handleAddProducts = () => {
+    if (productGlobal?.length !== 0) {
+      productGlobal?.map((item, idx) => {
+        if (item.land?.id) {
+          console.log('a');
+          productRenderTemps?.push({
+            id: Math.random().toString(36).substring(2, 8),
+            name: '',
+            totalQuantity: 0,
+            quantity: 0,
+            land: item.land,
+            seed: item.seed,
+            season: {}
+          });
+        }
+      });
+      updateData(productRenderTemps);
+    };
+  };
+
+  const updateData = (productsTemp: Product[] | undefined) => {
+    ResetData();
+    productsTemp?.map((item, idx) => {
+      createProducts?.push({
+        land: item.land,
+        seed: item.seed
+      });
+    });
+    form?.setFieldValue('cultivationDetail',createProducts);
+    setProductRenders(productsTemp);
+
+
+  }
+
+  useEffect(() => {
+    updateData(productRenderTemps);
+  }, [productRenders]);
+
+
+  useEffect(() => {
+    handleAddProducts();
+  }, [productGlobal]);
+
+  //notification
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (
+    placement: NotificationPlacement,
+    status: string,
+    type: 'success' | 'error'
+  ) => {
+    api[type]({
+      message: `${status}`,
+      placement,
+      duration: 2
+    });
+  };
+
+  //handle submit form create
+  const onSubmit = async (value: CreateSeasonDto) => {
+    console.log(value);
+    try {
+      const res = await createSeasonApi(http, value);
+      if (res.data) {
+        openNotification('top', t('Create_successfully'), 'success');
+
+        console.log('create staff success', res.status);
+      } else {
+        openNotification('top', t('Create_fail'), 'error');
+
+        console.log('create staff fail', res.status);
+
+      }
+      router.push(`/season`);
+      console.log(router.push(`/season`));
+    } catch (error) {
+      console.error('Error occurred while updating season:', error);
+    }
+  };
+
+  //handle change title
+  const [seasonTitle, setSeasonTitle] = useState<string>('');
+  const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSeasonTitle(e.target.value);
+  }
 
   return (
     <>
+      {contextHolder}
       <Content style={{ padding: '20px 24px' }}>
         <ConfigProvider
           theme={{
@@ -100,27 +242,31 @@ const SeasonCreate = (props: Props) => {
             size={'large'}
           >
             <HomeOutlined />
-            Farm Name
+            {siteName}
           </Button>
         </ConfigProvider>
-        <Breadcrumb style={{ margin: '0px 24px' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>Season</Breadcrumb.Item>
-          <Breadcrumb.Item>Details</Breadcrumb.Item>
+        <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
         </Breadcrumb>
-        <TitleHeader title={'Spring Details'}></TitleHeader>
+        <TitleHeader title={seasonTitle}></TitleHeader>
 
-        <Form>
+        <Form
+          form={form}
+          colon={false}
+          layout='vertical'
+          onFinish={onSubmit}
+        >
           <Form.Item
+            name='title'
             style={{
               maxWidth: '100%',
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
             className={cx('color-input-disable')}
+            label={t('Title')}
+            rules={[{ required: true, message: t('Please_input_season_title!') }]} 
           >
-            <label>Name</label>
-            <Input />
+            <Input value={seasonTitle} onChange={handleChangeTitle}/>
           </Form.Item>
           <Form.Item
             style={{
@@ -128,12 +274,13 @@ const SeasonCreate = (props: Props) => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
+            name='description'
+            label={t('Description')}
           >
-            <label>Description</label>
             <TextArea rows={4} />
           </Form.Item>
 
-          <label>Period</label>
+          <label>{t('Period')}</label>
           <Flex
             align='center'
             justify='space-between'
@@ -147,39 +294,39 @@ const SeasonCreate = (props: Props) => {
                 alignItems: 'center',
                 justifyContent: 'space-between'
               }}
+              name='startIn'
+              label={<label>{t('Start')}</label>}
+              rules={[{ required: true, message: t('Please_select_start_date!') }]} 
             >
-              <Flex
-                align='center'
-                justify='center'
-                gap={10}
-              >
-                <label>Start:</label>
-                <DatePicker onChange={onChange} />
-              </Flex>
+                <DatePicker onChange={handleChangeStartIn} format={dateFormat}/>
+             
             </Form.Item>
 
             <Form.Item
-              style={{
-                maxWidth: '100%',
-                margin: '0px 0px 8px 0px',
-                padding: '0px 0px',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Flex
-                align='center'
-                justify='center'
-                gap={10}
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px',
+                  width: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+                // label={<TitleLabelFormItem name='End: '></TitleLabelFormItem>}
+                name='endIn'
+                label={<label>{t('End')}</label>}
+                rules={[{ required: true, message: t('Please_select_end_date!') }]} 
               >
-                <label>End:</label>
-                <DatePicker onChange={onChange} />
-              </Flex>
-            </Form.Item>
+                {/* <Flex
+                  align='center'
+                  justify='center'
+                  gap={10}
+                > */}
+                  <DatePicker onChange={handleChangeEndIn} format={dateFormat}/>
+                {/* </Flex> */}
+              </Form.Item>
           </Flex>
 
-          <label>Land & Rice variety</label>
+          <label>{t('Land_&_Seed')}</label>
           <Flex
             align='center'
             justify='flex-start'
@@ -191,34 +338,27 @@ const SeasonCreate = (props: Props) => {
               onClick={() => setCreateState(true)}
               icon={<PlusOutlined />}
             >
-              Add
+              {t('Add')}
             </Button>
-            {/* <AddProductSeason
+            <AddProductSeason
               params={{
-  
+                seasonId: '',
                 visible: createState,
-                onCancel: () => setCreateState(false)
+                onCancel: () => setCreateState(false),
+                isUpdate: false
               }}
-            ></AddProductSeason> */}
-
-            {/* <Button
-          onClick={() => setCreateState(true)}
-          className={cx('bg-btn')}
-          icon={<PlusOutlined />}
-        />
-        <AddUser
-          params={{
-            visible: createState,
-            onCancel: () => setCreateState(false)
-          }}
-        /> */}
+            ></AddProductSeason>
             <Button
               type='primary'
               danger
               icon={<MinusOutlined />}
+              onClick={() => {setDeleteState(true)}}
+              disabled={deleteBtnState}
             >
               Delete
             </Button>
+            <Modal title={t('delete_product_confirm')} open={deleteState} onOk={onDelete} 
+            onCancel={() => {setDeleteState(false)}} centered={true} okText={t('Yes')} cancelText={t('Cancel')}></Modal>
           </Flex>
           <ConfigProvider
             theme={{
@@ -234,9 +374,8 @@ const SeasonCreate = (props: Props) => {
             }}
           >
             <Table
-              loading={loading}
               rowKey={'id'}
-              columns={LandAndRiceVarietyColumns}
+              columns={LandAndRiceVarietyColumns()}
               bordered
               rowSelection={{
                 type: 'checkbox',
@@ -244,13 +383,29 @@ const SeasonCreate = (props: Props) => {
               }}
               scroll={{ x: 'max-content' }}
               className={cx('table_style')}
-              dataSource={data?.map(land => ({
-                ...land
+              dataSource={productRenders?.map(product => ({
+                ...product
               }))}
             />
-
-            {/* <listLandTable data={data} loading={loading}></listLandTable> */}
           </ConfigProvider>
+          <FormItem name='cultivationDetail' style={{height:'0px'}}></FormItem>
+          <Form.Item
+            style={{
+              margin: '30px 0px 8px 0px',
+              padding: '0px 20px',
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              className={cx('bg-btn')}
+              htmlType='submit'
+              type='primary'
+              icon={<SaveOutlined />}
+            >
+              {t('Submit')}
+            </Button>
+          </Form.Item>
         </Form>
       </Content>
     </>
