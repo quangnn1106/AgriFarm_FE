@@ -86,9 +86,28 @@ const AdminSider = ({ path }: Props) => {
     getItem(`${t('activities')}`, 'activities', <FaClipboardList />, [
       getItem(<Link href={`/risk`}>{t('risk')}</Link>, `/risk`, <WarningOutlined />),
       getItem(
-        <Link href={`/activity`}>{t('activity')}</Link>,
-        `/activity`,
+        <Link href={`/activities`}>{t('activity')}</Link>,
+        `/activities`,
         <FaClipboardList />
+      ),
+      getItem(`${t('training')}`, 'training',<FaClipboardList/>,[
+        getItem(
+          <Link href={`/training/contents`}>{t('t_content')}</Link>,
+          `/training/contents`,
+          <FaClipboardList />
+        ),
+        getItem(
+          <Link href={`/training/experts`}>{t('expert')}</Link>,
+          `/training/experts`,
+          <FaClipboardList />
+        ),
+        // getItem(
+        //   <Link href={`/training/details`}>{t('detail')}</Link>,
+        //   `/training/details`,
+        //   <FaClipboardList />
+        // ),
+      ]
+        
       ),
       getItem(
         <Link href={`/season`}>{t('culti')}</Link>,
