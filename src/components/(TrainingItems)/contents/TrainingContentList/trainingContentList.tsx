@@ -6,6 +6,7 @@ import { useState } from 'react';
 import TrainingContentDetail from '../TrainingContentDetail/trainingContentDetail';
 import CreateTrainingContent from '../CreateTrainingContent/createTrainingContent';
 import UpdateTrainingContent from '../UpdateTrainingContent/updateTrainingContent';
+import TrainingContentModal from '../TrainingContentDetail/trainingContentModal';
 
 interface IProps {
   list: TrainingContent[] | [];
@@ -49,7 +50,7 @@ export default function TrainingContentList(props: IProps) {
   const renderDetail = () => {
     console.log('appear popup');
     return (
-      <TrainingContentDetail
+      <TrainingContentModal
         detail={selectedContent ?? ({} as TrainingContent)}
         onClose={() => setDetailOpen(false)}
       />
@@ -133,7 +134,7 @@ export default function TrainingContentList(props: IProps) {
         columns={columns}
       />
         {detailOpen && selectedContent &&
-          <TrainingContentDetail
+          <TrainingContentModal
             detail={selectedContent ?? ({} as TrainingContent)}
             onClose={() => {
               setDetailOpen(false)
