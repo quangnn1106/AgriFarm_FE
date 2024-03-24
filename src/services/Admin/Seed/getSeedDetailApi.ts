@@ -13,7 +13,7 @@ export interface Pagination {
 const getSeedDetailApi: (
     seedId?: string | null,
     http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Seed[]>> = async (seedId, http) => {
+    ) => Promise<HttpResponseCommon<Seed>> = async (seedId, http) => {
     try {
         const res = await http?.get(`/seed/farm-seeds/get`, {
             params: {

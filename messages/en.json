@@ -225,7 +225,10 @@
         "Please_select_end_date!": "Please select end date !",
         "Add": "Add",
         "Submit": "Submit",
-        "save_change": "Save change"
-
+        "save_change": "Save change",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "add_new": "Add new",
+        "yes": "Yes"
     }
 }

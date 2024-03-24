@@ -8,6 +8,7 @@ import {
   Flex,
   Layout,
   Modal,
+  Space,
   Table,
   TableProps,
   Tooltip,
@@ -33,7 +34,10 @@ import { SeedTableColumns } from './component/Table/column-type';
 import { Seed } from './models/seed-models';
 import { AxiosInstance } from 'axios';
 import getSeedsApi from '@/services/Admin/Seed/getSeedsApi';
-import DetailSeedDrawer from './component/DetailsDrawer/detailSeedDrawer';
+import AddSeedFormDrawer from './component/AddSeedDrawer/add-seed-drawer';
+import SeedDetailFormDrawer from './component/DetailSeedDrawer/detail-seed-drawer';
+import UpdateSeedFormDrawer from './component/UpdateSeedDrawer/update-seed-drawer';
+
 
 type Props = {};
 const SeedManagement = (props: Props) => {
@@ -76,20 +80,32 @@ const SeedManagement = (props: Props) => {
       console.error('Error calling API getListSeedsApi:', error);
     }
   };
-  useEffect(() => {
-    getListSeedsApi(http, siteId);
-  }, [http, siteId]);
+
 
   //handle load details
   const [seedId, setSeedId] = useState<string>('');
-  const [openDrawer, setOpenDrawer] = useState<boolean>(true);
-  const handleDetails = async (id: string) => {};
-  const handleSeedDetails = () => {
-    setOpenDrawer(true);
+  const [openSeedDetailDrawer, setOpenSeedDetailDrawer] = useState<boolean>(false);
+
+ 
+  const handleDetails = async (id: string) => {
+    setSeedId(id)
+    setOpenSeedDetailDrawer(true);
+  };
+  const closeSeedDetailDrawer = () => {
+    setOpenSeedDetailDrawer(false);
   };
 
+
   //handle update seed
-  const handleUpdate = async (id: string) => {};
+  const [openSeedUpdateDrawer, setOpenSeedUpdateDrawer] = useState<boolean>(false);
+  const handleUpdate = async (id: string) => {
+    setSeedId(id)
+    setOpenSeedUpdateDrawer(true);
+  };
+  const closeSeedUpdateDrawer = () => {
+    setOpenSeedUpdateDrawer(false);
+  };
+
 
   //handle delete
   const [deleteState, setDeleteState] = useState<boolean>(false);
@@ -100,18 +116,24 @@ const SeedManagement = (props: Props) => {
     console.log('params', pagination, filters, sorter, extra);
   };
 
-  const [open, setOpen] = useState(false);
+  //handle add seed
+  const [openAddSeed, setOpenAddSeed] = useState(false);
 
-  const showDrawer = () => {
-    setOpen(true);
+  const showAddSeedDrawer = () => {
+    setOpenAddSeed(true);
   };
 
-  const onClose = () => {
-    setOpen(false);
+  const closeAddSeedDrawer = () => {
+    setOpenAddSeed(false);
   };
+
+  useEffect(() => {
+    getListSeedsApi(http, siteId);
+  }, [http, siteId, openAddSeed, openSeedDetailDrawer]);
 
   return (
     <>
+      
       <Content style={{ padding: '20px 0px' }}>
         <ConfigProvider
           theme={{
@@ -199,17 +221,11 @@ const SeedManagement = (props: Props) => {
             <Button
               className={cx('bg-btn')}
               icon={<PlusOutlined />}
+              onClick={showAddSeedDrawer}
             />
           </Tooltip>
         </Flex>
-        <Button type="primary" onClick={showDrawer}>
-        Open
-      </Button>
-      {/* <Drawer title="Basic Drawer" onClose={onClose} open={open}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer> */}
+      
      
         <ConfigProvider
           theme={{
@@ -262,6 +278,38 @@ const SeedManagement = (props: Props) => {
             </Layout>
           </Content>
         </ConfigProvider>
+        <Drawer
+        title="Details Seed"
+        placement="right"
+        width={500}
+        onClose={closeSeedDetailDrawer}
+        open={openSeedDetailDrawer}
+      >
+        <SeedDetailFormDrawer params={{
+            seedId: seedId
+          }} ></SeedDetailFormDrawer>
+      </Drawer>
+      <Drawer
+        title="Add Seed"
+        placement="right"
+        width={500}
+        onClose={closeAddSeedDrawer}
+        open={openAddSeed}
+      >
+        <AddSeedFormDrawer></AddSeedFormDrawer>
+      </Drawer>
+      {/* UpdateSeedFormDrawer */}
+      <Drawer
+        title="Update seed"
+        placement="right"
+        width={500}
+        onClose={closeSeedUpdateDrawer}
+        open={openSeedUpdateDrawer}
+      >
+        <UpdateSeedFormDrawer params={{
+            seedId: seedId
+          }}></UpdateSeedFormDrawer>
+      </Drawer>
       </Content>
     </>
   );

@@ -3,7 +3,7 @@ import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
 export const createSeedApi: (
-    siteId: string | null,
+    siteId: string | undefined,
     http: AxiosInstance | null,
     createSeasonDto?: CreateSeedDto
 ) => Promise<HttpResponseCommon<Seed | undefined>> = async (

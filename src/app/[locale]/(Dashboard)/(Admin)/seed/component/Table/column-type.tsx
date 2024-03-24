@@ -9,7 +9,9 @@ import {
   Switch,
   Tag,
   ConfigProvider,
-  Popconfirm
+  Popconfirm,
+  Drawer,
+  theme
 } from 'antd';
 import {
   CheckOutlined,
@@ -23,9 +25,33 @@ import {
 
 import { useTranslations } from 'next-intl';
 import { Seed } from '../../models/seed-models';
+import { useState } from 'react';
+import { truncate } from 'fs';
 
  export function SeedTableColumns() {
   const t = useTranslations('Common');
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const { token } = theme.useToken();
+
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    height: 200,
+    padding: 48,
+    overflow: 'hidden',
+    background: token.colorFillAlter,
+    border: `1px solid ${token.colorBorderSecondary}`,
+    borderRadius: token.borderRadiusLG,
+  };
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const hiddenDrawer = () => {
+    setOpenDrawer(false);
+    console.log('hidden',openDrawer);
+  };
+
   const seedTableColumn: TableColumnsType<Seed> = [
     {
       title: t('Name'),
@@ -78,9 +104,12 @@ import { Seed } from '../../models/seed-models';
             },
             {
               label: (
+                
                 <a
                   onClick={() => {
-                    onUpdateSeed();
+                    // setOpenDrawer(true)
+                    //   console.log(openDrawer);
+                      onUpdateSeed();
                   } }
                 >
                   <Space>
