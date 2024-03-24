@@ -91,8 +91,8 @@ const AdminSider = ({ path }: Props) => {
         <FaClipboardList />
       ),
       getItem(
-        <Link href={`/cultivation`}>{t('culti')}</Link>,
-        `/cultivation`,
+        <Link href={`/season`}>{t('culti')}</Link>,
+        `/season`,
         <GiHighGrass />
       ),
       getItem(

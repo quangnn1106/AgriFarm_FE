@@ -158,7 +158,8 @@
         "select_disease_name": "Choose disease",
         "delete_title": "Delete",
         "msg_confirm_delete": "Do you want to delete",
-        "cancel_btn": "Cancel"
+        "cancel_btn": "Cancel",
+        "min_length": "Please enter description > 50 characters!"
     },
     "FormRegister": {
         "title_add": "Add new Farm Admin",

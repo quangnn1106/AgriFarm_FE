@@ -14,6 +14,7 @@ import fetchDiseaseData from '@/services/Disease/diseaseDiagnosesApi';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
+import { AxiosInstance } from 'axios';
 
 const cx = classNames.bind(styles);
 const DiseaseDiagnostic = () => {
@@ -26,19 +27,31 @@ const DiseaseDiagnostic = () => {
     const router = useRouter();
     const http = UseAxiosAuth();
 
-    const handleKeyword = (e : any) => {
-        setKeyword(e.target.value);
-    };
-    const handleDate = (dates: any, dateStrings: any)  => {
-        setDateFrom(dateStrings[0]);
-        setDateTo(dateStrings[1]);
-    };
+    useEffect(() => {
+        const getData = async (http: AxiosInstance | null) => {
+            try {
+                setLoading(true);
+                const responseData = await fetchDiseaseData(http,"","","");
+                setApiData(responseData);
+            } catch (error: unknown) {
+                // Assert the type of error to be an instance of Error
+                if (error instanceof Error) {
+                    throw new Error(`Error calling API: ${error.message}`);
+                } else {
+                    throw new Error(`Unknown error occurred: ${error}`);
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        getData(http);
+    },[http]);
+
     const searchAction = async () => {
         try {
             setLoading(true);
             const responseData = await fetchDiseaseData(http, keyword, dateFrom, dateTo);
             setApiData(responseData);
-            localStorage.setItem('conditionSearch', JSON.stringify([keyword, dateFrom, dateTo]));
         } catch (error: unknown) {
             // Assert the type of error to be an instance of Error
             if (error instanceof Error) {
@@ -79,6 +92,13 @@ const DiseaseDiagnostic = () => {
     const handleDiagnoses = () => {
         router.push("/diagnostic-add");
     }
+    const handleKeyword = (e : any) => {
+        setKeyword(e.target.value);
+    };
+    const handleDate = (dates: any, dateStrings: any)  => {
+        setDateFrom(dateStrings[0]);
+        setDateTo(dateStrings[1]);
+    };
     return (
     <Content style={{ padding: '30px 48px' }}>
         <h1 className={cx('disease__title')}>{t('diagnostic')}</h1>
