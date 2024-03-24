@@ -3,7 +3,7 @@
 import ActivityList from "@/components/(ScheduleItems)/ActivityList/activityList";
 import { useAppSelector } from "@/redux/hooks";
 import { getActivitiesService } from "@/services/Admin/Activities/activityService";
-import { ActivityResponse } from "@/types/activities";
+import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activities";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { Select } from "antd";
 import { AxiosInstance } from "axios";
@@ -24,10 +24,9 @@ const ActivityListPage = (props: any) => {
         }
       ]);
 
-    const [selectedSeason, setSelectedSeason] = useState<string>(seasons[0].value)
+    const [selectedSeason, setSelectedSeason] = useState<string>(seasons[1].value)
   
     const [isFetching, setIsFetching] = useState<boolean>(true);
-    const season = "9929dad3-61ae-49c7-a398-7995357dca1e";
   
     const fetchActivities = async (http: AxiosInstance, seasonId: string) => {
       try {
@@ -42,8 +41,8 @@ const ActivityListPage = (props: any) => {
     };
   
     useEffect(() => {
-      fetchActivities(http, season);
-    }, [http, season]);
+      fetchActivities(http, selectedSeason);
+    }, [http, selectedSeason]);
   
   
     const LIMIT = 5;
@@ -56,7 +55,8 @@ const ActivityListPage = (props: any) => {
         <Select
             options={seasons}
             style={{width: '100%', backgroundColor : 'green'}}
-            defaultValue={seasons[0]}
+            defaultValue={selectedSeason}
+            onChange={(e)=>setSelectedSeason(e)}
         >
             
         </Select>

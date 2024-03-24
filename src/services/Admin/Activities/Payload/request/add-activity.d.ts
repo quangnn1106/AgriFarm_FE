@@ -1,6 +1,6 @@
-import {ActivityDescription} from "@/types/activities"
+import {ActivityDescription} from "@/services/Admin/Activities/Payload/response/activities"
 
-export interface CreateForm {
+export interface CreateActivityForm {
   title: string;
   duration: string[];
   unit: string;
