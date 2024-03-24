@@ -1,10 +1,12 @@
 import { Radio, Table, TableColumnProps, TableColumnsType } from "antd";
-import { Land, RiceVariety, Seed } from "../../models/season-model";
+import { Land, RiceVariety } from "../../models/season-model";
 import { useTranslations } from 'next-intl';
+import { Seed } from "../../../seed/models/seed-models";
 
 
 export function RiceVarietyColumns() {
-    const t = useTranslations('Season');
+    const t = useTranslations('Common');
+    const tSeason = useTranslations('Season');
     const seedColumn : TableColumnsType<Seed> = [
         {
             title: 'ID',
@@ -17,7 +19,7 @@ export function RiceVarietyColumns() {
             width: 'max-content',
         },
         {
-            title: t('Stock'),
+            title: tSeason('Stock'),
             dataIndex: 'stock',
             width: 'max-content',
         },

@@ -63,20 +63,4 @@ export type Season = {
     name?: string | '';
 }
 
-export interface Seed {
-    id: string
-    stock: number
-    unitPrice: number
-    measureUnit: string
-    name: string
-    description: string
-    notes: string
-    properties: Property[]
-  }
-  
-  export interface Property {
-    name: string
-    value: number
-    unit: string
-  }
   

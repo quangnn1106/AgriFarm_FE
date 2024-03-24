@@ -9,7 +9,9 @@ import {
   Switch,
   Tag,
   ConfigProvider,
-  Popconfirm
+  Popconfirm,
+  Drawer,
+  theme
 } from 'antd';
 import {
   CheckOutlined,
@@ -21,75 +23,73 @@ import {
   WarningOutlined
 } from '@ant-design/icons';
 
-import { SeasonModel } from '../../models/season-model';
 import { useTranslations } from 'next-intl';
+import { Seed } from '../../models/seed-models';
+import { useState } from 'react';
+import { truncate } from 'fs';
 
- export function SeasonTableColumns() {
+ export function SeedTableColumns() {
   const t = useTranslations('Common');
-  const tSeason = useTranslations('Season');
-  const seasonTableColumn: TableColumnsType<SeasonModel> = [
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const { token } = theme.useToken();
+
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    height: 200,
+    padding: 48,
+    overflow: 'hidden',
+    background: token.colorFillAlter,
+    border: `1px solid ${token.colorBorderSecondary}`,
+    borderRadius: token.borderRadiusLG,
+  };
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const hiddenDrawer = () => {
+    setOpenDrawer(false);
+    console.log('hidden',openDrawer);
+  };
+
+  const seedTableColumn: TableColumnsType<Seed> = [
     {
       title: t('Name'),
-      dataIndex: 'title',
+      dataIndex: 'name',
       width: 'max-content',
       fixed: 'left'
     },
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'status',
-    //   width: 'max-content',
-    //   render: (_, { status }) => {
-    //     let color = '';
-    //     if (status == 'In progress') {
-    //       color = 'processing';
-    //     } else if (status == 'Pending') {
-    //       color = 'warning';
-    //     } else if (status == 'Done') {
-    //       color = 'success';
-    //     } else if (status == 'Cancel') {
-    //       color = 'error';
-    //     } else {
-    //       color = '';
-    //     }
-    //     return (
-    //         <Tag
-    //           color={color}
-    //           bordered={false}
-    //         >
-    //           {status}
-    //         </Tag>
-    //     );
-    //   }
-    // },
     {
-      title: t('Start_Date'),
-      dataIndex: 'startIn',
-      width: 'max-content'
+      title: 'Stock',
+      dataIndex: 'stock',
+      width: 'max-content',
+      render: (_,seedItem) => `${seedItem.stock} ${seedItem.measureUnit}`
     },
     {
-      title: t('End_Date'),
-      dataIndex: 'endIn',
-      width: 'max-content'
-    },
+        title: 'price',
+        dataIndex: 'unitPrice',
+        width: 'max-content',
+        render: (_,seedItem) => `${seedItem.unitPrice} VND`
+      },
     {
       width: 'max-content',
       title: '',
       key: 'actions',
       fixed: 'right',
       align: 'right' as const,
-      render: (_, seasonItem) => {
+      render: (_, seedItem) => {
         const renderItems = (
           id: string,
-          onDetailsSeason: () => void,
-          onRemoveSeason: () => void,
-          onUpdateSeason: () => void
+          onDetailsSeed: () => void,
+          onRemoveSeed: () => void,
+          onUpdateSeed: () => void
         ): MenuProps['items'] => {
           return [
             {
               label: (
                 <a
                   onClick={() => {
-                    onDetailsSeason();
+                    onDetailsSeed();
                   } }
                 >
                   <Space>
@@ -104,9 +104,12 @@ import { useTranslations } from 'next-intl';
             },
             {
               label: (
+                
                 <a
                   onClick={() => {
-                    onUpdateSeason();
+                    // setOpenDrawer(true)
+                    //   console.log(openDrawer);
+                      onUpdateSeed();
                   } }
                 >
                   <Space>
@@ -124,7 +127,7 @@ import { useTranslations } from 'next-intl';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title: tSeason('delete_confirm_sentence'),
+                      title:'Do you want to delete this seeds',
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,
@@ -133,7 +136,7 @@ import { useTranslations } from 'next-intl';
                       okText: t('Yes'),
                       okButtonProps: { type: 'primary', danger: true },
                       onOk: () => {
-                        onRemoveSeason();
+                        onRemoveSeed();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
                         <>
@@ -157,10 +160,10 @@ import { useTranslations } from 'next-intl';
           <Dropdown
             menu={{
               items: renderItems(
-                seasonItem.id!,
-                seasonItem.onDetails!,
-                seasonItem.onDelete!,
-                seasonItem.onUpdate!
+                seedItem.id!,
+                seedItem.onDetails!,
+                seedItem.onDelete!,
+                seedItem.onUpdate!
               )
             }}
           >
@@ -177,5 +180,5 @@ import { useTranslations } from 'next-intl';
       }
     }
   ];
-  return seasonTableColumn;
+  return seedTableColumn;
 }
