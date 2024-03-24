@@ -14,7 +14,7 @@ import {
 } from "@fullcalendar/core/index.js";
 
 import ActivityDetail from "../ActivityDetail/activityDetail";
-import { ActivityResponse } from "@/types/activities";
+import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activities";
 
 interface IProps {
   allActivities: ActivityResponse[];

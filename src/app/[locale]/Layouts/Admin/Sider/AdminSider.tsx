@@ -90,6 +90,25 @@ const AdminSider = ({ path }: Props) => {
         `/activities`,
         <FaClipboardList />
       ),
+      getItem(`${t('training')}`, 'training',<FaClipboardList/>,[
+        getItem(
+          <Link href={`/training/contents`}>{t('t_content')}</Link>,
+          `/training/contents`,
+          <FaClipboardList />
+        ),
+        getItem(
+          <Link href={`/training/experts`}>{t('expert')}</Link>,
+          `/training/experts`,
+          <FaClipboardList />
+        ),
+        // getItem(
+        //   <Link href={`/training/details`}>{t('detail')}</Link>,
+        //   `/training/details`,
+        //   <FaClipboardList />
+        // ),
+      ]
+        
+      ),
       getItem(
         <Link href={`/cultivation`}>{t('culti')}</Link>,
         `/cultivation`,

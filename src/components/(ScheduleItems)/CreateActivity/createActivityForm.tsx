@@ -19,11 +19,10 @@ import {
 import { useState } from "react";
 import FormItem from "antd/es/form/FormItem";
 import { USING_ADDITION, TRAINING_ADDITION, ASSESSMENT_ADDITION, TREATMENT_ADDITION } from "@/constants/additionType";
-const { getMentions } = Mentions;
 const { RangePicker } = DatePicker;
 
 interface IProps {
-  onFinish?: (values: any) => void;
+  onFinish?: () => void;
   onSubmit?: (values: any) => void;
   form: FormInstance;
 }
@@ -39,12 +38,12 @@ export default function CreateActivityForm(props: IProps) {
       value: "none",
     },
     {
-      label: "01",
-      value: "01",
+      label: "Expert recommend",
+      value: "79fff957-9464-4745-8150-73faca8d55d5",
     },
     {
-      label: "02",
-      value: "02",
+      label: "How to start season",
+      value: "cc0f8c70-b4f7-4cf7-9de5-83c4f5c8396f",
     },
     {
       label: "03",
@@ -57,12 +56,12 @@ export default function CreateActivityForm(props: IProps) {
       value: "none",
     },
     {
-      label: "01",
-      value: "01",
+      label: "Expert 02",
+      value: "7a7a8916-c767-4ad6-b98c-10775ba4a86c",
     },
     {
-      label: "02",
-      value: "02",
+      label: "Expert 01",
+      value: "b7119c1e-f585-4a9c-b22d-f8441d350963",
     },
     {
       label: "03",
@@ -89,8 +88,8 @@ export default function CreateActivityForm(props: IProps) {
   ]);
   const [items, setItems] = useState([
     {
-      label: "None",
-      value: "none",
+      label: "Seed 01",
+      value: "559ac487-62ff-493f-8898-9d23c18c8718",
     },
     {
       label: "01",
@@ -142,13 +141,10 @@ export default function CreateActivityForm(props: IProps) {
     },
   ]);
   const [inspectors, setInspectors] = useState([
-    {
-      label: "None",
-      value: null,
-    },
+    
     {
       label: "Admin",
-      value: "252f0d43-cfe2-4f71-89bc-ac11e6f6e2be",
+      value: "8c412e0d-4de2-48bc-9a5c-8482cad10dde",
     },
     {
       label: "02",
@@ -161,21 +157,13 @@ export default function CreateActivityForm(props: IProps) {
   ]);
   const [workers, setWorkers] = useState([
     {
-      label: "None",
-      value: null,
-    },
-    {
       label: "user 02",
-      value: "eaa8255e-c9a5-4eed-9120-c2ac0838404a",
+      value: "fb80655e-cb2c-4680-9c61-fe6a30c8d95f",
     },
     {
-      label: "02",
-      value: "02",
-    },
-    {
-      label: "03",
-      value: "03",
-    },
+      label: "User User1",
+      value: "65bc6b9a-6664-4275-a79b-33694251c405",
+    }
   ]);
 
   const hanldeChooseItem = async (value: string) => {
@@ -327,7 +315,7 @@ export default function CreateActivityForm(props: IProps) {
                 <Row gutter={[15, 15]}>
                   {fields.map((field, index) => (
                     <>
-                      <Col span={24} md={12} key={index}>
+                      <Col span={24} md={22} key={index}>
                         <Form.Item required={false}>
                           <Form.Item
                             //{...field}
@@ -345,7 +333,25 @@ export default function CreateActivityForm(props: IProps) {
                           >
                             <Input
                               placeholder="name"
-                              style={{ width: "60%" }}
+                              style={{ width: "40%" }}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name={[field.name, "value"]}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[
+                              {
+                                required: true,
+                                whitespace: true,
+                                message:
+                                  "Please input descriptions value or delete this field.",
+                              },
+                            ]}
+                            noStyle
+                          >
+                            <Input
+                              placeholder="value"
+                              style={{ width: "50%" }}
                             />
                           </Form.Item>
                           {fields.length > 0 ? (
@@ -383,6 +389,7 @@ export default function CreateActivityForm(props: IProps) {
   };
 
   const renderByType = () => {
+    
     switch (type) {
       case USING_ADDITION:
         return (
@@ -591,7 +598,7 @@ export default function CreateActivityForm(props: IProps) {
           {renderDescriptionsListSection()}
         </Col>
       </Row>
-
+      
       <Form.Item noStyle shouldUpdate>
         {() => (
           <Typography>

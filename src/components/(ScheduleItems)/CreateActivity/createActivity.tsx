@@ -1,4 +1,4 @@
-
+"use client"
 import {
   Button,
   Col,
@@ -11,7 +11,7 @@ import {
   Row,
   Typography,
 } from "antd";
-import UsingAddition from "../activityAdditions/viewer/UsingAddition/usingAddition";
+import UsingAddition from "../activityAdditions/viewer/UsingDetail/usingAddition";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import CreateActivityForm from "./createActivityForm";
@@ -69,8 +69,8 @@ const CreateActivity = (props: IProps) => {
     console.log("Your post response here: ", rs)
   };
 
-  const onFinish = async (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async () => {
+    console.log("Success:");
     // const res = await handleCreateUserAction(values);
     // if (res?.id) {
     //     handleCloseCreateModal();

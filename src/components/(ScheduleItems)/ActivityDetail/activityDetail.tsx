@@ -1,24 +1,28 @@
-import React, { useState } from "react";
-import { Button, Modal, Space, Tag } from "antd";
-import AdditionDetail from "../activityAdditions/additionDetail";
-import { ActivityResponse, Addition } from "@/types/activities";
-import dayjs from "dayjs";
-import { additionsData } from "../FakeData/fakeDatesData";
+import React, { useState } from 'react';
+import { Button, Drawer, Modal, Space, Tag } from 'antd';
+import { ActivityResponse, Addition } from '@/services/Admin/Activities/Payload/response/activities';
+import dayjs from 'dayjs';
+import { additionsData } from '../FakeData/fakeDatesData';
+import { Link } from '@/navigation';
+import AdditionSection from '../activityAdditions/AdditionSection/additionSection';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { doneScheduleService } from '@/services/Admin/Activities/scheduleService';
 
 interface EventModalProps {
   activity: ActivityResponse; // Assuming you have CustomEvent type defined
   onClose: () => void;
 }
 
+const addData = additionsData[0];
+
 const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
   const [open, setOpen] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
-  const [selectedDetail, setSelectedDetail] = useState<Addition | null>(null);
-
-  
+  const [additionDetail, setAdditionDetail] = useState<Addition | null>(null);
+  const http = UseAxiosAuth()
 
   const showModal = () => {
-    console.log("ok");
+    console.log('ok');
     //setOpen(true);
   };
   const handleOk = () => {
@@ -30,97 +34,93 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
     onClose();
   };
 
-  const handleDone = () => {
-    //setOpen(false);
-    console.log("done");
-  };
-
-  const renderAddition = () => {
-    //console.log("list is: ", addiList)
-    return activity.addition?.map((id, index) => {
-      const item = additionsData.find((add,i)=>i===0)//.find((e) => e.id === id);
-      console.log("addition item: ", item);
-      if (item) {
-        return (
-          <div key={item.id}>
-            <a onClick={() => setSelectedDetail(item)}>{item.id}</a>
-          </div>
-        );
-      }
-    });
+  const handleDone = async (activityId: string) => {
+    console.log("id: ", activityId)
+    const rs = await doneScheduleService(http, activityId)
+    
+    console.log('done, ', rs);
   };
 
   return (
     <>
-      <Modal
+      <Drawer
         open={open}
-        title={activity.title}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        style={{ top: "5%", right: 20, position: "absolute" }}
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <Button onClick={handleDone}>Mark as Done</Button>
-            <CancelBtn />
-            <OkBtn />
-          </>
-        )}
-        width={"40vw"}
+        title={'Activity Detail'}
+        onClose={handleCancel}
+        width={'40vw'}
       >
-        <div style={{ height: "80vh" }}>
-          <p>ID: {activity.id}</p>
-          <p>Title: {activity.title}</p>
-          <p>Start: {dayjs(activity.start).format("DD-MM-YYYY HH:mm:ss")}</p>
-          <p>End: {dayjs(activity.start).format("DD-MM-YYYY HH:mm:ss")}</p>
+        <div style={{ height: '80vh' }}>
+          {/* <p>ID: {activity.id}</p> */}
           <div>
-            More Details:{" "}
+            <h2>Title: {activity.title}</h2>
+          </div>
+          <p>Start: {dayjs(activity.start).format('HH:mm DD/MM/YYYY')}</p>
+          <p>End: {dayjs(activity.end).format('HH:mm DD/MM/YYYY')}</p>
+          <div>
+            Information:{' '}
             {activity.descriptions.map((des, index) => {
               return (
                 <div key={index}>
-                  {" "}
-                  {">>"} {des.name}: {des.value}
+                  {' '}
+                  {'-'} {des.name}: {des.value}
                 </div>
               );
             })}
           </div>
-          <div>Land: {activity.location?.name}</div>
-          <div>Season: {activity.season?.title}</div>
           <div>
-            Inspectors:{" "}
+            Land: <a href={`/${activity.location?.id}`}>{activity.location?.name}</a>
+          </div>
+          <div>
+            Season: <a href={`/${activity.season?.id}`}>{activity.season?.title}</a>
+          </div>
+          <div>
+            Inspectors:{' '}
             {activity.inspectors.map((ins, index) => (
-              <Tag color="blue" key={index}>
-                @{ins.name}
+              <Tag
+                color='blue'
+                key={index}
+              >
+                <a href={`/${ins.id}`}>@{ins.name}</a>
               </Tag>
             ))}
           </div>
           <div>
-            Participants:{" "}
+            Participants:{' '}
             {activity.workers.map((wok, index) => (
-              <Tag color="cyan" key={index}>
+              <Tag
+                color='cyan'
+                key={index}
+              >
                 @{wok.name}
               </Tag>
             ))}
           </div>
-          <p>Status: {activity.isCompleted ? "Completed" : "Not yet"}</p>
-
-          <a
-            onClick={
-              () => setShowDetail(!showDetail)
-              //() => console.log(showDetail)
-            }
-          >
-            Show detail
-          </a>
-
-          {showDetail && renderAddition()}
-          {selectedDetail && (
-            <AdditionDetail
-              addition={selectedDetail}
-              onClose={() => setSelectedDetail(null)}
+          <p>Status: {activity.isCompleted ? 'Completed' : 'Not yet'}</p>
+          
+          Detail:{' '}
+          {activity.addition && (
+            <AdditionSection
+              activityId={activity.id}
+              addition={activity.addition}
             />
           )}
+          {/* {additionDetail && (
+            <AdditionDetail
+              addition={additionDetail}
+              onClose={() => setAdditionDetail(null)}
+            />
+          )} */}
         </div>
-      </Modal>
+        <>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button
+            type='primary'
+            onClick={()=>handleDone(activity.id)}
+          >
+            Mark as Done
+          </Button>
+        </>
+      </Drawer>
     </>
   );
 };

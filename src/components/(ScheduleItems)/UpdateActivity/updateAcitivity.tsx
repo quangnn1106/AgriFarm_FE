@@ -1,4 +1,4 @@
-import { ActivityResponse } from "@/types/activities";
+import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activities";
 import { Col, Form, Input, Modal, Row, message } from "antd";
 
 
