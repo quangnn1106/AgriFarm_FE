@@ -35,7 +35,9 @@
         "rice_culti": "Rice cultivation record",
         "GBG_checklist": "Global G.A.P checklist",
         "subscription": "Manage subcriptions",
-        "logout": "Logout Account"
+        "logout": "Logout Account",
+        "t_content": "Content",
+        "training": "Training"
     },
     "LocaleSwitcher": {
         "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"
@@ -158,7 +160,8 @@
         "select_disease_name": "Choose disease",
         "delete_title": "Delete",
         "msg_confirm_delete": "Do you want to delete",
-        "cancel_btn": "Cancel"
+        "cancel_btn": "Cancel",
+        "min_length": "Please enter description > 50 characters!"
     },
     "FormRegister": {
         "title_add": "Add new Farm Admin",
@@ -225,10 +228,7 @@
         "Please_select_end_date!": "Please select end date !",
         "Add": "Add",
         "Submit": "Submit",
-        "save_change": "Save change",
-        "delete": "Delete",
-        "cancel": "Cancel",
-        "add_new": "Add new",
-        "yes": "Yes"
+        "save_change": "Save change"
+
     }
 }

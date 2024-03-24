@@ -205,8 +205,8 @@ const UserManagement = (props: Props) => {
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: event => {
-                      console.log('record row onCLick: ', record);
-                      console.log('event row onCLick: ', event);
+                      //    console.log('record row onCLick: ', record);
+                      //console.log('event row onCLick: ', event);
                       const target = event.target as HTMLElement;
                       const isWithinLink = target.tagName === 'A' || target.closest('a');
 

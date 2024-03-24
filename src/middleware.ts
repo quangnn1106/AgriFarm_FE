@@ -15,7 +15,7 @@ const publicPages = [
   REGISTER_PATH,
   SALOGIN_PATH,
   SUCCESS_PATH,
-  ERROR_PATH,
+  ERROR_PATH
   // (/secret requires auth)
 ];
 

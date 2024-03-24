@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
 import getListLandApi from "@/services/Disease/getListLandApi";
-import { Button, Col, Row, Select } from "antd";
+import { Button, Col, Row, Select, Spin, Tabs, TabsProps } from "antd";
 import { Input } from 'antd';
 import diseaseDiagnosesAddApi from "@/services/Disease/diseaseDiagnosesAddApi";
 import ModalComponent from "./component/modal/modal";
@@ -30,12 +30,14 @@ const DiseaseDiagnosticAdd = () => {
     const [msgAdd, setMsgAdd] = useState("");
     const [diagnosticRs, setDiagnosticRs] = useState(false);
     const [diagnoeseId, setDiagnoeseId] = useState("");
-    const [plantDisease, setPlantDisease] = useState<plantDiseaseDef>();
+    const [plantDisease, setPlantDisease] = useState<plantDiseaseDef | null>(null);
     const [feedback, setFeedback] = useState("");
     const [latitude, setLatitude] = useState<number | null>(null);
     const [longitude, setLongitude] = useState<number | null>(null);
     const http = UseAxiosAuth();
     const { data: session, status } = useSession();
+    const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
+    const [defaultActiveKey, setDefaultActiveKey] = useState<string>("");
 
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
@@ -70,6 +72,11 @@ const DiseaseDiagnosticAdd = () => {
     // Call api AI disease
     const submitAction = async () => {
         try {
+            if (description.length < 50) {
+                setMsgAdd(t('min_length'));
+                setDisplayModalAdd(true);
+                return;
+            }
             setLoadings(true);
             const url = `${process.env.NEXT_PUBLIC_AI_API}/get_disease`;
             axios.post(url, {
@@ -77,33 +84,69 @@ const DiseaseDiagnosticAdd = () => {
             })
                 .then(async (response : any) => {
                     console.log(response.data);
-                    const diseaseId = response.data.result as string;
-                    const diseaseDiagnostic : diseaseDiagnosticDef = {
-                        plantDiseaseId: diseaseId,
-                        description: description,
-                        feedback: "",
-                        location: `${latitude},${longitude}`,
-                        createBy: session?.user?.userInfo.id as string,
-                        landId: selLand,
-                    };
-        
-                    const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
-                    if (diseaseId == "00000000-0000-0000-0000-000000000000") {
-                        setMsgAdd(t('message_disease_diagnostic'));
+                    const diseaseId = response.data.result;
+                    if (diseaseId.length == 0) {
+                        setMsgAdd(t('disease_diagnostic_fail'));
                         setDisplayModalAdd(true);
                     } else {
-                        if (res.statusCode != STATUS_OK) {
-                            setMsgAdd(t('disease_diagnostic_fail'));
-                            setDisplayModalAdd(true);
-                        } else {
-                            setDiagnoeseId(res.data.id);
-                            const responseData = await plantDiseaseInfoApi(http, diseaseId);
-                            if (responseData.statusCode == STATUS_OK) {
-                                setPlantDisease(responseData.data);
+                        let isForEachComplete = false; // Khởi tạo biến cờ
+                        let listDisease: TabsProps['items'] = [];
+                        diseaseId.forEach(async (element: string, index: number) => {
+                            const diseaseDiagnostic : diseaseDiagnosticDef = {
+                                plantDiseaseId: element,
+                                description: description,
+                                feedback: "",
+                                location: `${latitude},${longitude}`,
+                                createBy: session?.user?.userInfo.id as string,
+                                landId: selLand,
+                            };
+                            const res = await diseaseDiagnosesAddApi(http, diseaseDiagnostic);
+                            if (res.statusCode != STATUS_OK) {
+                                setMsgAdd(t('disease_diagnostic_fail'));
+                                setDisplayModalAdd(true);
+                                return;
+                            } else {
+                                setDiagnoeseId(res.data.id);
+                                const responseData = await plantDiseaseInfoApi(http, element);
+                                if (responseData.statusCode == STATUS_OK) {
+                                    if (element == "b23294ba-d83a-4a96-8697-edb5dad34c03" &&
+                                        (description.includes("chín") ||
+                                        description.includes("chính") ||
+                                        description.includes("chin") ||
+                                        description.includes("chinh"))
+                                    ) {
+                                    } else {
+                                        const items = {
+                                            key: element,
+                                            label: responseData.data.diseaseName
+                                        };
+                                        if (index == 0) {
+                                            setDefaultActiveKey(element);
+                                            setPlantDisease(responseData.data);
+                                        }
+                                        listDisease?.push(items);
+                                    }
+                                }
+                                setMsgAdd("");
+                                setDiagnosticRs(true);
                             }
-                            setMsgAdd("");
-                            setDiagnosticRs(true);
-                        }
+                            // Kiểm tra xem đã chạy hết vòng lặp chưa
+                            if (index === diseaseId.length - 1) {
+                                isForEachComplete = true;
+                            }
+                        });
+                        // Sau khi vòng lặp kết thúc, kiểm tra và thực hiện đoạn mã
+                        const checkCompletionInterval = setInterval(() => {
+                            if (isForEachComplete) {
+                                clearInterval(checkCompletionInterval); // Dừng interval
+                                if (listDisease == undefined || listDisease.length == 0) {
+                                    setMsgAdd(t('disease_diagnostic_fail'));
+                                    setDisplayModalAdd(true);
+                                    setPlantDisease(null);
+                                }
+                            }
+                        }, 100); // Kiểm tra mỗi 100ms
+                        setItemsDisease(listDisease);
                     }
                     
                 })
@@ -147,6 +190,25 @@ const DiseaseDiagnosticAdd = () => {
     const handleFeedback = (e : any) => {
         setFeedback(e.target.value);
     }
+
+    const onChange = async (key: string) => {
+        try {
+            setLoadings(true);
+            const responseData = await plantDiseaseInfoApi(http, key);
+            if (responseData.statusCode == STATUS_OK) {
+                setPlantDisease(responseData.data);
+            }
+            setMsgAdd("");
+            setDiagnosticRs(true);
+        } catch (error) {
+            console.log(error);
+            setMsgAdd("Error!!!!!");
+            setDisplayModalAdd(true);
+        } finally {
+            setLoadings(false);
+        }
+    };
+
     const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
     return (
@@ -162,8 +224,13 @@ const DiseaseDiagnosticAdd = () => {
                             <Row className={cx('dd__row')}>
                                 <p className={cx('dd__content')}>{description}</p>
                             </Row>
+                            <Spin spinning={loadings}>
                             <div className={cx('dd__result')}>
                                 <h3 className={cx('dd__result--label')}>{t('diagnostic_result')}</h3>
+                                
+                                <Row className={cx('dd__row')}>
+                                    <Tabs defaultActiveKey={defaultActiveKey} items={itemsDisease} onChange={onChange} />
+                                </Row>
                                 <Row className={cx('dd__row')}>
                                     <Col span={2}>
                                         <label className={cx('dd__label')}>{t('lbl_disease_name')}</label>
@@ -216,6 +283,7 @@ const DiseaseDiagnosticAdd = () => {
                                     </Button>
                                 </Row>
                             </div>
+                            </Spin>
                         </div>
                     </>
                 ) : (

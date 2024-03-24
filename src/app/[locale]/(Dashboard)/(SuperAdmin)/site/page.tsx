@@ -33,6 +33,7 @@ import { usePathname, useRouter } from '@/navigation';
 import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import Loader from '@/components/Loader/Loader';
+import useGeolocation from '@/utils/getlocaiton';
 
 type Props = {};
 interface CenterState {
@@ -44,7 +45,7 @@ const SitePage = (props: Props) => {
   const [fetching, setIsFetching] = React.useState(true);
   const [loadingMap, setLoading] = React.useState(true);
   const handleMapLoading = () => setLoading(false);
-
+  const { latitude, longitude, error } = useGeolocation();
   const [sites, setSites] = React.useState<Sites[] | []>([]);
   const t = useTranslations('Disease');
   const t2 = useTranslations('Button');
@@ -56,7 +57,7 @@ const SitePage = (props: Props) => {
   const fetchSites = async (http: AxiosInstance) => {
     try {
       const responseData = await getSitesService(http);
-      console.log(responseData?.data as Sites[]);
+      //   console.log(responseData?.data as Sites[]);
       setSites(responseData?.data as Sites[]);
       setIsFetching(false);
     } catch (error) {
@@ -110,7 +111,9 @@ const SitePage = (props: Props) => {
         <MapBoxReact
           onLoaded={handleMapLoading}
           loadingMap={loadingMap}
-          zoom={8}
+          latInit={latitude || 0}
+          lngInit={longitude || 0}
+          zoom={7}
         >
           <GeocoderControl
             mapboxAccessToken={MAPBOX_TOKEN}
@@ -155,7 +158,7 @@ const SitePage = (props: Props) => {
               }}
             >
               <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                <Flex
+                {/* <Flex
                   gap='small'
                   wrap='wrap'
                   className={cx('btn_row')}
@@ -170,7 +173,7 @@ const SitePage = (props: Props) => {
                   >
                     {t2('btn_add')}
                   </Button>
-                </Flex>
+                </Flex> */}
                 <Table
                   loading={fetching}
                   rowKey={'id'}
@@ -182,8 +185,8 @@ const SitePage = (props: Props) => {
                   onRow={(record, rowIndex) => {
                     return {
                       onClick: event => {
-                        console.log('record row onCLick: ', record);
-                        console.log('event row onCLick: ', event);
+                        //console.log('record row onCLick: ', record);
+                        // console.log('event row onCLick: ', event);
                         const target = event.target as HTMLElement;
                         const isWithinLink =
                           target.tagName === 'A' || target.closest('a');

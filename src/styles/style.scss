@@ -23,11 +23,14 @@ p {
     align-items: center;
 }
 
+.jus-center {
+    justify-content: center;
+}
+
 .sa_login {
     height: 100vh;
     display: flex;
     padding: 0 8vw;
-
     img {
         top: 20px;
     }
@@ -86,7 +89,6 @@ p {
     // border-radius: 5px;
     // margin: 24px 16px;
     background-color: $white;
-
     .sidebar {
         position: absolute;
         z-index: 1;
@@ -109,7 +111,6 @@ p {
 
 .layout {
     height: fit-content;
-
     header {
         display: flex;
         align-items: center;
@@ -119,32 +120,26 @@ p {
         z-index: 2;
         justify-content: space-between;
     }
-
     .right_menu {
         display: flex;
         align-items: center;
         min-width: 200px;
-
         .ul_right {
             display: flex;
         }
-
         ul {
             justify-content: center;
             width: 100%;
-
             li:first-child {
                 padding: 0 1px;
                 display: flex;
                 cursor: pointer;
-
                 span {
                     display: flex;
                     align-items: center;
                 }
             }
         }
-
         .iconButton {
             width: 48px;
             height: 48px;
@@ -155,12 +150,10 @@ p {
             cursor: pointer;
             font-size: 24px;
         }
-
         .iconSearch {
             font-size: 24px;
         }
     }
-
     .logo {
         height: 32px;
         width: 96px;
@@ -173,26 +166,22 @@ p {
         height: fit-content;
         width: fit-content;
         border: none !important;
-
         span {
             svg {
                 color: #009A29;
             }
         }
     }
-
     .bg-btn {
         background: #009A29 !important;
         color: #ffffff !important;
     }
-
     .bg-btn:hover {
         color: #ffffff !important;
         background: #009A29 !important;
         border: #009A29 !important;
         opacity: 0.6 !important;
     }
-
     .label-icon {
         color: #009A29;
         width: fit-content;
@@ -201,21 +190,17 @@ p {
         gap: 8px;
         padding-left: 30px;
     }
-
     .flex-space {
         gap: 12px;
         padding: 16px;
     }
-
     .flex-center {
         gap: 12px;
         padding: 20px;
     }
-
     .flex-outline-space {
         margin: 12px 24px;
     }
-
     .filter-box {
         padding: 12px;
         border: 1px solid #009A29;
@@ -223,59 +208,48 @@ p {
         margin: 12px 24px;
         box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
     }
-
     //style list page
     .table_style {
-        :global {
-
+         :global {
             // ant-table-ping-right.ant-table-fixed-column.ant-table-scroll-horizontal.ant-table-has-fix-left.ant-table-has-fix-right {
             //     border: 1px solid #F2F3F5 !important;
             // }
             td.ant-table-cell.ant-table-selection-column.ant-table-cell-fix-left {
                 border-left: 1px solid #F2F3F5;
             }
-
             td.ant-table-cell.ant-table-cell-fix-right.ant-table-cell-fix-right-first {
                 border-right: 1px solid #F2F3F5;
             }
         }
-
         tr {
             cursor: pointer;
         }
-
-        ::-webkit-scrollbar {
+         ::-webkit-scrollbar {
             width: 0;
             height: 8px;
         }
-
-        ::-webkit-scrollbar-track {
+         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 4px;
         }
-
         /* Handle */
-        ::-webkit-scrollbar-thumb {
+         ::-webkit-scrollbar-thumb {
             background: #A5D6A7;
             border-radius: 4px;
         }
-
         /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
+         ::-webkit-scrollbar-thumb:hover {
             background: #84da87;
         }
     }
-
     //Style profile page
     .group-info-label {
         padding-left: 0px;
         font-weight: 500;
     }
-
     .padding-input {
         padding: 8px 30px;
     }
-
     .btn-right {
         margin-left: auto;
         display: flex !important;
@@ -287,6 +261,6 @@ p {
 .cancel-btn {
     .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
         color: #009A29;
-        border-color:  #009A29;
+        border-color: #009A29;
     }
 }

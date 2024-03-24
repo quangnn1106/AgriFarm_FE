@@ -6,6 +6,7 @@ import { usePathname } from '@/navigation';
 import { SITE_MAP_PATH } from '@/constants/routes';
 import { Content } from 'antd/es/layout/layout';
 import {
+  App,
   Button,
   Col,
   ConfigProvider,
@@ -14,7 +15,11 @@ import {
   FormInstance,
   Input,
   Row,
-  Select
+  Select,
+  UploadFile,
+  UploadProps,
+  message,
+  notification
 } from 'antd';
 import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
 import Map, {
@@ -39,8 +44,12 @@ import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import ControlPanel from '../../components/control-panel';
-import UploadImgAgri from '@/components/Upload/uploadAvatar';
+import UploadImgAgri, { FileType } from '@/components/Upload/uploadAvatar';
 import { addPositionService } from '@/services/SuperAdmin/Site/addPositionService';
+import useGeolocation from '@/utils/getlocaiton';
+import { updateSiteService } from '@/services/SuperAdmin/Site/updateInforService';
+import { NotificationPlacement } from 'antd/es/notification/interface';
+import { useTranslations } from 'next-intl';
 
 const cx = classNames.bind(styles);
 type Props = {};
@@ -49,16 +58,34 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const path = usePathname();
   const [form] = Form.useForm();
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [loadingMap, setLoading] = useState<boolean>(true);
   const [displayMarker, setDisplayMarker] = useState<boolean>(true);
   const [stateBtnConfirm, setStateBtnConfirm] = useState<boolean>(true);
   const handleMapLoading = () => setLoading(false);
   const [isFetching, setIsFetching] = useState<boolean | undefined>();
+  const { latitude, longitude, error } = useGeolocation();
+  const tM = useTranslations('Message');
+
   const http = UseAxiosAuth();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (
+    placement: NotificationPlacement,
+    status: string,
+    type: 'success' | 'error'
+  ) => {
+    api[type]({
+      message: `Sites ${status}`,
+      placement,
+      duration: 2
+    });
+  };
   const fetchSitesDetails = async (
     http: AxiosInstance,
     siteId?: string,
-    form?: FormInstance
+    form?: FormInstance,
+    fileList?: any,
+    check?: boolean
   ) => {
     try {
       const responseData = await getSitesService(http, siteId);
@@ -68,17 +95,18 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
         // console.log('fetchSitesDetails: ', responseData?.data);
 
         form?.setFieldsValue({
-          ...responseData?.data
+          ...responseData?.data,
+          avatarImg: fileList[0]?.name ? fileList[0]?.name : ''
         });
       }
       setIsFetching(false);
     } catch (error) {
-      console.error('Error calling API Staffs:', error);
+      // console.error('Error calling API Staffs:', error);
     }
   };
   React.useEffect(() => {
-    fetchSitesDetails(http, params.id, form);
-  }, [form, http, params.id]);
+    fetchSitesDetails(http, params.id, form, fileList);
+  }, [fileList, form, http, params.id]);
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -112,9 +140,49 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     }
     return e && e.fileList;
   };
-
+  // logic update + upload file image
   const handleForm = async (values: any) => {
     console.log('value form: ', values);
+    let count: number = 0;
+    const formData = new FormData();
+    fileList.forEach(file => {
+      formData.append('files[]', file as FileType);
+    });
+
+    // You can use any AJAX library you like
+    fetch('https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => {
+        res.json();
+        console.log('res.json(): ', res);
+      })
+      .then(() => {
+        setFileList([]);
+        //  message.success('upload successfully.');
+        count++;
+      })
+      .catch(() => {
+        //   message.error('upload failed.');
+      })
+      .finally(() => {
+        //setUploading(false);
+        //  console.log('finaly');
+      });
+
+    setIsFetching(true);
+    const res = await updateSiteService(http, params.id, values);
+    if (res.data && res.status === STATUS_OK) {
+      setIsFetching(false);
+      openNotification('top', `${tM('update_susses')}`, 'success');
+
+      console.log('update site success', res.status);
+    } else {
+      openNotification('top', `${tM('update_error')}`, 'error');
+
+      console.log('update site fail', res.status);
+    }
   };
 
   const handleConfirmPosition = async () => {
@@ -124,16 +192,40 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     const res = await addPositionService(http, params.id, payLoadAddPos);
     if (res?.status === STATUS_CREATED) {
       console.log('thanh cong');
+      message.success('Upload new position successfully.');
       setStateBtnConfirm(true);
       setDisplayMarker(false);
       fetchSitesDetails(http, params.id, form);
     }
+
     // console.log('res click, ', res);
     // console.log('payLoadAddPos, ', payLoadAddPos);
   };
+  //  console.log('fileList out return: ', fileList);
 
+  // console.log('fileList all: ', fileList[0]?.status);
+  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as FileType);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
   return (
     <>
+      {contextHolder}
+
       <Content>
         <BreadcrumbArgiFarm
           subPath={SITE_MAP_PATH}
@@ -147,10 +239,10 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
             <MapBoxAgriFarm
               onLoaded={handleMapLoading}
               loadingMap={loadingMap}
-              latInit={sitesDetail?.positions[0]?.lat}
-              lngInit={sitesDetail?.positions[0]?.long}
+              latInit={sitesDetail?.positions[0]?.lat || (latitude as number)}
+              lngInit={sitesDetail?.positions[0]?.long || (longitude as number)}
               zoom={7}
-              // style={{ width: '100%', height: 400, margin: '25px 0' }}
+              style={{ width: '100%', height: 530, margin: '25px 0' }}
             >
               {sitesDetail?.positions[0] ? (
                 <Marker
@@ -173,7 +265,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
               <GeocoderControl
                 mapboxAccessToken={MAPBOX_TOKEN}
                 position='top-right'
-                marker={displayMarker}
+                marker={true}
+                displayMarker={displayMarker}
                 latFromUpdate={sitesDetail?.positions[0]?.lat || 0}
                 lngFromUpdate={sitesDetail?.positions[0]?.long || 0}
                 onMarkerDragStart={onMarkerDragStart}
@@ -205,7 +298,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
               theme={{
                 components: {
                   Form: {
-                    itemMarginBottom: 10,
+                    itemMarginBottom: 15,
                     verticalLabelPadding: '0 0 0',
                     labelFontSize: 15,
                     labelColor: 'rgb(133, 133, 133)'
@@ -222,12 +315,25 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                 layout='vertical'
               >
                 <Form.Item
-                  name='avatar'
+                  name='avatarImg'
                   label={<TitleLabelFormItem name='Avatar Farm'></TitleLabelFormItem>}
                   valuePropName='fileList'
                   getValueFromEvent={getFile}
                 >
-                  <UploadImgAgri action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188' />
+                  {/* action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188' */}
+                  <UploadImgAgri
+                    // customRequest={(i: any) => {
+                    //   setFileList([i.file]);
+                    // }}
+                    //  fileList={fileList}
+                    onChange={onChange}
+                    onPreview={onPreview}
+                    beforeUpload={file => {
+                      setFileList([...fileList, file]);
+
+                      return false;
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   name='siteCode'
@@ -247,17 +353,19 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                 </Form.Item>
                 <Form.Item
                   name='description'
-                  label={<TitleLabelFormItem name='description'></TitleLabelFormItem>}
+                  label={<TitleLabelFormItem name='Description'></TitleLabelFormItem>}
                 >
                   <Input size='large' />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                <Form.Item className={cx('mt-30', 'd-flex', 'jus-center')}>
                   <Button
                     type='primary'
                     htmlType='submit'
+                    loading={isFetching}
+                    size='middle'
                   >
-                    Submit
+                    Save Changes
                   </Button>
                 </Form.Item>
               </Form>

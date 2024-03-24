@@ -35,7 +35,9 @@
         "rice_culti": "Nhật ký canh tác lúa",
         "GBG_checklist": "Tiêu chuẩn Global G.A.P",
         "subscription": "Quản lý gói đăng ký",
-        "logout": "Đăng xuất   "
+        "logout": "Đăng xuất   ",
+        "t_content": "Chủ đề tập huấn",
+        "training": "Tập huấn"
     },
     "LocaleSwitcher": {
         "switchLocale": "Convert {locale, select, vi {vi} "
@@ -196,20 +198,16 @@
         "search_condition": "Tìm kiếm và lọc dữ liệu",
         "search_result": "Kết quả tìm kiếm",
         "Delete": "Xóa",
-        "delete": "Xóa",
-        "cancel": "Hủy",
         "Cancel": "Hủy",
         "Description": "Mô tả",
         "History": "Lịch sử",
         "Add_new": "Thêm mới",
-        "add_new": "Thêm mới",
         "keyword": "Từ khóa",
         "Input_search_text":"Nhập từ khóa",
         "Date_of_execution":"Khoảng thời gian",
         "Status": "Trạng thái",
         "Search": "Tìm kiếm",
         "Yes": "Có",
-        "yes": "Có",
         "Pending": "Tạm hoãn",
         "In_progress": "Đang thực hiện",
         "Done": "Hoàn thành",
@@ -231,6 +229,7 @@
         "Submit": "Hoàn thành",
         "save_change": "Lưu thay đổi"
     }
+
 
 
 }

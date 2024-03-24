@@ -1,5 +1,5 @@
 'use client';
-import styles from '../../(SuperAdmin)/management-page.module.scss';
+import styles from '../adminStyle.module.scss';
 import React, { useEffect, useState } from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
@@ -113,7 +113,7 @@ const UserManagement = (props: Props) => {
           icon={<PlusOutlined />}
         />
         <AddUser
-          params={{ 
+          params={{
             siteId: siteId,
             visible: createState,
             onCancel: () => setCreateState(false)
@@ -154,8 +154,8 @@ const UserManagement = (props: Props) => {
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: event => {
-                      console.log('record row onCLick: ', record);
-                      console.log('event row onCLick: ', event);
+                      //   console.log('record row onCLick: ', record);
+                      //  console.log('event row onCLick: ', event);
                       router.push(`${pathName}/update/${record.id}`);
                     }
                   };
@@ -175,7 +175,7 @@ const UserManagement = (props: Props) => {
                   total: users.length
                 }}
                 scroll={{ x: 'max-content' }}
-                className={cx('table_style')}
+                className='table_style'
               />
             </Content>
           </Layout>
