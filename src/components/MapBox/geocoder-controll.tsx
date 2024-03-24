@@ -41,6 +41,8 @@ const defaultProps: Partial<GeocoderControlProps> = {
 /* eslint-disable complexity,max-statements */
 const GeocoderControl = (props: GeocoderControlProps) => {
   const [marker, setMarker] = useState<any>(null);
+  const [checkMarker, setCheckMarker] = useState<boolean>(props.displayMarker as boolean);
+
   const geocoder = useControl<MapboxGeocoder>(
     () => {
       const ctrl = new MapboxGeocoder({
@@ -52,11 +54,12 @@ const GeocoderControl = (props: GeocoderControlProps) => {
       ctrl.on('loading', (event: any) => {
         props.onLoading && props.onLoading(event);
         console.log('loadingGeo: ', event);
+        setCheckMarker(props.displayMarker as boolean);
+        console.log('checkMarker ', checkMarker);
       });
       // @ts-ignore (TS2339) private member
 
       // ctrl.on('results', props.onResults);
-      console.log('props marker', props.marker);
 
       ctrl.on('results', (event: any) => {
         props.onResults && props.onResults(event);
@@ -71,7 +74,7 @@ const GeocoderControl = (props: GeocoderControlProps) => {
           result &&
           (result.center ||
             (result.geometry?.type === 'Point' && result.geometry.coordinates));
-        if (location && props.marker) {
+        if (location && props.marker && props.displayMarker) {
           console.log('if true');
 
           setMarker(
@@ -85,9 +88,11 @@ const GeocoderControl = (props: GeocoderControlProps) => {
               onDragEnd={props.onMarkerDragEnd}
             />
           );
-        } else {
+        } else if (props.displayMarker === false) {
           console.log('else falsy else falsyelse falsyelse falsyelse falsyelse falsy');
 
+          setMarker(null);
+        } else {
           setMarker(null);
         }
       });
@@ -160,9 +165,9 @@ const GeocoderControl = (props: GeocoderControlProps) => {
     //   geocoder.setWorldview(props.worldview);
     // }
   }
-  console.log('props marker', marker);
+  console.log('props marker disp: ', props.displayMarker);
 
-  return marker ? marker : '';
+  return props.displayMarker ? marker : '';
 };
 
 GeocoderControl.defaultProps = defaultProps;

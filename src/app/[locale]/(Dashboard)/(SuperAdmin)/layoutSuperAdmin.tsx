@@ -11,6 +11,7 @@ import Loader from '@/components/Loader/Loader';
 import SAdminSider from '../../Layouts/SAdmin/Sider/SASider';
 import { usePathname } from '@/navigation';
 import BreadcrumbComponent from '../(Admin)/staff/components/Breadcrumb/breadCrumb';
+import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
 
 export default function LayoutSuperAdmin({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -51,6 +52,7 @@ export default function LayoutSuperAdmin({ children }: { children: React.ReactNo
               />
             }
           >
+            <MenuHeaderLocale path={pathName} />
             {children}
           </Suspense>
         </Content>

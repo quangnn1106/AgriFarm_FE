@@ -15,7 +15,7 @@ type Props = {
 
 const Loader = (props: Props) => {
   const { spinning, fullScreen, style, className } = props;
-  console.log('render loader');
+  // console.log('render loader');
 
   return loaderTheme(
     <Spin

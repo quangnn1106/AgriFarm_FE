@@ -35,7 +35,9 @@
         "rice_culti": "Nhật ký canh tác lúa",
         "GBG_checklist": "Tiêu chuẩn Global G.A.P",
         "subscription": "Quản lý gói đăng ký",
-        "logout": "Đăng xuất   "
+        "logout": "Đăng xuất   ",
+        "t_content": "Chủ đề tập huấn",
+        "training": "Tập huấn"
     },
     "LocaleSwitcher": {
         "switchLocale": "Convert {locale, select, vi {vi} "
@@ -181,61 +183,52 @@
         "email_valid": "Sai định dạng email"
     },
     "Season": {
-      "home": "Trang chủ",
       "season": "Mùa vụ",
-      "search_condition": "Tìm kiếm và lọc dữ liệu",
-      "search_result": "Kết quả tìm kiếm",
-      "Delete": "Xóa",
       "delete_confirm_sentence": "Bạn muốn xóa những mùa vụ này?",
-      "Yes": "Có",
-      "Cancel": "Hủy",
-      "Add_new": "Thêm mới",
-      "keyword": "Từ khóa",
-      "Input_search_text":"Nhập từ khóa",
-      "Date_of_execution":"Khoảng thời gian",
-      "Status": "Trạng thái",
-      "Search": "Tìm kiếm",
-      "Pending": "Tạm hoãn",
-      "In_progress": "Đang thực hiện",
-      "Done": "Hoàn thành",
-      "Name": "Tên",
-      "Start_Date": "Ngày bắt đầu",
-      "End_Date": "Ngày kết thúc",
-      "Details": "Chi tiết",
-      "Update": "Cập nhật",
       "Land_name": "Tên khu đất",
-      "Description": "Mô tả",
-      "History": "Lịch sử",
       "Stock": "Số lượng",
       "edit_information":"Chỉnh sửa thông tin",
-      "Title": "Tên",
-      "Start": "Ngày bắt đầu",
-      "End": "Ngày kết thúc",
-      "Period":"Khoảng thời gian",
       "Land_&_Seed": "Chọn đất và giống lúa",
-      "delete_product_confirm":"Bạn có muốn xóa những lựa chọn này ?",
       "Seed_name": "Hạt giống",
-      "Create_successfully":"Tạo thành công!",
-      "Create_fail": "Tạo thất bại",
       "Please_input_season_title!": "Bạn hãy nhập tên mùa vụ!",
-      "Please_select_start_date!": "Bạn hãy nhập ngày bắt đầu!",
-      "Please_select_end_date!": "Bạn hãy nhập ngày kết thúc!",
-      "Add": "Thêm",
-      "Submit": "Hoàn thành",
-      "save_change": "Lưu thay đổi",
       "Add_new_product": "Chọn giống và khu đất"
-      
-
-
-
-
-
-
-
-
-
-
-
+    }, 
+    "Common": {
+        "home": "Trang chủ",
+        "search_condition": "Tìm kiếm và lọc dữ liệu",
+        "search_result": "Kết quả tìm kiếm",
+        "Delete": "Xóa",
+        "Cancel": "Hủy",
+        "Description": "Mô tả",
+        "History": "Lịch sử",
+        "Add_new": "Thêm mới",
+        "keyword": "Từ khóa",
+        "Input_search_text":"Nhập từ khóa",
+        "Date_of_execution":"Khoảng thời gian",
+        "Status": "Trạng thái",
+        "Search": "Tìm kiếm",
+        "Yes": "Có",
+        "Pending": "Tạm hoãn",
+        "In_progress": "Đang thực hiện",
+        "Done": "Hoàn thành",
+        "Name": "Tên",
+        "Start_Date": "Ngày bắt đầu",
+        "End_Date": "Ngày kết thúc",
+        "Details": "Chi tiết",
+        "Update": "Cập nhật",
+        "Title": "Tên",
+        "Start": "Ngày bắt đầu",
+        "End": "Ngày kết thúc",
+        "Period":"Khoảng thời gian",
+        "delete_product_confirm":"Bạn có muốn xóa những lựa chọn này ?",
+        "Create_successfully":"Tạo thành công!",
+        "Create_fail": "Tạo thất bại",
+        "Please_select_start_date!": "Bạn hãy nhập ngày bắt đầu!",
+        "Please_select_end_date!": "Bạn hãy nhập ngày kết thúc!",
+        "Add": "Thêm",
+        "Submit": "Hoàn thành",
+        "save_change": "Lưu thay đổi"
     }
+
 
 }
