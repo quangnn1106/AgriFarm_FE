@@ -1,25 +1,20 @@
-import React from 'react';
-import { App, Button, Space } from 'antd';
+/* eslint-disable import/no-anonymous-default-export */
+// Entry component
+import { App } from 'antd';
+import type { MessageInstance } from 'antd/es/message/interface';
+import type { ModalStaticFunctions } from 'antd/es/modal/confirm';
+import type { NotificationInstance } from 'antd/es/notification/interface';
 
-// Sub page
-const MyPage = () => {
-  const { notification } = App.useApp();
+let message: MessageInstance;
+let notification: NotificationInstance;
+let modal: Omit<ModalStaticFunctions, 'warn'>;
 
-  const showNotification = () => {
-    notification.info({
-      message: `Notification topLeft`,
-      description: 'Hello, Ant Design!!'
-    });
-  };
-
-  return (
-    <Space>
-      <Button
-        type='primary'
-        onClick={showNotification}
-      >
-        Open notification
-      </Button>
-    </Space>
-  );
+export default () => {
+  const staticFunction = App.useApp();
+  message = staticFunction.message;
+  modal = staticFunction.modal;
+  notification = staticFunction.notification;
+  return null;
 };
+
+export { message, modal, notification };

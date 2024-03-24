@@ -41,7 +41,7 @@ type Props = {
 };
 const MenuSider = ({ items, path }: Props) => {
   const [current, setCurrent] = useState(`${path}`);
-  console.log(path);
+  // console.log(path);
 
   const onClick: MenuProps['onClick'] = e => {
     console.log('click ', e);

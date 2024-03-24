@@ -24,13 +24,8 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
   },
 
   {
-    title: 'Name',
-    dataIndex: 'name',
-    width: 'max-content'
-  },
-  {
     title: 'Site Name',
-    dataIndex: 'siteName',
+    dataIndex: 'name',
     width: 'max-content'
   },
   {

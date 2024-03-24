@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
-import { Map, Marker } from 'react-map-gl';
+import * as React from 'react';
+import { Map, Marker, ViewState } from 'react-map-gl';
 import Loader from '../Loader/Loader';
 
 type Props = {
@@ -26,19 +26,35 @@ const MapBoxAgriFarm = ({
   lngInit,
   zoom
 }: Props) => {
+  const [viewStateInit, setViewStateInit] = React.useState({
+    latitude: latInit,
+    longitude: lngInit,
+    zoom: zoom
+  });
+  React.useEffect(() => {
+    setViewStateInit((e: any) => ({
+      ...e,
+      latitude: latInit,
+      longitude: lngInit,
+      zoom: zoom
+    }));
+  }, [latInit, lngInit, zoom]);
+
   return (
     <Map
       onResize={e => e.target.resize()}
+      {...viewStateInit}
+      onMove={evt => setViewStateInit(evt.viewState)}
       onLoad={e => {
         if (onLoaded) e.target.once('load', () => onLoaded(e.target));
       }}
-      initialViewState={{
-        // latitude: 9.99763360283688,
-        // longitude: 105.7125548348531,
-        latitude: latInit ? latInit : 9.99763360283688,
-        longitude: lngInit ? lngInit : 105.7125548348531,
-        zoom: zoom
-      }}
+      // initialViewState={{
+      //   // latitude: 9.99763360283688,
+      //   // longitude: 105.7125548348531,
+      //   latitude: viewStateInit?.latitude,
+      //   longitude: viewStateInit?.longitude,
+      //   zoom: zoom
+      // }}
       style={style ? style : { width: '100%', height: 400, margin: '25px 0' }}
       mapStyle='mapbox://styles/mapbox/streets-v11'
       mapboxAccessToken={MAPBOX_TOKEN}
