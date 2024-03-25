@@ -571,13 +571,13 @@ export default function CreateActivityForm(props: IProps) {
         </Col>
       </Row>
       
-      <Form.Item noStyle shouldUpdate>
+      {/* <Form.Item noStyle shouldUpdate>
         {() => (
           <Typography>
             <pre>{JSON.stringify(form.getFieldsValue())}</pre>
           </Typography>
         )}
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 }
