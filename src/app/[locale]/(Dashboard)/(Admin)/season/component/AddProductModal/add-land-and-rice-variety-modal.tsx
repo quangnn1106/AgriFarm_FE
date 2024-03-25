@@ -2,11 +2,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
 import { LandColumn } from './land-table-column';
-import { Land, LandProd, RiceVariety, Seed, SeedPro } from '../../models/season-model';
+import { Land, LandProd, RiceVariety, SeedPro } from '../../models/season-model';
 import React, { useEffect, useState } from 'react';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { ConfigProvider, Form, Input, Modal, Table, notification } from 'antd';
-import fetchListRiceVarietyData from '@/services/Admin/RiceVariety/getRiceVarietyApi';
 import { RiceVarietyColumns } from './rice-variety-table-column';
 import classNames from 'classnames';
 import styles from '../../../../(SuperAdmin)/management-page.module.scss';
@@ -28,6 +27,8 @@ import { STATUS_CREATED } from '@/constants/https';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setProductsAction } from '@/redux/features/season-slice';
 import { useSelector } from 'react-redux';
+import getSeedsApi from '@/services/Admin/Seed/getSeedsApi';
+import { Seed } from '../../../seed/models/seed-models';
 
 // interface Properties {
 
@@ -36,11 +37,10 @@ import { useSelector } from 'react-redux';
 const AddProductSeason = ({
   params
 }: {
-  params: 
-  { 
-    seasonId: string | undefined; 
-    visible: boolean; 
-    onCancel: () => void; 
+  params: {
+    seasonId: string | undefined;
+    visible: boolean;
+    onCancel: () => void;
     isUpdate: boolean;
   };
 }) => {
@@ -48,8 +48,9 @@ const AddProductSeason = ({
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
-  const t = useTranslations('Season');
-  
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
+
   const dispatch = useAppDispatch();
 
   // Get land list data
@@ -80,7 +81,7 @@ const AddProductSeason = ({
 
   const getRiceVarietyData = async (http: AxiosInstance, siteId?: string) => {
     try {
-      const res = await fetchListRiceVarietyData(siteId, http);
+      const res = await getSeedsApi(siteId, http);
       setSeeds(res.data as Seed[]);
       setLoadingSeedData(false);
     } catch (error) {
@@ -143,8 +144,8 @@ const AddProductSeason = ({
     });
   };
 
-  //Handle OK action 
-  
+  //Handle OK action
+
   const onHandleOK = () => {
     setProducts([]);
     selectedLands?.forEach(function (value) {
@@ -159,30 +160,29 @@ const AddProductSeason = ({
         }
       });
     });
-    dispatch(setProductsAction(products)) ;
-    console.log('Product current: ',productGlobal);
+    dispatch(setProductsAction(products));
+    console.log('Product current: ', productGlobal);
     if (params.isUpdate) {
       try {
-        products?.map( async (item, idx) => {
+        products?.map(async (item, idx) => {
           const res = await createProductApi(http, params.seasonId, item);
-            if (res?.data || res?.status === STATUS_CREATED) {
-              params.onCancel();
-              console.log('update staff success', res.status);
-            } else {
-              openNotification('top', `${tM('update_error')}`, 'error');
-              params.onCancel();
-              console.log('update staff fail', res.status);
-            }
+          if (res?.data || res?.status === STATUS_CREATED) {
+            params.onCancel();
+            console.log('update staff success', res.status);
+          } else {
+            openNotification('top', `${tM('update_error')}`, 'error');
+            params.onCancel();
+            console.log('update staff fail', res.status);
+          }
         });
         openNotification('top', `${tM('update_susses')}`, 'success');
-
-    } catch (error) {
-      console.error('Error occurred while updating season:', error);
-    }
+      } catch (error) {
+        console.error('Error occurred while updating season:', error);
+      }
     } else {
       params.onCancel();
     }
-  }
+  };
 
   return (
     <>
@@ -201,7 +201,7 @@ const AddProductSeason = ({
         }}
       >
         <Modal
-          title={t('Add_new_product')}
+          title={tSeason('Add_new_product')}
           open={params.visible}
           onCancel={params.onCancel}
           onOk={onHandleOK}

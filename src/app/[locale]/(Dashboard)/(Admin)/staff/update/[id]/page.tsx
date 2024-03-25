@@ -91,7 +91,7 @@ const UpdateUser = ({
   params: { id: string; visible: boolean; onCancel: () => void };
 }) => {
   const { data: session } = useSession();
-  const sideId = session?.user.userInfo.siteId;
+  const siteId = session?.user.userInfo.siteId;
   const dateFormat = 'YYYY/MM/DD';
   const [form] = Form.useForm();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
@@ -170,12 +170,12 @@ const UpdateUser = ({
   useEffect(() => {
     const fetchStaffsDetails = async (
       http: AxiosInstance,
-      sideId?: string,
+      siteId?: string,
       userId?: string,
       form?: FormInstance
     ) => {
       try {
-        const responseData = await getStaffsServiceDetails(sideId, http, userId);
+        const responseData = await getStaffsServiceDetails(siteId, http, userId);
         if (responseData.status === STATUS_OK) {
         //  console.log('status ok: ', responseData?.data);
           setStaffDetail(responseData?.data as StaffsDetails);
@@ -194,12 +194,12 @@ const UpdateUser = ({
       }
     };
 
-    fetchStaffsDetails(http, sideId, params.id, form);
+    fetchStaffsDetails(http, siteId, params.id, form);
   }, [
     form,
     http,
     params.id,
-    sideId,
+    siteId,
     staffsDetail?.dob,
     staffsDetail?.isLockout,
     staffsDetail?.onboarding

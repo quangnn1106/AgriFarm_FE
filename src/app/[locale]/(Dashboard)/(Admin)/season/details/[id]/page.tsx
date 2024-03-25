@@ -70,7 +70,8 @@ const SeasonDetails = ({
 }: {
   params: { id: string; visible: boolean; onCancel: () => void };
 }) => {
-  const t = useTranslations('Season');
+  const t = useTranslations('Common');
+  const tSeason = useTranslations('Season');
   const tM = useTranslations('Message');
   const cx = classNames.bind(styles);
 
@@ -386,7 +387,7 @@ const SeasonDetails = ({
                 </Form.Item>
               </Flex>
 
-              <label>{t('Land_&_Seed')}</label>
+              <label>{tSeason('Land_&_Seed')}</label>
               <Flex
                 align='center'
                 justify='flex-start'

@@ -1,5 +1,5 @@
 
-import { Seed } from "@/app/[locale]/(Dashboard)/(Admin)/season/models/season-model";
+import { Seed } from "@/app/[locale]/(Dashboard)/(Admin)/seed/models/seed-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
@@ -10,7 +10,7 @@ export interface Pagination {
     TotalPages: number;
   }
 
-const fetchListRiceVarietyData: (
+const getSeedsApi: (
     siteId?: string | null,
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<Seed[]>> = async (siteId, http) => {
@@ -20,16 +20,6 @@ const fetchListRiceVarietyData: (
               siteId: siteId
             }
         });
-        // const riceVarietyList : RiceVariety[] = [];
-        // for (let i = 0; i < 10; i++) {
-        //     riceVarietyList.push({
-        //         id: 'IDA'+i,
-        //         name: 'Tai Nguyen',
-        //         stock: 20,
-        //         description: 'Bạn hãy trồng lúa này trong 3 tháng, sẽ được hạt gạo thơm, dẻo ngon nhất Việt Nam'
-        //     });
-        // }
-        // return riceVarietyList;
         return res?.data;
 
     } catch (error: unknown) {
@@ -41,4 +31,4 @@ const fetchListRiceVarietyData: (
         }
     }
 }
-export default fetchListRiceVarietyData;
+export default getSeedsApi;
