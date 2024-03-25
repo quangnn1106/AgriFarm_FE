@@ -8,13 +8,14 @@ import {
   Space,
   Button,
   Typography,
-  notification
+  notification,
+  Tooltip
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { Axios, AxiosInstance } from 'axios';
 import getSeedDetailApi from '@/services/Admin/Seed/getSeedDetailApi';
 import { STATUS_OK } from '@/constants/https';
@@ -25,6 +26,10 @@ import {
 } from '@/services/Admin/Seed/updateSeedApi';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { SegmentedLabeledOption } from 'antd/es/segmented';
+import classNames from 'classnames/bind';
+import styles from '../../../adminStyle.module.scss';
+import AddSeedSupplyModal from '../UpdateSeedSupplyModal/add-supply-modal';
+
 
 const UpdateSeedFormDrawer = ({
   params
@@ -33,6 +38,7 @@ const UpdateSeedFormDrawer = ({
     seedId: string;
   };
 }) => {
+  const cx = classNames.bind(styles);
   const t = useTranslations('Common');
   const tM = useTranslations('Message');
 
@@ -43,10 +49,7 @@ const UpdateSeedFormDrawer = ({
   const [seedDetail, setSeedDetail] = useState<Seed>();
 
 
-  useEffect(() => {
-    getSeedDetailData(http, params.seedId, formInfoCommon);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [http, params.seedId, formInfoCommon]);
+
 
   const getSeedDetailData = async (
     http: AxiosInstance,
@@ -129,6 +132,17 @@ const UpdateSeedFormDrawer = ({
       <Input />
     </Form.Item>
   );
+
+  //handle update supply
+  const [showAddSupply, setShowAddSupply] = useState(false);
+  const showAddSupplyModal = () => {
+    setShowAddSupply(true);
+  }
+
+  useEffect(() => {
+    getSeedDetailData(http, params.seedId, formInfoCommon);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [http, params.seedId, formInfoCommon, showAddSupply]);
 
   return (
     <>
@@ -258,6 +272,18 @@ const UpdateSeedFormDrawer = ({
             Save
           </Button>
         </Form>
+        <Tooltip title='Add More Supply'>
+            <Button
+              className={cx('bg-btn')}
+              icon={<PlusOutlined />}
+              onClick={showAddSupplyModal}
+            />
+          </Tooltip>
+          <AddSeedSupplyModal params={{
+          seedId: params.seedId,
+          visible: showAddSupply,
+          onCancel: (()=>{ setShowAddSupply(false) })
+        }}></AddSeedSupplyModal>
       </Spin>
     </>
   );

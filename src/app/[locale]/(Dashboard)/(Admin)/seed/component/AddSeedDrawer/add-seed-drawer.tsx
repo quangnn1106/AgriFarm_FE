@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+'use client';
 import UseAxiosAuth from '@/utils/axiosClient';
 import {
   Form,
@@ -50,38 +52,40 @@ const AddSeedFormDrawer = () => {
     });
   };
 
-    //Set selection supplier
-    let options: SelectProps['options'] = [];
+  //Set selection supplier
+  const [listSupplier, setListSupplier] = useState<SupplierResponse[]>([]);
+  const [options, setOptions] = useState<SelectProps['options']>([]);
+  const [selectedSupplier, setSelectedSupplier] = useState<string>('');
 
-    const setSupplierOptions = (suppliers: SupplierResponse[] | undefined) => {
-      options = [];
-      suppliers?.map((item, idx) => {
-        options?.push({
-            label: item.name,
-            value: item.id
-          });
-        });
-        console.log('Options: ', options);
-        setIsFetching(false);
-    }
+  useEffect(() => {
+    getListSupplier(http);
+  }, [http, isFetching]);
 
   //get list suppliers
   const getListSupplier = async (http: AxiosInstance) => {
-      try {
-          await getSuppliersApi(http).then((res)=> {
+    try {
+      await getSuppliersApi(http).then(res => {
+        console.log('supplier: ', res?.data);
+        setListSupplier(res?.data as SupplierResponse[]);
+        setSupplierOptions(res?.data as SupplierResponse[]);
+      });
+    } catch (error) {
+      console.error('Error occurred while get list supplier:', error);
+    }
+  };
 
-            console.log('supplier: ', res?.data);
-            setSupplierOptions(res?.data as SupplierResponse[])
-          });
-          
-      } catch (error) {
-        console.error('Error occurred while get list supplier:', error);
-      }
-  }
-
-
-
-  const [selectedSupplier, setSelectedSupplier] = useState<string>('');
+  const setSupplierOptions = (suppliers: SupplierResponse[] | undefined) => {
+    const updatedOptions: SelectProps['options'] = [];
+    suppliers?.map((item, idx) => {
+      updatedOptions?.push({
+        value: item.id,
+        label: item.name
+      });
+    });
+    setOptions(updatedOptions);
+    console.log('Options: ', options);
+    setIsFetching(false);
+  };
 
   //Setup create seed info
 
@@ -100,10 +104,6 @@ const AddSeedFormDrawer = () => {
   //   }
   // };
 
-  useEffect(()=>{
-    getListSupplier(http);
-  },[http, isFetching])
-
   const [createdSeed, setCreatedSeed] = useState<Seed>();
 
   const onSubmit = async (value: CreateAllInfoOfSeedDto) => {
@@ -115,14 +115,15 @@ const AddSeedFormDrawer = () => {
         defaultUnit: value.defaultUnit,
         properties: value.properties
       }).then(async res => {
-        setCreatedSeed(res.data as Seed);
-        await createSupplyInfoApi(createdSeed?.id, http, {
-          quantity: value.quantity,
+        const seedNew = res?.data as Seed;
+        // setCreatedSeed(res.data as Seed);
+        await createSupplyInfoApi(seedNew.id , http, {
+          quanlity: value.quantity,
           unitPrice: value.unitPrice,
           measureUnit: value.measureUnit,
           content: value.content,
           supplier: {
-            id: value.supplier.id,
+            id: value.supplierId,
             name: value.supplierName,
             address: value.address
           }
@@ -134,7 +135,7 @@ const AddSeedFormDrawer = () => {
             openNotification('top', t('Create_fail'), 'error');
             console.log('create staff fail', res.status);
           }
-        })  
+        });
       });
     } catch (error) {
       console.error('Error occurred while updating season:', error);
@@ -159,230 +160,223 @@ const AddSeedFormDrawer = () => {
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
-      <Form
-        disabled={!componentDisabled}
-        form={form}
-        colon={false}
-        layout='vertical'
-        onFinish={onSubmit}
-      >
-        <Form.Item
-          name='name'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Name'
+        <Form
+          disabled={!componentDisabled}
+          form={form}
+          colon={false}
+          layout='vertical'
+          onFinish={onSubmit}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name='description'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label={t('Description')}
-        >
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item
-          name='notes'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Notes'
-        >
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item
-          name='defaultUnit'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Unit'
-        >
-          <Select
-            options={[
-              {
-                value: 'kg',
-                label: 'kg'
-              }
-            ]}
-          ></Select>
-        </Form.Item>
-        <label>Properties</label>
-        <Form.List name='properties'>
-          {(fields, { add, remove }) => (
-            <div>
-              {fields.map(field => (
-                <Space
-                  key={field.key}
-                  style={{ display: 'flex', marginBottom: '4px' }}
-                  align='baseline'
-                >
-                  <Form.Item
-                    name={[field.name, 'name']}
-                    rules={[{ required: true, message: 'Missing name' }]}
-                  >
-                    <Input placeholder='Name' />
-                  </Form.Item>
-                  <Form.Item
-                    name={[field.name, 'value']}
-                    rules={[{ required: true, message: 'Missing value' }]}
-                  >
-                    <InputNumber placeholder='Value' />
-                  </Form.Item>
-                  <Form.Item
-                    name={[field.name, 'unit']}
-                    rules={[{ required: true, message: 'Missing unit' }]}
-                  >
-                    <Input placeholder='Unit' />
-                  </Form.Item>
-                  <CloseOutlined
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  />
-                </Space>
-              ))}
-              <Button
-                type='dashed'
-                onClick={() => add()}
-                block
-              >
-                + Add new property
-              </Button>
-            </div>
-          )}
-        </Form.List>
-        <Form.Item
-          name='quantity'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Quantity'
-        >
-          <InputNumber placeholder='Quantity' />
-        </Form.Item>
-        <Form.Item
-          name='unitPrice'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='UnitPrice'
-        >
-          <InputNumber placeholder='UnitPrice' />
-        </Form.Item>
-        <Form.Item
-          name='measureUnit'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='MeasureUnit'
-        >
-          <Select
-            options={[
-              {
-                value: 'kg',
-                label: 'kg'
-              }
-            ]}
-          ></Select>
-        </Form.Item>
-        <Form.Item
-          name='content'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Content'
-        >
-          <TextArea placeholder='Content' rows={4} />
-        </Form.Item>
-        <Form.Item
-          name='supplier'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Supplier'
-        >
-          <Select
-           onChange={(value: string) => {
-             setSelectedSupplier(value);
-           }}
-           placeholder="select one country"
-           optionLabelProp="label"
-           options={options} 
-          >
-          </Select>
           <Form.Item
-          noStyle
-          shouldUpdate
-        >
-          {() => (
-            <Typography>
-              <pre>{JSON.stringify(options)}</pre>
-            </Typography>
-          )}
-        </Form.Item>
-        </Form.Item>
-        <Form.Item
-          name='supplierName'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='supplierName'
-        >
-          <Input placeholder='supplierName' />
-        </Form.Item>
-        <Form.Item
-          name='address'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='address'
-        >
-          <Input placeholder='address' />
-        </Form.Item>
+            name='name'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Name'
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name='description'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label={t('Description')}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item
+            name='notes'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Notes'
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item
+            name='defaultUnit'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Unit'
+          >
+            <Select
+              options={[
+                {
+                  value: 'kg',
+                  label: 'kg'
+                }
+              ]}
+            ></Select>
+          </Form.Item>
+          <label>Properties</label>
+          <Form.List name='properties'>
+            {(fields, { add, remove }) => (
+              <div>
+                {fields.map(field => (
+                  <Space
+                    key={field.key}
+                    style={{ display: 'flex', marginBottom: '4px' }}
+                    align='baseline'
+                  >
+                    <Form.Item
+                      name={[field.name, 'name']}
+                      rules={[{ required: true, message: 'Missing name' }]}
+                    >
+                      <Input placeholder='Name' />
+                    </Form.Item>
+                    <Form.Item
+                      name={[field.name, 'value']}
+                      rules={[{ required: true, message: 'Missing value' }]}
+                    >
+                      <InputNumber placeholder='Value' />
+                    </Form.Item>
+                    <Form.Item
+                      name={[field.name, 'unit']}
+                      rules={[{ required: true, message: 'Missing unit' }]}
+                    >
+                      <Input placeholder='Unit' />
+                    </Form.Item>
+                    <CloseOutlined
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  </Space>
+                ))}
+                <Button
+                  type='dashed'
+                  onClick={() => add()}
+                  block
+                >
+                  + Add new property
+                </Button>
+              </div>
+            )}
+          </Form.List>
+          <Form.Item
+            name='quantity'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Quantity'
+          >
+            <InputNumber placeholder='Quantity' />
+          </Form.Item>
+          <Form.Item
+            name='unitPrice'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='UnitPrice'
+          >
+            <InputNumber placeholder='UnitPrice' />
+          </Form.Item>
+          <Form.Item
+            name='measureUnit'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='MeasureUnit'
+          >
+            <Select
+              options={[
+                {
+                  value: 'kg',
+                  label: 'kg'
+                }
+              ]}
+            ></Select>
+          </Form.Item>
+          <Form.Item
+            name='content'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Content'
+          >
+            <TextArea
+              placeholder='Content'
+              rows={4}
+            />
+          </Form.Item>
+          <Form.Item
+            name='supplier'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='Supplier'
+          >
+            <Select
+              // onChange={(value: string) => {
+              //   setSelectedSupplier(value);
+              // }}
+              placeholder='select one country'
+              optionLabelProp='label'
+              options={options}
+              value={selectedSupplier}
+            ></Select>
+          </Form.Item>
+          <Form.Item
+            name='supplierName'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='supplierName'
+          >
+            <Input placeholder='supplierName' />
+          </Form.Item>
+          <Form.Item
+            name='address'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label='address'
+          >
+            <Input placeholder='address' />
+          </Form.Item>
 
-        <Form.Item
-          noStyle
-          shouldUpdate
-        >
-          {() => (
-            <Typography>
-              <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-            </Typography>
-          )}
-        </Form.Item>
-        <Button
-          htmlType='submit'
-          type='primary'
-          loading={isFetching}
-        >
-          Save
-        </Button>
-      </Form>
+          <Form.Item
+            noStyle
+            shouldUpdate
+          >
+            {() => (
+              <Typography>
+                <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+              </Typography>
+            )}
+          </Form.Item>
+          <Button
+            htmlType='submit'
+            type='primary'
+            loading={isFetching}
+          >
+            Save
+          </Button>
+        </Form>
       </Spin>
     </>
   );

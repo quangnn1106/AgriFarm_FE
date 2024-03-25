@@ -32,11 +32,20 @@ export interface Seed {
   }
 
   export interface CreateSupplierDto {
-    quantity: number
+    quanlity: number
     unitPrice: number
     measureUnit: string
     content: string
     supplier: Supplier
+  }
+  export interface CreateSupplierMapper {
+    quantity: number
+    unitPrice: number
+    measureUnit: string
+    content: string
+    supplierId: string
+    supplierName: string
+    address: string
   }
   
   export interface Supplier {
@@ -55,7 +64,7 @@ export interface Seed {
     unitPrice: number
     measureUnit: string
     content: string
-    supplier: Supplier
+    supplierId: string
     supplierName: string
     address: string
   }
