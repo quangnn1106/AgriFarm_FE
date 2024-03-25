@@ -285,9 +285,9 @@ const SeedManagement = (props: Props) => {
         onClose={closeSeedDetailDrawer}
         open={openSeedDetailDrawer}
       >
-        <SeedDetailFormDrawer params={{
+       <UpdateSeedFormDrawer params={{
             seedId: seedId
-          }} ></SeedDetailFormDrawer>
+          }}></UpdateSeedFormDrawer>
       </Drawer>
       <Drawer
         title="Add Seed"
@@ -297,18 +297,6 @@ const SeedManagement = (props: Props) => {
         open={openAddSeed}
       >
         <AddSeedFormDrawer></AddSeedFormDrawer>
-      </Drawer>
-      {/* UpdateSeedFormDrawer */}
-      <Drawer
-        title="Update seed"
-        placement="right"
-        width={500}
-        onClose={closeSeedUpdateDrawer}
-        open={openSeedUpdateDrawer}
-      >
-        <UpdateSeedFormDrawer params={{
-            seedId: seedId
-          }}></UpdateSeedFormDrawer>
       </Drawer>
       </Content>
     </>

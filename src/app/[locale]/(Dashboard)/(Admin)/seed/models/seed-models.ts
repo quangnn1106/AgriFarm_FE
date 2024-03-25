@@ -40,7 +40,22 @@ export interface Seed {
   }
   
   export interface Supplier {
+    id: string
     name: string
     address: string
   }
   
+  export interface CreateAllInfoOfSeedDto {
+    name: string
+    description: string
+    notes: string
+    defaultUnit: string
+    properties: Property[]
+    quantity: number
+    unitPrice: number
+    measureUnit: string
+    content: string
+    supplier: Supplier
+    supplierName: string
+    address: string
+  }

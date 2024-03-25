@@ -8,22 +8,28 @@ import {
   Space,
   Button,
   Typography,
-  notification
+  notification,
+  Select,
+  SelectProps
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
-import { CreateSeedDto } from '../../models/seed-models';
+import { CreateAllInfoOfSeedDto, CreateSeedDto, Seed } from '../../models/seed-models';
 import { createSeedApi } from '@/services/Admin/Seed/createSeedApi';
 import { useSession } from 'next-auth/react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
+import { SupplierResponse } from '../../../supply/models/supplier-models';
+import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
+import { AxiosInstance } from 'axios';
+import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';
 
 const AddSeedFormDrawer = () => {
   const t = useTranslations('Common');
 
-  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [form] = Form.useForm();
   const http = UseAxiosAuth();
@@ -44,16 +50,92 @@ const AddSeedFormDrawer = () => {
     });
   };
 
-  const onSubmit = async (value: CreateSeedDto) => {
-    try {
-      const res = await createSeedApi(siteId, http, value);
-      if (res.data) {
-        openNotification('top', t('Create_successfully'), 'success');
-        console.log('create staff success', res.status);
-      } else {
-        openNotification('top', t('Create_fail'), 'error');
-        console.log('create staff fail', res.status);
+    //Set selection supplier
+    let options: SelectProps['options'] = [];
+
+    const setSupplierOptions = (suppliers: SupplierResponse[] | undefined) => {
+      options = [];
+      suppliers?.map((item, idx) => {
+        options?.push({
+            label: item.name,
+            value: item.id
+          });
+        });
+        console.log('Options: ', options);
+        setIsFetching(false);
+    }
+
+  //get list suppliers
+  const getListSupplier = async (http: AxiosInstance) => {
+      try {
+          await getSuppliersApi(http).then((res)=> {
+
+            console.log('supplier: ', res?.data);
+            setSupplierOptions(res?.data as SupplierResponse[])
+          });
+          
+      } catch (error) {
+        console.error('Error occurred while get list supplier:', error);
       }
+  }
+
+
+
+  const [selectedSupplier, setSelectedSupplier] = useState<string>('');
+
+  //Setup create seed info
+
+  // const onSubmit = async (value: CreateSeedDto) => {
+  //   try {
+  //     const res = await createSeedApi(siteId, http, value);
+  //     if (res.data) {
+  //       openNotification('top', t('Create_successfully'), 'success');
+  //       console.log('create staff success', res.status);
+  //     } else {
+  //       openNotification('top', t('Create_fail'), 'error');
+  //       console.log('create staff fail', res.status);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error occurred while updating season:', error);
+  //   }
+  // };
+
+  useEffect(()=>{
+    getListSupplier(http);
+  },[http, isFetching])
+
+  const [createdSeed, setCreatedSeed] = useState<Seed>();
+
+  const onSubmit = async (value: CreateAllInfoOfSeedDto) => {
+    try {
+      await createSeedApi(siteId, http, {
+        name: value.name,
+        description: value.description,
+        notes: value.notes,
+        defaultUnit: value.defaultUnit,
+        properties: value.properties
+      }).then(async res => {
+        setCreatedSeed(res.data as Seed);
+        await createSupplyInfoApi(createdSeed?.id, http, {
+          quantity: value.quantity,
+          unitPrice: value.unitPrice,
+          measureUnit: value.measureUnit,
+          content: value.content,
+          supplier: {
+            id: value.supplier.id,
+            name: value.supplierName,
+            address: value.address
+          }
+        }).then(resSupplier => {
+          if (res.data && resSupplier.data) {
+            openNotification('top', t('Create_successfully'), 'success');
+            console.log('create staff success', res.status);
+          } else {
+            openNotification('top', t('Create_fail'), 'error');
+            console.log('create staff fail', res.status);
+          }
+        })  
+      });
     } catch (error) {
       console.error('Error occurred while updating season:', error);
     }
@@ -76,7 +158,7 @@ const AddSeedFormDrawer = () => {
   return (
     <>
       {contextHolder}
-
+      <Spin spinning={isFetching}>
       <Form
         disabled={!componentDisabled}
         form={form}
@@ -126,30 +208,15 @@ const AddSeedFormDrawer = () => {
           }}
           label='Unit'
         >
-          <Input />
+          <Select
+            options={[
+              {
+                value: 'kg',
+                label: 'kg'
+              }
+            ]}
+          ></Select>
         </Form.Item>
-        {/* <Form.Item
-          name='stock'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Stock'
-        >
-          <InputNumber addonAfter={InputUnit}></InputNumber>
-        </Form.Item>
-        <Form.Item
-          name='unitPrice'
-          style={{
-            maxWidth: '100%',
-            margin: '0px 0px 8px 0px',
-            padding: '0px 0px'
-          }}
-          label='Unit Price'
-        >
-          <InputNumber addonAfter='VND'></InputNumber>
-        </Form.Item> */}
         <label>Properties</label>
         <Form.List name='properties'>
           {(fields, { add, remove }) => (
@@ -195,6 +262,108 @@ const AddSeedFormDrawer = () => {
             </div>
           )}
         </Form.List>
+        <Form.Item
+          name='quantity'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='Quantity'
+        >
+          <InputNumber placeholder='Quantity' />
+        </Form.Item>
+        <Form.Item
+          name='unitPrice'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='UnitPrice'
+        >
+          <InputNumber placeholder='UnitPrice' />
+        </Form.Item>
+        <Form.Item
+          name='measureUnit'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='MeasureUnit'
+        >
+          <Select
+            options={[
+              {
+                value: 'kg',
+                label: 'kg'
+              }
+            ]}
+          ></Select>
+        </Form.Item>
+        <Form.Item
+          name='content'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='Content'
+        >
+          <TextArea placeholder='Content' rows={4} />
+        </Form.Item>
+        <Form.Item
+          name='supplier'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='Supplier'
+        >
+          <Select
+           onChange={(value: string) => {
+             setSelectedSupplier(value);
+           }}
+           placeholder="select one country"
+           optionLabelProp="label"
+           options={options} 
+          >
+          </Select>
+          <Form.Item
+          noStyle
+          shouldUpdate
+        >
+          {() => (
+            <Typography>
+              <pre>{JSON.stringify(options)}</pre>
+            </Typography>
+          )}
+        </Form.Item>
+        </Form.Item>
+        <Form.Item
+          name='supplierName'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='supplierName'
+        >
+          <Input placeholder='supplierName' />
+        </Form.Item>
+        <Form.Item
+          name='address'
+          style={{
+            maxWidth: '100%',
+            margin: '0px 0px 8px 0px',
+            padding: '0px 0px'
+          }}
+          label='address'
+        >
+          <Input placeholder='address' />
+        </Form.Item>
 
         <Form.Item
           noStyle
@@ -214,6 +383,7 @@ const AddSeedFormDrawer = () => {
           Save
         </Button>
       </Form>
+      </Spin>
     </>
   );
 };

@@ -24,6 +24,7 @@ import {
   updateSeedPropertyApi
 } from '@/services/Admin/Seed/updateSeedApi';
 import { NotificationPlacement } from 'antd/es/notification/interface';
+import { SegmentedLabeledOption } from 'antd/es/segmented';
 
 const UpdateSeedFormDrawer = ({
   params
@@ -38,13 +39,9 @@ const UpdateSeedFormDrawer = ({
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [formInfoCommon] = Form.useForm();
-  const [formSeedProps] = Form.useForm();
-
   const http = UseAxiosAuth();
-
   const [seedDetail, setSeedDetail] = useState<Seed>();
-  const [updatedSeed, setUpdateSeed] = useState<UpdateSeedDto>();
-  const [updatedSeedProps, setUpdateSeedProps] = useState<Property[]>([]);
+
 
   useEffect(() => {
     getSeedDetailData(http, params.seedId, formInfoCommon);
@@ -55,34 +52,17 @@ const UpdateSeedFormDrawer = ({
     http: AxiosInstance,
     seedId?: string,
     formInfoCommon?: FormInstance,
-    formSeedProps?: FormInstance
   ) => {
     try {
       const responseData = await getSeedDetailApi(seedId, http);
       if (responseData?.status === STATUS_OK) {
         setSeedDetail(responseData?.data as Seed);
-
-        //const setData = setSeedDetail(responseData?.data as Seed);
-
         console.log('Data', seedDetail);
-        //form
-
         formInfoCommon?.setFieldsValue({
           ...responseData?.data
         });
-        formSeedProps?.setFieldsValue({
-          ...responseData?.data
-        });
-
-        // formSeedProps?.setFieldsValue({
-        //   properties: seedDetail?.properties
-        // });
-
         console.log(formInfoCommon?.getFieldsValue);
       }
-      formSeedProps?.setFieldsValue({
-        properties: seedDetail?.properties
-      });
       setIsFetching(false);
     } catch (error) {
       console.log('Error: :  ', error);
@@ -102,52 +82,39 @@ const UpdateSeedFormDrawer = ({
     });
   };
 
-  const saveInfoCommon = async (value: UpdateSeedDto) => {
-    setIsFetching(true);
-    try {
-      const res = await updateSeedApi(params.seedId, http, value);
-      if (res.data) {
-        setIsFetching(false);
-        openNotification('top', `${tM('update_susses')}`, 'success');
 
-        console.log('update staff success', res.status);
-      } else {
-        openNotification('top', `${tM('update_error')}`, 'error');
-
-        console.log('update staff fail', res.status);
-      }
-    } catch (error) {
-      console.log('Error: :  ', error);
-    }
-  };
-
-  const [seedProps, setSeedProps] = useState<Property[]>([]);
-
-  const saveSeedProps = async (props: Property[]) => {
+  const onFinish = async (props: Seed) => {
     console.log(props);
     setIsFetching(true);
-
     try {
-      const resProps = await updateSeedPropertyApi(params.seedId, http, formInfoCommon.getFieldValue('properties'));
-      if (resProps.data) {
-        setIsFetching(false);
-        openNotification('top', `${tM('update_susses')}`, 'success');
+      await updateSeedApi(params.seedId, http, {
+        name: props.name,
+        description: props.description,
+        notes: props.notes
+      }).then( async res => {
+        await updateSeedPropertyApi(
+          params.seedId,
+          http,
+          props.properties
+        ).then(resProps => {
+          if (resProps.data && res.data) {
+            setIsFetching(false);
+            openNotification('top', `${tM('update_susses')}`, 'success');
 
-        console.log('update staff success', resProps.status);
-      } else {
-        openNotification('top', `${tM('update_error')}`, 'error');
+            console.log('update staff success', resProps.status);
+          } else {
+            openNotification('top', `${tM('update_error')}`, 'error');
 
-        console.log('update staff fail', resProps.status);
-      }
+            console.log('update staff fail', resProps.status);
+          }
+        }).finally(()=> {
+
+        });
+      });
     } catch (error) {
       console.log('Error: :  ', error);
     }
   };
-
-  // const onFinish = (valueA: UpdateSeedDto, valueB: Property[]) => {
-  //   saveInfoCommon(valueA);
-  //   saveSeedProps(valueB);
-  // }
 
   const InputUnit = (
     <Form.Item
@@ -165,13 +132,14 @@ const UpdateSeedFormDrawer = ({
 
   return (
     <>
+      {contextHolder}
       <Spin spinning={isFetching}>
         <Form
           disabled={!componentDisabled}
           form={formInfoCommon}
           colon={false}
           layout='vertical'
-          onFinish={saveInfoCommon}
+          onFinish={onFinish}
         >
           <Form.Item
             name='name'
@@ -206,16 +174,15 @@ const UpdateSeedFormDrawer = ({
           >
             <TextArea rows={4} />
           </Form.Item>
-          <Button
+          {/* <Button
             htmlType='submit'
             type='primary'
             loading={isFetching}
           >
             Save
-          </Button>
-        </Form>
+          </Button> */}
 
-        {/* <Form.Item
+          <Form.Item
             name='stock'
             style={{
               maxWidth: '100%',
@@ -236,14 +203,7 @@ const UpdateSeedFormDrawer = ({
             label='Unit Price'
           >
             <InputNumber addonAfter='VND'></InputNumber>
-          </Form.Item> */}
-        <Form
-          disabled={!componentDisabled}
-          form={formSeedProps}
-          colon={false}
-          layout='vertical'
-          onFinish={saveSeedProps}
-        >
+          </Form.Item>
           <label>Properties</label>
           <Form.List name='properties'>
             {(fields, { add, remove }) => (
@@ -290,17 +250,6 @@ const UpdateSeedFormDrawer = ({
               </div>
             )}
           </Form.List>
-
-          <Form.Item
-            noStyle
-            shouldUpdate
-          >
-            {/* {() => (
-              <Typography>
-                <pre>{JSON.stringify(formSeedProps.getFieldsValue(), null, 2)}</pre>
-              </Typography>
-            )} */}
-          </Form.Item>
           <Button
             htmlType='submit'
             type='primary'

@@ -104,26 +104,6 @@ import { truncate } from 'fs';
             },
             {
               label: (
-                
-                <a
-                  onClick={() => {
-                    // setOpenDrawer(true)
-                    //   console.log(openDrawer);
-                      onUpdateSeed();
-                  } }
-                >
-                  <Space>
-                    <EditOutlined /> {t('Update')}
-                  </Space>
-                </a>
-              ),
-              key: '1'
-            },
-            {
-              type: 'divider'
-            },
-            {
-              label: (
                 <a
                   onClick={() => {
                     Modal.confirm({
@@ -152,7 +132,7 @@ import { truncate } from 'fs';
                   </Space>
                 </a>
               ),
-              key: '2'
+              key: '1'
             }
           ];
         };
