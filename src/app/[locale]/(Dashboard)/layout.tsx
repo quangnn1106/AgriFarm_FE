@@ -5,6 +5,8 @@ import { ReactNode } from 'react';
 import LayoutSuperAdmin from './(SuperAdmin)/layoutSuperAdmin';
 import LayoutAdmin from './(Admin)/layoutAdmin';
 import Loader from '@/components/Loader/Loader';
+import LayoutMember from './(Member)/layoutMember';
+import LayoutManager from './(Manager)/layoutManager';
 
 type Props = {
   children: React.ReactNode;
@@ -29,6 +31,10 @@ export default function DashBoardLayout({ children }: Props) {
         return <LayoutSuperAdmin>{children}</LayoutSuperAdmin>;
       case ROLES.ADMIN:
         return <LayoutAdmin>{children}</LayoutAdmin>;
+      case ROLES.MEMBER:
+        return <LayoutMember>{children}</LayoutMember>;
+      case ROLES.MANAGER:
+        return <LayoutManager>{children}</LayoutManager>;
       default:
         // Default layout for other roles
         return <div>Lỗi rồi fix đi</div>;
