@@ -43,13 +43,13 @@ const RegisterForm: React.FC = () => {
   };
 
   useEffect(() => {
-    // const processPayment = async (http: AxiosInstance) => {
-    //   console.log('Start api thanh toan');
-    //   const res = await paymentApi(http);
-    //   console.log(res);
-    //   window.location.href = res?.data.paymentUrl;
-    //   //   router.push(res?.data?.paymentUrl);
-    // };
+    const processPayment = async (http: AxiosInstance) => {
+      console.log('Start api thanh toan');
+      const res = await paymentApi(http);
+      console.log(res);
+      window.location.href = res?.data.paymentUrl;
+      //   router.push(res?.data?.paymentUrl);
+    };
 
     if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
@@ -57,7 +57,7 @@ const RegisterForm: React.FC = () => {
       setErrorEmail('');
       setErrorFCode('');
       setErrorFName('');
-      //  processPayment(http);
+      processPayment(http);
       //  router.push(SUCCESS_PATH);
 
       const eeee = userRegister?.data as Admin;
@@ -93,10 +93,10 @@ const RegisterForm: React.FC = () => {
 
     const actionAsyncThunk = registerAsyncApi(data);
     dispatch(actionAsyncThunk);
-    console.log('Start api thanh toan');
-    const res = await paymentApi(http);
-    console.log(res);
-    window.location.href = res?.data.paymentUrl;
+    // console.log('Start api thanh toan');
+    // const res = await paymentApi(http);
+    // console.log(res);
+    // window.location.href = res?.data.paymentUrl;
   };
 
   return (

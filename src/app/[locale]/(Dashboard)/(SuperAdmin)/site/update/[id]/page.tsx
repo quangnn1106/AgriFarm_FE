@@ -50,6 +50,7 @@ import useGeolocation from '@/utils/getlocaiton';
 import { updateSiteService } from '@/services/SuperAdmin/Site/updateInforService';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 type Props = {};
@@ -66,7 +67,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const [isFetching, setIsFetching] = useState<boolean | undefined>();
   const { latitude, longitude, error } = useGeolocation();
   const tM = useTranslations('Message');
-
+  const router = useRouter();
   const http = UseAxiosAuth();
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (
@@ -84,8 +85,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     http: AxiosInstance,
     siteId?: string,
     form?: FormInstance,
-    fileList?: any,
-    check?: boolean
+    fileList?: any
   ) => {
     try {
       const responseData = await getSitesService(http, siteId);
@@ -106,7 +106,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   React.useEffect(() => {
     fetchSitesDetails(http, params.id, form, fileList);
-  }, [fileList, form, http, params.id]);
+  }, [fileList, form, http, params.id, router]);
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -195,6 +195,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
       message.success('Upload new position successfully.');
       setStateBtnConfirm(true);
       setDisplayMarker(false);
+      // router.refresh();
+
       fetchSitesDetails(http, params.id, form);
     }
 

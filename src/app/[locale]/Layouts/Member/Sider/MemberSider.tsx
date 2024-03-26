@@ -4,7 +4,7 @@ import { FaMapLocationDot, FaUser, FaClipboard } from 'react-icons/fa6';
 import { MdOutlineFeedback } from 'react-icons/md';
 import { GiHighGrass } from 'react-icons/gi';
 
-import styles from './SASider.module.scss';
+import styles from './MemberSider.module.scss';
 import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
 import { type MenuProps } from 'antd';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ type Props = {
   path: string;
 };
 
-const SAdminSider = ({ path }: Props) => {
+const MemberSider = ({ path }: Props) => {
   const t = useTranslations('Nav');
   const items: MenuProps['items'] = [
     GetUserInfoGroup(),
@@ -57,8 +57,8 @@ const SAdminSider = ({ path }: Props) => {
           <FaClipboard />
         ),
         getItem(
-          <Link href={`/riceplant`}>{t('rice_plant')}</Link>,
-          `/riceplant`,
+          <Link href={`/time-table`}>{t('schedule')}</Link>,
+          `/time-table`,
           <GiHighGrass />
         ),
         getItem(
@@ -85,4 +85,4 @@ const SAdminSider = ({ path }: Props) => {
   );
 };
 
-export default SAdminSider;
+export default MemberSider;
