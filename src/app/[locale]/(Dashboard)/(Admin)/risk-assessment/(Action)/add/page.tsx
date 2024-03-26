@@ -155,7 +155,6 @@ const Add = () => {
           resetForm();
       } catch (error) {
           console.log(error);
-          setLoadingBtn(false);
       } finally {
         setLoadingBtn(false);
       }
@@ -178,12 +177,13 @@ const Add = () => {
         <ColoredLine text={tLbl('basic_information')}/>
         <Form
             labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
             layout="horizontal"
             onFinish={saveAction}
             form={form}
             >
               <Form.Item 
+                wrapperCol={{ span: 8 }}
                 label={tLbl('risk_name')}
                 name="risk_name"
                 rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_name'))}]}
@@ -191,6 +191,7 @@ const Add = () => {
                 <Input onChange={handleInputRiskName}/>
               </Form.Item>
               <Form.Item
+                wrapperCol={{ span: 8 }}
                 label={tLbl('risk_description')}
                 name="risk_description"
                 rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_description'))}]}

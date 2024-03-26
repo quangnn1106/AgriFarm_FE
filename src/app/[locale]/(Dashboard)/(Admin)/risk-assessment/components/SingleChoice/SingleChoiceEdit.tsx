@@ -1,5 +1,5 @@
 'use client'
-import { Button, Col, Flex, Input, Radio, Row, Space } from "antd";
+import { Button, Col, Flex, Form, Input, Radio, Row, Space } from "antd";
 import styles from "../risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
@@ -47,7 +47,15 @@ const SingleChoiceEdit: React.FC<ItemSingleChoice> = ({
         {rows.map((item, index) => {
           return (
           <Row className={cx('row')} key={index}>
-            <Col span={12}><Input defaultValue={item as string} style={{width: "70%"}} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input></Col>
+            <Col span={12}>
+              <Form.Item
+                  name={`risk_item_title_single${index}`}
+                  rules={[{ required: true, message: ""}]}
+                  hasFeedback
+              >
+                <Input defaultValue={item as string} maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
+              </Form.Item>
+            </Col>
             <Col span={12}>
                 <Flex gap="small">
                   <Button type="primary" onClick={handleAddRow}>{tCom('btn_add')}</Button>

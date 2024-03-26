@@ -1,5 +1,5 @@
 'use client'
-import { Button, Col, Flex, Input, Radio, Row, Space } from "antd";
+import { Button, Col, Flex, Form, Input, Radio, Row, Space } from "antd";
 import styles from "../risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
@@ -20,6 +20,7 @@ const SingleChoice: React.FC<ItemSingleChoice> = ({
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
+  const tMsg = useTranslations('Services.RiskAsm.message');
   const [rows, setRows] = useState<Rows[]>(["New Row"]);
 
   const handleAddRow = () => {
@@ -45,7 +46,15 @@ const SingleChoice: React.FC<ItemSingleChoice> = ({
         {rows.map((_, index) => {
           return (
           <Row className={cx('row')} key={index}>
-            <Col span={12}><Input style={{width: "70%"}} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input></Col>
+            <Col span={12}>
+              <Form.Item
+                name={`risk_item_title_single_${index}_${idxItem}`}
+                rules={[{ required: true, message: ""}]}
+                hasFeedback
+              >
+                <Input maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
+              </Form.Item>
+              </Col>
             <Col span={12}>
                 <Flex gap="small">
                   <Button type="primary" onClick={handleAddRow}>{tCom('btn_add')}</Button>

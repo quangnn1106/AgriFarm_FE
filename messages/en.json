@@ -289,7 +289,8 @@
             "msg_delete_success": "Delete success!",
             "msg_delete_fail": "Delete fail!",
             "msg_update_success": "Update success!",
-            "msg_update_fail": "Update fail!"
+            "msg_update_fail": "Update fail!",
+            "msg_item_required": "Item is required!"
           }
         }
     }

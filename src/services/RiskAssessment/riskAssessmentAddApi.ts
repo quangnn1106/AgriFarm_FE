@@ -4,7 +4,7 @@ import { AxiosInstance } from 'axios';
 interface RiskMasterDef {
     riskName: string;
     riskDescription: string;
-    createBy: string,
+    createBy?: string,
     isDraft: boolean,
     riskItems: RiskItemDef[];
 }
