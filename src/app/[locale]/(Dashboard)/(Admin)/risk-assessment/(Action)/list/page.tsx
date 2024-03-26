@@ -190,8 +190,15 @@ const List = () => {
         },
         {
             title: 'Created Date',
-            dataIndex: 'createdDate',
+            // dataIndex: 'createdDate',
             width: '20%',
+            render: (_, item) => {
+                const date = new Date(item.createdDate);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
         },
         {
             title: '',

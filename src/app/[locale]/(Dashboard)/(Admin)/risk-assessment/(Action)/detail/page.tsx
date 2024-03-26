@@ -1,12 +1,12 @@
 'use client'
-import { App, Breadcrumb, Card, Checkbox, Collapse, Divider, Radio, Space, Tag, Upload, message } from "antd";
+import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Radio, Space, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from "@/utils/axiosClient";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
 import Link from "next/link";
@@ -29,6 +29,8 @@ const Detail = () => {
     const http = UseAxiosAuth();
     const riskId = useSearchParams().get("id");
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
+    const router = useRouter();
+    
     useEffect(() => {
         getData(http, riskId);
     },[http, riskId]);
@@ -36,7 +38,6 @@ const Detail = () => {
         try {
             const responseData = await riskAssessementDetailApi(http, riskId);
             setRiskData(responseData.data);
-            console.log(responseData);
         } catch (error) {
             console.error('Error calling API:', error);
         }
@@ -93,7 +94,7 @@ const Detail = () => {
             <h2>{tLbl('risk_assessment_detail')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
-            {riskData && (
+            {riskData ? (
                 <div style={{backgroundColor:'#F4F6F8', borderRadius: '30px', padding: '20px 80px'}}>
                     {/* Risk name */}
                     <div style={{minHeight: '75px', borderLeft: '2px solid #AFA793'}}>
@@ -242,6 +243,12 @@ const Detail = () => {
                         </Space> */}
                     </div>
                 </div>
+            ) : (
+                <>
+                    <Empty>
+                        <Button type="primary" onClick={() => {router.push('/risk-assessment/add')}}>{tCom('btn_add')}</Button>
+                    </Empty>
+                </>
             )}
         </Content>
         </>

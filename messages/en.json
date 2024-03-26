@@ -250,6 +250,7 @@
             "risk_assessment_add": "Risk Assessement Add",
             "risk_assessment_detail": "Risk Assessement Detail",
             "risk_assessment_impl": "Risk Assessment Implement",
+            "risk_assessment_edit": "Risk Assessment Edit",
             "single": "Single Choice",
             "multi": "Multi Choice",
             "text": "Text",
@@ -285,7 +286,9 @@
             "msg_add_success": "Add success!",
             "msg_confirm_delete":"Do you want to delete 「%ITEM%」?",
             "msg_delete_success": "Delete success!",
-            "msg_delete_fail": "Delete fail!"
+            "msg_delete_fail": "Delete fail!",
+            "msg_update_success": "Update success!",
+            "msg_update_fail": "Update fail!"
           }
         }
     }

@@ -56,21 +56,21 @@ const Add = () => {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       },
       {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       },
       {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       }
     ]);
@@ -96,7 +96,7 @@ const Add = () => {
       indexItem: number,
       value: string
     ) => {
-      riskItems[indexItem].riskItemTile = value;
+      riskItems[indexItem].riskItemTitle = value;
       setRiskItems(riskItems);
     }
     
@@ -106,7 +106,7 @@ const Add = () => {
       }
       const newItem = [...riskItems];
       newItem.push({
-          riskItemTile: tLbl('title_default_text').replace('%ITEM%', (riskItems.length).toString()),
+          riskItemTitle: tLbl('title_default_text').replace('%ITEM%', (riskItems.length).toString()),
           riskItemType: 1,
           riskItemContent: JSON.stringify(risItemContent),
           must: 0,

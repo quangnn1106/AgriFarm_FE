@@ -27,8 +27,8 @@ const ItemText: React.FC<ItemText> = ({
     <>
         <div className={cx('text-item__wrap')}>
             <Row className={cx('row')}>
-                <Col span={6}><TextArea cols={45} rows={3} className={cx('text-content')} onChange={handleOnchange}></TextArea></Col>
-                <Col span={18}></Col>
+                <Col span={12}><TextArea cols={45} rows={3} className={cx('text-content')} onChange={handleOnchange}></TextArea></Col>
+                <Col span={12}></Col>
             </Row>
         </div>
     </>
