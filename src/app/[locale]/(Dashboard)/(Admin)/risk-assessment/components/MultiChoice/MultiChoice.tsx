@@ -11,24 +11,26 @@ interface Rows {
 interface ItemSingleChoice {
   idxItem: number;
   handleEnterContent: (indexItem: number, index: number, value: string) => void;
+  contents: Rows[];
 }
 // Single choice
 const MultiChoice: React.FC<ItemSingleChoice> = ({
     idxItem,
-    handleEnterContent
+    handleEnterContent,
+    contents
   }: ItemSingleChoice): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const [disabled, setDisabled] = useState(true);
-  const [rows, setRows] = useState<Rows[]>(["New Row"]);
+  const [rows, setRows] = useState<Rows[]>(contents.length == 0 ? [""] : contents);
 
   const handleAddRow = () => {
     if (rows.length > 5) {
       return;
     }
     const newRows = [...rows];
-    newRows.push("New Row");
+    newRows.push("");
     setRows(newRows);
   };
 
@@ -48,7 +50,7 @@ const MultiChoice: React.FC<ItemSingleChoice> = ({
           <Row className={cx('row')} key={index}>
             <Col span={12}>
               <Form.Item
-                  name={`risk_item_title_multi_${index}`}
+                  name={`risk_item_title_multi_${index}_${idxItem}`}
                   rules={[{ required: true, message: ""}]}
                   hasFeedback
               >

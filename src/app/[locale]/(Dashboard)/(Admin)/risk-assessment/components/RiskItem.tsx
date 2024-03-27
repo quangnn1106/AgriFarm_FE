@@ -12,14 +12,20 @@ import ItemText from "./Text/Text";
 import UploadImage from "./Image/Upload";
 import type { CheckboxProps } from 'antd';
 
+interface ItemContentDef {
+  [key: number] : {
+    [key: number] : string
+  };
+}
 interface RiskItem {
     onRadioChange: (indexItem: number, value: number) => void;
-    handleRiskItems: (indexItem: number, index: number, value: string) => void;
+    handleRiskItems: (indexItem: number, index: number, value: string, type?: number) => void;
     handleDeleteItem: (index: number) => void;
     itemMode: number;
     indexItem: number;
     handleRiskItemsTitle: (indexItem: number, value: string) => void;
     onCheckboxChange: (indexItem: number, value: number) => void;
+    riskItemContent: ItemContentDef;
 }
 // Single choice
 const RiskItem: React.FC<RiskItem> = ({
@@ -29,18 +35,26 @@ const RiskItem: React.FC<RiskItem> = ({
         handleDeleteItem,
         indexItem,
         handleRiskItemsTitle,
-        onCheckboxChange
+        onCheckboxChange,
+        riskItemContent
     }: RiskItem): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const tMsg = useTranslations('Services.RiskAsm.message');
+  const [content, setContent] = useState(riskItemContent[indexItem][itemMode]);
   const [readioSel, setReadioSel] = useState(itemMode);
   const handleOnchangeTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     handleRiskItemsTitle(indexItem, e.target.value);
   }
 
   const handleOnchangeRadio = (e: RadioChangeEvent) => {
+    handleRiskItems(indexItem,0,"",e.target.value);
+    if (riskItemContent[indexItem][e.target.value] == undefined) {
+      setContent('[]');
+    } else {
+      setContent(riskItemContent[indexItem][e.target.value]);
+    }
     setReadioSel(e.target.value);
     onRadioChange(indexItem, e.target.value);
   }
@@ -71,11 +85,11 @@ const RiskItem: React.FC<RiskItem> = ({
             </Radio.Group>
             {readioSel == ItemModeValue.SINGLE_CHOICE ? (
               <>
-                <SingleChoice handleEnterContent={handleRiskItems} idxItem={indexItem}/>
+                <SingleChoice contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
               </>
             ) : readioSel == ItemModeValue.MULTI_CHOICE ? (
               <>
-              <MultiChoice handleEnterContent={handleRiskItems} idxItem={indexItem}/>
+              <MultiChoice contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
               </>
             ) : readioSel == ItemModeValue.TEXT ? (
               <>

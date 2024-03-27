@@ -49,11 +49,12 @@ const SingleChoiceEdit: React.FC<ItemSingleChoice> = ({
           <Row className={cx('row')} key={index}>
             <Col span={12}>
               <Form.Item
-                  name={`risk_item_title_single${index}`}
+                  name={`risk_item_title_single_${idxItem}_${index}`}
                   rules={[{ required: true, message: ""}]}
                   hasFeedback
+                  initialValue={item as string}
               >
-                <Input defaultValue={item as string} maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
+                <Input maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
               </Form.Item>
             </Col>
             <Col span={12}>

@@ -16,7 +16,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 interface ItemContentDef {
-  [key: number] : string;
+  [key: number] : {
+    [key: number] : string
+  };
 }
 interface ColoredLineProps {
   text: string;
@@ -32,7 +34,7 @@ const Add = () => {
     const [riskDescription, setRiskDescription] = useState("");
     const [riskIsDraft, setRiskIsDraft] = useState(true);
     const [riskItems, setRiskItems] = useState<RiskItemDef[]>([]);
-    const [risItemContent, setRiskItemContent] = useState<ItemContentDef[]>([]);
+    const [risItemContent, setRiskItemContent] = useState<ItemContentDef>([]);
     const { data: session } = useSession();
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
@@ -85,12 +87,27 @@ const Add = () => {
     const handleRiskItems = (
         indexItem: number,
         index: number,
-        value: string
+        value: string,
+        type?: number
       ) => {
-      let riskItemContent = JSON.parse(riskItems[indexItem].riskItemContent);
-      riskItemContent = {...riskItemContent, [index]: value};
-      riskItems[indexItem].riskItemContent = JSON.stringify(riskItemContent);
-      setRiskItems(riskItems);
+        let rskItmCtn = [];
+        if (type == undefined) {
+          rskItmCtn = JSON.parse(riskItems[indexItem].riskItemContent);
+          rskItmCtn = {...rskItmCtn, [index]: value};
+          risItemContent[indexItem][riskItems[indexItem].riskItemType] = JSON.stringify(rskItmCtn);
+        } else {
+          if (risItemContent[indexItem][type] != undefined) {
+            console.log(risItemContent);
+            rskItmCtn = JSON.parse(risItemContent[indexItem][type]);
+            risItemContent[indexItem][type] = JSON.stringify(rskItmCtn);
+          } else {
+            risItemContent[indexItem] = {...risItemContent[indexItem], [type]: '[]'};
+
+          }
+        }
+        riskItems[indexItem].riskItemContent = JSON.stringify(rskItmCtn);
+        setRiskItemContent(risItemContent);
+        setRiskItems(riskItems);
     }
     const handleRiskItemsTitle = (
       indexItem: number,
@@ -111,11 +128,14 @@ const Add = () => {
           riskItemContent: JSON.stringify(risItemContent),
           must: 0,
           riskItemDiv: 1
-        });
+      });
+      setRiskItemContent(Object.values({...risItemContent, [riskItems.length]: {[1] : JSON.stringify([])}}));
       setRiskItems(newItem);
     };
     const handleDeleteItem = (indexToRemove: number) => {
       const newItem = riskItems.filter((_, index) => index !== indexToRemove);
+      const newRisItemContent = Object.values(risItemContent).filter((_, index) => index !== indexToRemove);
+      setRiskItemContent(newRisItemContent);
       setRiskItems(newItem);
     }
 
@@ -238,6 +258,7 @@ const Add = () => {
                 <RiskItem 
                   key={index}
                   indexItem={index}
+                  riskItemContent={risItemContent}
                   onRadioChange={onRadioChange}
                   onCheckboxChange={onCheckboxChange}
                   itemMode={riskItems[index].riskItemType}

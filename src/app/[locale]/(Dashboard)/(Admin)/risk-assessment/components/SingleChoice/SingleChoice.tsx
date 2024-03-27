@@ -11,24 +11,26 @@ interface Rows {
 interface ItemSingleChoice {
   idxItem: number;
   handleEnterContent: (indexItem: number, index: number, value: string) => void;
+  contents: Rows[];
 }
 // Single choice
 const SingleChoice: React.FC<ItemSingleChoice> = ({
     idxItem,
-    handleEnterContent
+    handleEnterContent,
+    contents
   }: ItemSingleChoice): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const tMsg = useTranslations('Services.RiskAsm.message');
-  const [rows, setRows] = useState<Rows[]>(["New Row"]);
+  const [rows, setRows] = useState<Rows[]>(contents.length == 0 ? [""] : contents);
 
   const handleAddRow = () => {
     if (rows.length > 5) {
       return;
     }
     const newRows = [...rows];
-    newRows.push("New Row");
+    newRows.push("");
     setRows(newRows);
   };
 

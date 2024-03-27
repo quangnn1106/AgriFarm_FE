@@ -1,5 +1,5 @@
 'use client'
-import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Radio, Space, Tag, Upload, message } from "antd";
+import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Radio, Space, Spin, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
@@ -25,21 +25,25 @@ const Detail = () => {
     const tMsg = useTranslations('Services.RiskAsm.message');
     const cx = classNames.bind(styles);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const [messageApi, contextHolder] = message.useMessage();
+    const { message } = App.useApp();
     const http = UseAxiosAuth();
     const riskId = useSearchParams().get("id");
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
     const router = useRouter();
+    const [loadings, setLoadings] = useState(false);
     
     useEffect(() => {
         getData(http, riskId);
     },[http, riskId]);
     const getData = async (http : AxiosInstance | null, riskId : string | null) => {
         try {
+            setLoadings(true);
             const responseData = await riskAssessementDetailApi(http, riskId);
             setRiskData(responseData.data);
         } catch (error) {
             console.error('Error calling API:', error);
+        } finally {
+            setLoadings(false);
         }
     }
     const props: UploadProps = {
@@ -53,15 +57,15 @@ const Detail = () => {
             console.log(file);
             const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
             if (!isJpgOrPng) {
-                messageApi.error(tMsg('msg_upload_img'));
+                message.error(tMsg('msg_upload_img'));
             }
             const isLt2M = file.size / 1024 / 1024 < 2;
             if (!isLt2M) {
-                messageApi.error(tMsg('msg_max_size_img'));
+                message.error(tMsg('msg_max_size_img'));
             }
             const maxUploadImg = fileList.length < 3;
             if (!maxUploadImg) {
-                messageApi.error(tMsg('msg_max_upload_img'));
+                message.error(tMsg('msg_max_upload_img'));
             }
             if (isJpgOrPng && isLt2M && maxUploadImg) {
                 setFileList([...fileList, file]);
@@ -88,12 +92,11 @@ const Detail = () => {
       ];
     return (
         <>
-            {contextHolder}
-            {/* Basic */}
         <Content style={{ padding: '30px 48px' }}>
             <h2>{tLbl('risk_assessment_detail')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
+            <Spin spinning={loadings}>
             {riskData ? (
                 <div style={{backgroundColor:'#F4F6F8', borderRadius: '30px', padding: '20px 80px'}}>
                     {/* Risk name */}
@@ -250,6 +253,7 @@ const Detail = () => {
                     </Empty>
                 </>
             )}
+            </Spin>
         </Content>
         </>
     )

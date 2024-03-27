@@ -40,14 +40,14 @@ const Edit = () => {
     const [risItemContent, setRiskItemContent] = useState<ItemContentDef>([]);
     const { data: session } = useSession();
     const [form] = Form.useForm();
-    const [messageApi, contextHolder] = message.useMessage();
+    const { message } = App.useApp();
     const riskId = useSearchParams().get("id");
     const [loadings, setLoadings] = useState(false);
     const router = useRouter();
     useEffect(() => {
         getData(http, riskId);
     },[http, riskId]);
-    
+
     const getData = async (http : AxiosInstance | null, riskId : string | null) => {
       try {
           setLoadings(true);
@@ -192,7 +192,7 @@ const Edit = () => {
 
     const saveAction = async() => {
       if (riskItems.length <= 0) {
-        messageApi.error(tMsg('msg_required').replace('%ITEM%', tLbl('item_list')));
+        message.error(tMsg('msg_required').replace('%ITEM%', tLbl('item_list')));
         return;
       }
       try {
@@ -208,14 +208,14 @@ const Edit = () => {
           console.log(riskMaster);
           const res = await riskAssessmentUpdApi(http, riskId ?? "", riskItems, riskMaster);
           if (res.statusCode != STATUS_OK) {
-            messageApi.error(tMsg('msg_update_fail'));
+            message.error(tMsg('msg_update_fail'));
           } else {
-            messageApi.success(tMsg('msg_add_success'));
+            message.success(tMsg('msg_add_success'));
           }
       } catch (error) {
           console.log(error);
           setLoadingBtn(false);
-          messageApi.error(tMsg('msg_update_fail'));
+          message.error(tMsg('msg_update_fail'));
       } finally {
         setLoadingBtn(false);
       }
@@ -226,11 +226,10 @@ const Edit = () => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      console.log("backAction ...");
+      router.push('/risk-assessment/list');
     }
   return(
     <>
-      {contextHolder}
       <Content style={{ padding: '30px 48px' }}>
         <h2>{tLbl('risk_assessment_edit')}</h2>
         <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
@@ -240,12 +239,13 @@ const Edit = () => {
           <ColoredLine text={tLbl('basic_information')}/>
           <Form
               labelCol={{ span: 8 }}
-              wrapperCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
               layout="horizontal"
               onFinish={saveAction}
               form={form}
               >
                 <Form.Item 
+                  wrapperCol={{ span: 8 }}
                   label={tLbl('risk_name')}
                   name="risk_name"
                   rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_name'))}]}
@@ -254,6 +254,7 @@ const Edit = () => {
                   <Input onChange={handleInputRiskName}/>
                 </Form.Item>
                 <Form.Item
+                  wrapperCol={{ span: 8 }}
                   label={tLbl('risk_description')}
                   name="risk_description"
                   rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_description'))}]}
