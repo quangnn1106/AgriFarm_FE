@@ -22,6 +22,7 @@ import {
   WarningOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
+import stylesSeedManagement from './seedStyle.module.scss';
 import classNames from 'classnames/bind';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
@@ -37,6 +38,7 @@ import getSeedsApi from '@/services/Admin/Seed/getSeedsApi';
 import AddSeedFormDrawer from './component/AddSeedDrawer/add-seed-drawer';
 import SeedDetailFormDrawer from './component/DetailSeedDrawer/detail-seed-drawer';
 import UpdateSeedFormDrawer from './component/UpdateSeedDrawer/update-seed-drawer';
+import { deleteSeedApi } from '@/services/Admin/Seed/deleteSeedApi';
 
 
 type Props = {};
@@ -49,6 +51,8 @@ const SeedManagement = (props: Props) => {
 
   //style
   const cx = classNames.bind(styles);
+  const styleSeedManagement = classNames.bind(stylesSeedManagement);
+
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
@@ -69,7 +73,6 @@ const SeedManagement = (props: Props) => {
   // handle loading data
   const [loading, setLoading] = useState<boolean>(true);
   const [seeds, setSeeds] = useState<Seed[] | undefined>([]);
-  const checkRowSelection = {};
 
   const getListSeedsApi = async (http: AxiosInstance, siteId: string | undefined) => {
     try {
@@ -110,8 +113,37 @@ const SeedManagement = (props: Props) => {
   //handle delete
   const [deleteState, setDeleteState] = useState<boolean>(false);
   const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
-  const handleDelete = (id: string) => {};
-  const deleteMultiple = () => {};
+  const [deletedSeeds, setDeleteSeeds] = useState<React.Key[]>([]);
+
+  const deleteSeed = async (http: AxiosInstance, seasonId?: string) => {
+    try {
+      const res = await deleteSeedApi(http, seasonId);
+      getListSeedsApi (http, siteId);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
+  }
+
+  const checkRowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Seed[]) => {
+      if (selectedRowKeys.length > 0) {
+        setDeleteBtnState(false);
+        setDeleteSeeds(selectedRowKeys);
+      } else {
+        setDeleteBtnState(true);
+      }
+    }
+  };
+  const handleDelete = (id: string) => {
+    deleteSeed(http, id);
+  };
+  const deleteMultiple = () => {
+    deletedSeeds.map(function (item) {
+      deleteSeed(http, item.toString());
+    });
+    setDeleteState(false);
+    setDeleteBtnState(true);
+  };
   const onChange: TableProps<Seed>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
@@ -189,7 +221,7 @@ const SeedManagement = (props: Props) => {
           className={cx('flex-space')}
           style={{ paddingRight: '24px' }}
         >
-          <Tooltip title={t('delete')}>
+          <Tooltip title={t('Delete')}>
             <Button
               type='primary'
               danger
@@ -212,12 +244,12 @@ const SeedManagement = (props: Props) => {
                 setDeleteState(false);
               }}
               centered={true}
-              cancelText={t('cancel')}
-              okText={t('yes')}
+              cancelText={t('Cancel')}
+              okText={t('Yes')}
               okButtonProps={{ type: 'primary', danger: true }}
             ></Modal>
           </Tooltip>
-          <Tooltip title={t('add_new')}>
+          <Tooltip title={t('Add_new')}>
             <Button
               className={cx('bg-btn')}
               icon={<PlusOutlined />}
@@ -281,34 +313,22 @@ const SeedManagement = (props: Props) => {
         <Drawer
         title="Details Seed"
         placement="right"
-        width={500}
         onClose={closeSeedDetailDrawer}
         open={openSeedDetailDrawer}
+        className={styleSeedManagement('drawer-width')}
       >
-        <SeedDetailFormDrawer params={{
-            seedId: seedId
-          }} ></SeedDetailFormDrawer>
-      </Drawer>
-      <Drawer
-        title="Add Seed"
-        placement="right"
-        width={500}
-        onClose={closeAddSeedDrawer}
-        open={openAddSeed}
-      >
-        <AddSeedFormDrawer></AddSeedFormDrawer>
-      </Drawer>
-      {/* UpdateSeedFormDrawer */}
-      <Drawer
-        title="Update seed"
-        placement="right"
-        width={500}
-        onClose={closeSeedUpdateDrawer}
-        open={openSeedUpdateDrawer}
-      >
-        <UpdateSeedFormDrawer params={{
+       <UpdateSeedFormDrawer params={{
             seedId: seedId
           }}></UpdateSeedFormDrawer>
+      </Drawer>
+      <Drawer
+        title="Thêm giống mới"
+        placement="right"
+        onClose={closeAddSeedDrawer}
+        open={openAddSeed}
+        className={styleSeedManagement('drawer-width')}
+      >
+        <AddSeedFormDrawer></AddSeedFormDrawer>
       </Drawer>
       </Content>
     </>
