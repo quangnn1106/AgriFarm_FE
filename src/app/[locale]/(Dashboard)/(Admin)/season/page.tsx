@@ -207,7 +207,7 @@ const SeasonManagement = (props: Props) => {
           className={cx('flex-space')}
           style={{ paddingRight: '24px' }}
         >
-          <Tooltip title={t('delete')}>
+          <Tooltip title={t('Delete')}>
             <Button
               type='primary'
               danger
@@ -221,14 +221,14 @@ const SeasonManagement = (props: Props) => {
             open={deleteState} onOk={deleteMultiple} 
             onCancel={() => {setDeleteState(false)}} 
             centered={true}
-            cancelText={t('cancel')}
-            okText={t('yes')}
+            cancelText={t('Cancel')}
+            okText={t('Yes')}
             okButtonProps={{type: 'primary', danger:true}}
             >
 
             </Modal>
           </Tooltip>
-          <Tooltip title={t('add_new')}>
+          <Tooltip title={t('Add_new')}>
             <Button
               className={cx('bg-btn')}
               icon={<PlusOutlined/>}
