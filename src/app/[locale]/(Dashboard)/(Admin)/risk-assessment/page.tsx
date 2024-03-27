@@ -3,7 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import styles from "./components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
-import { App, Button, Dropdown, Form, Input, MenuProps, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
+import { App, Button, Dropdown, Form, Input, MenuProps, Modal, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { AxiosInstance } from "axios";
@@ -50,7 +50,7 @@ const List = () => {
       },
     });
     const router = useRouter();
-    const { modal , message } = App.useApp();
+    const [messageApi, contextHolder] = message.useMessage();
     const pathName = usePathname();
 
     useEffect(() => {
@@ -73,6 +73,17 @@ const List = () => {
                     })
                 );
                 setData(normalizedData);
+                const pagination: TablePaginationConfig = {
+                    pageSize: 10,
+                    current: 1
+                }
+                setTableParams({
+                    ...pagination,
+                    pagination: {
+                      ...pagination,
+                      total: responseData.pagination.totalRecord,
+                    },
+                  });
             } catch (error: unknown) {
                 // Assert the type of error to be an instance of Error
                 if (error instanceof Error) {
@@ -150,13 +161,13 @@ const List = () => {
             const responseData = await riskAssessmentDeleteApi(http, riskId);
             if (responseData.statusCode == STATUS_OK) {
                 searchAction(tableParams.pagination!);
-                message.success(tMsg('msg_delete_success'));
+                messageApi.success(tMsg('msg_delete_success'));
             } else {
-                message.error(tMsg('msg_delete_fail'));
+                messageApi.error(tMsg('msg_delete_fail'));
             }
         } catch (error) {
             console.error(error);
-            message.error(tMsg('msg_delete_fail'));
+            messageApi.error(tMsg('msg_delete_fail'));
         } finally {
             setLoading(false);
         }
@@ -249,7 +260,7 @@ const List = () => {
                             label: (
                                     <a
                                     onClick={() => {
-                                        modal.confirm({
+                                        Modal.confirm({
                                         title: tMsg('msg_confirm_delete').replace('%ITEM%', riskName),
                                         centered: true,
                                         width: '40%',
@@ -317,6 +328,7 @@ const List = () => {
     }
     return (
         <>
+            {contextHolder}
             <Content style={{ padding: '30px 48px' }}>
                 <h2>{tLbl('risk_assessment')}</h2>
                 <ColoredLine text={tLbl('search_condition')}/>
