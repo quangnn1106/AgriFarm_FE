@@ -1,12 +1,11 @@
 'use client'
-import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Form, Radio, Space, Spin, Tag, Upload, message } from "antd";
+import { Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Form, Radio, Space, Spin, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { FormProps, GetProp, RadioChangeEvent, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from "@/utils/axiosClient";
-import { useSearchParams } from "next/navigation";
 import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
 import Link from "next/link";
@@ -26,13 +25,15 @@ interface ItemResponseDef {
     riskMappingId: string;
     answer: string;
 }
-
+interface FileListWithItem {
+    [key: number]: UploadFile[];
+}
 const Implement = ({ params }: { params: { taskId: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
     const cx = classNames.bind(styles);
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [fileList, setFileList] = useState<FileListWithItem>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const http = UseAxiosAuth();
     const taskId = params.taskId;
@@ -56,7 +57,6 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                 setRiskMasterId(responseData.data[0].riskMasterId);
                 setRiskMappingId(responseData.data[0].id);
             }
-            console.log(responseData);
         } catch (error) {
             console.error('Error calling API:', error);
         } finally {
@@ -68,16 +68,25 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
             setLoadings(true);
             const responseData = await riskAssessementDetailApi(http, riskId);
             if (responseData.statusCode != STATUS_NO_CONTENT) {
-                setRiskData(responseData.data);
+                let files: FileListWithItem = [];
                 const response: ItemResponseDef[] = responseData.data.riskItems.map((item: any,indx: number) => {
+                    let answer = item.riskItemContents[0]?.anwser ?? "";
+                    if (item.riskItemType == ItemModeValue.MULTI_CHOICE && answer == "") {
+                        answer = "[]";
+                    }
+                    if (item.riskItemType == ItemModeValue.PHOTOS) {
+                        files[indx] = JSON.parse(answer != "" ? answer : "[]");
+                    }
                     const tmp: ItemResponseDef = {
                         riskItemId: item.id,
                         riskMappingId: riskMapId,
-                        answer: ""
+                        answer: answer
                     }
                     return tmp;
                 });
+                setFileList(files);
                 setItemResponse(response);
+                setRiskData(responseData.data);
             }
         } catch (error) {
             console.error('Error calling API:', error);
@@ -85,35 +94,44 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
             setLoadings(false);
         }
     }
-    const props: UploadProps = {
-        onRemove: (file) => {
-        const index = fileList.indexOf(file);
-        const newFileList = fileList.slice();
+    const onRemoveImg = (file: any, indexItem: number) => {
+        const index = fileList[indexItem].indexOf(file);
+        const newFileList = fileList[indexItem].slice();
         newFileList.splice(index, 1);
-        setFileList(newFileList);
-        },
-        beforeUpload: (file: FileType) => {
-            console.log(file);
-            const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-            if (!isJpgOrPng) {
-                messageApi.error(tMsg('msg_upload_img'));
-            }
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isLt2M) {
-                messageApi.error(tMsg('msg_max_size_img'));
-            }
-            const maxUploadImg = fileList.length < 3;
-            if (!maxUploadImg) {
-                messageApi.error(tMsg('msg_max_upload_img'));
-            }
-            if (isJpgOrPng && isLt2M && maxUploadImg) {
-                setFileList([...fileList, file]);
-            }
 
-        return false;
-        },
-        fileList,
-    };
+        fileList[indexItem] = newFileList;
+        setFileList(fileList);
+        itemResponse[indexItem].answer = JSON.stringify(newFileList);
+        setItemResponse(itemResponse);
+    }
+    const onBeforeUploadImg = (file: FileType, indexItem: number) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            messageApi.error(tMsg('msg_upload_img'));
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            messageApi.error(tMsg('msg_max_size_img'));
+        }
+        const maxUploadImg = fileList[indexItem].length < 3;
+        if (!maxUploadImg) {
+            messageApi.error(tMsg('msg_max_upload_img'));
+        }
+        if (isJpgOrPng && isLt2M && maxUploadImg) {
+            const info: UploadFile[] = [...fileList[indexItem],
+                {
+                    uid: file.uid,
+                    name: file.name,
+                    url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                }
+            ]
+            fileList[indexItem] = info;
+            setFileList(fileList);
+
+            itemResponse[indexItem].answer = JSON.stringify(info);
+            setItemResponse(itemResponse);
+        }
+    }
     const uploadButton = (
       <button style={{ border: 0, background: 'none' }} type="button">
         <PlusOutlined />
@@ -166,7 +184,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
         // fileList.forEach((file) => {
         //   formData.append('files[]', file as FileType);
         // });
-        console.log(file);
+        // console.log(file);
         // setUploading(true);
         // You can use any AJAX library you like
         // fetch('https://weatherapi-com.p.rapidapi.com/current.json?q=53.1,-0.13', {
@@ -187,8 +205,8 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
         //     // setUploading(false);
         //   });
         // url= {"rc-upload-1711477172303-5": "path_to_image0" }
-        itemResponse[index].answer = `{"rc-upload-1711477172303-5": "path_to_image0" }`;
-        setItemResponse(itemResponse);
+        // itemResponse[index].answer = JSON.stringify(fileList);
+        // setItemResponse(itemResponse);
     };
     return (
         <>
@@ -247,6 +265,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                                 ]
                                                                             }
                                                                             name={`item_${index}`}
+                                                                            initialValue={itemResponse[index].answer}
                                                                         >
                                                                             <Radio.Group onChange={(e) => {singleChoice(e, index)}}>
                                                                                 <Space direction="vertical">
@@ -255,7 +274,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                             </Radio.Group>
                                                                         </Form.Item>
                                                                         ,
-                                                                    extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                    extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                                 }
                                                             ]
                                                         }
@@ -286,6 +305,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                             ]
                                                                         }
                                                                         name={`item_${index}`}
+                                                                        initialValue={JSON.parse(itemResponse[index].answer)}
                                                                     >
                                                                         <Checkbox.Group onChange={(e) => {multiChoice(e, index)}}>
                                                                             <Space direction="vertical">
@@ -294,7 +314,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                         </Checkbox.Group>
                                                                     </Form.Item>
                                                                         ,
-                                                                    extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                    extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                                 }
                                                             ]
                                                         }
@@ -312,7 +332,6 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                     key: index,
                                                                     label: item.riskItemTitle,
                                                                     children:
-                                                                    
                                                                     <Form.Item
                                                                         rules={
                                                                             [
@@ -320,11 +339,12 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                             ]
                                                                         }
                                                                         name={`item_${index}`}
+                                                                        initialValue={itemResponse[index].answer}
                                                                     >
                                                                         <TextArea onChange={(e) => {inputText(e, index)}} cols={45} rows={3} className={cx('text-content')}></TextArea>
                                                                     </Form.Item>
                                                                         ,
-                                                                    extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                    extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                                 }
                                                             ]
                                                         }
@@ -342,10 +362,17 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                                                                     key: index,
                                                                     label: item.riskItemTitle,
                                                                     children:
-                                                                    <Upload {...props} listType="picture-card" onChange={(e) => {handleUpload(e, index)}}>
+                                                                    <Upload 
+                                                                        listType="picture-card"
+                                                                        // onChange={(e) => {handleUpload(e, index)}}
+                                                                        onRemove={(e) => {onRemoveImg(e, index)}}
+                                                                        beforeUpload={(e) => {onBeforeUploadImg(e, index); return false;}}
+                                                                        defaultFileList={fileList[index]}
+                                                                        maxCount={3}
+                                                                    >
                                                                         {uploadButton}
                                                                     </Upload>,
-                                                                    extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                    extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                                 }
                                                             ]
                                                         }
