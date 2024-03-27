@@ -2,11 +2,11 @@
 import { Content } from 'antd/es/layout/layout';
 import { App, Breadcrumb, Button, Form, Input, Radio, RadioChangeEvent, message } from 'antd';
 import React, { useState } from 'react';
-import RiskItem from '../../components/RiskItem';
-import { RiskItemDef, RiskMasterInputDef } from '../../interface';
+import RiskItem from '../components/RiskItem';
+import { RiskItemDef, RiskMasterInputDef } from '../interface';
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
-import styles from "../../components/risk-assessment-style.module.scss";
+import styles from "../components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { PlusOutlined } from '@ant-design/icons';
@@ -14,6 +14,7 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import riskAssessmentAddApi from '@/services/RiskAssessment/riskAssessmentAddApi';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { usePathname } from '@/navigation';
 
 interface ItemContentDef {
   [key: number] : {
@@ -39,6 +40,7 @@ const Add = () => {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const router = useRouter();
+    const pathName = usePathname();
 
     const handleInputRiskName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRiskName(e.target.value);
@@ -185,8 +187,7 @@ const Add = () => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      console.log("backAction ...");
-      router.push('/risk-assessment/list');
+      router.push(`${pathName}`);
     }
   return(
     <>

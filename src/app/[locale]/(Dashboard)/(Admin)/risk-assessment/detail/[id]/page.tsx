@@ -16,10 +16,11 @@ import classNames from 'classnames/bind';
 import { RiskMasterResponseDef } from "../../interface";
 import { DeleteTwoTone , PushpinTwoTone } from '@ant-design/icons';
 import { ItemModeValue } from "../../enum";
+import { usePathname } from "@/navigation";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const Detail = () => {
+const Detail = ({ params }: { params: { id: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -27,10 +28,11 @@ const Detail = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const { message } = App.useApp();
     const http = UseAxiosAuth();
-    const riskId = useSearchParams().get("id");
+    const riskId = params.id;
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
     const router = useRouter();
     const [loadings, setLoadings] = useState(false);
+    const pathName = usePathname();
     
     useEffect(() => {
         getData(http, riskId);
@@ -84,7 +86,7 @@ const Detail = () => {
     
     const breadCrumb = [
         {
-            title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+            title: <Link href={`${pathName}`}>{tLbl('risk_assessment')}</Link>
         },
         {
             title: tLbl('risk_assessment_detail')
@@ -218,38 +220,12 @@ const Detail = () => {
                                 <></>
                             )}
                         </Space>
-                        {/* <Space direction="vertical" size={22} style={{flex: '1', margin: '20px 80px'}}>
-                            <Card title="Default size card" extra={<Tag color="#f50">Required</Tag>}>
-                                <Radio.Group>
-                                    <Space direction="vertical">
-                                        <Radio value={1}>Option A</Radio>
-                                        <Radio value={2}>Option B</Radio>
-                                        <Radio value={3}>Option C</Radio>
-                                    </Space>
-                                </Radio.Group>
-                            </Card>
-                            <Card title="Default size card">
-                                <Space direction="vertical">
-                                    <Checkbox>Checkbox1</Checkbox>
-                                    <Checkbox>Checkbox2</Checkbox>
-                                    <Checkbox>Checkbox3</Checkbox>
-                                </Space>
-                            </Card>
-                            <Card title="Default size card">
-                                <TextArea cols={45} rows={5} style={{resize: 'none'}}></TextArea>
-                            </Card>
-                            <Card title="Default size card">
-                                <Upload {...props} listType="picture-card">
-                                    {uploadButton}
-                                </Upload>
-                            </Card>
-                        </Space> */}
                     </div>
                 </div>
             ) : (
                 <>
                     <Empty>
-                        <Button type="primary" onClick={() => {router.push('/risk-assessment/add')}}>{tCom('btn_add')}</Button>
+                        <Button type="primary" onClick={() => {router.push(`${pathName}/add`)}}>{tCom('btn_add')}</Button>
                     </Empty>
                 </>
             )}
@@ -259,9 +235,4 @@ const Detail = () => {
     )
 }
 
-const DetailApp: React.FC = () => (
-    <App>
-      <Detail />
-    </App>
-  );
-  export default DetailApp;
+export default Detail;

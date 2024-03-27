@@ -1,13 +1,13 @@
 'use client'
 import { Content } from "antd/es/layout/layout";
-import styles from "../../components/risk-assessment-style.module.scss";
+import styles from "./components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
 import { App, Button, Dropdown, Form, Input, MenuProps, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { AxiosInstance } from "axios";
-import { RiskMasterListDef, SearchConditionDef } from "../../interface";
+import { RiskMasterListDef, SearchConditionDef } from "./interface";
 import riskAssessmentListMasterApi from "@/services/RiskAssessment/riskAssessmentListMasterApi";
 import Table, { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
 import {
@@ -23,6 +23,7 @@ import {
 import { useRouter } from "next/navigation";
 import riskAssessmentDeleteApi from "@/services/RiskAssessment/riskAssessmentDeleteApi";
 import { STATUS_OK } from "@/constants/https";
+import { usePathname } from "@/navigation";
 
 interface ColoredLineProps {
     text: string;
@@ -50,6 +51,7 @@ const List = () => {
     });
     const router = useRouter();
     const { modal , message } = App.useApp();
+    const pathName = usePathname();
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
@@ -213,7 +215,7 @@ const List = () => {
                             label: (
                                 <a
                                     onClick={() => {
-                                        router.push(`/risk-assessment/detail?id=${id}`);
+                                        router.push(`${pathName}/detail/${id}`);
                                     }}
                                 >
                                     <Space>
@@ -230,7 +232,7 @@ const List = () => {
                             label: (
                                 <a
                                 onClick={() => {
-                                    router.push(`/risk-assessment/edit?id=${id}`);
+                                    router.push(`${pathName}/edit/${id}`);
                                 }}
                                 >
                                 <Space>
@@ -311,7 +313,7 @@ const List = () => {
         }
       };
     const handleCreateNewRisk = () => {
-        router.push('/risk-assessment/add');
+        router.push(`${pathName}/add`);
     }
     return (
         <>
@@ -380,15 +382,9 @@ const List = () => {
                     loading={loading}
                     onChange={handleTableChange}
                 />
-                {/* <TableComponent data={apiData} loading={loadings} /> */}
             </Content>
         </>
     )
 };
 
-const ListApp: React.FC = () => (
-    <App>
-      <List />
-    </App>
-  );
-export default ListApp;
+export default List;

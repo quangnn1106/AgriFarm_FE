@@ -8,15 +8,16 @@ import TextArea from 'antd/es/input/TextArea';
 import styles from "../../components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AxiosInstance } from 'axios';
 import riskAssessementDetailApi from '@/services/RiskAssessment/riskAssessementDetailApi';
 import RiskItemEdit from '../../components/RiskItemEdit';
 import { STATUS_NO_CONTENT, STATUS_OK } from '@/constants/https';
 import riskAssessmentUpdApi from '@/services/RiskAssessment/riskAssessmentUpdApi';
+import { usePathname } from '@/navigation';
 
 interface ItemContentDef {
   [key: number] : {
@@ -26,7 +27,7 @@ interface ItemContentDef {
 interface ColoredLineProps {
   text: string;
 }
-const Edit = () => {
+const Edit = ({ params }: { params: { id: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -41,9 +42,11 @@ const Edit = () => {
     const { data: session } = useSession();
     const [form] = Form.useForm();
     const { message } = App.useApp();
-    const riskId = useSearchParams().get("id");
+    const riskId = params.id;
     const [loadings, setLoadings] = useState(false);
     const router = useRouter();
+    const pathName = usePathname();
+
     useEffect(() => {
         getData(http, riskId);
     },[http, riskId]);
@@ -183,7 +186,7 @@ const Edit = () => {
     
     const breadCrumb = [
       {
-          title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+          title: <Link href={`${pathName}`}>{tLbl('risk_assessment')}</Link>
       },
       {
           title: tLbl('risk_assessment_edit')
@@ -226,7 +229,7 @@ const Edit = () => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      router.push('/risk-assessment/list');
+      router.push(`${pathName}`);
     }
   return(
     <>
@@ -352,7 +355,7 @@ const Edit = () => {
         ) : (
           <>
             <Empty>
-              <Button type="primary" onClick={() => {router.push('/risk-assessment/add')}}>{tCom('btn_add')}</Button>
+              <Button type="primary" onClick={() => {router.push(`${pathName}/add`)}}>{tCom('btn_add')}</Button>
             </Empty>
           </>
         )}
@@ -362,9 +365,4 @@ const Edit = () => {
   )
 }
 
-const EditApp: React.FC = () => (
-  <App>
-    <Edit />
-  </App>
-);
-export default EditApp;
+export default Edit;

@@ -11,7 +11,7 @@ import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
 import Link from "next/link";
 import { Content } from "antd/es/layout/layout";
-import styles from "../risk-assessment-style.module.scss";
+import styles from "../../risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import riskAssessmentMappingApi from "@/services/RiskAssessment/riskAssessmentMappingApi";
 import { RiskMasterResponseDef } from "@/app/[locale]/(Dashboard)/(Admin)/risk-assessment/interface";
@@ -27,7 +27,7 @@ interface ItemResponseDef {
     answer: string;
 }
 
-const Implement = () => {
+const Implement = ({ params }: { params: { taskId: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -35,7 +35,7 @@ const Implement = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const { message } = App.useApp();
     const http = UseAxiosAuth();
-    const taskId = useSearchParams().get("taskId");
+    const taskId = params.taskId;
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
     const [riskMasterId, setRiskMasterId] = useState("");
     const [riskMappingId, setRiskMappingId] = useState("");
@@ -264,7 +264,7 @@ const Implement = () => {
                                             const riskCtn = JSON.parse(item.riskItemContent);
                                             const checkBox = () => (
                                                 Object.keys(riskCtn).map((index) => (
-                                                    <Checkbox key={index} value={riskCtn[index]}>{riskCtn[index]}</Checkbox>
+                                                    <Checkbox key={index} value={index}>{riskCtn[index]}</Checkbox>
                                                 ))
                                             );
                                             return (
@@ -278,11 +278,20 @@ const Implement = () => {
                                                                     key: index,
                                                                     label: item.riskItemTitle,
                                                                     children:
-                                                                    <Checkbox.Group onChange={(e) => {multiChoice(e, index)}}>
-                                                                        <Space direction="vertical">
-                                                                            {checkBox()}
-                                                                        </Space>
-                                                                    </Checkbox.Group>
+                                                                    <Form.Item
+                                                                        rules={
+                                                                            [
+                                                                                { required: item.must == 1, message: tMsg('msg_item_required')}
+                                                                            ]
+                                                                        }
+                                                                        name={`item_${index}`}
+                                                                    >
+                                                                        <Checkbox.Group onChange={(e) => {multiChoice(e, index)}}>
+                                                                            <Space direction="vertical">
+                                                                                {checkBox()}
+                                                                            </Space>
+                                                                        </Checkbox.Group>
+                                                                    </Form.Item>
                                                                         ,
                                                                     extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
                                                                 }
@@ -301,7 +310,19 @@ const Implement = () => {
                                                                 { 
                                                                     key: index,
                                                                     label: item.riskItemTitle,
-                                                                    children:<TextArea onChange={(e) => {inputText(e, index)}} cols={45} rows={3} className={cx('text-content')}></TextArea>,
+                                                                    children:
+                                                                    
+                                                                    <Form.Item
+                                                                        rules={
+                                                                            [
+                                                                                { required: item.must == 1, message: tMsg('msg_item_required')}
+                                                                            ]
+                                                                        }
+                                                                        name={`item_${index}`}
+                                                                    >
+                                                                        <TextArea onChange={(e) => {inputText(e, index)}} cols={45} rows={3} className={cx('text-content')}></TextArea>
+                                                                    </Form.Item>
+                                                                        ,
                                                                     extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
                                                                 }
                                                             ]
@@ -364,9 +385,4 @@ const Implement = () => {
     )
 }
 
-const ImplementApp: React.FC = () => (
-    <App>
-      <Implement />
-    </App>
-  );
-  export default ImplementApp;
+export default Implement;
