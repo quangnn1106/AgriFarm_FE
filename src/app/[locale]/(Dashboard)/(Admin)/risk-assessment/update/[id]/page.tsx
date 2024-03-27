@@ -41,7 +41,7 @@ const Edit = ({ params }: { params: { id: string } }) => {
     const [risItemContent, setRiskItemContent] = useState<ItemContentDef>([]);
     const { data: session } = useSession();
     const [form] = Form.useForm();
-    const { message } = App.useApp();
+    const [messageApi, contextHolder] = message.useMessage();
     const riskId = params.id;
     const [loadings, setLoadings] = useState(false);
     const router = useRouter();
@@ -186,7 +186,7 @@ const Edit = ({ params }: { params: { id: string } }) => {
     
     const breadCrumb = [
       {
-          title: <Link href={`${pathName}`}>{tLbl('risk_assessment')}</Link>
+          title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
       },
       {
           title: tLbl('risk_assessment_edit')
@@ -208,17 +208,16 @@ const Edit = ({ params }: { params: { id: string } }) => {
             isDraft: riskIsDraft,
             updateBy: session?.user?.userInfo.id as string
           }
-          console.log(riskMaster);
           const res = await riskAssessmentUpdApi(http, riskId ?? "", riskItems, riskMaster);
           if (res.statusCode != STATUS_OK) {
-            message.error(tMsg('msg_update_fail'));
+            messageApi.error(tMsg('msg_update_fail'));
           } else {
-            message.success(tMsg('msg_add_success'));
+            messageApi.success(tMsg('msg_update_success'));
           }
       } catch (error) {
           console.log(error);
           setLoadingBtn(false);
-          message.error(tMsg('msg_update_fail'));
+          messageApi.error(tMsg('msg_update_fail'));
       } finally {
         setLoadingBtn(false);
       }
@@ -229,10 +228,11 @@ const Edit = ({ params }: { params: { id: string } }) => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      router.push(`${pathName}`);
+      router.push(`/risk-assessment`);
     }
   return(
     <>
+      {contextHolder}
       <Content style={{ padding: '30px 48px' }}>
         <h2>{tLbl('risk_assessment_edit')}</h2>
         <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />

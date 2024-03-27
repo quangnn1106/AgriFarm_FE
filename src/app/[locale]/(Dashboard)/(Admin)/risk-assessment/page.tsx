@@ -232,7 +232,7 @@ const List = () => {
                             label: (
                                 <a
                                 onClick={() => {
-                                    router.push(`${pathName}/edit/${id}`);
+                                    router.push(`${pathName}/update/${id}`);
                                 }}
                                 >
                                 <Space>

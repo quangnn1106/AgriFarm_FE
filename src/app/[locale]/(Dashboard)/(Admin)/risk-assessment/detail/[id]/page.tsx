@@ -26,7 +26,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
     const tMsg = useTranslations('Services.RiskAsm.message');
     const cx = classNames.bind(styles);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const { message } = App.useApp();
+    const [messageApi, contextHolder] = message.useMessage();
     const http = UseAxiosAuth();
     const riskId = params.id;
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
@@ -59,15 +59,15 @@ const Detail = ({ params }: { params: { id: string } }) => {
             console.log(file);
             const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
             if (!isJpgOrPng) {
-                message.error(tMsg('msg_upload_img'));
+                messageApi.error(tMsg('msg_upload_img'));
             }
             const isLt2M = file.size / 1024 / 1024 < 2;
             if (!isLt2M) {
-                message.error(tMsg('msg_max_size_img'));
+                messageApi.error(tMsg('msg_max_size_img'));
             }
             const maxUploadImg = fileList.length < 3;
             if (!maxUploadImg) {
-                message.error(tMsg('msg_max_upload_img'));
+                messageApi.error(tMsg('msg_max_upload_img'));
             }
             if (isJpgOrPng && isLt2M && maxUploadImg) {
                 setFileList([...fileList, file]);
@@ -86,7 +86,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
     
     const breadCrumb = [
         {
-            title: <Link href={`${pathName}`}>{tLbl('risk_assessment')}</Link>
+            title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
         },
         {
             title: tLbl('risk_assessment_detail')
@@ -94,6 +94,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
       ];
     return (
         <>
+        {contextHolder}
         <Content style={{ padding: '30px 48px' }}>
             <h2>{tLbl('risk_assessment_detail')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />

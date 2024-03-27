@@ -151,7 +151,7 @@ const Add = () => {
     
     const breadCrumb = [
       {
-          title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+          title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
       },
       {
           title: tLbl('risk_assessment_add')
@@ -187,7 +187,7 @@ const Add = () => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      router.push(`${pathName}`);
+      router.push(`/risk-assessment`);
     }
   return(
     <>

@@ -33,7 +33,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     const tMsg = useTranslations('Services.RiskAsm.message');
     const cx = classNames.bind(styles);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const { message } = App.useApp();
+    const [messageApi, contextHolder] = message.useMessage();
     const http = UseAxiosAuth();
     const taskId = params.taskId;
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
@@ -96,15 +96,15 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
             console.log(file);
             const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
             if (!isJpgOrPng) {
-                message.error(tMsg('msg_upload_img'));
+                messageApi.error(tMsg('msg_upload_img'));
             }
             const isLt2M = file.size / 1024 / 1024 < 2;
             if (!isLt2M) {
-                message.error(tMsg('msg_max_size_img'));
+                messageApi.error(tMsg('msg_max_size_img'));
             }
             const maxUploadImg = fileList.length < 3;
             if (!maxUploadImg) {
-                message.error(tMsg('msg_max_upload_img'));
+                messageApi.error(tMsg('msg_max_upload_img'));
             }
             if (isJpgOrPng && isLt2M && maxUploadImg) {
                 setFileList([...fileList, file]);
@@ -123,7 +123,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     
     const breadCrumb = [
         {
-            title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+            title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
         },
         {
             title: tLbl('risk_assessment_impl')
@@ -135,13 +135,13 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
             setLoadings(true);
             const res = await riskAssessmentImplApi(http, itemResponse);
             if (res.statusCode != STATUS_OK) {
-              message.error(tMsg('msg_update_fail'));
+              messageApi.error(tMsg('msg_update_fail'));
             } else {
-              message.success(tMsg('msg_add_success'));
+              messageApi.success(tMsg('msg_add_success'));
             }
         } catch (error) {
             console.log(error);
-            message.error(tMsg('msg_update_fail'));
+            messageApi.error(tMsg('msg_update_fail'));
         } finally {
             setLoadings(false);
         }
@@ -192,6 +192,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     };
     return (
         <>
+        {contextHolder}
         <Content style={{ padding: '30px 48px' }}>
             <h2>{tLbl('risk_assessment_impl')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
