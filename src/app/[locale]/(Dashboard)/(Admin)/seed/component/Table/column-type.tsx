@@ -57,7 +57,6 @@ import { truncate } from 'fs';
       title: t('Name'),
       dataIndex: 'name',
       width: 'max-content',
-      fixed: 'left'
     },
     {
       title: 'Stock',
@@ -66,7 +65,7 @@ import { truncate } from 'fs';
       render: (_,seedItem) => `${seedItem.stock} ${seedItem.measureUnit}`
     },
     {
-        title: 'price',
+        title: 'Price',
         dataIndex: 'unitPrice',
         width: 'max-content',
         render: (_,seedItem) => `${seedItem.unitPrice} VND`

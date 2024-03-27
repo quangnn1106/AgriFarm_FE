@@ -9,13 +9,24 @@ import {
   Button,
   Typography,
   notification,
-  Tooltip
+  Tooltip,
+  Select,
+  Flex
 } from 'antd';
+import {
+  BorderlessTableOutlined,
+  CloseOutlined,
+  DownCircleOutlined,
+  FormOutlined,
+  FileOutlined,
+  BarsOutlined,
+  PlusOutlined,
+  HomeOutlined
+} from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { Axios, AxiosInstance } from 'axios';
 import getSeedDetailApi from '@/services/Admin/Seed/getSeedDetailApi';
 import { STATUS_OK } from '@/constants/https';
@@ -28,8 +39,8 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { SegmentedLabeledOption } from 'antd/es/segmented';
 import classNames from 'classnames/bind';
 import styles from '../../../adminStyle.module.scss';
-import AddSeedSupplyModal from '../UpdateSeedSupplyModal/add-supply-modal';
 
+import AddSeedSupplyModal from '../UpdateSeedSupplyModal/add-supply-modal';
 
 const UpdateSeedFormDrawer = ({
   params
@@ -39,6 +50,7 @@ const UpdateSeedFormDrawer = ({
   };
 }) => {
   const cx = classNames.bind(styles);
+
   const t = useTranslations('Common');
   const tM = useTranslations('Message');
 
@@ -48,13 +60,10 @@ const UpdateSeedFormDrawer = ({
   const http = UseAxiosAuth();
   const [seedDetail, setSeedDetail] = useState<Seed>();
 
-
-
-
   const getSeedDetailData = async (
     http: AxiosInstance,
     seedId?: string,
-    formInfoCommon?: FormInstance,
+    formInfoCommon?: FormInstance
   ) => {
     try {
       const responseData = await getSeedDetailApi(seedId, http);
@@ -85,7 +94,6 @@ const UpdateSeedFormDrawer = ({
     });
   };
 
-
   const onFinish = async (props: Seed) => {
     console.log(props);
     setIsFetching(true);
@@ -94,50 +102,32 @@ const UpdateSeedFormDrawer = ({
         name: props.name,
         description: props.description,
         notes: props.notes
-      }).then( async res => {
-        await updateSeedPropertyApi(
-          params.seedId,
-          http,
-          props.properties
-        ).then(resProps => {
-          if (resProps.data && res.data) {
-            setIsFetching(false);
-            openNotification('top', `${tM('update_susses')}`, 'success');
+      }).then(async res => {
+        await updateSeedPropertyApi(params.seedId, http, props.properties)
+          .then(resProps => {
+            if (resProps.data && res.data) {
+              setIsFetching(false);
+              openNotification('top', `${tM('update_susses')}`, 'success');
 
-            console.log('update staff success', resProps.status);
-          } else {
-            openNotification('top', `${tM('update_error')}`, 'error');
+              console.log('update staff success', resProps.status);
+            } else {
+              openNotification('top', `${tM('update_error')}`, 'error');
 
-            console.log('update staff fail', resProps.status);
-          }
-        }).finally(()=> {
-
-        });
+              console.log('update staff fail', resProps.status);
+            }
+          })
+          .finally(() => {});
       });
     } catch (error) {
       console.log('Error: :  ', error);
     }
   };
 
-  const InputUnit = (
-    <Form.Item
-      name='measureUnit'
-      style={{
-        maxWidth: '100%',
-        margin: '0px 0px 8px 0px',
-        padding: '0px 0px'
-      }}
-      label='Unit'
-    >
-      <Input />
-    </Form.Item>
-  );
-
   //handle update supply
   const [showAddSupply, setShowAddSupply] = useState(false);
   const showAddSupplyModal = () => {
     setShowAddSupply(true);
-  }
+  };
 
   useEffect(() => {
     getSeedDetailData(http, params.seedId, formInfoCommon);
@@ -148,12 +138,36 @@ const UpdateSeedFormDrawer = ({
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
+        <Tooltip title='Add More Supply'>
+          <Button
+            size='middle'
+            className={cx('bg-btn')}
+            icon={<PlusOutlined />}
+            onClick={showAddSupplyModal}
+          >
+            Nhập thêm giống
+          </Button>
+        </Tooltip>
+        <AddSeedSupplyModal
+          params={{
+            seedId: params.seedId,
+            visible: showAddSupply,
+            onCancel: () => {
+              setShowAddSupply(false);
+            }
+          }}
+        ></AddSeedSupplyModal>
         <Form
           disabled={!componentDisabled}
           form={formInfoCommon}
           colon={false}
-          layout='vertical'
+          layout={'horizontal'}
+          labelCol={{ span: 10 }}
+          labelWrap
+          wrapperCol={{ span: 18 }}
           onFinish={onFinish}
+          style={{ paddingTop: '1rem' }}
+          size='middle'
         >
           <Form.Item
             name='name'
@@ -162,9 +176,13 @@ const UpdateSeedFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Name'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Name')}
+              </>
+            }
           >
-            <Input />
+            <Input placeholder='Nhập dữ liệu' />
           </Form.Item>
           <Form.Item
             name='description'
@@ -173,9 +191,16 @@ const UpdateSeedFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label={t('Description')}
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Description')}{' '}
+              </>
+            }
           >
-            <TextArea rows={4} />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
+            />
           </Form.Item>
           <Form.Item
             name='notes'
@@ -184,18 +209,17 @@ const UpdateSeedFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Notes'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+              </>
+            }
           >
-            <TextArea rows={4} />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
+            />
           </Form.Item>
-          {/* <Button
-            htmlType='submit'
-            type='primary'
-            loading={isFetching}
-          >
-            Save
-          </Button> */}
-
           <Form.Item
             name='stock'
             style={{
@@ -203,9 +227,40 @@ const UpdateSeedFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Stock'
+            label={
+              <>
+                <HomeOutlined style={{ marginRight: '0.5rem' }} /> Stock
+              </>
+            }
           >
-            <InputNumber addonAfter={InputUnit}></InputNumber>
+            <InputNumber
+              className='stock-input'
+              addonAfter='kg'
+            ></InputNumber>
+          </Form.Item>
+          <Form.Item
+            name='measureUnit'
+            style={{
+              maxWidth: '100%',
+              margin: '0px 0px 8px 0px',
+              padding: '0px 0px'
+            }}
+            label={
+              <>
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit
+              </>
+            }
+          >
+            <Select
+              size={'middle'}
+              options={[
+                {
+                  value: 'kg',
+                  label: 'kg'
+                }
+              ]}
+              placeholder='Chọn giá trị'
+            ></Select>
           </Form.Item>
           <Form.Item
             name='unitPrice'
@@ -214,76 +269,76 @@ const UpdateSeedFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Unit Price'
+            label={
+              <>
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Unit Price 
+              </>
+            }
           >
             <InputNumber addonAfter='VND'></InputNumber>
           </Form.Item>
-          <label>Properties</label>
-          <Form.List name='properties'>
-            {(fields, { add, remove }) => (
-              <div>
-                {fields.map(field => (
-                  <Space
-                    key={field.key}
-                    style={{ display: 'flex', marginBottom: '4px' }}
-                    align='baseline'
-                    title='Properties'
-                  >
-                    <Form.Item
-                      name={[field.name, 'name']}
-                      rules={[{ required: true, message: 'Missing name' }]}
-                    >
-                      <Input placeholder='Name' />
-                    </Form.Item>
-                    <Form.Item
-                      name={[field.name, 'value']}
-                      rules={[{ required: true, message: 'Missing value' }]}
-                    >
-                      <InputNumber placeholder='Value' />
-                    </Form.Item>
-                    <Form.Item
-                      name={[field.name, 'unit']}
-                      rules={[{ required: true, message: 'Missing unit' }]}
-                    >
-                      <Input placeholder='Unit' />
-                    </Form.Item>
-                    <CloseOutlined
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  </Space>
-                ))}
-                <Button
-                  type='dashed'
-                  onClick={() => add()}
-                  block
-                >
-                  + Add new property
-                </Button>
-              </div>
-            )}
-          </Form.List>
-          <Button
-            htmlType='submit'
-            type='primary'
-            loading={isFetching}
+          <Flex
+            gap={'0.5rem'}
+            vertical
+            style={{ paddingBottom: '1rem' }}
           >
-            Save
-          </Button>
-        </Form>
-        <Tooltip title='Add More Supply'>
+            <label>
+              <BarsOutlined style={{ marginRight: '0.5rem' }} />
+              Properties
+            </label>
+            <Form.List name='properties'>
+              {(fields, { add, remove }) => (
+                <div>
+                  {fields.map(field => (
+                    <Space
+                      key={field.key}
+                      style={{ display: 'flex', marginBottom: '4px' }}
+                      align='baseline'
+                      title='Properties'
+                    >
+                      <Form.Item name={[field.name, 'name']}>
+                        <Input placeholder='Name' />
+                      </Form.Item>
+                      <Form.Item name={[field.name, 'value']}>
+                        <InputNumber placeholder='Value' />
+                      </Form.Item>
+                      <Form.Item name={[field.name, 'unit']}>
+                        <Input placeholder='Unit' />
+                      </Form.Item>
+                      <CloseOutlined
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    </Space>
+                  ))}
+                  <Button
+                    size='middle'
+                    type='dashed'
+                    onClick={() => add()}
+                    block
+                  >
+                    + Add new property
+                  </Button>
+                </div>
+              )}
+            </Form.List>
+          </Flex>
+          <Flex
+            style={{ width: '100%' }}
+            justify='end'
+          >
             <Button
-              className={cx('bg-btn')}
-              icon={<PlusOutlined />}
-              onClick={showAddSupplyModal}
-            />
-          </Tooltip>
-          <AddSeedSupplyModal params={{
-          seedId: params.seedId,
-          visible: showAddSupply,
-          onCancel: (()=>{ setShowAddSupply(false) })
-        }}></AddSeedSupplyModal>
+              htmlType='submit'
+              type='primary'
+              loading={isFetching}
+              icon={<FileOutlined />}
+              className='bg-btn'
+            >
+              Save
+            </Button>
+          </Flex>
+        </Form>
       </Spin>
     </>
   );

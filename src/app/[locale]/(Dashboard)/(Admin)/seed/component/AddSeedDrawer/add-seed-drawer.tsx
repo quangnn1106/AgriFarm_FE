@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
+import React from 'react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import {
   Form,
@@ -12,13 +13,21 @@ import {
   Typography,
   notification,
   Select,
-  SelectProps
+  SelectProps,
+  Flex
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { CloseOutlined } from '@ant-design/icons';
+import {
+  BorderlessTableOutlined,
+  CloseOutlined,
+  DownCircleOutlined,
+  FormOutlined,
+  FileOutlined,
+  BarsOutlined
+} from '@ant-design/icons';
 import { CreateAllInfoOfSeedDto, CreateSeedDto, Seed } from '../../models/seed-models';
 import { createSeedApi } from '@/services/Admin/Seed/createSeedApi';
 import { useSession } from 'next-auth/react';
@@ -27,8 +36,9 @@ import { SupplierResponse } from '../../../supply/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';
+import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
 
-const AddSeedFormDrawer = () => {
+const AddSeedFormDrawer: React.FC = () => {
   const t = useTranslations('Common');
 
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -52,10 +62,38 @@ const AddSeedFormDrawer = () => {
     });
   };
 
+  const initialFormValues = {
+    name: '',
+    description: '',
+    notes: '',
+    defaultUnit: 'kg',
+    properties: [{ name: '', value: 0, unit: '' }], // Default value for the properties field
+    quantity: 0,
+    unitPrice: 0,
+    measureUnit: 'kg',
+    content: '',
+    supplierId: '', // Default value for supplierId field
+    supplierName: '',
+    address: '',
+  };
+
   //Set selection supplier
   const [listSupplier, setListSupplier] = useState<SupplierResponse[]>([]);
   const [options, setOptions] = useState<SelectProps['options']>([]);
-  const [selectedSupplier, setSelectedSupplier] = useState<string>('');
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string>('');
+
+  const onSelectSupplier = async (value: string) => {
+    setSelectedSupplierId(value);
+    try {
+      await getSupplierDetailApi(value, http).then(res => {
+        let selected = res?.data as SupplierResponse
+        form.setFieldValue('supplierName', selected?.name);
+        form.setFieldValue('address', selected?.address);
+      });
+    } catch (error) {
+      console.error('Error occurred while get details supplier:', error);
+    }
+  };
 
   useEffect(() => {
     getListSupplier(http);
@@ -117,27 +155,40 @@ const AddSeedFormDrawer = () => {
       }).then(async res => {
         const seedNew = res?.data as Seed;
         // setCreatedSeed(res.data as Seed);
-        await createSupplyInfoApi(seedNew.id , http, {
-          quanlity: value.quantity,
-          unitPrice: value.unitPrice,
-          measureUnit: value.measureUnit,
-          content: value.content,
-          supplier: {
-            id: value.supplierId,
-            name: value.supplierName,
-            address: value.address
-          }
-        }).then(resSupplier => {
-          if (res.data && resSupplier.data) {
+        if(form.getFieldValue('quantity') > 0 && form.getFieldValue('quantity') < 10000) {
+          await createSupplyInfoApi(seedNew.id, http, {
+            quanlity: value.quantity,
+            unitPrice: value.unitPrice,
+            measureUnit: value.measureUnit,
+            content: value.content,
+            supplier: {
+              id: value.supplierId,
+              name: value.supplierName,
+              address: value.address
+            }
+          }).then(resSupplier => {
+            if (res.data && resSupplier.data) {
+              openNotification('top', t('Create_successfully'), 'success');
+              console.log('create success', res.status);
+            } else {
+              openNotification('top', t('Create_fail')+ res?.message , 'error');
+              console.log('create fail', res.status);
+            }
+            form.resetFields();
+          });
+        } else {
+          if (res.data) {
             openNotification('top', t('Create_successfully'), 'success');
-            console.log('create staff success', res.status);
+            console.log('create success', res.status);
           } else {
-            openNotification('top', t('Create_fail'), 'error');
-            console.log('create staff fail', res.status);
+            openNotification('top', t('Create_fail')+ res?.message , 'error');
+            console.log('create fail', res.status);
           }
-        });
+          form.resetFields();
+        }
       });
     } catch (error) {
+      openNotification('top', t('Create_fail') , 'error');
       console.error('Error occurred while updating season:', error);
     }
   };
@@ -164,8 +215,12 @@ const AddSeedFormDrawer = () => {
           disabled={!componentDisabled}
           form={form}
           colon={false}
-          layout='vertical'
           onFinish={onSubmit}
+          layout={'horizontal'}
+          labelCol={{ span: 10 }}
+          labelWrap
+          wrapperCol={{ span: 18 }}
+          initialValues={initialFormValues}
         >
           <Form.Item
             name='name'
@@ -174,9 +229,14 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Name'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Name')}
+              </>
+            }
+            rules={[{ required: true, message: 'Vui lòng nhập dữ liệu' }]}
           >
-            <Input />
+            <Input placeholder='Nhập dữ liệu' />
           </Form.Item>
           <Form.Item
             name='description'
@@ -185,9 +245,16 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label={t('Description')}
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Description')}
+              </>
+            }
           >
-            <TextArea rows={4} />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
+            />
           </Form.Item>
           <Form.Item
             name='notes'
@@ -196,9 +263,16 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Notes'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+              </>
+            }
           >
-            <TextArea rows={4} />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
+            />
           </Form.Item>
           <Form.Item
             name='defaultUnit'
@@ -207,62 +281,75 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Unit'
+            label={
+              <>
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Unit
+              </>
+            }
           >
             <Select
+              size={'middle'}
               options={[
                 {
                   value: 'kg',
                   label: 'kg'
                 }
               ]}
+              placeholder='Chọn giá trị'
             ></Select>
           </Form.Item>
-          <label>Properties</label>
-          <Form.List name='properties'>
-            {(fields, { add, remove }) => (
-              <div>
-                {fields.map(field => (
-                  <Space
-                    key={field.key}
-                    style={{ display: 'flex', marginBottom: '4px' }}
-                    align='baseline'
+          <Flex
+            gap={'0.5rem'}
+            vertical
+            style={{ paddingBottom: '1rem' }}
+          >
+            <label>
+              <BarsOutlined style={{ marginRight: '0.5rem' }} />
+              Properties
+            </label>
+            <Form.List name='properties'>
+              {(fields, { add, remove }) => (
+                <div>
+                  {fields.map(field => (
+                    <Space
+                      key={field.key}
+                      style={{ display: 'flex', marginBottom: '0.5rem' }}
+                      align='baseline'
+                    >
+                      <Form.Item
+                        name={[field.name, 'name']}
+                      >
+                        <Input placeholder='Name'/>
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, 'value']}
+                      >
+                        <InputNumber placeholder='Value'/>
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, 'unit']}
+                      >
+                        <Input placeholder='Unit'/>
+                      </Form.Item>
+                      <CloseOutlined
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    </Space>
+                  ))}
+                  <Button
+                    size='middle'
+                    type='dashed'
+                    onClick={() => add()}
+                    block
                   >
-                    <Form.Item
-                      name={[field.name, 'name']}
-                      rules={[{ required: true, message: 'Missing name' }]}
-                    >
-                      <Input placeholder='Name' />
-                    </Form.Item>
-                    <Form.Item
-                      name={[field.name, 'value']}
-                      rules={[{ required: true, message: 'Missing value' }]}
-                    >
-                      <InputNumber placeholder='Value' />
-                    </Form.Item>
-                    <Form.Item
-                      name={[field.name, 'unit']}
-                      rules={[{ required: true, message: 'Missing unit' }]}
-                    >
-                      <Input placeholder='Unit' />
-                    </Form.Item>
-                    <CloseOutlined
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  </Space>
-                ))}
-                <Button
-                  type='dashed'
-                  onClick={() => add()}
-                  block
-                >
-                  + Add new property
-                </Button>
-              </div>
-            )}
-          </Form.List>
+                    + Add new property
+                  </Button>
+                </div>
+              )}
+            </Form.List>
+          </Flex>
           <Form.Item
             name='quantity'
             style={{
@@ -270,7 +357,11 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Quantity'
+            label={
+              <>
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity 
+              </>
+            }
           >
             <InputNumber placeholder='Quantity' />
           </Form.Item>
@@ -281,7 +372,11 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='UnitPrice'
+            label={
+              <>
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice 
+              </>
+            }
           >
             <InputNumber placeholder='UnitPrice' />
           </Form.Item>
@@ -292,9 +387,15 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='MeasureUnit'
+            label={
+              <>
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit 
+              </>
+            }
           >
             <Select
+              size='middle'
+              placeholder='Chọn 1 giá trị'
               options={[
                 {
                   value: 'kg',
@@ -310,30 +411,51 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Content'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> Content 
+              </>
+            }
           >
             <TextArea
-              placeholder='Content'
-              rows={4}
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
             />
           </Form.Item>
           <Form.Item
-            name='supplier'
+            name='supplierId'
             style={{
               maxWidth: '100%',
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Supplier'
+            label={
+              <>
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Supplier 
+              </>
+            }
           >
             <Select
-              // onChange={(value: string) => {
-              //   setSelectedSupplier(value);
-              // }}
-              placeholder='select one country'
+              onChange={onSelectSupplier}
+              showSearch
+              optionFilterProp='label'
+              filterOption={(input, option) =>
+                (option?.label?.toString().toLowerCase() ?? '').includes(
+                  input.toLowerCase()
+                )
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label?.toString() ?? '')
+                  .toLowerCase()
+                  .localeCompare(
+                    (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
+                  )
+              }
+              placeholder='Chọn 1 giá trị'
               optionLabelProp='label'
               options={options}
-              value={selectedSupplier}
+              value={selectedSupplierId}
+              size={'middle'}
             ></Select>
           </Form.Item>
           <Form.Item
@@ -343,9 +465,13 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='supplierName'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> Supplier Name 
+              </>
+            }
           >
-            <Input placeholder='supplierName' />
+            <Input placeholder='Nhập dữ liệu' />
           </Form.Item>
           <Form.Item
             name='address'
@@ -354,9 +480,14 @@ const AddSeedFormDrawer = () => {
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='address'
+            label={
+              <>
+                <FormOutlined style={{ marginRight: '0.5rem' }} />
+                Address 
+              </>
+            }
           >
-            <Input placeholder='address' />
+            <Input placeholder='Nhập dữ liệu' />
           </Form.Item>
 
           <Form.Item
@@ -369,13 +500,19 @@ const AddSeedFormDrawer = () => {
               </Typography>
             )}
           </Form.Item>
-          <Button
-            htmlType='submit'
-            type='primary'
-            loading={isFetching}
+          <Flex
+            style={{ width: '100%' }}
+            justify='end'
           >
-            Save
-          </Button>
+            <Button
+              htmlType='submit'
+              type='primary'
+              loading={isFetching}
+              icon={<FileOutlined />}
+            >
+              Save
+            </Button>
+          </Flex>
         </Form>
       </Spin>
     </>

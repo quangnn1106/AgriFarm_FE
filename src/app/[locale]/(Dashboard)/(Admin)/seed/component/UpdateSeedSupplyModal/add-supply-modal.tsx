@@ -2,14 +2,24 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import {
   Button,
   ConfigProvider,
+  Flex,
   Form,
   Input,
   InputNumber,
   Modal,
   Select,
   SelectProps,
+  Typography,
   notification
 } from 'antd';
+import {
+  BorderlessTableOutlined,
+  CloseOutlined,
+  DownCircleOutlined,
+  FormOutlined,
+  FileOutlined,
+  BarsOutlined
+} from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useSession } from 'next-auth/react';
@@ -20,6 +30,9 @@ import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import { CreateSupplierMapper } from '../../models/seed-models';
 import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';
+import stylesSeedManagement from '../../seedStyle.module.scss';
+import classNames from 'classnames/bind';
+import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
 
 const AddSeedSupplyModal = ({
   params
@@ -30,6 +43,8 @@ const AddSeedSupplyModal = ({
     onCancel: () => void;
   };
 }) => {
+  const styleSeedManagement = classNames.bind(stylesSeedManagement);
+
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
@@ -49,9 +64,32 @@ const AddSeedSupplyModal = ({
     });
   };
 
+  const initialFormValues = {
+    quantity: 0,
+    unitPrice: 0,
+    measureUnit: 'kg',
+    content: '',
+    supplierId: '', // Default value for supplierId field
+    supplierName: '',
+    address: '',
+  };
+
   //Set selection supplier
   const [options, setOptions] = useState<SelectProps['options']>([]);
-  const [selectedSupplier, setSelectedSupplier] = useState<string>('');
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string>('');
+
+  const onSelectSupplier = async (value: string) => {
+    setSelectedSupplierId(value);
+    try {
+      await getSupplierDetailApi(value, http).then(res => {
+        let selected = res?.data as SupplierResponse
+        form.setFieldValue('supplierName', selected?.name);
+        form.setFieldValue('address', selected?.address);
+      });
+    } catch (error) {
+      console.error('Error occurred while get details supplier:', error);
+    }
+  };
 
   useEffect(() => {
     getListSupplier(http);
@@ -102,6 +140,7 @@ const AddSeedSupplyModal = ({
           console.log('create staff fail', resSupplier.status);
         }
       });
+      params.onCancel();
     } catch (error) {
       console.error('Error occurred while updating season:', error);
     }
@@ -130,12 +169,18 @@ const AddSeedSupplyModal = ({
           cancelText={t('Cancel')}
           centered={true}
           width={'fit-content'}
+          footer={null}
+          className= {styleSeedManagement('add-supply-modal')}
         >
           <Form
             form={form}
             colon={false}
-            layout='vertical'
             onFinish={onSubmit}
+            layout={'horizontal'}
+            labelCol={{ span: 10 }}
+            labelWrap
+            wrapperCol={{ span: 18 }}
+            initialValues={initialFormValues}
           >
             <Form.Item
               name='quantity'
@@ -144,7 +189,11 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='Quantity'
+              label={
+                <>
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity 
+                </>
+              }
             >
               <InputNumber placeholder='Quantity' />
             </Form.Item>
@@ -155,7 +204,11 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='UnitPrice'
+              label={
+                <>
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice 
+                </>
+              }
             >
               <InputNumber placeholder='UnitPrice' />
             </Form.Item>
@@ -166,9 +219,15 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='MeasureUnit'
+              label={
+                <>
+                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit 
+                </>
+              }
             >
               <Select
+              size='middle'
+              placeholder='Chọn 1 giá trị'
                 options={[
                   {
                     value: 'kg',
@@ -184,31 +243,52 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='Content'
+              label={
+                <>
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Content 
+                </>
+              }
             >
               <TextArea
-                placeholder='Content'
-                rows={4}
-              />
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              placeholder='Nhập dữ liệu'
+            />
             </Form.Item>
             <Form.Item
-              name='supplier'
+              name='supplierId'
               style={{
                 maxWidth: '100%',
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='Supplier'
+              label={
+                <>
+                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Supplier 
+                </>
+              }
             >
               <Select
-                // onChange={(value: string) => {
-                //   setSelectedSupplier(value);
-                // }}
-                placeholder='select one country'
-                optionLabelProp='label'
-                options={options}
-                value={selectedSupplier}
-              ></Select>
+              onChange={onSelectSupplier}
+              showSearch
+              optionFilterProp='label'
+              filterOption={(input, option) =>
+                (option?.label?.toString().toLowerCase() ?? '').includes(
+                  input.toLowerCase()
+                )
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label?.toString() ?? '')
+                  .toLowerCase()
+                  .localeCompare(
+                    (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
+                  )
+              }
+              placeholder='Chọn 1 giá trị'
+              optionLabelProp='label'
+              options={options}
+              value={selectedSupplierId}
+              size={'middle'}
+            ></Select>
             </Form.Item>
             <Form.Item
               name='supplierName'
@@ -217,9 +297,13 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='supplierName'
+              label={
+                <>
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Supplier Name 
+                </>
+              }
             >
-              <Input placeholder='supplierName' />
+              <Input placeholder='Nhập dữ liệu' />
             </Form.Item>
             <Form.Item
               name='address'
@@ -228,16 +312,36 @@ const AddSeedSupplyModal = ({
                 margin: '0px 0px 8px 0px',
                 padding: '0px 0px'
               }}
-              label='address'
+              label={
+                <>
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Address 
+                </>
+              }
             >
-              <Input placeholder='address' />
+              <Input placeholder='Nhập dữ liệu' />
             </Form.Item>
+            <Flex
+            style={{ width: '100%' }}
+            justify='end'
+          >
             <Button
               htmlType='submit'
               type='primary'
+              icon={<FileOutlined />}
             >
               Save
             </Button>
+          </Flex>
+            <Form.Item
+            noStyle
+            shouldUpdate
+          >
+            {() => (
+              <Typography>
+                <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+              </Typography>
+            )}
+          </Form.Item>
           </Form>
         </Modal>
       </ConfigProvider>

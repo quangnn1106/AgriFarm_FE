@@ -79,6 +79,7 @@ const FilterSection = () => {
           onFinishFailed={onFinishFailed}
           autoComplete='off'
           className={st('margin-form-item')}
+          style={{padding: '0px 24px'}}
         >
           <Form.Item
             label={t('keyword')}
