@@ -1,28 +1,22 @@
 import { RiskItemDef, RiskMasterInputDef } from '@/app/[locale]/(Dashboard)/(Admin)/risk-assessment/interface';
 import { AxiosInstance } from 'axios';
 
-interface RiskMasterDef {
-    riskName: string;
-    riskDescription: string;
-    createBy?: string,
-    isDraft: boolean,
-    riskItems: RiskItemDef[];
-}
-const riskAssessmentAddApi = async (
+const riskAssessmentUpdApi = async (
     http: AxiosInstance | null,
+    id: string,
     riskItems : RiskItemDef[],
-    riskMaster : RiskMasterInputDef) => {
+    riskMaster : RiskMasterInputDef,
+    ) => {
     try {
-        const formData: RiskMasterDef = {
+        const response = await http?.put(`/risk/risk-assessment/edit?id=${id}`, {
             riskName: riskMaster.riskName,
             riskDescription: riskMaster.riskDescription,
-            isDraft: riskMaster.isDraft,
-            createBy: riskMaster.createBy,
+            updateBy: riskMaster.updateBy,
             riskItems: riskItems
-        }
-        const response = await http?.post('/risk/risk-assessment/add', formData);
-
-        return response?.data;
+        });
+  
+        const responseData = response?.data;
+        return responseData;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error
         if (error instanceof Error) {
@@ -32,5 +26,4 @@ const riskAssessmentAddApi = async (
         }
     }
 };
-
-export default riskAssessmentAddApi;
+export default riskAssessmentUpdApi;

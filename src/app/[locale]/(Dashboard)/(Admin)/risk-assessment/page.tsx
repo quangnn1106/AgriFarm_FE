@@ -1,13 +1,13 @@
 'use client'
 import { Content } from "antd/es/layout/layout";
-import styles from "../../components/risk-assessment-style.module.scss";
+import styles from "./components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
-import { App, Button, Dropdown, Form, Input, MenuProps, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
+import { App, Button, Dropdown, Form, Input, MenuProps, Modal, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { AxiosInstance } from "axios";
-import { RiskMasterListDef, SearchConditionDef } from "../../interface";
+import { RiskMasterListDef, SearchConditionDef } from "./interface";
 import riskAssessmentListMasterApi from "@/services/RiskAssessment/riskAssessmentListMasterApi";
 import Table, { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
 import {
@@ -23,6 +23,7 @@ import {
 import { useRouter } from "next/navigation";
 import riskAssessmentDeleteApi from "@/services/RiskAssessment/riskAssessmentDeleteApi";
 import { STATUS_OK } from "@/constants/https";
+import { usePathname } from "@/navigation";
 
 interface ColoredLineProps {
     text: string;
@@ -49,7 +50,8 @@ const List = () => {
       },
     });
     const router = useRouter();
-    const { modal , message } = App.useApp();
+    const [messageApi, contextHolder] = message.useMessage();
+    const pathName = usePathname();
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
@@ -71,6 +73,17 @@ const List = () => {
                     })
                 );
                 setData(normalizedData);
+                const pagination: TablePaginationConfig = {
+                    pageSize: 10,
+                    current: 1
+                }
+                setTableParams({
+                    ...pagination,
+                    pagination: {
+                      ...pagination,
+                      total: responseData.pagination.totalRecord,
+                    },
+                  });
             } catch (error: unknown) {
                 // Assert the type of error to be an instance of Error
                 if (error instanceof Error) {
@@ -148,13 +161,13 @@ const List = () => {
             const responseData = await riskAssessmentDeleteApi(http, riskId);
             if (responseData.statusCode == STATUS_OK) {
                 searchAction(tableParams.pagination!);
-                message.success(tMsg('msg_delete_success'));
+                messageApi.success(tMsg('msg_delete_success'));
             } else {
-                message.error(tMsg('msg_delete_fail'));
+                messageApi.error(tMsg('msg_delete_fail'));
             }
         } catch (error) {
             console.error(error);
-            message.error(tMsg('msg_delete_fail'));
+            messageApi.error(tMsg('msg_delete_fail'));
         } finally {
             setLoading(false);
         }
@@ -190,8 +203,15 @@ const List = () => {
         },
         {
             title: 'Created Date',
-            dataIndex: 'createdDate',
+            // dataIndex: 'createdDate',
             width: '20%',
+            render: (_, item) => {
+                const date = new Date(item.createdDate);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
         },
         {
             title: '',
@@ -206,7 +226,7 @@ const List = () => {
                             label: (
                                 <a
                                     onClick={() => {
-                                        router.push(`/risk-assessment/detail?id=${id}`);
+                                        router.push(`${pathName}/detail/${id}`);
                                     }}
                                 >
                                     <Space>
@@ -223,7 +243,7 @@ const List = () => {
                             label: (
                                 <a
                                 onClick={() => {
-                                    router.push(`/risk-assessment/edit?id=${id}`);
+                                    router.push(`${pathName}/update/${id}`);
                                 }}
                                 >
                                 <Space>
@@ -240,7 +260,7 @@ const List = () => {
                             label: (
                                     <a
                                     onClick={() => {
-                                        modal.confirm({
+                                        Modal.confirm({
                                         title: tMsg('msg_confirm_delete').replace('%ITEM%', riskName),
                                         centered: true,
                                         width: '40%',
@@ -304,10 +324,11 @@ const List = () => {
         }
       };
     const handleCreateNewRisk = () => {
-        router.push('/risk-assessment/add');
+        router.push(`${pathName}/add`);
     }
     return (
         <>
+            {contextHolder}
             <Content style={{ padding: '30px 48px' }}>
                 <h2>{tLbl('risk_assessment')}</h2>
                 <ColoredLine text={tLbl('search_condition')}/>
@@ -373,15 +394,9 @@ const List = () => {
                     loading={loading}
                     onChange={handleTableChange}
                 />
-                {/* <TableComponent data={apiData} loading={loadings} /> */}
             </Content>
         </>
     )
 };
 
-const ListApp: React.FC = () => (
-    <App>
-      <List />
-    </App>
-  );
-export default ListApp;
+export default List;
