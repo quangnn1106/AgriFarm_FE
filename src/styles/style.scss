@@ -264,3 +264,19 @@ p {
         border-color: #009A29;
     }
 }
+
+@media screen and (max-width: 48rem) {
+    .ant-drawer-content-wrapper {
+        width: 100% !important;
+    }
+}
+@media screen and (min-width: 48rem) {
+    .ant-drawer-content-wrapper {
+        width: 60% !important;
+    }
+}
+@media screen and (min-width: 80rem) {
+    .ant-drawer-content-wrapper {
+        width: 40% !important;
+    }
+}

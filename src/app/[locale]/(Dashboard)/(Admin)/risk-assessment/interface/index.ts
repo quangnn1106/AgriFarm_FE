@@ -1,5 +1,5 @@
 export interface RiskItemDef {
-    riskItemTile: string;
+    riskItemTitle: string;
     riskItemDiv: number;
     riskItemType: number;
     riskItemContent: string;
@@ -9,7 +9,8 @@ export interface RiskMasterInputDef {
     riskName: string;
     riskDescription: string;
     isDraft: boolean;
-    createBy: string;
+    createBy?: string;
+    updateBy?: string;
 }
 export interface RiskItemContentsResponseDef {
     anwser: string;

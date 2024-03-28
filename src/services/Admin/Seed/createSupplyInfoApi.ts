@@ -3,7 +3,7 @@ import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
 export const createSupplyInfoApi: (
-    seedId: string | null,
+    seedId: string | undefined,
     http: AxiosInstance | null,
     CreateSupplierDto?: CreateSupplierDto
 ) => Promise<HttpResponseCommon<Seed | undefined>> = async (

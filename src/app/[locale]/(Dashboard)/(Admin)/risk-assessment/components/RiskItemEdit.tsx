@@ -6,11 +6,13 @@ import classNames from 'classnames/bind';
 import { ReactElement, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ItemModeValue } from "../enum";
-import SingleChoice from "./SingleChoice/SingleChoice";
 import MultiChoice from "./MultiChoice/MultiChoice";
 import ItemText from "./Text/Text";
 import UploadImage from "./Image/Upload";
 import type { CheckboxProps } from 'antd';
+import { RiskItemDef } from "../interface";
+import SingleChoiceEdit from "./SingleChoice/SingleChoiceEdit";
+import MultiChoiceEdit from "./MultiChoice/MultiChoiceEdit";
 
 interface ItemContentDef {
   [key: number] : {
@@ -25,10 +27,10 @@ interface RiskItem {
     indexItem: number;
     handleRiskItemsTitle: (indexItem: number, value: string) => void;
     onCheckboxChange: (indexItem: number, value: number) => void;
-    riskItemContent: ItemContentDef;
+    riskItem: RiskItemDef;
+    riskItemContent: ItemContentDef
 }
-// Single choice
-const RiskItem: React.FC<RiskItem> = ({
+const RiskItemEdit: React.FC<RiskItem> = ({
         onRadioChange,
         handleRiskItems,
         itemMode,
@@ -36,18 +38,18 @@ const RiskItem: React.FC<RiskItem> = ({
         indexItem,
         handleRiskItemsTitle,
         onCheckboxChange,
+        riskItem,
         riskItemContent
     }: RiskItem): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const tMsg = useTranslations('Services.RiskAsm.message');
-  const [content, setContent] = useState(riskItemContent[indexItem][itemMode]);
   const [readioSel, setReadioSel] = useState(itemMode);
+  const [content, setContent] = useState(riskItemContent[indexItem][itemMode]);
   const handleOnchangeTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     handleRiskItemsTitle(indexItem, e.target.value);
   }
-
   const handleOnchangeRadio = (e: RadioChangeEvent) => {
     handleRiskItems(indexItem,0,"",e.target.value);
     if (riskItemContent[indexItem][e.target.value] == undefined) {
@@ -67,7 +69,7 @@ const RiskItem: React.FC<RiskItem> = ({
         <fieldset className={cx('risk-item__wrap')}>
           <legend style={{width: '50%', border: 'none'}}>
             <TextArea
-              defaultValue={tLbl('title_default_text').replace('%ITEM%', indexItem.toString())}
+              defaultValue={riskItem.riskItemTitle}
               maxLength={300}
               cols={70}
               rows={4}
@@ -85,11 +87,11 @@ const RiskItem: React.FC<RiskItem> = ({
             </Radio.Group>
             {readioSel == ItemModeValue.SINGLE_CHOICE ? (
               <>
-                <SingleChoice contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
+                <SingleChoiceEdit contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
               </>
             ) : readioSel == ItemModeValue.MULTI_CHOICE ? (
               <>
-              <MultiChoice contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
+              <MultiChoiceEdit contents={Object.values(JSON.parse(content))} handleEnterContent={handleRiskItems} idxItem={indexItem}/>
               </>
             ) : readioSel == ItemModeValue.TEXT ? (
               <>
@@ -104,7 +106,7 @@ const RiskItem: React.FC<RiskItem> = ({
             )}
             <div className={cx('must')}>
               <span>{tLbl('must')}:</span><br/>
-              <Checkbox className={cx('must-checkbox')} onChange={handleOnchangeMust}>{tLbl('required')}</Checkbox>
+              <Checkbox defaultChecked={(riskItem.must == 1)} className={cx('must-checkbox')} onChange={handleOnchangeMust}>{tLbl('required')}</Checkbox>
             </div>
             <div className={cx('delete-item')}>
                   <Button type="primary" className={cx('single-choice-btn__addrec')} onClick={() => handleDeleteItem(indexItem)}>{tCom('btn_delete')}</Button>
@@ -114,4 +116,4 @@ const RiskItem: React.FC<RiskItem> = ({
     </>
   );
 };
-export default RiskItem;
+export default RiskItemEdit;

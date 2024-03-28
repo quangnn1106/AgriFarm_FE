@@ -1,5 +1,5 @@
 
-import { Seed } from "@/app/[locale]/(Dashboard)/(Admin)/seed/models/seed-models";
+import { SupplierResponse } from "@/app/[locale]/(Dashboard)/(Admin)/supply/models/supplier-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
@@ -10,17 +10,15 @@ export interface Pagination {
     TotalPages: number;
   }
 
-const getSeedsApi: (
-    siteId?: string | null,
+const getSupplierDetailApi: (
+    supplierID: string,
     http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Seed[]>> = async (siteId, http) => {
+    ) => Promise<HttpResponseCommon<SupplierResponse>> = async (supplierID, http) => {
     try {
-        const res = await http?.get(`/seed/farm-seeds/get`, {
+        const res = await http?.get(`/sup/suppliers/get`, {
             params: {
-              siteId: siteId
-            }, headers: {
-                pageSize: 40
-              }
+              id: supplierID
+            }
         });
         return res?.data;
 
@@ -33,4 +31,4 @@ const getSeedsApi: (
         }
     }
 }
-export default getSeedsApi;
+export default getSupplierDetailApi;
