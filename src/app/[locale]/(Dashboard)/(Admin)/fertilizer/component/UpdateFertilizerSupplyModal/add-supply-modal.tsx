@@ -28,22 +28,22 @@ import { useEffect, useState } from 'react';
 import { SupplierResponse } from '../../../supply/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
-import { CreateSupplierMapper } from '../../models/seed-models';
-import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';
-import stylesSeedManagement from '../../seedStyle.module.scss';
+import stylesFertilizerManagement from '../../fertilizerStyle.module.scss';
 import classNames from 'classnames/bind';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
+import { CreateSupplierMapper } from '../../models/fertilizer-models';
+import { createSupplyInfoApi } from '@/services/Admin/Fertilizer/createSuppyInfoApi';
 
-const AddSeedSupplyModal = ({
+const AddFertilizerSupplyModal = ({
   params
 }: {
   params: {
-    seedId: string | undefined;
+    fertilizerId: string | undefined;
     visible: boolean;
     onCancel: () => void;
   };
 }) => {
-  const styleSeedManagement = classNames.bind(stylesSeedManagement);
+  const styleFertilizerManagement = classNames.bind(stylesFertilizerManagement);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
@@ -121,7 +121,7 @@ const AddSeedSupplyModal = ({
 
   const onSubmit = async (value: CreateSupplierMapper) => {
     try {
-      await createSupplyInfoApi(params.seedId, http, {
+      await createSupplyInfoApi(params.fertilizerId, http, {
         quanlity: value.quantity,
         unitPrice: value.unitPrice,
         measureUnit: value.measureUnit,
@@ -164,14 +164,14 @@ const AddSeedSupplyModal = ({
         }}
       >
         <Modal
-          title='Nhập thêm giống'
+          title='Nhập thêm phân bón'
           open={params.visible}
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
           centered={true}
           width={'fit-content'}
           footer={null}
-          className= {styleSeedManagement('add-supply-modal')}
+          className= {styleFertilizerManagement('add-supply-modal')}
         >
           <Form
             form={form}
@@ -349,4 +349,4 @@ const AddSeedSupplyModal = ({
     </>
   );
 };
-export default AddSeedSupplyModal;
+export default AddFertilizerSupplyModal;

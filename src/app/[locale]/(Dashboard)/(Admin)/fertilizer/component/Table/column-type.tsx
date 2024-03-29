@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 'use client'
 import {
   TableColumnsType,
@@ -6,6 +7,8 @@ import {
   Modal,
   Space,
   Button,
+  Image,
+  Flex
 } from 'antd';
 import {
   DeleteOutlined,
@@ -15,29 +18,42 @@ import {
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
-import { Seed } from '../../models/seed-models';
+import { Fertilizer } from '../../models/fertilizer-models';
 
- export function SeedTableColumns() {
+ export function FertilizerTableColumns() {
   const t = useTranslations('Common');
 
-
-  const seedTableColumn: TableColumnsType<Seed> = [
+  const fertilizerTableColumn: TableColumnsType<Fertilizer> = [
     {
       title: t('Name'),
       dataIndex: 'name',
       width: 'max-content',
+      render: (_, fertilizerItem) => {
+        return (
+          <>
+          <Flex align='center' gap='10px'>
+          <Image
+              style={{borderRadius: '50%'}}
+              height={40}
+              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+            />
+            <p style={{color:'#009A29', fontWeight:'600'}} >{fertilizerItem.name}</p>
+            </Flex>  
+          </>
+        );
+      }
     },
     {
       title: 'Stock',
       dataIndex: 'stock',
       width: 'max-content',
-      render: (_,seedItem) => `${seedItem.stock} ${seedItem.measureUnit}`
+      render: (_,fertilizerItem) => `${fertilizerItem.stock} ${fertilizerItem.measureUnit}`
     },
     {
         title: 'Price',
         dataIndex: 'unitPrice',
         width: 'max-content',
-        render: (_,seedItem) => `${seedItem.unitPrice} VND`
+        render: (_,fertilizerItem) => `${fertilizerItem.unitPrice} VND`
       },
     {
       width: 'max-content',
@@ -45,18 +61,18 @@ import { Seed } from '../../models/seed-models';
       key: 'actions',
       fixed: 'right',
       align: 'right' as const,
-      render: (_, seedItem) => {
+      render: (_, fertilizerItem) => {
         const renderItems = (
           id: string,
-          onDetailsSeed: () => void,
-          onRemoveSeed: () => void,
+          onDetailsFertilizer: () => void,
+          onRemoveFertilizer: () => void,
         ): MenuProps['items'] => {
           return [
             {
               label: (
                 <a
                   onClick={() => {
-                    onDetailsSeed();
+                    onDetailsFertilizer();
                   } }
                 >
                   <Space>
@@ -74,7 +90,7 @@ import { Seed } from '../../models/seed-models';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this seeds',
+                      title:'Do you want to delete this Fertilizers',
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,
@@ -83,7 +99,7 @@ import { Seed } from '../../models/seed-models';
                       okText: t('Yes'),
                       okButtonProps: { type: 'primary', danger: true },
                       onOk: () => {
-                        onRemoveSeed();
+                        onRemoveFertilizer();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
                         <>
@@ -107,9 +123,9 @@ import { Seed } from '../../models/seed-models';
           <Dropdown
             menu={{
               items: renderItems(
-                seedItem.id!,
-                seedItem.onDetails!,
-                seedItem.onDelete!
+                fertilizerItem.id!,
+                fertilizerItem.onDetails!,
+                fertilizerItem.onDelete!
               )
             }}
           >
@@ -126,5 +142,5 @@ import { Seed } from '../../models/seed-models';
       }
     }
   ];
-  return seedTableColumn;
+  return fertilizerTableColumn;
 }

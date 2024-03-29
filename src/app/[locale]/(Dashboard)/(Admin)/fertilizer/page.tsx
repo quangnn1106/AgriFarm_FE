@@ -22,26 +22,27 @@ import {
   WarningOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
-import stylesSeedManagement from './seedStyle.module.scss';
+import stylesFertilizerManagement from './fertilizerStyle.module.scss';
 import classNames from 'classnames/bind';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from '@/navigation';
 import Link from 'next/link';
-import FilterSection from './component/FilterSection/filterSection';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { SeedTableColumns } from './component/Table/column-type';
-import { Seed } from './models/seed-models';
 import { AxiosInstance } from 'axios';
-import getSeedsApi from '@/services/Admin/Seed/getSeedsApi';
-import AddSeedFormDrawer from './component/AddSeedDrawer/add-seed-drawer';
-import UpdateSeedFormDrawer from './component/UpdateSeedDrawer/update-seed-drawer';
-import { deleteSeedApi } from '@/services/Admin/Seed/deleteSeedApi';
+import { Fertilizer } from './models/fertilizer-models';
+import getFertilizersApi from '@/services/Admin/Fertilizer/getFertilizersApi';
+import { deleteFertilizerApi } from '@/services/Admin/Fertilizer/deleteFertilizerApi';
+import FilterSection from './component/FilterSection/filterSection';
+import { FertilizerTableColumns } from './component/Table/column-type';
+import UpdateFertilizerFormDrawer from './component/UpdateFertilizerDrawer/update-fertilizer-drawer';
+import AddFertilizerFormDrawer from './component/AddFertilizerDrawer/add-fertilizer-drawer';
+
 
 
 type Props = {};
-const SeedManagement = (props: Props) => {
+const FertilizerManagement = (props: Props) => {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken();
@@ -50,7 +51,7 @@ const SeedManagement = (props: Props) => {
 
   //style
   const cx = classNames.bind(styles);
-  const styleSeedManagement = classNames.bind(stylesSeedManagement);
+  const styleFertilizerManagement = classNames.bind(stylesFertilizerManagement);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
@@ -65,102 +66,102 @@ const SeedManagement = (props: Props) => {
       title: <Link href={`/`}>Home</Link>
     },
     {
-      title: <Link href={`/seed`}>Seed</Link>
+      title: <Link href={`/fertilizer`}>Fertilizer</Link>
     }
   ];
 
   // handle loading data
   const [loading, setLoading] = useState<boolean>(true);
-  const [seeds, setSeeds] = useState<Seed[] | undefined>([]);
+  const [fertilizers, setFertilizers] = useState<Fertilizer[] | undefined>([]);
 
-  const getListSeedsApi = async (http: AxiosInstance, siteId: string | undefined) => {
+  const getListFertilizersApi = async (http: AxiosInstance, siteId: string | undefined) => {
     try {
-      const responseData = await getSeedsApi(siteId, http);
-      setSeeds(responseData.data as Seed[]);
+      const responseData = await getFertilizersApi(siteId, http);
+      setFertilizers(responseData.data as Fertilizer[]);
       setLoading(false);
     } catch (error) {
-      console.error('Error calling API getListSeedsApi:', error);
+      console.error('Error calling API getListFertilizersApi:', error);
     }
   };
 
 
   //handle load details
-  const [seedId, setSeedId] = useState<string>('');
-  const [openSeedDetailDrawer, setOpenSeedDetailDrawer] = useState<boolean>(false);
+  const [fertilizerId, setFertilizerId] = useState<string>('');
+  const [openFertilizerDetailDrawer, setOpenFertilizerDetailDrawer] = useState<boolean>(false);
 
  
   const handleDetails = async (id: string) => {
-    setSeedId(id)
-    setOpenSeedDetailDrawer(true);
+    setFertilizerId(id)
+    setOpenFertilizerDetailDrawer(true);
   };
-  const closeSeedDetailDrawer = () => {
-    setOpenSeedDetailDrawer(false);
+  const closeFertilizerDetailDrawer = () => {
+    setOpenFertilizerDetailDrawer(false);
   };
 
 
-  //handle update seed
-  const [openSeedUpdateDrawer, setOpenSeedUpdateDrawer] = useState<boolean>(false);
+  //handle update fertilizer
+  const [openFertilizerUpdateDrawer, setOpenFertilizerUpdateDrawer] = useState<boolean>(false);
   const handleUpdate = async (id: string) => {
-    setSeedId(id)
-    setOpenSeedUpdateDrawer(true);
+    setFertilizerId(id)
+    setOpenFertilizerUpdateDrawer(true);
   };
-  const closeSeedUpdateDrawer = () => {
-    setOpenSeedUpdateDrawer(false);
+  const closeFertilizerUpdateDrawer = () => {
+    setOpenFertilizerUpdateDrawer(false);
   };
 
 
   //handle delete
   const [deleteState, setDeleteState] = useState<boolean>(false);
   const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
-  const [deletedSeeds, setDeleteSeeds] = useState<React.Key[]>([]);
+  const [deletedFertilizers, setDeleteFertilizers] = useState<React.Key[]>([]);
 
-  const deleteSeed = async (http: AxiosInstance, seasonId?: string) => {
+  const deleteFertilizer = async (http: AxiosInstance, seasonId?: string) => {
     try {
-      const res = await deleteSeedApi(http, seasonId);
-      getListSeedsApi (http, siteId);
+      const res = await deleteFertilizerApi(http, seasonId);
+      getListFertilizersApi (http, siteId);
     } catch (error) {
       console.error('Error calling API Delete Season:', error);
     }
   }
 
   const checkRowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: Seed[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Fertilizer[]) => {
       if (selectedRowKeys.length > 0) {
         setDeleteBtnState(false);
-        setDeleteSeeds(selectedRowKeys);
+        setDeleteFertilizers(selectedRowKeys);
       } else {
         setDeleteBtnState(true);
       }
     }
   };
   const handleDelete = (id: string) => {
-    deleteSeed(http, id);
+    deleteFertilizer(http, id);
   };
   const deleteMultiple = () => {
-    deletedSeeds.map(function (item) {
-      deleteSeed(http, item.toString());
+    deletedFertilizers.map(function (item) {
+      deleteFertilizer(http, item.toString());
     });
     setDeleteState(false);
     setDeleteBtnState(true);
   };
-  const onChange: TableProps<Seed>['onChange'] = (pagination, filters, sorter, extra) => {
+  const onChange: TableProps<Fertilizer>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
 
-  //handle add seed
-  const [openAddSeed, setOpenAddSeed] = useState(false);
+  //handle add fertilizer
+  const [openAddFertilizer, setOpenAddFertilizer] = useState(false);
 
-  const showAddSeedDrawer = () => {
-    setOpenAddSeed(true);
+  const showAddFertilizerDrawer = () => {
+    setOpenAddFertilizer(true);
   };
 
-  const closeAddSeedDrawer = () => {
-    setOpenAddSeed(false);
+  const closeAddFertilizerDrawer = () => {
+    setOpenAddFertilizer(false);
   };
 
   useEffect(() => {
-    getListSeedsApi(http, siteId);
-  }, [http, siteId, openAddSeed, openSeedDetailDrawer, openSeedUpdateDrawer]);
+    getListFertilizersApi(http, siteId);
+  }, [http, siteId, openAddFertilizer, openFertilizerDetailDrawer, openFertilizerUpdateDrawer]);
 
   return (
     <>
@@ -234,7 +235,7 @@ const SeedManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this seeds?</span>
+                  <span>Do you want to delete this fertilizers?</span>
                 </div>
               }
               open={deleteState}
@@ -252,7 +253,7 @@ const SeedManagement = (props: Props) => {
             <Button
               className={cx('bg-btn')}
               icon={<PlusOutlined />}
-              onClick={showAddSeedDrawer}
+              onClick={showAddFertilizerDrawer}
             />
           </Tooltip>
         </Flex>
@@ -288,19 +289,19 @@ const SeedManagement = (props: Props) => {
                     type: 'checkbox',
                     ...checkRowSelection
                   }}
-                  columns={SeedTableColumns()}
-                  dataSource={seeds?.map(seed => ({
-                    ...seed,
-                    onDetails: () => handleDetails(seed.id!),
-                    onDelete: () => handleDelete(seed.id!),
-                    onUpdate: () => handleUpdate(seed.id!)
+                  columns={FertilizerTableColumns()}
+                  dataSource={fertilizers?.map(fertilizer => ({
+                    ...fertilizer,
+                    onDetails: () => handleDetails(fertilizer.id!),
+                    onDelete: () => handleDelete(fertilizer.id!),
+                    onUpdate: () => handleUpdate(fertilizer.id!)
                   }))}
                   onChange={onChange}
                   pagination={{
                     showTotal: total => `Total ${total} Items`,
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '20', '30'],
-                    total: seeds?.length
+                    total: fertilizers?.length
                   }}
                   scroll={{ x: 'max-content' }}
                   className={cx('table_style')}
@@ -310,27 +311,27 @@ const SeedManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Seed"
+        title="Details Fertilizer"
         placement="right"
-        onClose={closeSeedDetailDrawer}
-        open={openSeedDetailDrawer}
-        className={styleSeedManagement('drawer-width')}
+        onClose={closeFertilizerDetailDrawer}
+        open={openFertilizerDetailDrawer}
+        className={styleFertilizerManagement('drawer-width')}
       >
-       <UpdateSeedFormDrawer params={{
-            seedId: seedId
-          }}></UpdateSeedFormDrawer>
+       <UpdateFertilizerFormDrawer params={{
+            fertilizerId: fertilizerId
+          }}></UpdateFertilizerFormDrawer>
       </Drawer>
       <Drawer
         title="Thêm giống mới"
         placement="right"
-        onClose={closeAddSeedDrawer}
-        open={openAddSeed}
-        className={styleSeedManagement('drawer-width')}
+        onClose={closeAddFertilizerDrawer}
+        open={openAddFertilizer}
+        className={styleFertilizerManagement('drawer-width')}
       >
-        <AddSeedFormDrawer></AddSeedFormDrawer>
+        <AddFertilizerFormDrawer></AddFertilizerFormDrawer>
       </Drawer>
       </Content>
     </>
   );
 };
-export default SeedManagement;
+export default FertilizerManagement;
