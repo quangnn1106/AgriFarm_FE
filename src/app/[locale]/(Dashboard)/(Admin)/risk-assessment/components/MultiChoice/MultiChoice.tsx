@@ -1,5 +1,5 @@
 'use client'
-import { Button, Col, Flex, Input, Radio, Row, Space } from "antd";
+import { Button, Col, Flex, Form, Input, Radio, Row, Space } from "antd";
 import styles from "../risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
@@ -11,24 +11,26 @@ interface Rows {
 interface ItemSingleChoice {
   idxItem: number;
   handleEnterContent: (indexItem: number, index: number, value: string) => void;
+  contents: Rows[];
 }
 // Single choice
 const MultiChoice: React.FC<ItemSingleChoice> = ({
     idxItem,
-    handleEnterContent
+    handleEnterContent,
+    contents
   }: ItemSingleChoice): ReactElement => {
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
   const [disabled, setDisabled] = useState(true);
-  const [rows, setRows] = useState<Rows[]>(["New Row"]);
+  const [rows, setRows] = useState<Rows[]>(contents.length == 0 ? [""] : contents);
 
   const handleAddRow = () => {
     if (rows.length > 5) {
       return;
     }
     const newRows = [...rows];
-    newRows.push("New Row");
+    newRows.push("");
     setRows(newRows);
   };
 
@@ -46,8 +48,16 @@ const MultiChoice: React.FC<ItemSingleChoice> = ({
         {rows.map((_, index) => {
           return (
           <Row className={cx('row')} key={index}>
-            <Col span={6}><Input style={{width: "70%"}} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input></Col>
-            <Col span={18}>
+            <Col span={12}>
+              <Form.Item
+                  name={`risk_item_title_multi_${index}_${idxItem}`}
+                  rules={[{ required: true, message: ""}]}
+                  hasFeedback
+              >
+                <Input maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
                 <Flex gap="small">
                   <Button type="primary" onClick={handleAddRow}>{tCom('btn_add')}</Button>
                   <Button 

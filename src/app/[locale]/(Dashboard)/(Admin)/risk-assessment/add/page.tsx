@@ -2,25 +2,29 @@
 import { Content } from 'antd/es/layout/layout';
 import { App, Breadcrumb, Button, Form, Input, Radio, RadioChangeEvent, message } from 'antd';
 import React, { useState } from 'react';
-import RiskItem from '../../components/RiskItem';
-import { RiskItemDef, RiskMasterInputDef } from '../../interface';
+import RiskItem from '../components/RiskItem';
+import { RiskItemDef, RiskMasterInputDef } from '../interface';
 import { useTranslations } from 'next-intl';
 import TextArea from 'antd/es/input/TextArea';
-import styles from "../../components/risk-assessment-style.module.scss";
+import styles from "../components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from '@/utils/axiosClient';
 import riskAssessmentAddApi from '@/services/RiskAssessment/riskAssessmentAddApi';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { usePathname } from '@/navigation';
 
 interface ItemContentDef {
-  [key: number] : string;
+  [key: number] : {
+    [key: number] : string
+  };
 }
 interface ColoredLineProps {
   text: string;
 }
-const Edit = () => {
+const Add = () => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -31,10 +35,12 @@ const Edit = () => {
     const [riskDescription, setRiskDescription] = useState("");
     const [riskIsDraft, setRiskIsDraft] = useState(true);
     const [riskItems, setRiskItems] = useState<RiskItemDef[]>([]);
-    const [risItemContent, setRiskItemContent] = useState<ItemContentDef[]>([]);
+    const [risItemContent, setRiskItemContent] = useState<ItemContentDef>([]);
     const { data: session } = useSession();
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
+    const router = useRouter();
+    const pathName = usePathname();
 
     const handleInputRiskName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRiskName(e.target.value);
@@ -54,21 +60,21 @@ const Edit = () => {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       },
       {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       },
       {
         riskItemContent: "testtt",
         riskItemDiv: 1,
         riskItemType: 1,
-        riskItemTile: "Test",
+        riskItemTitle: "Test",
         must: 1
       }
     ]);
@@ -83,18 +89,33 @@ const Edit = () => {
     const handleRiskItems = (
         indexItem: number,
         index: number,
-        value: string
+        value: string,
+        type?: number
       ) => {
-      let riskItemContent = JSON.parse(riskItems[indexItem].riskItemContent);
-      riskItemContent = {...riskItemContent, [index]: value};
-      riskItems[indexItem].riskItemContent = JSON.stringify(riskItemContent);
-      setRiskItems(riskItems);
+        let rskItmCtn = [];
+        if (type == undefined) {
+          rskItmCtn = JSON.parse(riskItems[indexItem].riskItemContent);
+          rskItmCtn = {...rskItmCtn, [index]: value};
+          risItemContent[indexItem][riskItems[indexItem].riskItemType] = JSON.stringify(rskItmCtn);
+        } else {
+          if (risItemContent[indexItem][type] != undefined) {
+            console.log(risItemContent);
+            rskItmCtn = JSON.parse(risItemContent[indexItem][type]);
+            risItemContent[indexItem][type] = JSON.stringify(rskItmCtn);
+          } else {
+            risItemContent[indexItem] = {...risItemContent[indexItem], [type]: '[]'};
+
+          }
+        }
+        riskItems[indexItem].riskItemContent = JSON.stringify(rskItmCtn);
+        setRiskItemContent(risItemContent);
+        setRiskItems(riskItems);
     }
     const handleRiskItemsTitle = (
       indexItem: number,
       value: string
     ) => {
-      riskItems[indexItem].riskItemTile = value;
+      riskItems[indexItem].riskItemTitle = value;
       setRiskItems(riskItems);
     }
     
@@ -104,16 +125,19 @@ const Edit = () => {
       }
       const newItem = [...riskItems];
       newItem.push({
-          riskItemTile: tLbl('title_default_text').replace('%ITEM%', (riskItems.length).toString()),
+          riskItemTitle: tLbl('title_default_text').replace('%ITEM%', (riskItems.length).toString()),
           riskItemType: 1,
           riskItemContent: JSON.stringify(risItemContent),
           must: 0,
           riskItemDiv: 1
-        });
+      });
+      setRiskItemContent(Object.values({...risItemContent, [riskItems.length]: {[1] : JSON.stringify([])}}));
       setRiskItems(newItem);
     };
     const handleDeleteItem = (indexToRemove: number) => {
       const newItem = riskItems.filter((_, index) => index !== indexToRemove);
+      const newRisItemContent = Object.values(risItemContent).filter((_, index) => index !== indexToRemove);
+      setRiskItemContent(newRisItemContent);
       setRiskItems(newItem);
     }
 
@@ -127,7 +151,7 @@ const Edit = () => {
     
     const breadCrumb = [
       {
-          title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+          title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
       },
       {
           title: tLbl('risk_assessment_add')
@@ -153,7 +177,6 @@ const Edit = () => {
           resetForm();
       } catch (error) {
           console.log(error);
-          setLoadingBtn(false);
       } finally {
         setLoadingBtn(false);
       }
@@ -164,7 +187,7 @@ const Edit = () => {
       setRiskIsDraft(true);
     }
     const backAction = () => {
-      console.log("backAction ...");
+      router.push(`/risk-assessment`);
     }
   return(
     <>
@@ -175,12 +198,13 @@ const Edit = () => {
         <ColoredLine text={tLbl('basic_information')}/>
         <Form
             labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
             layout="horizontal"
             onFinish={saveAction}
             form={form}
             >
               <Form.Item 
+                wrapperCol={{ span: 8 }}
                 label={tLbl('risk_name')}
                 name="risk_name"
                 rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_name'))}]}
@@ -188,6 +212,7 @@ const Edit = () => {
                 <Input onChange={handleInputRiskName}/>
               </Form.Item>
               <Form.Item
+                wrapperCol={{ span: 8 }}
                 label={tLbl('risk_description')}
                 name="risk_description"
                 rules={[{ required: true, message: tMsg('msg_required').replace('%ITEM%', tLbl('risk_description'))}]}
@@ -234,6 +259,7 @@ const Edit = () => {
                 <RiskItem 
                   key={index}
                   indexItem={index}
+                  riskItemContent={risItemContent}
                   onRadioChange={onRadioChange}
                   onCheckboxChange={onCheckboxChange}
                   itemMode={riskItems[index].riskItemType}
@@ -279,9 +305,9 @@ const Edit = () => {
   )
 }
 
-const EditApp: React.FC = () => (
+const AddApp: React.FC = () => (
   <App>
-    <Edit />
+    <Add />
   </App>
 );
-export default EditApp;
+export default Add;

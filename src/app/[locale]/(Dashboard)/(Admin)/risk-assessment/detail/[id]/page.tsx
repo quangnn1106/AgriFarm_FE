@@ -1,12 +1,12 @@
 'use client'
-import { App, Breadcrumb, Card, Checkbox, Collapse, Divider, Radio, Space, Tag, Upload, message } from "antd";
+import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Radio, Space, Spin, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from "@/utils/axiosClient";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
 import Link from "next/link";
@@ -16,10 +16,11 @@ import classNames from 'classnames/bind';
 import { RiskMasterResponseDef } from "../../interface";
 import { DeleteTwoTone , PushpinTwoTone } from '@ant-design/icons';
 import { ItemModeValue } from "../../enum";
+import { usePathname } from "@/navigation";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const Detail = () => {
+const Detail = ({ params }: { params: { id: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.RiskAsm.label');
     const tMsg = useTranslations('Services.RiskAsm.message');
@@ -27,18 +28,24 @@ const Detail = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const http = UseAxiosAuth();
-    const riskId = useSearchParams().get("id");
+    const riskId = params.id;
     const [riskData, setRiskData] = useState<RiskMasterResponseDef>();
+    const router = useRouter();
+    const [loadings, setLoadings] = useState(false);
+    const pathName = usePathname();
+    
     useEffect(() => {
         getData(http, riskId);
     },[http, riskId]);
     const getData = async (http : AxiosInstance | null, riskId : string | null) => {
         try {
+            setLoadings(true);
             const responseData = await riskAssessementDetailApi(http, riskId);
             setRiskData(responseData.data);
-            console.log(responseData);
         } catch (error) {
             console.error('Error calling API:', error);
+        } finally {
+            setLoadings(false);
         }
     }
     const props: UploadProps = {
@@ -79,7 +86,7 @@ const Detail = () => {
     
     const breadCrumb = [
         {
-            title: <Link href={`/risk-assessment/list`}>{tLbl('risk_assessment')}</Link>
+            title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
         },
         {
             title: tLbl('risk_assessment_detail')
@@ -87,13 +94,13 @@ const Detail = () => {
       ];
     return (
         <>
-            {contextHolder}
-            {/* Basic */}
+        {contextHolder}
         <Content style={{ padding: '30px 48px' }}>
             <h2>{tLbl('risk_assessment_detail')}</h2>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
-            {riskData && (
+            <Spin spinning={loadings}>
+            {riskData ? (
                 <div style={{backgroundColor:'#F4F6F8', borderRadius: '30px', padding: '20px 80px'}}>
                     {/* Risk name */}
                     <div style={{minHeight: '75px', borderLeft: '2px solid #AFA793'}}>
@@ -214,43 +221,19 @@ const Detail = () => {
                                 <></>
                             )}
                         </Space>
-                        {/* <Space direction="vertical" size={22} style={{flex: '1', margin: '20px 80px'}}>
-                            <Card title="Default size card" extra={<Tag color="#f50">Required</Tag>}>
-                                <Radio.Group>
-                                    <Space direction="vertical">
-                                        <Radio value={1}>Option A</Radio>
-                                        <Radio value={2}>Option B</Radio>
-                                        <Radio value={3}>Option C</Radio>
-                                    </Space>
-                                </Radio.Group>
-                            </Card>
-                            <Card title="Default size card">
-                                <Space direction="vertical">
-                                    <Checkbox>Checkbox1</Checkbox>
-                                    <Checkbox>Checkbox2</Checkbox>
-                                    <Checkbox>Checkbox3</Checkbox>
-                                </Space>
-                            </Card>
-                            <Card title="Default size card">
-                                <TextArea cols={45} rows={5} style={{resize: 'none'}}></TextArea>
-                            </Card>
-                            <Card title="Default size card">
-                                <Upload {...props} listType="picture-card">
-                                    {uploadButton}
-                                </Upload>
-                            </Card>
-                        </Space> */}
                     </div>
                 </div>
+            ) : (
+                <>
+                    <Empty>
+                        <Button type="primary" onClick={() => {router.push(`${pathName}/add`)}}>{tCom('btn_add')}</Button>
+                    </Empty>
+                </>
             )}
+            </Spin>
         </Content>
         </>
     )
 }
 
-const DetailApp: React.FC = () => (
-    <App>
-      <Detail />
-    </App>
-  );
-  export default DetailApp;
+export default Detail;

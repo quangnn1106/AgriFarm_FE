@@ -14,7 +14,7 @@ interface ItemSingleChoice {
   contents: Rows[];
 }
 // Single choice
-const SingleChoice: React.FC<ItemSingleChoice> = ({
+const SingleChoiceEdit: React.FC<ItemSingleChoice> = ({
     idxItem,
     handleEnterContent,
     contents
@@ -22,7 +22,6 @@ const SingleChoice: React.FC<ItemSingleChoice> = ({
   const cx = classNames.bind(styles);
   const tCom = useTranslations('common');
   const tLbl = useTranslations('Services.RiskAsm.label');
-  const tMsg = useTranslations('Services.RiskAsm.message');
   const [rows, setRows] = useState<Rows[]>(contents.length == 0 ? [""] : contents);
 
   const handleAddRow = () => {
@@ -45,18 +44,19 @@ const SingleChoice: React.FC<ItemSingleChoice> = ({
   return (
     <>
       <div className={cx('single-choice__wrap')}>
-        {rows.map((_, index) => {
+        {rows.map((item, index) => {
           return (
           <Row className={cx('row')} key={index}>
             <Col span={12}>
               <Form.Item
-                name={`risk_item_title_single_${index}_${idxItem}`}
-                rules={[{ required: true, message: ""}]}
-                hasFeedback
+                  name={`risk_item_title_single_${idxItem}_${index}`}
+                  rules={[{ required: true, message: ""}]}
+                  hasFeedback
+                  initialValue={item as string}
               >
                 <Input maxLength={150} placeholder={`${tLbl('text_placeholder')}${index}`} onChange={(e) => {handleOnchange(index, e)}}></Input>
               </Form.Item>
-              </Col>
+            </Col>
             <Col span={12}>
                 <Flex gap="small">
                   <Button type="primary" onClick={handleAddRow}>{tCom('btn_add')}</Button>
@@ -78,4 +78,4 @@ const SingleChoice: React.FC<ItemSingleChoice> = ({
   );
 };
 
-export default SingleChoice;
+export default SingleChoiceEdit;

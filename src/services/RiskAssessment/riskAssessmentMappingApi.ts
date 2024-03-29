@@ -10,7 +10,6 @@ const riskAssessmentMappingApi = async (
             }
         });
         const responseData = response?.data;
-        console.log(responseData);
         return responseData;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error
