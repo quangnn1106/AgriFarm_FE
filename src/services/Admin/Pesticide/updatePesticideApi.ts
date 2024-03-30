@@ -1,20 +1,20 @@
-import { UpdateFertilizerInfoDto, Fertilizer, Property } from "@/app/[locale]/(Dashboard)/(Admin)/fertilizer/models/fertilizer-models";
+import { UpdatePesticideInfoDto, Pesticide, Property } from "@/app/[locale]/(Dashboard)/(Admin)/pesticide/models/pesticide-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
-export const updateFertilizerApi: (
-    fertilizerId: string | null,
+export const updatePesticideApi: (
+    pesticideId: string | null,
     http: AxiosInstance | null,
-    UpdateFertilizerDto?: UpdateFertilizerInfoDto
-) => Promise<HttpResponseCommon<Fertilizer | undefined>> = async (
-    fertilizerId,
+    UpdatePesticideDto?: UpdatePesticideInfoDto
+) => Promise<HttpResponseCommon<Pesticide | undefined>> = async (
+    pesticideId,
     http,
-    UpdateFertilizerDto
+    UpdatePesticideDto
 ) => {
     try {
-        const res = await http?.put(`fert/farm-fertilizers/put`, UpdateFertilizerDto, {
+        const res = await http?.put(`ppp/farm-pesticides/put`, UpdatePesticideDto, {
             params: {
-                id: fertilizerId
+                id: pesticideId
             }
         });
         return res?.data;
@@ -29,19 +29,19 @@ export const updateFertilizerApi: (
     }
 }
 
-export const updateFertilizerPropertyApi: (
-    fertilizerId: string | null,
+export const updatePesticidePropertyApi: (
+    pesticideId: string | null,
     http: AxiosInstance | null,
-    UpdateFertilizerPropertyDto?: Property[]
-) => Promise<HttpResponseCommon<Fertilizer | undefined>> = async (
-    fertilizerId,
+    UpdatePesticidePropertyDto?: Property[]
+) => Promise<HttpResponseCommon<Pesticide | undefined>> = async (
+    pesticideId,
     http,
-    UpdateFertilizerPropertyDto
+    UpdatePesticidePropertyDto
 ) => {
     try {
-        const res = await http?.put(`fert/fertilizer-props/put`, UpdateFertilizerPropertyDto, {
+        const res = await http?.put(`ppp/pesticide-props/put`, UpdatePesticidePropertyDto, {
             params: {
-                fertilizeId: fertilizerId
+                pesticideId: pesticideId
             }
         });
         return res?.data;

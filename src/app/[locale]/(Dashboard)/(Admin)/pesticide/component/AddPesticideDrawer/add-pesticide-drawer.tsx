@@ -37,14 +37,14 @@ import { SupplierResponse } from '../../../supply/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import {
-  Fertilizer,
-  CreateAllInfoOfFertilizerMapperDto
-} from '../../models/fertilizer-models';
-import { createFertilizerApi } from '@/services/Admin/Fertilizer/createFertilizerApi';
-import { createSupplyInfoApi } from '@/services/Admin/Fertilizer/createSuppyInfoApi';
+  Pesticide,
+  CreateAllInfoOfPesticideMapperDto
+} from '../../models/pesticide-models';
+import { createPesticideApi } from '@/services/Admin/Pesticide/createPesticideApi';
+import { createSupplyInfoApi } from '@/services/Admin/Pesticide/createSuppyInfoApi';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
 
-const AddFertilizerFormDrawer: React.FC = () => {
+const AddPesticideFormDrawer: React.FC = () => {
   const t = useTranslations('Common');
 
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -131,23 +131,23 @@ const AddFertilizerFormDrawer: React.FC = () => {
     setIsFetching(false);
   };
 
-  const [createdFertilizer, setCreatedFertilizer] = useState<Fertilizer>();
+  const [createdPesticide, setCreatedPesticide] = useState<Pesticide>();
 
-  const onSubmit = async (value: CreateAllInfoOfFertilizerMapperDto) => {
+  const onSubmit = async (value: CreateAllInfoOfPesticideMapperDto) => {
     try {
-      await createFertilizerApi(siteId, http, {
+      await createPesticideApi(siteId, http, {
         name: value.name,
         description: value.description,
         notes: value.notes,
         defaultUnit: value.defaultUnit,
         properties: value.properties
       }).then(async res => {
-        const fertilizerNew = res?.data as Fertilizer;
+        const pesticideNew = res?.data as Pesticide;
         if (
           form.getFieldValue('quantity') > 0 &&
           form.getFieldValue('quantity') < 10000
         ) {
-          await createSupplyInfoApi(fertilizerNew.id, http, {
+          await createSupplyInfoApi(pesticideNew.id, http, {
             quantity: value.quantity,
             unitPrice: value.unitPrice,
             measureUnit: value.measureUnit,
@@ -180,7 +180,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
       });
     } catch (error) {
       openNotification('top', t('Create_fail'), 'error');
-      console.error('Error occurred while updating fertilizer:', error);
+      console.error('Error occurred while updating pesticide:', error);
     }
   };
 
@@ -534,4 +534,4 @@ const AddFertilizerFormDrawer: React.FC = () => {
     </>
   );
 };
-export default AddFertilizerFormDrawer;
+export default AddPesticideFormDrawer;

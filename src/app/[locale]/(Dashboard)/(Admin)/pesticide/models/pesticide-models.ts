@@ -1,4 +1,4 @@
-export interface Seed {
+export interface Pesticide {
     id: string
     stock: number
     unitPrice: number
@@ -11,33 +11,40 @@ export interface Seed {
     onUpdate?: () => void;
     onDetails?: () => void;
   }
-  
   export interface Property {
     name: string
     value: number
     unit: string
   }
-  export interface CreateSeedDto {
+
+  export interface CreatePesticideDto {
     name: string
     description: string
-    notes: string
     defaultUnit: string
+    notes: string
     properties: Property[]
   }
 
-  export interface UpdateSeedDto {
-    name: string
-    description: string
-    notes: string
-  }
-
-  export interface CreateSupplierDto {
+  export interface CreateSupplyDto {
     quantity: number
     unitPrice: number
     measureUnit: string
     content: string
     supplier: Supplier
   }
+
+  export interface Supplier {
+    id: string
+    name: string
+    address: string
+  }
+
+  export interface UpdatePesticideInfoDto {
+    name: string
+    description: string
+    notes: string
+  }
+  
   export interface CreateSupplierMapper {
     quantity: number
     unitPrice: number
@@ -47,14 +54,8 @@ export interface Seed {
     supplierName: string
     address: string
   }
-  
-  export interface Supplier {
-    id: string
-    name: string
-    address: string
-  }
-  
-  export interface CreateAllInfoOfSeedDto {
+
+  export interface CreateAllInfoOfPesticideMapperDto {
     name: string
     description: string
     notes: string

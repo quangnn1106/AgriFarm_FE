@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import UseAxiosAuth from '@/utils/axiosClient';
 import {
   Button,
@@ -122,7 +123,7 @@ const AddSeedSupplyModal = ({
   const onSubmit = async (value: CreateSupplierMapper) => {
     try {
       await createSupplyInfoApi(params.seedId, http, {
-        quanlity: value.quantity,
+        quantity: value.quantity,
         unitPrice: value.unitPrice,
         measureUnit: value.measureUnit,
         content: value.content,

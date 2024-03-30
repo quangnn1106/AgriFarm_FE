@@ -1,18 +1,18 @@
-import { CreateFertilizerDto, Fertilizer } from "@/app/[locale]/(Dashboard)/(Admin)/fertilizer/models/fertilizer-models";
+import { CreatePesticideDto, Pesticide } from "@/app/[locale]/(Dashboard)/(Admin)/pesticide/models/pesticide-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
-export const createFertilizerApi: (
+export const createPesticideApi: (
     siteId: string | undefined,
     http: AxiosInstance | null,
-    createFertilizerDto?: CreateFertilizerDto
-) => Promise<HttpResponseCommon<Fertilizer | undefined>> = async (
+    createPesticideDto?: CreatePesticideDto
+) => Promise<HttpResponseCommon<Pesticide | undefined>> = async (
     siteId,
     http,
-    createFertilizerDto
+    createPesticideDto
 ) => {
     try {
-        const res = await http?.post(`fert/farm-fertilizers/post`, createFertilizerDto, {
+        const res = await http?.post(`ppp/farm-pesticides/post`, createPesticideDto, {
             params: {
                 siteId: siteId
             }

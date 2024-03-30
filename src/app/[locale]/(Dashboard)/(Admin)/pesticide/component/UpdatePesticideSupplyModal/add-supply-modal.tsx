@@ -29,22 +29,22 @@ import { useEffect, useState } from 'react';
 import { SupplierResponse } from '../../../supply/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
-import stylesFertilizerManagement from '../../fertilizerStyle.module.scss';
+import stylesPesticideManagement from '../../pesticideStyle.module.scss';
 import classNames from 'classnames/bind';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
-import { CreateSupplierMapper } from '../../models/fertilizer-models';
-import { createSupplyInfoApi } from '@/services/Admin/Fertilizer/createSuppyInfoApi';
+import { CreateSupplierMapper } from '../../models/pesticide-models';
+import { createSupplyInfoApi } from '@/services/Admin/Pesticide/createSuppyInfoApi';
 
-const AddFertilizerSupplyModal = ({
+const AddPesticideSupplyModal = ({
   params
 }: {
   params: {
-    fertilizerId: string | undefined;
+    pesticideId: string | undefined;
     visible: boolean;
     onCancel: () => void;
   };
 }) => {
-  const styleFertilizerManagement = classNames.bind(stylesFertilizerManagement);
+  const stylePesticideManagement = classNames.bind(stylesPesticideManagement);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
@@ -122,7 +122,7 @@ const AddFertilizerSupplyModal = ({
 
   const onSubmit = async (value: CreateSupplierMapper) => {
     try {
-      await createSupplyInfoApi(params.fertilizerId, http, {
+      await createSupplyInfoApi(params.pesticideId, http, {
         quantity: value.quantity,
         unitPrice: value.unitPrice,
         measureUnit: value.measureUnit,
@@ -172,7 +172,7 @@ const AddFertilizerSupplyModal = ({
           centered={true}
           width={'fit-content'}
           footer={null}
-          className= {styleFertilizerManagement('add-supply-modal')}
+          className= {stylePesticideManagement('add-supply-modal')}
         >
           <Form
             form={form}
@@ -350,4 +350,4 @@ const AddFertilizerSupplyModal = ({
     </>
   );
 };
-export default AddFertilizerSupplyModal;
+export default AddPesticideSupplyModal;
