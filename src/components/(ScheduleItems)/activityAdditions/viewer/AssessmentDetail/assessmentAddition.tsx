@@ -52,7 +52,7 @@ const AssessmentAddition = (props: IProps) => {
         </div>
       )}
       <Button
-        onClick={() => router.push('/risk-assessment/implement?taskId=' + detail?.id)}
+        onClick={() => router.push('/risk-assessment/implement?taskId=' + detail?.taskId)}
       >
         Go to assess
       </Button>
