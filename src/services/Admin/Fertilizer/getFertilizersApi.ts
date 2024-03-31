@@ -15,7 +15,7 @@ const getFertilizersApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<Fertilizer[]>> = async (siteId, http) => {
     try {
-        const res = await http?.get(`/fert/farm-fertilizes/get`, {
+        const res = await http?.get(`/fert/farm-fertilizers/get`, {
             params: {
               siteId: siteId
             }, headers: {

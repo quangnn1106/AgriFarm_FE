@@ -126,7 +126,7 @@ const AdminSider = ({ path }: Props) => {
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticides`}>{t('pesti')}</Link>, `/pesticides`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
-      getItem(<Link href={`/rice_variety`}>{t('rice_va')}</Link>, `/rice_variety`),
+      getItem(<Link href={`/seed`}>{t('rice_va')}</Link>, `/seed`),
       getItem(<Link href={`/equipments`}>{t('equip')}</Link>, `/equipments`),
       getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
     ]),

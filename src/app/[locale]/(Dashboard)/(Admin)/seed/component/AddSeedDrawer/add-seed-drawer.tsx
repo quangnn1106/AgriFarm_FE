@@ -157,7 +157,7 @@ const AddSeedFormDrawer: React.FC = () => {
         // setCreatedSeed(res.data as Seed);
         if(form.getFieldValue('quantity') > 0 && form.getFieldValue('quantity') < 10000) {
           await createSupplyInfoApi(seedNew.id, http, {
-            quanlity: value.quantity,
+            quantity: value.quantity,
             unitPrice: value.unitPrice,
             measureUnit: value.measureUnit,
             content: value.content,

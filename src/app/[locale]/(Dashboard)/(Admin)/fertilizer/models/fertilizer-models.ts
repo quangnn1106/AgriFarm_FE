@@ -26,7 +26,7 @@ export interface Fertilizer {
   }
 
   export interface CreateSupplyDto {
-    quanlity: number
+    quantity: number
     unitPrice: number
     measureUnit: string
     content: string
