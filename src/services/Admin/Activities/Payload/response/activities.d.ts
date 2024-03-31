@@ -42,6 +42,7 @@ export interface Addition {
 
 export interface RiskAdditionResponse {
   id: string;
+  taskId: string;
   checkList: {
     id: string;
     riskName: string;

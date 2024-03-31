@@ -22,7 +22,9 @@ import {
   HomeFilled,
   WarningOutlined,
   DeleteFilled,
-  SafetyCertificateFilled
+  SafetyCertificateFilled,
+  BranchesOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 import { type MenuProps } from 'antd';
 import Link from 'next/link';
@@ -90,16 +92,16 @@ const AdminSider = ({ path }: Props) => {
         `/activities`,
         <FaClipboardList />
       ),
-      getItem(`${t('training')}`, 'training',<FaClipboardList/>,[
+      getItem(`${t('training')}`, 'training',<BranchesOutlined />,[
         getItem(
           <Link href={`/training/contents`}>{t('t_content')}</Link>,
           `/training/contents`,
-          <FaClipboardList />
+          <BookOutlined />
         ),
         getItem(
           <Link href={`/training/experts`}>{t('expert')}</Link>,
           `/training/experts`,
-          <FaClipboardList />
+          <FaUserTie />
         ),
         // getItem(
         //   <Link href={`/training/details`}>{t('detail')}</Link>,
@@ -122,9 +124,10 @@ const AdminSider = ({ path }: Props) => {
       getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
-      getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),
+      getItem(<Link href={`/pesticides`}>{t('pesti')}</Link>, `/pesticides`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
       getItem(<Link href={`/seed`}>{t('rice_va')}</Link>, `/seed`),
+      getItem(<Link href={`/equipments`}>{t('equip')}</Link>, `/equipments`),
       getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
     ]),
 
@@ -136,7 +139,7 @@ const AdminSider = ({ path }: Props) => {
         `/subcontractor`,
         <FaHandshakeAngle />
       ),
-      getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
+      //getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
     ]),
     { type: 'divider' },
 
