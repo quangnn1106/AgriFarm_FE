@@ -65,6 +65,7 @@ import { Fertilizer } from '../../models/fertilizer-models';
         const renderItems = (
           id: string,
           onDetailsFertilizer: () => void,
+          onViewHistory: () => void,
           onRemoveFertilizer: () => void,
         ): MenuProps['items'] => {
           return [
@@ -81,6 +82,20 @@ import { Fertilizer } from '../../models/fertilizer-models';
                 </a>
               ),
               key: '0'
+            },
+            {
+              label: (
+                <a
+                  onClick={() => {
+                    onViewHistory();
+                  } }
+                >
+                  <Space>
+                    <ExclamationCircleOutlined /> Xem lịch sử
+                  </Space>
+                </a>
+              ),
+              key: '1'
             },
             {
               type: 'divider'
@@ -115,7 +130,7 @@ import { Fertilizer } from '../../models/fertilizer-models';
                   </Space>
                 </a>
               ),
-              key: '1'
+              key: '2'
             }
           ];
         };
@@ -125,7 +140,9 @@ import { Fertilizer } from '../../models/fertilizer-models';
               items: renderItems(
                 fertilizerItem.id!,
                 fertilizerItem.onDetails!,
+                fertilizerItem.onViewHistory!,
                 fertilizerItem.onDelete!
+
               )
             }}
           >

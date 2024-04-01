@@ -100,15 +100,10 @@ const SeedManagement = (props: Props) => {
 
   //handle update seed
   const [openSeedUpdateDrawer, setOpenSeedUpdateDrawer] = useState<boolean>(false);
-  const handleUpdate = async (id: string) => {
+  const onViewHistory = async (id: string) => {
     setSeedId(id)
-    setOpenSeedUpdateDrawer(true);
-  };
-  const closeSeedUpdateDrawer = () => {
-    setOpenSeedUpdateDrawer(false);
-  };
-
-
+    router.replace(`/suppliesHistory/seed/${id}`);
+  }
   //handle delete
   const [deleteState, setDeleteState] = useState<boolean>(false);
   const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
@@ -293,7 +288,7 @@ const SeedManagement = (props: Props) => {
                     ...seed,
                     onDetails: () => handleDetails(seed.id!),
                     onDelete: () => handleDelete(seed.id!),
-                    onUpdate: () => handleUpdate(seed.id!)
+                    onViewHistory: () => onViewHistory(seed.id!)
                   }))}
                   onChange={onChange}
                   pagination={{

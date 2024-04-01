@@ -101,12 +101,9 @@ const PesticideManagement = (props: Props) => {
 
   //handle update pesticide
   const [openPesticideUpdateDrawer, setOpenPesticideUpdateDrawer] = useState<boolean>(false);
-  const handleUpdate = async (id: string) => {
+  const handleViewHistory = async (id: string) => {
     setPesticideId(id)
-    setOpenPesticideUpdateDrawer(true);
-  };
-  const closePesticideUpdateDrawer = () => {
-    setOpenPesticideUpdateDrawer(false);
+    router.replace(`/suppliesHistory/pesticide/${id}`);
   };
 
 
@@ -294,7 +291,7 @@ const PesticideManagement = (props: Props) => {
                     ...pesticide,
                     onDetails: () => handleDetails(pesticide.id!),
                     onDelete: () => handleDelete(pesticide.id!),
-                    onUpdate: () => handleUpdate(pesticide.id!)
+                    onViewHistory: () => handleViewHistory(pesticide.id!)
                   }))}
                   onChange={onChange}
                   pagination={{
