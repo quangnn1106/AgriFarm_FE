@@ -56,17 +56,9 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
           </div>
           <p>Start: {dayjs(activity.start).format('HH:mm DD/MM/YYYY')}</p>
           <p>End: {dayjs(activity.end).format('HH:mm DD/MM/YYYY')}</p>
-          <div>
-            Information:{' '}
-            {activity.descriptions.map((des, index) => {
-              return (
-                <div key={index}>
-                  {' '}
-                  {'-'} {des.name}: {des.value}
-                </div>
-              );
-            })}
-          </div>
+          <br/>
+          <h3>--Detail Information--</h3>
+          
           <div>
             Land: <a href={`/${activity.location?.id}`}>{activity.location?.name}</a>
           </div>
@@ -96,7 +88,19 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
             ))}
           </div>
           <p>Status: {activity.isCompleted ? 'Completed' : 'Not yet'}</p>
-          
+          <div>
+            More Information:{' '}
+            {activity.descriptions.map((des, index) => {
+              return (
+                <div key={index}>
+                  {' '}
+                  {'-'} {des.name}: {des.value}
+                </div>
+              );
+            })}
+          </div>
+          <br/>
+          <h3>--Advance Detail--</h3>
           Detail:{' '}
           {activity.addition && (
             <AdditionSection
