@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader/Loader';
 import AdminSider from '../../Layouts/Admin/Sider/AdminSider';
 import { usePathname } from '@/navigation';
+import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
 
 export default function LayoutAdmin({ children }: { children: any }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -52,6 +53,8 @@ export default function LayoutAdmin({ children }: { children: any }) {
               />
             }
           >
+            <MenuHeaderLocale path={pathName} />
+
             {children}
           </Suspense>
         </Content>

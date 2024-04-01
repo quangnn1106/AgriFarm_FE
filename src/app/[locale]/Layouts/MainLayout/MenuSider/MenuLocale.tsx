@@ -14,9 +14,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
 const cx = classNames.bind(style);
-type Props = {
+interface Props {
   path: string;
-};
+}
 
 const MenuHeaderLocale = (props: Props) => {
   const { path } = props;
