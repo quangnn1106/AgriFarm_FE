@@ -49,6 +49,7 @@ import { Seed } from '../../models/seed-models';
         const renderItems = (
           id: string,
           onDetailsSeed: () => void,
+          onViewHistory: () => void,
           onRemoveSeed: () => void,
         ): MenuProps['items'] => {
           return [
@@ -65,6 +66,20 @@ import { Seed } from '../../models/seed-models';
                 </a>
               ),
               key: '0'
+            },
+            {
+              label: (
+                <a
+                  onClick={() => {
+                    onViewHistory();
+                  } }
+                >
+                  <Space>
+                    <ExclamationCircleOutlined /> Xem lịch sử
+                  </Space>
+                </a>
+              ),
+              key: '1'
             },
             {
               type: 'divider'
@@ -109,6 +124,7 @@ import { Seed } from '../../models/seed-models';
               items: renderItems(
                 seedItem.id!,
                 seedItem.onDetails!,
+                seedItem.onViewHistory!,
                 seedItem.onDelete!
               )
             }}

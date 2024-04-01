@@ -65,6 +65,7 @@ import { Pesticide } from '../../models/pesticide-models';
         const renderItems = (
           id: string,
           onDetailsPesticide: () => void,
+          onViewHistory: () => void,
           onRemovePesticide: () => void,
         ): MenuProps['items'] => {
           return [
@@ -81,6 +82,20 @@ import { Pesticide } from '../../models/pesticide-models';
                 </a>
               ),
               key: '0'
+            },
+            {
+              label: (
+                <a
+                  onClick={() => {
+                    onViewHistory();
+                  } }
+                >
+                  <Space>
+                    <ExclamationCircleOutlined /> Xem lịch sử
+                  </Space>
+                </a>
+              ),
+              key: '1'
             },
             {
               type: 'divider'
@@ -115,7 +130,7 @@ import { Pesticide } from '../../models/pesticide-models';
                   </Space>
                 </a>
               ),
-              key: '1'
+              key: '2'
             }
           ];
         };
@@ -125,6 +140,7 @@ import { Pesticide } from '../../models/pesticide-models';
               items: renderItems(
                 pesticideItem.id!,
                 pesticideItem.onDetails!,
+                pesticideItem.onViewHistory!,
                 pesticideItem.onDelete!
               )
             }}

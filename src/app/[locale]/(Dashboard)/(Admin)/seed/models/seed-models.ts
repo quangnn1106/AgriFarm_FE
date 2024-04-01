@@ -8,7 +8,7 @@ export interface Seed {
     notes: string
     properties: Property[],
     onDelete?: () => void;
-    onUpdate?: () => void;
+    onViewHistory?: () => void;
     onDetails?: () => void;
   }
   
