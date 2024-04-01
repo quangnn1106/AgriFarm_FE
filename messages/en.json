@@ -293,6 +293,20 @@
             "msg_update_fail": "Update fail!",
             "msg_item_required": "Item is required!"
           }
+        },
+        "SystemSetting" : {
+            "label" : {
+                "system_setting": "System Setting",
+                "setting_disease": "Service Disease",
+                "distance_receive_warnings": "Distance to receive warnings about rice diseases",
+                "distance_input": "Distance",
+                "distance_input_placeholder": "Enter the number of kilometers"
+            },
+            "message": {
+                "msg_update_success": "Setting information changed successfully",
+                "msg_distance_input": "Distance greater than 1km and less than 10km",
+                "msg_distance_des": "The distance to receive the warning from land A to land B is "
+            }
         }
     }
 }
