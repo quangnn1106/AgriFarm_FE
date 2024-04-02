@@ -8,7 +8,7 @@ export interface Pesticide {
     notes: string
     properties: Property[],
     onDelete?: () => void;
-    onUpdate?: () => void;
+    onViewHistory?: () => void;
     onDetails?: () => void;
   }
   export interface Property {

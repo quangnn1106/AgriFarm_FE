@@ -38,6 +38,7 @@ import FilterSection from './component/FilterSection/filterSection';
 import { FertilizerTableColumns } from './component/Table/column-type';
 import UpdateFertilizerFormDrawer from './component/UpdateFertilizerDrawer/update-fertilizer-drawer';
 import AddFertilizerFormDrawer from './component/AddFertilizerDrawer/add-fertilizer-drawer';
+import { redirect } from 'next/navigation';
 
 
 
@@ -98,15 +99,13 @@ const FertilizerManagement = (props: Props) => {
     setOpenFertilizerDetailDrawer(false);
   };
 
-
+  
   //handle update fertilizer
-  const [openFertilizerUpdateDrawer, setOpenFertilizerUpdateDrawer] = useState<boolean>(false);
-  const handleUpdate = async (id: string) => {
+  // const [openFertilizerUpdateDrawer, setOpenFertilizerUpdateDrawer] = useState<boolean>(false);
+  const handleViewHisrory = async (id: string) => {
     setFertilizerId(id)
-    setOpenFertilizerUpdateDrawer(true);
-  };
-  const closeFertilizerUpdateDrawer = () => {
-    setOpenFertilizerUpdateDrawer(false);
+    // redirect(`/suppliesHistory/fertilizer/${id}`);
+    router.replace(`/suppliesHistory/fertilizer/${id}`);
   };
 
 
@@ -161,7 +160,7 @@ const FertilizerManagement = (props: Props) => {
 
   useEffect(() => {
     getListFertilizersApi(http, siteId);
-  }, [http, siteId, openAddFertilizer, openFertilizerDetailDrawer, openFertilizerUpdateDrawer]);
+  }, [http, siteId, openAddFertilizer, openFertilizerDetailDrawer]);
 
   return (
     <>
@@ -294,7 +293,7 @@ const FertilizerManagement = (props: Props) => {
                     ...fertilizer,
                     onDetails: () => handleDetails(fertilizer.id!),
                     onDelete: () => handleDelete(fertilizer.id!),
-                    onUpdate: () => handleUpdate(fertilizer.id!)
+                    onViewHistory: () => handleViewHisrory(fertilizer.id!)
                   }))}
                   onChange={onChange}
                   pagination={{
