@@ -33,7 +33,7 @@ import {
 
 import { useSession } from 'next-auth/react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import {

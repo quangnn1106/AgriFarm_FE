@@ -1,5 +1,5 @@
 
-import { SupplierResponse } from "@/app/[locale]/(Dashboard)/(Admin)/supply/models/supplier-models";
+import { SupplierResponse } from "@/app/[locale]/(Dashboard)/(Admin)/(supply)/models/supplier-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
