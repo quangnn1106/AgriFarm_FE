@@ -32,7 +32,7 @@ import { CreateAllInfoOfSeedDto, CreateSeedDto, Seed } from '../../models/seed-m
 import { createSeedApi } from '@/services/Admin/Seed/createSeedApi';
 import { useSession } from 'next-auth/react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';

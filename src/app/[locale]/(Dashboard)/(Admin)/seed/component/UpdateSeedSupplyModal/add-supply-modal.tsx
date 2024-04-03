@@ -26,7 +26,7 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import { CreateSupplierMapper } from '../../models/seed-models';
