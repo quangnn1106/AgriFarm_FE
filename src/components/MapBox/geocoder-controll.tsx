@@ -165,7 +165,6 @@ const GeocoderControl = (props: GeocoderControlProps) => {
     //   geocoder.setWorldview(props.worldview);
     // }
   }
-  console.log('props marker disp: ', props.displayMarker);
 
   return props.displayMarker ? marker : '';
 };

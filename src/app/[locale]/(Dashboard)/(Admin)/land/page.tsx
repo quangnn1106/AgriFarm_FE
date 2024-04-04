@@ -35,8 +35,10 @@ import { Land } from './models/land-model';
 import { LandTableColumn } from './components/Table/column-type';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
-import ModalCustom from '@/components/ModalCustom/ModalCustom';
+
 import AddLand from './components/ModalAdd/modal';
+import UpdateLandModal from './components/update/updateModal';
+import { deleteLandApi } from '@/services/Admin/Land/deleteLand';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +46,9 @@ type Props = {};
 
 const LandPage = (props: Props) => {
   const [createState, setCreateState] = useState<boolean>(false);
+  const [updateState, setUpdateState] = useState<boolean>(false);
+
+  const [formModal, setFormModal] = useState<Land>();
 
   // handle loading data
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,38 +80,36 @@ const LandPage = (props: Props) => {
     }
   ];
 
+  //handle delete
+  const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
+
+  const [deletedLands, setDeleteLands] = useState<React.Key[]>([]);
   const checkRowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: Land[]) => {
       if (selectedRowKeys.length > 0) {
         setDeleteBtnState(false);
-        setDeleteFertilizers(selectedRowKeys);
+        setDeleteLands(selectedRowKeys);
       } else {
         setDeleteBtnState(true);
       }
     }
   };
-
-  //handle delete
-  const [deleteState, setDeleteState] = useState<boolean>(false);
-  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
-
-  const [deletedFertilizers, setDeleteFertilizers] = useState<React.Key[]>([]);
-
-  const deleteFertilizer = async (http: AxiosInstance, seasonId?: string) => {
-    //   try {
-    //     const res = await deleteFertilizerApi(http, seasonId);
-    //     getListFertilizersApi (http, siteId);
-    //   } catch (error) {
-    //     console.error('Error calling API Delete Season:', error);
-    //   }
+  const deleteLand = async (http: AxiosInstance, landId?: string) => {
+    try {
+      await deleteLandApi(http, landId);
+      getListLLandApi(http, siteId);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
   };
 
   const handleDelete = (id: string) => {
-    deleteFertilizer(http, id);
+    deleteLand(http, id);
   };
   const deleteMultiple = () => {
-    deletedFertilizers.map(function (item) {
-      deleteFertilizer(http, item.toString());
+    deletedLands.map(function (item) {
+      deleteLand(http, item.toString());
     });
     setDeleteState(false);
     setDeleteBtnState(true);
@@ -114,10 +117,13 @@ const LandPage = (props: Props) => {
   const onChange: TableProps<Land>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
-
+  const handleDetails = async (record: Land) => {
+    setFormModal(record);
+    setUpdateState(true);
+  };
   useEffect(() => {
     getListLLandApi(http, siteId);
-  }, [http, siteId]);
+  }, [http, siteId, createState, formModal, updateState]);
   return (
     <>
       <Content style={{ padding: '20px 0px' }}>
@@ -216,6 +222,13 @@ const LandPage = (props: Props) => {
                 onCancel: () => setCreateState(false)
               }}
             />
+            <UpdateLandModal
+              params={{
+                visible: updateState,
+                onCancel: () => setUpdateState(false),
+                dataRow: formModal
+              }}
+            />
           </Tooltip>
         </Flex>
 
@@ -249,11 +262,37 @@ const LandPage = (props: Props) => {
                     type: 'checkbox',
                     ...checkRowSelection
                   }}
+                  onRow={(record, rowIndex) => {
+                    return {
+                      onClick: event => {
+                        //    console.log('record row onCLick: ', record);
+                        //console.log('event row onCLick: ', event);
+                        const target = event.target as HTMLElement;
+                        const isWithinLink =
+                          target.tagName === 'A' || target.closest('a');
+
+                        const isWithinAction =
+                          target.closest('td')?.classList.contains('ant-table-cell') &&
+                          !target
+                            .closest('td')
+                            ?.classList.contains('ant-table-selection-column') &&
+                          !target
+                            .closest('td')
+                            ?.classList.contains('ant-table-cell-fix-right');
+
+                        if (isWithinAction && !isWithinLink) {
+                          console.log('record land: ', record);
+
+                          handleDetails(record);
+                        }
+                      } // click row
+                    };
+                  }}
                   columns={LandTableColumn()}
                   dataSource={land?.map(lands => ({
-                    ...lands
+                    ...lands,
                     // onDetails: () => handleDetails(fertilizer.id!),
-                    // onDelete: () => handleDelete(fertilizer.id!),
+                    onDelete: () => handleDelete(lands.id!)
                     // onUpdate: () => handleUpdate(fertilizer.id!)
                   }))}
                   onChange={onChange}

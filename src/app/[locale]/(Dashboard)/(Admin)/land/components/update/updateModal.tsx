@@ -1,10 +1,5 @@
 'use client';
 import * as React from 'react';
-
-import BreadcrumbArgiFarm from '@/components/Breadcrumb/breadCrumb';
-import { usePathname } from '@/navigation';
-import { SITE_MAP_PATH } from '@/constants/routes';
-import { Content } from 'antd/es/layout/layout';
 import {
   Col,
   ConfigProvider,
@@ -13,12 +8,10 @@ import {
   Input,
   InputNumber,
   Row,
-  Select,
   Space,
   notification,
   Button
 } from 'antd';
-import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
 import Map, {
   FullscreenControl,
   GeolocateControl,
@@ -28,52 +21,57 @@ import Map, {
   NavigationControl,
   ScaleControl
 } from 'react-map-gl';
-import GeocoderControl from '@/components/MapBox/geocoder-controll';
-import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
-import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
-//import { formItemLayoutSite } from '../components/FormItemLayout/formItemSite';
-import styles from './add.module.scss';
-import classNames from 'classnames/bind';
-import ModalCustom from '@/components/ModalCustom/ModalCustom';
-import UseAxiosAuth from '@/utils/axiosClient';
-import { NotificationPlacement } from 'antd/es/notification/interface';
+import styles from './update.module.scss';
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import useGeolocation from '@/utils/getlocaiton';
 import { formItemLayoutSite } from '../FormItemLayout/formItemSite';
 import { CloseOutlined, BarsOutlined } from '@ant-design/icons';
-import { Position } from '@/services/SuperAdmin/Site/payload/response/sites';
-import { LandPayLoad } from '@/services/Admin/Land/Payload/request/addLandPayLoad';
-import { addNewLandApi } from '@/services/Admin/Land/addNewLand';
-import { STATUS_CREATED, STATUS_OK } from '@/constants/https';
+import { NotificationPlacement } from 'antd/es/notification/interface';
+
+import ModalCustom from '@/components/ModalCustom/ModalCustom';
+
+import classNames from 'classnames/bind';
+import FormRegisterValues from '@/types/register';
+
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+
+import UseAxiosAuth from '@/utils/axiosClient';
+
 import { useTranslations } from 'next-intl';
-import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
-import fetchListLandData from '@/services/Admin/Land/getLandsApi';
-import { AxiosInstance } from 'axios';
-import Pin from '@/components/MapBox/pin';
+
+import GeocoderControl from '@/components/MapBox/geocoder-controll';
+import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
+import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
 import { Land } from '../../models/land-model';
+import Pin from '@/components/MapBox/pin';
+import { updateLandApi, updateLandPropApi } from '@/services/Admin/Land/updateLand';
+import { STATUS_OK } from '@/constants/https';
+import { LandUpdatePayLoad } from '@/services/Admin/Land/Payload/request/updateLandPayLoad';
+import { Position } from '@/services/SuperAdmin/Site/payload/response/sites';
 import { useSession } from 'next-auth/react';
-
+import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
+import { Property } from '@/services/Admin/Land/Payload/request/addLandPayLoad';
 const cx = classNames.bind(styles);
-type Props = {};
-
-const AddLand = ({
+const UpdateLandModal = ({
   params
 }: {
-  params: { siteId: string | undefined; visible: boolean; onCancel: () => void };
+  params: { visible: boolean; onCancel: () => void; dataRow?: Land };
 }) => {
-  const { data: session } = useSession();
-  const siteId = session?.user.userInfo.siteId;
+  const [form] = Form.useForm();
   const { latitude, longitude, error } = useGeolocation();
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [landsExist, setLandsExist] = React.useState<Land[]>();
 
   const [displayMarker, setDisplayMarker] = React.useState<boolean>(true);
   const tM = useTranslations('Message');
   const handleMapLoading = () => setLoading(false);
   const [marker, setMarker] = React.useState<any>();
-  const path = usePathname();
-  const [form] = Form.useForm();
+  const t = useTranslations('FormRegister');
+  const msg = useTranslations('Message');
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
   const [api, contextHolder] = notification.useNotification();
+
+  const dispatch = useAppDispatch();
   const http = UseAxiosAuth();
   const openNotification = (
     placement: NotificationPlacement,
@@ -81,11 +79,14 @@ const AddLand = ({
     type: 'success' | 'error'
   ) => {
     api[type]({
-      message: `New ${status}`,
+      message: `${status}`,
       placement,
       duration: 2
     });
   };
+  React.useEffect(() => {
+    form.setFieldsValue(params?.dataRow);
+  }, [form, params?.dataRow]);
 
   const [events, logEvents] = React.useState<Record<string, LngLat>>({});
   const onMarkerDragStart = React.useCallback((event: MarkerDragEvent) => {
@@ -109,82 +110,59 @@ const AddLand = ({
       onDragEnd: event.lngLat as LngLat
     }));
   }, []);
-
-  const handleForm = async (values: LandPayLoad) => {
+  const handleUpdate = async (values: LandUpdatePayLoad) => {
     const payLoadAddPos: Position[] = [
       { lat: events?.onDragEnd?.lat, long: events?.onDragEnd?.lng }
     ];
 
-    const allValues: LandPayLoad = {
+    const allValues: LandUpdatePayLoad = {
       ...values,
       defaultUnit: 'm2',
-      positions: payLoadAddPos
+      positions: payLoadAddPos,
+      properties: null
     };
-    //setLoading(true);
 
-    console.log('value form: ', allValues);
+    const res = await updateLandApi(http, allValues, params.dataRow?.id);
 
-    const res = await addNewLandApi(http, allValues);
-    if (res.data && res.status === STATUS_CREATED) {
+    if (res.data && res.status === STATUS_OK) {
       setLoading(false);
-      openNotification('top', `${tM('add_susses')}`, 'success');
+      console.log('values?.properties: ', values?.properties?.length);
+
+      if (values?.properties?.length !== 0) {
+        console.log('1231231312');
+        const nested = await updateLandPropApi(
+          http,
+          values?.properties as Property[],
+          params.dataRow?.id
+        );
+        if (nested.data && nested.status === STATUS_OK) {
+          openNotification('top', `${tM('update_susses')}`, 'success');
+          params.onCancel();
+          form.resetFields();
+          return;
+        } else {
+          openNotification('top', `${tM('update_error')}`, 'error');
+          params.onCancel();
+          form.resetFields();
+        }
+      }
+      openNotification('top', `${tM('update_susses')}`, 'success');
       params.onCancel();
       form.resetFields();
-      fetchLandExist(siteId, http);
+      setLoading(true);
       //  console.log('add site success', res.status);
     } else {
-      openNotification('top', `${tM('add_error')}`, 'error');
+      openNotification('top', `${tM('update_error')}`, 'error');
       params.onCancel();
       form.resetFields();
       //  console.log('add site fail', res.status);
     }
   };
 
-  const fetchLandExist = async (siteId?: string, http?: AxiosInstance) => {
-    try {
-      const responseData = await fetchListLandData(siteId, http);
-      //   console.log(responseData?.data as Sites[]);
-      setLandsExist(responseData?.data as Land[]);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error calling API fetchSites:', error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchLandExist(siteId, http);
-  }, [http, siteId]);
-
-  const pinsPositions = React.useMemo(() => {
-    return landsExist?.map((city, index) =>
-      city.positions.length > 0 ? (
-        <Marker
-          key={index}
-          longitude={city?.positions[0]?.long || 0}
-          latitude={city?.positions[0]?.lat || 0}
-          color='red'
-          anchor='bottom'
-          // onClick={e => {
-          //   // If we let the click event propagates to the map, it will immediately close the popup
-          //   // with `closeOnClick: true`
-          //   e.originalEvent.stopPropagation();
-          //   setPopupInfo(city);
-          // }}
-        >
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
-            </div>
-          </>
-        </Marker>
-      ) : (
-        ''
-      )
-    );
-  }, [landsExist]);
   return (
     <>
       {contextHolder}
+
       <ModalCustom
         open={params.visible}
         title='New Land'
@@ -208,20 +186,38 @@ const AddLand = ({
               //   onMove={evt => setViewState(evt.viewState)}
               onLoaded={handleMapLoading}
               loadingMap={loading}
-              latInit={latitude as number}
-              lngInit={longitude as number}
-              zoom={7}
+              latInit={params.dataRow?.positions[0]?.lat || (latitude as number)}
+              lngInit={params.dataRow?.positions[0]?.long || (longitude as number)}
+              zoom={10}
               style={{ width: '100%', height: '400px', margin: '25px 0' }}
               mapStyle={MAP_BOX_SATELLITE}
               //mapboxAccessToken={MAPBOX_TOKEN}
             >
+              {params.dataRow?.positions[0] ? (
+                <Marker
+                  latitude={params.dataRow?.positions[0]?.lat || 0}
+                  longitude={params.dataRow?.positions[0]?.long || 0}
+                  anchor='bottom'
+                >
+                  <>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <Pin />{' '}
+                      <span className='red'>
+                        {params.dataRow?.name ? params.dataRow?.name : ''}
+                      </span>
+                    </div>
+                  </>
+                </Marker>
+              ) : (
+                ''
+              )}
               <GeocoderControl
                 mapboxAccessToken={MAPBOX_TOKEN}
                 position='top-right'
                 marker={true}
                 displayMarker={displayMarker}
-                //   latFromUpdate={poInit?.positions[0]?.lat || 0}
-                //   lngFromUpdate={poInit?.positions[0]?.long || 0}
+                latFromUpdate={params.dataRow?.positions[0]?.lat}
+                lngFromUpdate={params.dataRow?.positions[0]?.long}
                 onMarkerDragStart={onMarkerDragStart}
                 onMarkerDrag={onMarkerDrag}
                 onMarkerDragEnd={onMarkerDragEnd}
@@ -230,7 +226,6 @@ const AddLand = ({
               <FullscreenControl position='top-left' />
               <NavigationControl position='top-left' />
               <ScaleControl />
-              {pinsPositions}
             </MapBoxAgriFarm>
           </Col>
 
@@ -267,7 +262,7 @@ const AddLand = ({
                   maxHeight: 'calc(63vh)'
                   //marginTop: '50px'
                 }}
-                onFinish={handleForm}
+                onFinish={handleUpdate}
               >
                 <Form.Item
                   name='name'
@@ -343,5 +338,4 @@ const AddLand = ({
     </>
   );
 };
-
-export default AddLand;
+export default UpdateLandModal;

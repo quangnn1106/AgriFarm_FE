@@ -1,7 +1,7 @@
-import { Property } from '@/services/Admin/Land/Payload/request/addLandPayLoad';
 import { Position } from '@/services/SuperAdmin/Site/payload/response/sites';
+import { Property } from '../request/addLandPayLoad';
 
-export interface Land {
+export interface LandResponse {
   id: string;
   siteId: string;
   siteName: null;

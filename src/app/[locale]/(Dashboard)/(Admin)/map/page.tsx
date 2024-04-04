@@ -11,12 +11,12 @@ import Map, {
   ScaleControl
 } from 'react-map-gl';
 import styles from './site.module.scss';
-import SearchConditionForm from './components/SearchCondition/searchConditionForm';
+
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import BreadcrumbComponent from '../subscription/components/Breadcrumb/breadCrumb';
+
 import { Content } from 'antd/es/layout/layout';
-import { sitesTableColumns } from './columnsType';
+
 import { Sites } from '@/services/SuperAdmin/Site/payload/response/sites';
 import { AxiosInstance } from 'axios';
 import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
@@ -34,6 +34,9 @@ import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import Loader from '@/components/Loader/Loader';
 import useGeolocation from '@/utils/getlocaiton';
+import SearchConditionForm from '../../(SuperAdmin)/site/components/SearchCondition/searchConditionForm';
+import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
+import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 
 type Props = {};
 interface CenterState {
@@ -96,9 +99,9 @@ const SitePage = (props: Props) => {
       )
     );
   }, [sites]);
-  // const handleAddSite = () => {
-  //   router.push(SITE_MAP_ADD_PATH);
-  // };
+  const handleAddSite = () => {
+    router.push(SITE_MAP_ADD_PATH);
+  };
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -106,14 +109,15 @@ const SitePage = (props: Props) => {
   return (
     <>
       <Content>
-        <BreadcrumbComponent subPath={path} />
+        {/* <BreadcrumbComponent subPath={path} /> */}
 
-        <MapBoxReact
+        <MapBoxAgriFarm
           onLoaded={handleMapLoading}
           loadingMap={loadingMap}
           latInit={latitude || 0}
           lngInit={longitude || 0}
           zoom={7}
+          mapStyle={MAP_BOX_SATELLITE}
         >
           <GeocoderControl
             mapboxAccessToken={MAPBOX_TOKEN}
@@ -124,7 +128,7 @@ const SitePage = (props: Props) => {
           <NavigationControl position='top-left' />
           <ScaleControl />
           {pinsPositions}
-        </MapBoxReact>
+        </MapBoxAgriFarm>
 
         <ColoredLine text={t('search_condition')} />
         <div>
@@ -135,99 +139,6 @@ const SitePage = (props: Props) => {
           />
         </div>
         <ColoredLine text={t('search_result')} />
-
-        <ConfigProvider
-          theme={{
-            components: {
-              Table: {
-                cellPaddingBlock: 8,
-                headerSortHoverBg: '#F2F3F5',
-                borderColor: '#F2F3F5',
-                headerBg: '#F2F3F5',
-                rowHoverBg: '#F2F3F5'
-              }
-            }
-          }}
-        >
-          <Content style={{ padding: '0px' }}>
-            <Layout
-              style={{
-                padding: '0px 0',
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG
-              }}
-            >
-              <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                {/* <Flex
-                  gap='small'
-                  wrap='wrap'
-                  className={cx('btn_row')}
-                >
-                  <Button
-                    type='primary'
-                    htmlType='submit'
-                    icon={<PlusOutlined />}
-                    size='large'
-                    // className={cx('disease__btn')}
-                    onClick={handleAddSite}
-                  >
-                    {t2('btn_add')}
-                  </Button>
-                </Flex> */}
-                <Table
-                  loading={fetching}
-                  rowKey={'id'}
-                  bordered
-                  // rowSelection={{
-                  //   type: 'checkbox',
-                  //   ...checkRowSelection
-                  // }}
-                  onRow={(record, rowIndex) => {
-                    return {
-                      onClick: event => {
-                        //console.log('record row onCLick: ', record);
-                        // console.log('event row onCLick: ', event);
-                        const target = event.target as HTMLElement;
-                        const isWithinLink =
-                          target.tagName === 'A' || target.closest('a');
-
-                        const isWithinAction =
-                          target.closest('td')?.classList.contains('ant-table-cell') &&
-                          !target
-                            .closest('td')
-                            ?.classList.contains('ant-table-selection-column') &&
-                          !target
-                            .closest('td')
-                            ?.classList.contains('ant-table-cell-fix-right');
-
-                        if (isWithinAction && !isWithinLink) {
-                          // handleDetails(record);
-                          router.push(`${path}/update/${record.id}`);
-                        }
-                      } // click row
-                    };
-                  }}
-                  columns={sitesTableColumns}
-                  dataSource={sites?.map(sites => ({
-                    ...sites
-                    // onDetails: () => handleDetails(sites.id!),
-                    // onDelete: () => handleDelete(sites.id!),
-                    // onUpdate: () => handleApproved(sites.id!)
-                  }))}
-                  // onChange={onChange}
-                  // pagination={{
-                  //   showTotal: total => `Total ${total} Items`,
-                  //   showSizeChanger: true,
-                  //   pageSizeOptions: ['10', '20', '30'],
-                  //   total: users?.length
-                  // }}
-                  scroll={{ x: 'max-content' }}
-                  className='table_style'
-                />
-              </Content>
-            </Layout>
-          </Content>
-        </ConfigProvider>
       </Content>
     </>
   );

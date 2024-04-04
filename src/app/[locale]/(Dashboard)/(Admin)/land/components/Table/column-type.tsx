@@ -19,6 +19,7 @@ import {
 
 import { useTranslations } from 'next-intl';
 import { Land } from '../../models/land-model';
+import { LandResponse } from '@/services/Admin/Land/Payload/response/landPayLoadResponse';
 
 export function LandTableColumn() {
   const t = useTranslations('Common');
@@ -35,11 +36,11 @@ export function LandTableColumn() {
               align='center'
               gap='10px'
             >
-              <Image
+              {/* <Image
                 style={{ borderRadius: '50%' }}
                 height={40}
                 src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-              />
+              /> */}
               <p style={{ color: '#009A29', fontWeight: '600' }}>{fertilizerItem.name}</p>
             </Flex>
           </>
