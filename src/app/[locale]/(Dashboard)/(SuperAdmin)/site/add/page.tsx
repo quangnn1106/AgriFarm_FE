@@ -20,6 +20,7 @@ import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
 import { formItemLayoutSite } from '../components/FormItemLayout/formItemSite';
 import styles from './add.module.scss';
 import classNames from 'classnames/bind';
+import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 
 const cx = classNames.bind(styles);
 type Props = {};
@@ -71,7 +72,7 @@ const AddSitePage = (props: Props) => {
                 zoom: 7
               }}
               style={{ width: '100%', height: '400px', margin: '25px 0' }}
-              mapStyle='mapbox://styles/mapbox/streets-v11'
+              mapStyle={MAP_BOX_SATELLITE}
               mapboxAccessToken={MAPBOX_TOKEN}
             >
               <GeocoderControl

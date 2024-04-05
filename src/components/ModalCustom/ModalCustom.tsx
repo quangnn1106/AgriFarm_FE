@@ -44,6 +44,7 @@ const ModalCustom = ({
       className={className}
       closeIcon={closeIcon}
       closable={closable}
+      
     >
       {children}
     </Modal>

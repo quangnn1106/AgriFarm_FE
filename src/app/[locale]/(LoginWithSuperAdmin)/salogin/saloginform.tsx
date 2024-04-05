@@ -80,12 +80,12 @@ const SaLoginForm: React.FC = () => {
 
             <Form.Item
               name='userName'
-              label='userName'
+              label='Email'
               rules={[
                 { required: true },
                 {
                   type: 'string',
-                  message: 'UserName is not valid'
+                  message: 'Email is not valid'
                 }
               ]}
             >
