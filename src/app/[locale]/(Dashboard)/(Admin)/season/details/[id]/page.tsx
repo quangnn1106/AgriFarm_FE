@@ -291,7 +291,6 @@ const SeasonDetails = ({
           <TitleHeader
             title={seasonDetail?.title ? seasonDetail?.title : 'Chưa đặt tên'}
           ></TitleHeader>
-
           <Flex
             align='center'
             justify='end'
@@ -439,20 +438,6 @@ const SeasonDetails = ({
                   okButtonProps={{ type: 'primary', danger: true }}
                 ></Modal>
               </Flex>
-
-              {/* <ConfigProvider
-          theme={{
-            components: {
-              Table: {
-                cellPaddingBlock: 8,
-                headerSortHoverBg: '#F2F3F5',
-                borderColor: '#F2F3F5',
-                headerBg: '#F2F3F5',
-                rowHoverBg: '#F2F3F5'
-              }
-            }
-          }}
-        > */}
               <Table
                 loading={loading}
                 rowKey={'id'}
