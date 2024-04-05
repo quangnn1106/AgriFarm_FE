@@ -96,9 +96,9 @@ const SitePage = (props: Props) => {
       )
     );
   }, [sites]);
-  const handleAddSite = () => {
-    router.push(SITE_MAP_ADD_PATH);
-  };
+  // const handleAddSite = () => {
+  //   router.push(SITE_MAP_ADD_PATH);
+  // };
 
   const {
     token: { colorBgContainer, borderRadiusLG }

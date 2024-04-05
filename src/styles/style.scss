@@ -43,7 +43,13 @@ p {
 .red {
     color: $danger-color;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 900;
+}
+
+.light_warning {
+    color: $warning-color;
+    font-size: 14px;
+    font-weight: 900;
 }
 
 .pab {
@@ -270,11 +276,13 @@ p {
         width: 100% !important;
     }
 }
+
 @media screen and (min-width: 48rem) {
     .ant-drawer-content-wrapper {
         width: 60% !important;
     }
 }
+
 @media screen and (min-width: 80rem) {
     .ant-drawer-content-wrapper {
         width: 40% !important;

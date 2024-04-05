@@ -84,14 +84,14 @@ const LoginForm: React.FC = () => {
 
             <Form.Item
               name='siteId'
-              label='SiteId'
+              label='Farm Code'
               rules={[{ required: false }]}
             >
               <Input size='large' />
             </Form.Item>
             <Form.Item
               name='userName'
-              label='UserName'
+              label='Email'
               rules={[
                 { required: true },
                 {
