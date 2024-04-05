@@ -355,7 +355,7 @@ const Edit = ({ params }: { params: { id: string } }) => {
         ) : (
           <>
             <Empty>
-              <Button type="primary" onClick={() => {router.push(`${pathName}/add`)}}>{tCom('btn_add')}</Button>
+              <Button type="primary" onClick={() => {router.push(`/risk-assessment/add`)}}>{tCom('btn_add')}</Button>
             </Empty>
           </>
         )}

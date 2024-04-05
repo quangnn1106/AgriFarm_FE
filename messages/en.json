@@ -243,7 +243,11 @@
         "btn_detail": "Detail",
         "btn_edit": "Edit",
         "btn_cancel": "Cancel",
-        "btn_yes": "Yes"
+        "btn_yes": "Yes",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "keyword": "Keyword",
+        "home": "Home"
     },
     "Services": {
         "RiskAsm": {
@@ -293,6 +297,32 @@
             "msg_update_fail": "Update fail!",
             "msg_item_required": "Item is required!"
           }
+        },
+        "Checklist": {
+            "label": {
+                "date_execution": "Date of execution",
+                "status": "Status",
+                "keyword_placeholder": "Input search text",
+                "screen_name_checklist": "GlobalG.A.P Check list",
+                "screen_name_implement": "GlobalG.A.P Check list implement",
+                "search_condition": "Search Condition",
+                "search_result": "Search Result",
+                "in_progress": "In progress",
+                "done": "Done",
+                "not_yet": "Not yet",
+                "check_all": "All",
+                "checklist_name": "Name",
+                "checklist_start_date": "Start Date",
+                "checklist_end_date": "End Date",
+                "checklist_status": "Status",
+                "checklist_create_date": "Create date",
+                "major_must": "Major must",
+                "minor_must": "Minor must",
+                "recommandation": " Recommandation"
+            },
+            "message": {
+                "msg_confirm_delete":"Do you want to delete 「%ITEM%」?"
+            }
         }
     }
 }

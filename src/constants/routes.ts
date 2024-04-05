@@ -8,7 +8,9 @@ export const LOGIN_PATH = '/login',
 // private paths
 export const DASH_BOARD_PATH = '/statistic',
   SITE_MAP_PATH = '/site',
-  SITE_MAP_ADD_PATH = '/site/add';
+  SITE_MAP_ADD_PATH = '/site/add',
+  CHECKLIST = '/checklist-global-gap',
+  CHECKLIST_IMPLEMENT = '/checklist-global-gap/implement';
 
 // call back for OAuth2
 export const CALLBACK_URL = process.env.NEXT_PUBLIC_FE;
