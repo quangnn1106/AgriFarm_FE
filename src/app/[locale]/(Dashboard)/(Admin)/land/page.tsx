@@ -39,6 +39,8 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import AddLand from './components/ModalAdd/modal';
 import UpdateLandModal from './components/update/updateModal';
 import { deleteLandApi } from '@/services/Admin/Land/deleteLand';
+import { Marker } from 'react-map-gl';
+import Pin from '@/components/MapBox/pin';
 
 const cx = classNames.bind(styles);
 
@@ -121,6 +123,32 @@ const LandPage = (props: Props) => {
     setFormModal(record);
     setUpdateState(true);
   };
+  const pinsPositions = React.useMemo(() => {
+    return land?.map((city, index) =>
+      city.positions.length > 0 ? (
+        <Marker
+          key={index}
+          longitude={city?.positions[0]?.long || 0}
+          latitude={city?.positions[0]?.lat || 0}
+          anchor='bottom'
+          // onClick={e => {
+          //   // If we let the click event propagates to the map, it will immediately close the popup
+          //   // with `closeOnClick: true`
+          //   e.originalEvent.stopPropagation();
+          //   setPopupInfo(city);
+          // }}
+        >
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
+            </div>
+          </>
+        </Marker>
+      ) : (
+        ''
+      )
+    );
+  }, [land]);
   useEffect(() => {
     getListLLandApi(http, siteId);
   }, [http, siteId, createState, formModal, updateState]);
@@ -219,14 +247,16 @@ const LandPage = (props: Props) => {
               params={{
                 siteId: siteId,
                 visible: createState,
-                onCancel: () => setCreateState(false)
+                onCancel: () => setCreateState(false),
+                pinsPositions: pinsPositions
               }}
             />
             <UpdateLandModal
               params={{
                 visible: updateState,
                 onCancel: () => setUpdateState(false),
-                dataRow: formModal
+                dataRow: formModal,
+                pinsPositions: pinsPositions
               }}
             />
           </Tooltip>

@@ -51,11 +51,19 @@ import { Position } from '@/services/SuperAdmin/Site/payload/response/sites';
 import { useSession } from 'next-auth/react';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import { Property } from '@/services/Admin/Land/Payload/request/addLandPayLoad';
+import { AxiosInstance } from 'axios';
+import fetchListLandData from '@/services/Admin/Land/getLandsApi';
+import PinDetail from '@/components/MapBox/pinDetail';
 const cx = classNames.bind(styles);
 const UpdateLandModal = ({
   params
 }: {
-  params: { visible: boolean; onCancel: () => void; dataRow?: Land };
+  params: {
+    visible: boolean;
+    onCancel: () => void;
+    dataRow?: Land;
+    pinsPositions: (React.JSX.Element | '')[] | undefined;
+  };
 }) => {
   const [form] = Form.useForm();
   const { latitude, longitude, error } = useGeolocation();
@@ -149,7 +157,7 @@ const UpdateLandModal = ({
       openNotification('top', `${tM('update_susses')}`, 'success');
       params.onCancel();
       form.resetFields();
-      setLoading(true);
+      setLoading(false);
       //  console.log('add site success', res.status);
     } else {
       openNotification('top', `${tM('update_error')}`, 'error');
@@ -165,7 +173,7 @@ const UpdateLandModal = ({
 
       <ModalCustom
         open={params.visible}
-        title='New Land'
+        title='Update Land'
         //  title={t('title_add')}
         width='70%'
         style={{ top: 40, maxWidth: 1000 }}
@@ -198,11 +206,12 @@ const UpdateLandModal = ({
                   latitude={params.dataRow?.positions[0]?.lat || 0}
                   longitude={params.dataRow?.positions[0]?.long || 0}
                   anchor='bottom'
+                  style={{ position: 'absolute', zIndex: 1 }}
                 >
                   <>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <Pin />{' '}
-                      <span className='red'>
+                      <PinDetail />{' '}
+                      <span className='light_warning'>
                         {params.dataRow?.name ? params.dataRow?.name : ''}
                       </span>
                     </div>
@@ -226,6 +235,7 @@ const UpdateLandModal = ({
               <FullscreenControl position='top-left' />
               <NavigationControl position='top-left' />
               <ScaleControl />
+              {params.pinsPositions}
             </MapBoxAgriFarm>
           </Col>
 

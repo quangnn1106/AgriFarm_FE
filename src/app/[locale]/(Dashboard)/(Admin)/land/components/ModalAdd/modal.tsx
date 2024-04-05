@@ -47,10 +47,7 @@ import { addNewLandApi } from '@/services/Admin/Land/addNewLand';
 import { STATUS_CREATED, STATUS_OK } from '@/constants/https';
 import { useTranslations } from 'next-intl';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
-import fetchListLandData from '@/services/Admin/Land/getLandsApi';
-import { AxiosInstance } from 'axios';
-import Pin from '@/components/MapBox/pin';
-import { Land } from '../../models/land-model';
+
 import { useSession } from 'next-auth/react';
 
 const cx = classNames.bind(styles);
@@ -59,13 +56,17 @@ type Props = {};
 const AddLand = ({
   params
 }: {
-  params: { siteId: string | undefined; visible: boolean; onCancel: () => void };
+  params: {
+    siteId: string | undefined;
+    visible: boolean;
+    onCancel: () => void;
+    pinsPositions: (React.JSX.Element | '')[] | undefined;
+  };
 }) => {
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const { latitude, longitude, error } = useGeolocation();
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [landsExist, setLandsExist] = React.useState<Land[]>();
 
   const [displayMarker, setDisplayMarker] = React.useState<boolean>(true);
   const tM = useTranslations('Message');
@@ -130,7 +131,7 @@ const AddLand = ({
       openNotification('top', `${tM('add_susses')}`, 'success');
       params.onCancel();
       form.resetFields();
-      fetchLandExist(siteId, http);
+
       //  console.log('add site success', res.status);
     } else {
       openNotification('top', `${tM('add_error')}`, 'error');
@@ -140,48 +141,6 @@ const AddLand = ({
     }
   };
 
-  const fetchLandExist = async (siteId?: string, http?: AxiosInstance) => {
-    try {
-      const responseData = await fetchListLandData(siteId, http);
-      //   console.log(responseData?.data as Sites[]);
-      setLandsExist(responseData?.data as Land[]);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error calling API fetchSites:', error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchLandExist(siteId, http);
-  }, [http, siteId]);
-
-  const pinsPositions = React.useMemo(() => {
-    return landsExist?.map((city, index) =>
-      city.positions.length > 0 ? (
-        <Marker
-          key={index}
-          longitude={city?.positions[0]?.long || 0}
-          latitude={city?.positions[0]?.lat || 0}
-          color='red'
-          anchor='bottom'
-          // onClick={e => {
-          //   // If we let the click event propagates to the map, it will immediately close the popup
-          //   // with `closeOnClick: true`
-          //   e.originalEvent.stopPropagation();
-          //   setPopupInfo(city);
-          // }}
-        >
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Pin /> <span className='red'>{city?.name ? city?.name : ''}</span>
-            </div>
-          </>
-        </Marker>
-      ) : (
-        ''
-      )
-    );
-  }, [landsExist]);
   return (
     <>
       {contextHolder}
@@ -230,7 +189,7 @@ const AddLand = ({
               <FullscreenControl position='top-left' />
               <NavigationControl position='top-left' />
               <ScaleControl />
-              {pinsPositions}
+              {params.pinsPositions}
             </MapBoxAgriFarm>
           </Col>
 

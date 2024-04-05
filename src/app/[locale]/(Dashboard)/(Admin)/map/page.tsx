@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { Suspense, useEffect, useMemo, useState } from 'react';
-import MapboxMap from '@/components/MapBox/mapbox';
-import { Button, Col, ConfigProvider, Flex, Layout, Row, Table, theme } from 'antd';
+
+import { Breadcrumb, Button, ConfigProvider, Divider, theme } from 'antd';
 import Map, {
   FullscreenControl,
   GeolocateControl,
@@ -10,33 +10,29 @@ import Map, {
   NavigationControl,
   ScaleControl
 } from 'react-map-gl';
-import styles from './site.module.scss';
+import styles from './map.module.scss';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 
 import { Content } from 'antd/es/layout/layout';
-
-import { Sites } from '@/services/SuperAdmin/Site/payload/response/sites';
 import { AxiosInstance } from 'axios';
-import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import classNames from 'classnames/bind';
-
 const cx = classNames.bind(styles);
-
-import MapBoxReact from '@/components/MapBox/mapBoxReact';
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
-
-import { usePathname, useRouter } from '@/navigation';
+import { Link, useRouter } from '@/navigation';
 import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
-import Loader from '@/components/Loader/Loader';
 import useGeolocation from '@/utils/getlocaiton';
 import SearchConditionForm from '../../(SuperAdmin)/site/components/SearchCondition/searchConditionForm';
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
+import { Land } from '../land/models/land-model';
+import fetchListLandData from '@/services/Admin/Land/getLandsApi';
+import { useSession } from 'next-auth/react';
+import FilterSection from './components/FilterSection/filterSection';
 
 type Props = {};
 interface CenterState {
@@ -45,35 +41,41 @@ interface CenterState {
   zoom?: number;
 }
 const SitePage = (props: Props) => {
-  const [fetching, setIsFetching] = React.useState(true);
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
   const [loadingMap, setLoading] = React.useState(true);
   const handleMapLoading = () => setLoading(false);
   const { latitude, longitude, error } = useGeolocation();
-  const [sites, setSites] = React.useState<Sites[] | []>([]);
-  const t = useTranslations('Disease');
-  const t2 = useTranslations('Button');
-  const path = usePathname();
+  const [lands, setLands] = React.useState<Land[] | []>([]);
+  const t = useTranslations('Common');
 
   const http = UseAxiosAuth();
   const router = useRouter();
-
-  const fetchSites = async (http: AxiosInstance) => {
+  const breadCrumb = [
+    {
+      title: <Link href={`/`}>Home</Link>
+    },
+    {
+      title: <Link href={`/map`}>Map</Link>
+    }
+  ];
+  const fetchLandExist = async (siteId?: string, http?: AxiosInstance) => {
     try {
-      const responseData = await getSitesService(http);
+      const responseData = await fetchListLandData(siteId, http);
       //   console.log(responseData?.data as Sites[]);
-      setSites(responseData?.data as Sites[]);
-      setIsFetching(false);
+      setLands(responseData?.data as Land[]);
+      setLoading(false);
     } catch (error) {
       console.error('Error calling API fetchSites:', error);
     }
   };
 
   React.useEffect(() => {
-    fetchSites(http);
-  }, [http]);
+    fetchLandExist(siteId, http);
+  }, [http, siteId]);
 
   const pinsPositions = useMemo(() => {
-    return sites?.map((city, index) =>
+    return lands?.map((city, index) =>
       city.positions.length > 0 ? (
         <Marker
           key={index}
@@ -98,7 +100,7 @@ const SitePage = (props: Props) => {
         ''
       )
     );
-  }, [sites]);
+  }, [lands]);
   const handleAddSite = () => {
     router.push(SITE_MAP_ADD_PATH);
   };
@@ -110,7 +112,54 @@ const SitePage = (props: Props) => {
     <>
       <Content>
         {/* <BreadcrumbComponent subPath={path} /> */}
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
+            }
+          }}
+        >
+          <Button
+            className='home-btn'
+            href='/'
+            size={'large'}
+          >
+            <HomeOutlined />
+            {/* {siteName} */}
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb
+          style={{ margin: '0px 24px' }}
+          items={breadCrumb}
+        ></Breadcrumb>
+        <Divider
+          orientation='left'
+          plain
+          style={{ margin: '0px' }}
+        >
+          {t('search_condition')}
+        </Divider>
 
+        <FilterSection></FilterSection>
+        <Divider
+          orientation='left'
+          plain
+        >
+          {t('search_result')}
+        </Divider>
         <MapBoxAgriFarm
           onLoaded={handleMapLoading}
           loadingMap={loadingMap}
@@ -130,7 +179,7 @@ const SitePage = (props: Props) => {
           {pinsPositions}
         </MapBoxAgriFarm>
 
-        <ColoredLine text={t('search_condition')} />
+        {/* <ColoredLine text={t('search_condition')} />
         <div>
           <SearchConditionForm
           // handleDate={handleDate}
@@ -138,25 +187,25 @@ const SitePage = (props: Props) => {
           // searchAction={searchAction}
           />
         </div>
-        <ColoredLine text={t('search_result')} />
+        <ColoredLine text={t('search_result')} /> */}
       </Content>
     </>
   );
 };
-interface ColoredLineProps {
-  text: string;
-}
-const ColoredLine: React.FC<ColoredLineProps> = ({ text }) => (
-  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 25 }}>
-    <div
-      className={cx('disease__line')}
-      style={{ flex: 1 }}
-    />
-    <span style={{ marginLeft: 5, marginRight: 5 }}>{text}</span>
-    <div
-      className={cx('disease__line')}
-      style={{ flex: 12 }}
-    />
-  </div>
-);
+// interface ColoredLineProps {
+//   text: string;
+// }
+// const ColoredLine: React.FC<ColoredLineProps> = ({ text }) => (
+//   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 25 }}>
+//     <div
+//       className={cx('disease__line')}
+//       style={{ flex: 1 }}
+//     />
+//     <span style={{ marginLeft: 5, marginRight: 5 }}>{text}</span>
+//     <div
+//       className={cx('disease__line')}
+//       style={{ flex: 12 }}
+//     />
+//   </div>
+// );
 export default SitePage;
