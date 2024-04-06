@@ -34,7 +34,7 @@ const authMiddleware = withAuth(
   req => intlMiddleware(req),
   {
     callbacks: {
-      authorized: ({ token, req }) => (token ? true : false)
+      authorized: ({ token }) => token != null
     },
     pages: {
       signIn: '/login' || '/salogin',
@@ -58,21 +58,6 @@ export default function middleware(req: NextRequest) {
     return (authMiddleware as any)(req);
   }
 }
-
-// export const config = {
-//   matcher: [
-//     '/lead/:path*',
-//     '/dashboard/:path*',
-//     '/contact/:path*',
-//     '/task/:path*',
-//     '/opportunity/:path*',
-//     '/meeting/:path*',
-//     '/calls/:path*',
-//     '/products/:path*',
-//     '/account/:path*',
-//     '/profile/:path*'
-//   ]
-// };
 
 export const config = {
   // Skip all paths that should not be internationalized
