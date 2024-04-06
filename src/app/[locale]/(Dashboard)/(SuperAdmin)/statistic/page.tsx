@@ -122,59 +122,9 @@ const Statistic = () => {
           </Button>
         </ConfigProvider>
         <TitleHeader title='Thống kê'></TitleHeader>
-        <Flex
-          gap={10}
-          style={{ width: '100%', marginTop: '20px' }}
-          wrap='wrap'
-          vertical={false}
-          justify='center'
-        >
-          <div style={{ width: '30%' }}>
-            <IconText
-              icon={<FaCloudSunRain />}
-              label='Thời tiết'
-              value='rain'
-            ></IconText>
-          </div>
-          <div style={{ width: '30%' }}>
-            <IconText
-              icon={<FaDroplet />}
-              label='Độ ẩm'
-              value='rain'
-            ></IconText>
-          </div>
-          <div style={{ width: '30%' }}>
-            <IconText
-              icon={<FaTemperatureLow />}
-              label='Nhiệt độ'
-              value='rain'
-            ></IconText>
-          </div>
-          <div style={{ width: '30%' }}>
-            <IconText
-             icon={<FaWind />}
-              label='Tốc độ gió'
-              value='rain'
-            ></IconText>
-          </div>
-          <div style={{ width: '30%' }}>
-            <IconText
-             icon={<FaFan />}
-              label='Weather'
-              value='rain'
-            ></IconText>
-          </div>
-          <div style={{ width: '30%' }}>
-            <IconText
-              icon={<FaCloudShowersHeavy />}
-              label='Weather'
-              value='rain'
-            ></IconText>
-          </div>
-        </Flex>
         <Flex className={ss('total-section')} vertical={true} justify='center'>
         <Flex gap={10} style={{marginBottom: '12px'}} align='center' wrap='wrap'>
-          <span style={{fontSize: '1.25rem', fontWeight: 600}}>Thống kê theo vụ hoặc năm</span>
+          <span style={{fontSize: '1.25rem', fontWeight: 600}}>Thống kê theo </span>
           <Select
             defaultValue=''
             style={{ width: 120 }}
@@ -198,29 +148,29 @@ const Statistic = () => {
             }
             rate={-8}
             float={2}
-            unit='Tr VND'
+            unit='tr VND'
             timeCompare='mùa trước'
           ></NumberBlock>
           <NumberBlock
             totalNumbers={100}
-            title={'Tổng sản lượng'}
+            title={'Tổng số đơn hàng'}
             color={
               '#DCFCE7'
             }
-            rate={-8}
+            rate={4}
             float={0}
-            unit='tấn'
+            unit='đơn'
             timeCompare='mùa trước'
           ></NumberBlock>
           <NumberBlock
             totalNumbers={100}
-            title={'Năng suất'}
+            title={'Tổng số gói dịch vụ đã bán'}
             color={
               '#fff4de'
             }
             rate={8}
             float={0}
-            unit='tạ/ha'
+            unit='gói'
             timeCompare='mùa trước'
           ></NumberBlock>
           <NumberBlock
@@ -231,58 +181,34 @@ const Statistic = () => {
             }
             rate={0}
             float={2}
-            unit='Người'
+            unit='người'
             timeCompare='mùa trước'
           ></NumberBlock>
           <NumberBlock
             totalNumbers={1000}
-            title={'Tổng diện tích'}
+            title={'Tổng số lượt sử dụng chức năng dự đoán bệnh'}
             color={
               '#E5F9FF'
             }
             rate={0}
             float={2}
-            unit='m^2'
+            unit='lượt'
             timeCompare='mùa trước'
           ></NumberBlock>
           <NumberBlock
             totalNumbers={1000}
-            title={'Tổng doanh thu'}
+            title={'Tổng số phản hồi đang chờ'}
             color={
               '#F8FFE5'
             }
             rate={-8}
             float={2}
-            unit='Tr VND'
+            unit='phản hồi'
             timeCompare='mùa trước'
           ></NumberBlock>
         </Flex>
         </Flex>
-        <ConfigProvider
-          theme={{
-            components: {
-              Table: {
-                cellPaddingBlock: 8,
-                headerSortHoverBg: '#F2F3F5',
-                borderColor: '#F2F3F5',
-                headerBg: '#F2F3F5',
-                rowHoverBg: '#F2F3F5'
-              }
-            }
-          }}
-        >
-        <Table
-                loading={loading}
-                rowKey={'id'}
-                columns={ProductTableColumns()}
-                bordered
-                scroll={{ x: 'max-content' }}
-                className={cx('table_style')}
-                dataSource={products?.map(product => ({
-                  ...product
-                }))}
-              />
-              </ConfigProvider>
+
               {/* <Typography>
                 <pre>{JSON.stringify(weather, null, 2)}</pre>
               </Typography> */}
