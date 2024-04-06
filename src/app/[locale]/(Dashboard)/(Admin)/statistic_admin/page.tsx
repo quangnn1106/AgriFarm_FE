@@ -24,7 +24,7 @@ import { AxiosInstance } from 'axios';
 import fetchListProductData from '@/services/Admin/Product/getProductsApi';
 import { STATUS_OK } from '@/constants/https';
 import getWeathersApi from '@/services/Weather/getWeathersApi';
-import { Weather } from '@/services/Weather/weather-models';
+import { DataWeather, Forecast, Weather } from '@/services/Weather/weather-models';
 import { Product } from '../season/models/season-model';
 import TitleHeader from '../season/component/TitleHeader/tiltle-header';
 import { ProductTableColumns } from './component/Table/product-column-type';
@@ -53,6 +53,8 @@ const Statistic = () => {
   //get product
   const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[] | undefined>([]);
+  const [dataWeather, setDataWeather] = useState<DataWeather>();
+  const [weather, setWeathers] = useState<Forecast>();
   
   // fetch list product data details
   const getListProductData = async (http: AxiosInstance, seasonId?: string) => {
@@ -70,10 +72,26 @@ const Statistic = () => {
     }
   };
 
+    // fetch list product data details
+    const getWeathers = async (http: AxiosInstance) => {
+      try {
+        await getWeathersApi(http).then((res) => {
+          const data = res.data as DataWeather;
+          console.log(data);
+          setWeathers(data.list[0]);
+        });
+        
+      } catch (error) {
+        setLoading(false);
+        console.log('Error: : ', error);
+      }
+    };
+
   useEffect(() => {
     getListProductData(http, '0bbafb0c-6c36-4996-b0c3-417443ad1f6e');
-    // getWeathers();
+    getWeathers(http);
   }, [http]);
+
   return (
     <> 
       <Content style={{ padding: '20px 20px', maxWidth: '1280px' }}>

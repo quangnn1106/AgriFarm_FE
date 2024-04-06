@@ -53,7 +53,7 @@ export default function LayoutAdmin({ children }: { children: any }) {
           className='sidebar'
           breakpoint='lg'
           // collapsedWidth='100'
-          // collapsible
+          //collapsible
           collapsed={collapsed}
           style={{position: 'relative' }}
           // onCollapse={value => setCollapsed(value)}
