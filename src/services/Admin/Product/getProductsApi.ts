@@ -16,7 +16,7 @@ const fetchListProductData: (
   siteId?: string | null,
    
 ) => Promise<HttpResponseCommon<Product[]>> = async (http, seasonId, siteId) => {
-      const res = await http?.get(`http://localhost/api/v1/cult/products/get`, {params: {
+      const res = await http?.get(`cult/products/get`, {params: {
         seasonId: seasonId
       }, headers: {
         pageSize: 40

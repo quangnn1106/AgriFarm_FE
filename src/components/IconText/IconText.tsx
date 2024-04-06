@@ -7,14 +7,14 @@ const IconText = ({
     label,
     value
   }: {
-    icon: React.FC;
+    icon: ReactNode;
     label: ReactNode;
     value: ReactNode;
   }) =>  {
     return (
         <Space style={{ width: '100%' }}>
-          {React.createElement(icon)}
-          <div style={{ fontSize: '0.8rem', fontWeight: 'normal', textWrap: 'nowrap' }}>
+          {icon}
+          <div style={{ fontSize: '1rem', fontWeight: 'normal', textWrap: 'nowrap' }}>
             {label}
           </div>
           <div style={{ fontSize: '1rem', fontWeight: 'bold', textWrap: 'nowrap' }}>

@@ -42,7 +42,7 @@ export type Product = {
     id? : string;
     name?: string | '';
     totalQuantity?: number | '';
-    quantity?: number | '';
+    currentQuanlity?: number | '';
     land: LandProd | null;
     seed: SeedPro | null;
     season: Season;
@@ -60,7 +60,7 @@ export type SeedPro = {
 
 export type Season = {
     id? : string | '';
-    name?: string | '';
+    title?: string | '';
 }
 
   
