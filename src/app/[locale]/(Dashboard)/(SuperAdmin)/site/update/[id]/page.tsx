@@ -51,6 +51,7 @@ import { updateSiteService } from '@/services/SuperAdmin/Site/updateInforService
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 
 const cx = classNames.bind(styles);
 type Props = {};
@@ -245,6 +246,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
               lngInit={sitesDetail?.positions[0]?.long || (longitude as number)}
               zoom={7}
               style={{ width: '100%', height: 530, margin: '25px 0' }}
+              mapStyle={MAP_BOX_SATELLITE}
             >
               {sitesDetail?.positions[0] ? (
                 <Marker

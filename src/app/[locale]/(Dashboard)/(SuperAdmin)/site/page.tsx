@@ -34,6 +34,7 @@ import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import Loader from '@/components/Loader/Loader';
 import useGeolocation from '@/utils/getlocaiton';
+import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 
 type Props = {};
 interface CenterState {
@@ -114,6 +115,7 @@ const SitePage = (props: Props) => {
           latInit={latitude || 0}
           lngInit={longitude || 0}
           zoom={7}
+          mapStyle={MAP_BOX_SATELLITE}
         >
           <GeocoderControl
             mapboxAccessToken={MAPBOX_TOKEN}

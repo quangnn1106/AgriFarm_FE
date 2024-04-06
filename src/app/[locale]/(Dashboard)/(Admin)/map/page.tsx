@@ -26,13 +26,18 @@ import { Link, useRouter } from '@/navigation';
 import { SITE_MAP_ADD_PATH } from '@/constants/routes';
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import useGeolocation from '@/utils/getlocaiton';
-import SearchConditionForm from '../../(SuperAdmin)/site/components/SearchCondition/searchConditionForm';
+//import SearchConditionForm from '../../(SuperAdmin)/site/components/SearchCondition/searchConditionForm';
+
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import { Land } from '../land/models/land-model';
 import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { useSession } from 'next-auth/react';
 import FilterSection from './components/FilterSection/filterSection';
+import WeatherComponent from '@/components/Statistic/weather';
+import { Water } from '../water/models/water-model';
+import fetchListWaterData from '@/services/Admin/Water/getWaterService';
+import PinWaterSource from '@/components/MapBox/pinWaterSource';
 
 type Props = {};
 interface CenterState {
@@ -47,6 +52,8 @@ const SitePage = (props: Props) => {
   const handleMapLoading = () => setLoading(false);
   const { latitude, longitude, error } = useGeolocation();
   const [lands, setLands] = React.useState<Land[] | []>([]);
+  const [water, setWater] = React.useState<Water[] | []>([]);
+
   const t = useTranslations('Common');
 
   const http = UseAxiosAuth();
@@ -70,8 +77,20 @@ const SitePage = (props: Props) => {
     }
   };
 
+  const fetchWaterExist = async (siteId?: string, http?: AxiosInstance) => {
+    try {
+      const responseData = await fetchListWaterData(siteId, http);
+      //   console.log(responseData?.data as Sites[]);
+      setWater(responseData?.data as Water[]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error calling API fetchWater:', error);
+    }
+  };
+
   React.useEffect(() => {
     fetchLandExist(siteId, http);
+    fetchWaterExist(siteId, http);
   }, [http, siteId]);
 
   const pinsPositions = useMemo(() => {
@@ -101,13 +120,35 @@ const SitePage = (props: Props) => {
       )
     );
   }, [lands]);
-  const handleAddSite = () => {
-    router.push(SITE_MAP_ADD_PATH);
-  };
 
-  const {
-    token: { colorBgContainer, borderRadiusLG }
-  } = theme.useToken();
+  const pinsWater = useMemo(() => {
+    return water?.map((city, index) =>
+      city.positions.length > 0 ? (
+        <Marker
+          key={index}
+          longitude={city?.positions[0]?.long || 0}
+          latitude={city?.positions[0]?.lat || 0}
+          anchor='bottom'
+          // onClick={e => {
+          //   // If we let the click event propagates to the map, it will immediately close the popup
+          //   // with `closeOnClick: true`
+          //   e.originalEvent.stopPropagation();
+          //   setPopupInfo(city);
+          // }}
+        >
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <PinWaterSource />{' '}
+              <span className='light-blue'>{city?.name ? city?.name : ''}</span>
+            </div>
+          </>
+        </Marker>
+      ) : (
+        ''
+      )
+    );
+  }, [water]);
+
   return (
     <>
       <Content>
@@ -145,7 +186,7 @@ const SitePage = (props: Props) => {
           style={{ margin: '0px 24px' }}
           items={breadCrumb}
         ></Breadcrumb>
-        <Divider
+        {/* <Divider
           orientation='left'
           plain
           style={{ margin: '0px' }}
@@ -159,7 +200,16 @@ const SitePage = (props: Props) => {
           plain
         >
           {t('search_result')}
+        </Divider> */}
+        <Divider
+          orientation='left'
+          plain
+          style={{ margin: '0px' }}
+        >
+          {t('search_condition')}
         </Divider>
+        <WeatherComponent />
+
         <MapBoxAgriFarm
           onLoaded={handleMapLoading}
           loadingMap={loadingMap}
@@ -167,6 +217,7 @@ const SitePage = (props: Props) => {
           lngInit={longitude || 0}
           zoom={7}
           mapStyle={MAP_BOX_SATELLITE}
+          //style={{ width: '100%', height: 500, margin: '25px 0' }}
         >
           <GeocoderControl
             mapboxAccessToken={MAPBOX_TOKEN}
@@ -177,6 +228,7 @@ const SitePage = (props: Props) => {
           <NavigationControl position='top-left' />
           <ScaleControl />
           {pinsPositions}
+          {pinsWater}
         </MapBoxAgriFarm>
 
         {/* <ColoredLine text={t('search_condition')} />

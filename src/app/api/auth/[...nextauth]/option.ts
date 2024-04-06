@@ -118,7 +118,9 @@ export const options: AuthOptions = {
         const access = user?.data?.token;
         token.access_token = access;
         token.user_info = user?.data?.userInfo;
+        token.role = user?.data?.userInfo.role;
         console.log('user.access jwttttttt: ', user?.data?.token);
+        //console.log('token.user_info: ', token?.role);
       }
 
       return token;
