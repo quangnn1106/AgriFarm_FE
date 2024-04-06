@@ -1,8 +1,9 @@
 "use client"
 
 import Schedule from '@/components/(ScheduleItems)/Schedule/schedule';
+import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import { getScheduleService } from '@/services/Admin/Activities/scheduleService';
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activities';
+
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
