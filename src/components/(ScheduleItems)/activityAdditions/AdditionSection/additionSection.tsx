@@ -6,7 +6,7 @@ import {
   USING_ADDITION
 } from '@/constants/additionType';
 import { Link } from '@/navigation';
-import { Addition } from '@/services/Admin/Activities/Payload/response/activities';
+import { Addition } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useEffect, useRef, useState } from 'react';
 import UsingAddition from '../viewer/UsingDetail/usingAddition';

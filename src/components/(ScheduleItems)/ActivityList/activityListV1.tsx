@@ -1,25 +1,34 @@
 'use client';
 import { PlusOutlined, DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { Button, Popconfirm, Space, Table, TableProps, Tag } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ActivityDetail from '../ActivityDetail/activityDetail';
-import CreateActivity from '../CreateActivity/createActivity';
+import CreateActivityV1 from '../CreateActivity/createActivityV1';
 import UpdateActivity from '../UpdateActivity/updateAcitivity';
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activities';
+import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import dayjs from 'dayjs';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface IProp {
   list: ActivityResponse[];
   isFetching: boolean;
+  defaultVal?: string;
 }
 
-const ActivityList = (props: IProp) => {
+const ActivityListV1 = (props: IProp) => {
+  const { list, isFetching, defaultVal } = props;
+  const [selectedActivity, setSelectedActivity] = useState<ActivityResponse | null>(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const [createOpen, setCreateOpen] = useState<boolean>(false);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
-  const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [detailOpen, setDetailOpen] = useState<boolean>(!!selectedActivity);
 
-  const [selectedActivity, setSelectedActivity] = useState<ActivityResponse | null>(null);
-  const { list, isFetching } = props;
+  useEffect(()=>{
+    const val = defaultVal ? list.find(e => e.id == defaultVal) ?? null : null
+    onOpenDetail(val)
+  },[list])
 
   const renderHeader = () => {
     return (
@@ -37,14 +46,20 @@ const ActivityList = (props: IProp) => {
   };
 
   const handleCloseDetail = () => {
+    replace(`${pathname}`);
     setSelectedActivity(null);
     setDetailOpen(false);
   };
 
-  const handleDetailClick = (detail: ActivityResponse) => {
+  const onOpenDetail = (detail: ActivityResponse | null) => {
     //console.log("On click, detail = ", detail);
-    setDetailOpen(true);
-    setSelectedActivity(detail);
+    if (detail) {
+      const params = new URLSearchParams(searchParams);
+      params.set('a', detail.id);
+      replace(`${pathname}?${params.toString()}`);
+      setDetailOpen(true);
+      setSelectedActivity(detail);
+    }
   };
 
   const handleDelete = async (activity: ActivityResponse) => {
@@ -56,9 +71,7 @@ const ActivityList = (props: IProp) => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (_, record) => (
-        <a onClick={() => handleDetailClick(record)}>{record.title}</a>
-      )
+      render: (_, record) => <a onClick={() => onOpenDetail(record)}>{record.title}</a>
     },
 
     {
@@ -83,7 +96,7 @@ const ActivityList = (props: IProp) => {
             twoToneColor='#f57800'
             style={{ cursor: 'pointer', margin: '0 20px' }}
             onClick={() => {
-              console.log("ok")
+              console.log('ok');
               setUpdateOpen(true);
               setSelectedActivity(record);
             }}
@@ -116,6 +129,7 @@ const ActivityList = (props: IProp) => {
         rowKey={'id'}
         dataSource={list}
         loading={isFetching}
+        pagination={{ pageSize: 5 }}
       />
       {detailOpen && selectedActivity && (
         <ActivityDetail
@@ -124,7 +138,7 @@ const ActivityList = (props: IProp) => {
         />
       )}
       {createOpen && (
-        <CreateActivity
+        <CreateActivityV1
           //isOpen={createOpen}
           setOpen={setCreateOpen}
         />
@@ -140,4 +154,4 @@ const ActivityList = (props: IProp) => {
   );
 };
 
-export default ActivityList;
+export default ActivityListV1;

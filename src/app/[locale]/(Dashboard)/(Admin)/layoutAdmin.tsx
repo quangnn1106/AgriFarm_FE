@@ -16,11 +16,7 @@ import AdminSider from '../../Layouts/Admin/Sider/AdminSider';
 import { usePathname } from '@/navigation';
 import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
 import { MenuUnfoldOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import {
-  FaChevronLeft, FaChevronRight
-} from 'react-icons/fa6';
-
-
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 
 export default function LayoutAdmin({ children }: { children: any }) {
   const { data: session, status } = useSession();
@@ -55,17 +51,26 @@ export default function LayoutAdmin({ children }: { children: any }) {
           // collapsedWidth='100'
           //collapsible
           collapsed={collapsed}
-          style={{position: 'relative' }}
+          style={{ position: 'relative' }}
           // onCollapse={value => setCollapsed(value)}
         >
-          <AdminSider path={pathName} visible={collapsed}/>
+          <AdminSider
+            path={pathName}
+            visible={collapsed}
+          />
           <Button
             type='primary'
             onClick={toggleCollapsed}
-            style={{ marginBottom: 16, position: 'absolute', top:'3%', left:'90%' }}
+            style={{
+              marginBottom: 16,
+              position: 'absolute',
+              top: '3%',
+              left: '90%',
+              zIndex: 2
+            }}
             className={cx('toggle-btn')}
           >
-            {collapsed ? <FaChevronRight /> : <FaChevronLeft /> }
+            {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
           </Button>
         </Sider>
         <Content className='site_layout_background'>

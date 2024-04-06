@@ -1,6 +1,9 @@
 import { Link, usePathname, useRouter } from '@/navigation';
 import { EquipmentResponse } from '@/services/Admin/Equipments/Payload/response/equipmentResponses';
-import { deleteEquipmentsService, getEquipmentsService } from '@/services/Admin/Equipments/equipmentsService';
+import {
+  deleteEquipmentsService,
+  getEquipmentsService
+} from '@/services/Admin/Equipments/equipmentsService';
 import { PaginationResponse } from '@/types/pagination';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { getPaginationResponse } from '@/utils/paginationHelper';
@@ -35,6 +38,8 @@ import EquipmentDetailDrawer from '../EquipmentDetail/equipmentDetailDrawer';
 import SupplyEquipmentModal from '../SupplyEquipment/supplyEquipment';
 import EquipSupplyDetailDrawer from '../EquipSupplyDetail/equipSupplyDetailDrawer';
 import UpdateEquipmentModal from '../UpdateEquipment/updateEquipmentModal';
+import InDomDrawer from './inDomDrawer';
+import EquipSupplyDetailList from '../EquipSupplyDetail/equipmentSupplyDetailList';
 
 interface IProps {}
 
@@ -80,16 +85,14 @@ export default function EquipmentList(props: IProps) {
   }, [http, hasChanged]);
 
   const handleDelete = async (content: EquipmentResponse) => {
-    deleteEquipmentsService(http, content.id)
-    .then((rs)=>{
-      if(rs){
-        message.success(`Deleted ${content.name} success`)
-        setHasChanged(!hasChanged)
-      }else{
-        message.success(`Something went wrong try again!`)
+    deleteEquipmentsService(http, content.id).then(rs => {
+      if (rs) {
+        message.success(`Deleted ${content.name} success`);
+        setHasChanged(!hasChanged);
+      } else {
+        message.success(`Something went wrong try again!`);
       }
-
-    })
+    });
   };
 
   const handleDetailClick = (content: EquipmentResponse) => {
@@ -284,9 +287,9 @@ export default function EquipmentList(props: IProps) {
                           margin: '0 20px'
                         }}
                         size='large'
-                        onClick={()=>{
-                          setSelectedEquipment(item)
-                          setSupplyOpen(true)
+                        onClick={() => {
+                          setSelectedEquipment(item);
+                          setSupplyOpen(true);
                         }}
                       >
                         <ShoppingOutlined
@@ -305,7 +308,7 @@ export default function EquipmentList(props: IProps) {
                         }}
                         size='large'
                         onClick={() => {
-                          setSelectedEquipment(item)
+                          setSelectedEquipment(item);
                           setUpdateOpen(true);
                         }}
                       >
@@ -330,7 +333,6 @@ export default function EquipmentList(props: IProps) {
                             margin: '0 20px'
                           }}
                           size='large'
-                          
                         >
                           <DeleteTwoTone twoToneColor='#ff4d4f' />
                         </Button>
@@ -343,10 +345,14 @@ export default function EquipmentList(props: IProps) {
                             <Flex vertical>
                               <Button href={'#'}>Upload new avatar</Button>
                               <Button href={'#'}>Update properties</Button>
-                              <Button onClick={()=>{
-                                setSelectedEquipment(item)
-                                setSupplyDetailsOpen(true)
-                              }}>View supply histories</Button>
+                              <Button
+                                onClick={() => {
+                                  setSelectedEquipment(item);
+                                  setSupplyDetailsOpen(true);
+                                }}
+                              >
+                                View supply histories
+                              </Button>
                               <Button href={'#'}>Go to detail page</Button>
                             </Flex>
                           );
@@ -364,8 +370,10 @@ export default function EquipmentList(props: IProps) {
                 </Card>
               </List.Item>
             )}
-          />
+          ></List>
         </InfiniteScroll>
+
+        {/* <InDomDrawer/> */}
       </div>
     );
   };
@@ -374,45 +382,46 @@ export default function EquipmentList(props: IProps) {
     <>
       {renderHeader()}
       {renderListSection()}
+      {/*  */}
       {detailOpen && selectedEquipment && (
         <EquipmentDetailDrawer
           item={selectedEquipment}
-          onClose={()=>{
-            setDetailOpen(false)
-            setSelectedEquipment(null)
+          onClose={() => {
+            setDetailOpen(false);
+            setSelectedEquipment(null);
           }}
         />
       )}
       {supplyOpen && selectedEquipment && (
         <SupplyEquipmentModal
           item={selectedEquipment}
-          onClose={()=>{
-            setSupplyOpen(false)
-            setSelectedEquipment(null)
-            
-            setHasChanged(!hasChanged)
+          onClose={() => {
+            setSupplyOpen(false);
+            setSelectedEquipment(null);
+
+            setHasChanged(!hasChanged);
           }}
         />
       )}
       {updateOpen && selectedEquipment && (
         <UpdateEquipmentModal
           item={selectedEquipment}
-          onClose={()=>{
-            setUpdateOpen(false)
-            setSelectedEquipment(null)
-            
-            setHasChanged(!hasChanged)
+          onClose={() => {
+            setUpdateOpen(false);
+            setSelectedEquipment(null);
+
+            setHasChanged(!hasChanged);
           }}
         />
       )}
-      {selectedEquipment && (
+      {selectedEquipment && supplyDetailsOpen && (
         <EquipSupplyDetailDrawer
           item={selectedEquipment}
           isOpen={supplyDetailsOpen}
-          onClose={()=>{
-            setSupplyDetailsOpen(false)
-            setSelectedEquipment(null)
-            
+          onClose={() => {
+            setSupplyDetailsOpen(false);
+            setSelectedEquipment(null);
+
             // setHasChanged(!hasChanged)
           }}
         />

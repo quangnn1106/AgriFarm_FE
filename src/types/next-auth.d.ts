@@ -1,5 +1,5 @@
 import { ROLES } from '@/constants/roles';
-import NextAuth, { DefaultSession } from 'next-auth';
+import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
 
 declare module 'next-auth' {
   /**

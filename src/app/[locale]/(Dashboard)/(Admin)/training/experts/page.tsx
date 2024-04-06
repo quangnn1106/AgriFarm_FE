@@ -10,39 +10,14 @@ import { AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
 
 export default function ExpertsPage() {
-  const [experts, setExperts] = useState<Expert[]|[]>();
-  const [isFetching, setIsFetching] = useState(true);
-  const [hasChanged, setHasChanged] = useState(true);
   
-  const http = UseAxiosAuth();
-
-  const fetchExperts = async (http: AxiosInstance) => {
-    try {
-      console.log('Fetching data..');
-      const responseData = await getExpertsService(http);
-      console.log('Data here: ', responseData);
-      setExperts(responseData?.data as Expert[]);
-      setIsFetching(false);
-    } catch (error) {
-      console.error('Error calling API training content:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchExperts(http)
-  }, [http, hasChanged]);
 
   
 
 
   return (
     <>
-      <ExpertList
-        isFetching={isFetching}
-        setHasChanged={setHasChanged}
-        list={experts?experts:[]}
-
-      />
+      <ExpertList/>
     </>
   );
 }
