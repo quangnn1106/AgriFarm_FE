@@ -14,7 +14,7 @@ import {
 import UsingAddition from "../activityAdditions/viewer/UsingDetail/usingAddition";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import CreateActivityForm from "./createActivityForm";
+import CreateActivityFormV1 from "./createActivityFormV1";
 import useAxios from "@/utils/axiosClient";
 
 
@@ -43,7 +43,7 @@ interface CreateForm {
 
 const basePath = "/schedule/activities"
 
-const CreateActivity = (props: IProps) => {
+const CreateActivityV1 = (props: IProps) => {
   var { setOpen } = props;
   const [form] = Form.useForm<CreateForm>();
   const http = useAxios()
@@ -95,7 +95,7 @@ const CreateActivity = (props: IProps) => {
           </>
         )}
       >
-        <CreateActivityForm
+        <CreateActivityFormV1
           form={form}
           onFinish={onFinish}
           //onSubmit={}
@@ -106,4 +106,4 @@ const CreateActivity = (props: IProps) => {
   );
 };
 
-export default CreateActivity;
+export default CreateActivityV1;

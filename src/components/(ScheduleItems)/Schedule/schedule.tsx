@@ -14,7 +14,7 @@ import {
 } from "@fullcalendar/core/index.js";
 
 import ActivityDetail from "../ActivityDetail/activityDetail";
-import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activities";
+import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activityResponse";
 
 interface IProps {
   allActivities: ActivityResponse[];
@@ -35,12 +35,13 @@ const Schedule: FC<IProps> = (props) => {
     const extProps = arg.event._def.extendedProps
     const eventData: ActivityResponse = {
       ... arg.event._def,
+      materials:[],
       start : arg.event.start as Date,
       end : arg.event.end as Date, 
       id : arg.event._def.publicId,
       descriptions: extProps.descriptions,
-      inspectors: extProps.inspectors,
-      workers: extProps.workers,
+      //inspectors: extProps.inspectors,
+      //workers: extProps.workers,
       season: extProps.season,
       location: extProps.location,
       isCompleted: extProps.isCompleted,
