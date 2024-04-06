@@ -2,7 +2,7 @@ import {
   getTrainingDetailService,
   getUsingDetailService
 } from '@/services/Admin/Activities/additionService';
-import { UsingDetail } from '@/services/Admin/Activities/Payload/request/activity-detail';
+import { UsingDetail } from '@/services/Admin/Activities/Payload/request/activityAdditionRequest';
 import { TrainingDetail } from '@/services/Admin/Training/response/training.response';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';

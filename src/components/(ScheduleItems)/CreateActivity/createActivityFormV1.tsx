@@ -27,7 +27,7 @@ interface IProps {
   form: FormInstance;
 }
 
-export default function CreateActivityForm(props: IProps) {
+export default function CreateActivityFormV1(props: IProps) {
   const { form, onFinish } = props;
   const [chooseAble, setChooseAble] = useState(false);
 

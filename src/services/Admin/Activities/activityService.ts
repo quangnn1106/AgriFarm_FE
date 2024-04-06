@@ -1,9 +1,9 @@
 import HttpResponseCommon from '@/types/response';
-import { AxiosInstance } from 'axios';
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activities';
-import { CreateActivityForm } from './Payload/request/add-activity';
+import { AxiosInstance, AxiosResponse } from 'axios';
+import { ActivityByMonthResponse, ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
+import { CreateActivityRequest } from './Payload/request/activityRequest';
 
-const basePath = '/schedule/activities';
+const basePath = '/cult/activities';
 
 export const getActivitiesService: (
   seasonId: string,
@@ -23,18 +23,62 @@ export const getActivitiesService: (
   return res?.data;
 };
 
+export const getActivityByIdService: (
+  http?: AxiosInstance | null,
+  id?: string | null
+) => Promise<HttpResponseCommon<ActivityResponse>> = async (http, id) => {
+  const res = await http?.get(`${basePath}/get`, {
+    params: {
+      id: id
+    }
+    
+  });
+  return res?.data;
+};
+
+export const getActivitiesByMonthService: (
+  http?: AxiosInstance | null,
+  month?:number,
+  year?:number
+) => Promise<HttpResponseCommon<ActivityByMonthResponse[]>> = async (
+  http,
+  month,
+  year
+) => {
+  const res = await http?.get(`${basePath}/by-month`, {
+    params:{
+      month: month,
+      year: year
+    }
+  });
+
+  return res?.data as HttpResponseCommon<ActivityByMonthResponse[]>;
+};
+
+export const getActivitiesByDateService: (
+  http?: AxiosInstance | null,
+  date?:Date
+) => Promise<HttpResponseCommon<ActivityResponse[]>> = async (
+  http,
+  date
+) => {
+  const res = await http?.get(`${basePath}/by-date`, {
+    params:{
+      date: date
+    }
+  });
+
+  return res?.data as HttpResponseCommon<ActivityResponse[]>;
+};
+
 export const postActivitiesService: (
   http: AxiosInstance,
-  payLoad: CreateActivityForm
-) => Promise<HttpResponseCommon<ActivityResponse[]>> = async (http, payLoad) => {
+  payLoad: CreateActivityRequest
+) => Promise<HttpResponseCommon<ActivityResponse>> = async (http, payLoad) => {
   const res = await http.post(
-    `${basePath}/get`,
+    `${basePath}/post`,
     payLoad,
-    {
-      params: {}
-      
-    }
+    
   );
-  //console.log('response staffsService: ', res);
-  return res?.data;
+  return res?.data as HttpResponseCommon<ActivityResponse>;
 };
