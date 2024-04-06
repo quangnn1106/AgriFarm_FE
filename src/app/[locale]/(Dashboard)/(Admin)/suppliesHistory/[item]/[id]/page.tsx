@@ -283,12 +283,12 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     style={{ width: '100%' }}
                   >
                     <IconText
-                      icon={FileTextOutlined}
+                      icon={<FileTextOutlined></FileTextOutlined>}
                       label='Name: '
                       value={itemDetails?.name as string}
                     />
                     <IconText
-                      icon={HomeOutlined}
+                      icon={<HomeOutlined></HomeOutlined>}
                       label='Stock: '
                       value={
                         <p>
@@ -298,7 +298,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                       }
                     />
                     <IconText
-                      icon={DollarOutlined}
+                      icon={<DollarOutlined></DollarOutlined>}
                       label='Unit Price: '
                       value={<p>{itemDetails?.unitPrice.toString() as string} VND</p>}
                     />

@@ -13,6 +13,9 @@ import { usePathname } from '@/navigation';
 import BreadcrumbComponent from '../(Admin)/staff/components/Breadcrumb/breadCrumb';
 import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
 import MemberSider from '../../Layouts/Member/Sider/MemberSider';
+import classNames from 'classnames/bind';
+import styles from '../(Admin)/adminStyle.module.scss';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 
 export default function LayoutMember({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -24,6 +27,12 @@ export default function LayoutMember({ children }: { children: React.ReactNode }
   //     />
   //   );
   // }
+  const cx = classNames.bind(styles);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
   return themeConfig(
     <Layout className='layout'>
       <Layout
@@ -35,14 +44,23 @@ export default function LayoutMember({ children }: { children: React.ReactNode }
           theme='light'
           className='sidebar'
           breakpoint='lg'
-          collapsedWidth='100'
-          collapsible
-
+          // collapsedWidth='100'
+          // collapsible
+          collapsed={collapsed}
+          style={{position: 'relative' }}
           // collapsed={collapsed}
           // onCollapse={value => setCollapsed(value)}
         >
           {/* <RenderSideBar roles={session?.user?.userInfo?.role as ROLES} /> */}
-          <MemberSider path={pathName} />
+          <MemberSider path={pathName}  visible={collapsed} />
+          <Button
+            type='primary'
+            onClick={toggleCollapsed}
+            style={{ marginBottom: 16, position: 'absolute', top:'3%', left:'90%' }}
+            className={cx('toggle-btn')}
+          >
+            {collapsed ? <FaChevronRight /> : <FaChevronLeft /> }
+          </Button>
         </Sider>
         <Content className='site_layout_background'>
           <Suspense

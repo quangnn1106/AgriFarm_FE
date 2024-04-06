@@ -137,7 +137,7 @@ const SeasonCreate = (props: Props) => {
             id: Math.random().toString(36).substring(2, 8),
             name: '',
             totalQuantity: 0,
-            quantity: 0,
+            currentQuanlity: 0,
             land: item.land,
             seed: item.seed,
             season: {}
