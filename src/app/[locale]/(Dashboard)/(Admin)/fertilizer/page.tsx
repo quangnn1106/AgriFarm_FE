@@ -321,7 +321,7 @@ const FertilizerManagement = (props: Props) => {
           }}></UpdateFertilizerFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm phân bón mới"
         placement="right"
         onClose={closeAddFertilizerDrawer}
         open={openAddFertilizer}

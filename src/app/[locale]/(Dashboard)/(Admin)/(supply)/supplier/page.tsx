@@ -320,7 +320,7 @@ const SupplierManagement = (props: Props) => {
           }}></UpdateSupplierDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm nhà cung cấp mới"
         placement="right"
         onClose={closeAddSupplierDrawer}
         open={openAddSupplier}

@@ -72,11 +72,11 @@ const AddPesticideFormDrawer: React.FC = () => {
     name: '',
     description: '',
     notes: '',
-    defaultUnit: 'kg',
+    defaultUnit: 'chai',
     properties: [{ name: '', value: 0, unit: '' }], // Default value for the properties field
     quantity: 0,
     unitPrice: 0,
-    measureUnit: 'kg',
+    measureUnit: 'chai',
     content: '',
     supplierId: '', // Default value for supplierId field
     supplierName: '',
@@ -254,8 +254,8 @@ const AddPesticideFormDrawer: React.FC = () => {
                   size={'middle'}
                   options={[
                     {
-                      value: 'kg',
-                      label: 'kg'
+                      value: 'chai',
+                      label: 'chai'
                     }
                   ]}
                   placeholder='Chọn giá trị'

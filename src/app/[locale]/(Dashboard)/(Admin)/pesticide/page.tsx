@@ -319,7 +319,7 @@ const PesticideManagement = (props: Props) => {
           }}></UpdatePesticideFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm thuốc bảo vệ thực vật mới"
         placement="right"
         onClose={closeAddPesticideDrawer}
         open={openAddPesticide}

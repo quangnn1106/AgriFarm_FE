@@ -329,7 +329,7 @@ const DocumentManagement = (props: Props) => {
           }}></UpdateDocumentDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm tài liệu"
         placement="right"
         onClose={closeAddDocumentDrawer}
         open={openAddDocument}

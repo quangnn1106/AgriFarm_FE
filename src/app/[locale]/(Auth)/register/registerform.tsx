@@ -171,7 +171,7 @@ const RegisterForm: React.FC = () => {
             <Form.Item
               name='siteName'
               label='Farm Name'
-              rules={[{ required: true, message: 'Password is required' }]}
+              rules={[{ required: true, message: 'Farm name is required' }]}
             >
               <Input
                 onChange={handleSetStateError}

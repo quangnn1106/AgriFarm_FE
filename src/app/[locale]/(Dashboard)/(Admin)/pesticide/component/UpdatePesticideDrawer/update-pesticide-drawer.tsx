@@ -207,7 +207,7 @@ const UpdatePesticideFormDrawer = ({
               >
                 <InputNumber
                   className='stock-input'
-                  addonAfter='kg'
+                  addonAfter='chai'
                 ></InputNumber>
               </Form.Item>
 
@@ -220,7 +220,7 @@ const UpdatePesticideFormDrawer = ({
                 }}
                 label={
                   <>
-                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit
+                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Đơn vị
                   </>
                 }
               >
@@ -228,8 +228,8 @@ const UpdatePesticideFormDrawer = ({
                   size={'middle'}
                   options={[
                     {
-                      value: 'kg',
-                      label: 'kg'
+                      value: 'chai',
+                      label: 'chai'
                     }
                   ]}
                   placeholder='Chọn giá trị'

@@ -68,7 +68,7 @@ const AddPesticideSupplyModal = ({
   const initialFormValues = {
     quantity: 0,
     unitPrice: 0,
-    measureUnit: 'kg',
+    measureUnit: 'chai',
     content: '',
     supplierId: '', // Default value for supplierId field
     supplierName: '',
@@ -165,7 +165,7 @@ const AddPesticideSupplyModal = ({
         }}
       >
         <Modal
-          title='Nhập thêm phân bón'
+          title='Nhập thêm thuốc bảo vệ thực vật'
           open={params.visible}
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
@@ -193,7 +193,7 @@ const AddPesticideSupplyModal = ({
               }}
               label={
                 <>
-                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity 
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Số lượng 
                 </>
               }
             >
@@ -208,7 +208,7 @@ const AddPesticideSupplyModal = ({
               }}
               label={
                 <>
-                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice 
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Đơn giá
                 </>
               }
             >
@@ -223,7 +223,7 @@ const AddPesticideSupplyModal = ({
               }}
               label={
                 <>
-                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit 
+                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Đơn vị 
                 </>
               }
             >
@@ -232,8 +232,8 @@ const AddPesticideSupplyModal = ({
               placeholder='Chọn 1 giá trị'
                 options={[
                   {
-                    value: 'kg',
-                    label: 'kg'
+                    value: 'chai',
+                    label: 'chai'
                   }
                 ]}
               ></Select>
