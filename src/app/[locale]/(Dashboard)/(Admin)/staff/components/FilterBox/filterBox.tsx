@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import styles from '../../../../(SuperAdmin)/management-page.module.scss';
+import styles from '../../../../(SuperAdmin)/sa/management-page.module.scss';
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';

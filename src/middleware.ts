@@ -1,4 +1,4 @@
-import { withAuth } from 'next-auth/middleware';
+import { NextRequestWithAuth, withAuth } from 'next-auth/middleware';
 import { locales } from './navigation';
 import { NextRequest } from 'next/server';
 // export { default } from 'next-auth/middleware';
@@ -8,14 +8,16 @@ import {
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
-  SUCCESS_PATH
+  SUCCESS_PATH,
+  HOME_PATH
 } from './constants/routes';
 const publicPages = [
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
   SUCCESS_PATH,
-  ERROR_PATH
+  ERROR_PATH,
+  HOME_PATH
   // (/secret requires auth)
 ];
 
@@ -27,11 +29,13 @@ const intlMiddleware = createMiddleware({
 
 const authMiddleware = withAuth(
   // `withAuth` augments your `Request` with the user's token.
-  // async function middleware(req) {},
+
   // Note that this callback is only invoked if
   // the `authorized` callback has returned `true`
   // and not for pages listed in `pages`.
-  req => intlMiddleware(req),
+  req => {
+    return intlMiddleware(req);
+  },
   {
     callbacks: {
       authorized: ({ token }) => token != null
@@ -43,7 +47,7 @@ const authMiddleware = withAuth(
   }
 );
 
-export default function middleware(req: NextRequest) {
+export default function middleware(req: NextRequestWithAuth) {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages
       .flatMap(p => (p === '/' ? ['', '/'] : p))

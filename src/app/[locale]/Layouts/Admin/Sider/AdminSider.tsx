@@ -43,7 +43,7 @@ import { ROLES } from '@/constants/roles';
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
 const cx = classNames.bind(styles);
 
-type Props = { path: string, visible: boolean };
+type Props = { path: string; visible: boolean };
 
 const AdminSider = ({ path, visible }: Props) => {
   const t = useTranslations('Nav');
@@ -87,7 +87,6 @@ const AdminSider = ({ path, visible }: Props) => {
         <FaClipboard />
       )
     ]),
-   
 
     getItem(`${t('map')}`, 'map', <FaMapLocationDot />, [
       getItem(<Link href={`/map`}>{t('map')}</Link>, `/map`, <FaMapLocationDot />)
@@ -96,7 +95,6 @@ const AdminSider = ({ path, visible }: Props) => {
       getItem(<Link href={`/land`}>{t('land')}</Link>, `/land`, <FaPlantWilt />),
       getItem(<Link href={`/water`}>{t('water')}</Link>, `/water`, <FaWater />)
     ]),
-  
 
     getItem(`${t('farm_resource')}`, 'farm resources', <FaClipboardUser />, [
       getItem(<Link href={`/staff`}>{t('user')}</Link>, `/staff`, <FaUser />),
@@ -107,7 +105,6 @@ const AdminSider = ({ path, visible }: Props) => {
         <SafetyCertificateFilled />
       )
     ]),
- 
 
     getItem(`${t('activities')}`, 'activities', <FaClipboardList />, [
       getItem(<Link href={`/risk`}>{t('risk')}</Link>, `/risk`, <WarningOutlined />),
@@ -149,8 +146,6 @@ const AdminSider = ({ path, visible }: Props) => {
       getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
     ]),
 
-    
-
     getItem(`${t('external')}`, 'external', <FaHandshakeAngle />, [
       getItem(
         <Link href={`/subcontractor`}>{t('subcontract')}</Link>,
@@ -159,7 +154,6 @@ const AdminSider = ({ path, visible }: Props) => {
       )
       //getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
     ]),
-    
 
     getItem(`${t('GBG')}`, 'GBG', <FaClipboardCheck />, [
       getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
@@ -181,30 +175,30 @@ const AdminSider = ({ path, visible }: Props) => {
     ]),
     { type: 'divider' },
     getItem(
-        <Button
-          className=''
-          type='link'
-          onClick={handleSignOut}
-          danger
-          style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
+      <Button
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        danger
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <Flex
+          gap='small'
+          align='center'
+          style={{ color: 'red' }}
         >
-          <Flex
-            gap='small'
-            align='center'
-          >
-            {t('logout')}
-          </Flex>
-        </Button>,
+          {t('logout')}
+        </Flex>
+      </Button>,
       'logout',
       <Button
-          className=''
-          type='link'
-          onClick={handleSignOut}
-          style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
-        >
-            <FaRightFromBracket />
-        </Button>
-      
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <FaRightFromBracket color='red' />
+      </Button>
     )
   ];
   return (

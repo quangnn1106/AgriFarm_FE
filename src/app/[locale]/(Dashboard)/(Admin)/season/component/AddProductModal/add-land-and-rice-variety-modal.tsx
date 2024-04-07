@@ -8,7 +8,7 @@ import fetchListLandData from '@/services/Admin/Land/getLandsApi';
 import { ConfigProvider, Form, Input, Modal, Table, notification } from 'antd';
 import { RiceVarietyColumns } from './rice-variety-table-column';
 import classNames from 'classnames';
-import styles from '../../../../(SuperAdmin)/management-page.module.scss';
+import styles from '../../../../(SuperAdmin)/sa/management-page.module.scss';
 import { SearchProps } from 'antd/es/input/Search';
 import { useSession } from 'next-auth/react';
 import { AxiosInstance } from 'axios';

@@ -1,6 +1,11 @@
 import React from 'react';
 import MenuSider from '../../MainLayout/MenuSider/MenuSider';
-import { FaMapLocationDot, FaUser, FaClipboard, FaRightFromBracket } from 'react-icons/fa6';
+import {
+  FaMapLocationDot,
+  FaUser,
+  FaClipboard,
+  FaRightFromBracket
+} from 'react-icons/fa6';
 import { MdOutlineFeedback } from 'react-icons/md';
 import { GiHighGrass } from 'react-icons/gi';
 
@@ -22,8 +27,8 @@ import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
 const cx = classNames.bind(styles);
 
 type Props = {
-  path: string,
-  visible: boolean 
+  path: string;
+  visible: boolean;
 };
 
 const MemberSider = ({ path, visible }: Props) => {
@@ -95,7 +100,7 @@ const MemberSider = ({ path, visible }: Props) => {
         //   <MdOutlineFeedback />
         // )
       ],
-      'group',
+      'group'
     ),
     getItem(
       <Button
@@ -103,26 +108,26 @@ const MemberSider = ({ path, visible }: Props) => {
         type='link'
         onClick={handleSignOut}
         danger
-        style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
       >
         <Flex
           gap='small'
           align='center'
+          style={{ color: 'red' }}
         >
           {t('logout')}
         </Flex>
       </Button>,
-    'logout',
-    <Button
+      'logout',
+      <Button
         className=''
         type='link'
         onClick={handleSignOut}
-        style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
       >
-          <FaRightFromBracket />
+        <FaRightFromBracket color='red' />
       </Button>
-    
-  )
+    )
   ];
   return (
     <>

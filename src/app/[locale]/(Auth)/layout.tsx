@@ -8,10 +8,12 @@ import Image from 'next/image';
 
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader/Loader';
-import { usePathname } from '@/navigation';
+import { redirect, usePathname } from '@/navigation';
 import LogoImage from '@/components/Logo/LogoImage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { DASH_BOARD_PATH } from '@/constants/routes';
+import { renderPath } from './login/loginform';
+import { ROLES } from '@/constants/roles';
 
 const { Sider, Content } = Layout;
 
@@ -48,18 +50,18 @@ const { Sider, Content } = Layout;
 // }
 
 const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
-  const { status } = useSession();
   const path = usePathname();
-
+  const { data: session, status } = useSession();
+  const userRole = session?.user?.userInfo?.role as ROLES;
   const isPath = path.startsWith('/login');
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-  console.log('callbackUrl: ', callbackUrl);
+  const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
+  //console.log('callbackUrl: ', callbackUrl);
 
   if (status === 'authenticated') {
-    router.push(callbackUrl);
+    router.replace(callbackUrl);
   } else {
     if (status === 'loading') {
       return (
