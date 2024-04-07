@@ -23,7 +23,7 @@ const cx = classNames.bind(styles);
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
 import { Link, useRouter } from '@/navigation';
-import { SITE_MAP_ADD_PATH } from '@/constants/routes';
+
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import useGeolocation from '@/utils/getlocaiton';
 //import SearchConditionForm from '../../(SuperAdmin)/site/components/SearchCondition/searchConditionForm';
