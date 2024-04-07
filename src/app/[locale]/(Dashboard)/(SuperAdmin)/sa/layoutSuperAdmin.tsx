@@ -8,13 +8,14 @@ const { Content, Sider } = Layout;
 import themeConfig from '@/lib/theme/themeConfig';
 
 import Loader from '@/components/Loader/Loader';
-import SAdminSider from '../../Layouts/SAdmin/Sider/SASider';
+import SAdminSider from '../../../Layouts/SAdmin/Sider/SASider';
 import { usePathname } from '@/navigation';
-import BreadcrumbComponent from '../(Admin)/staff/components/Breadcrumb/breadCrumb';
-import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
+//import BreadcrumbComponent from '../../(Admin)/staff/components/Breadcrumb/breadCrumb';
+//import MenuHeaderLocale from '../../Layouts/MainLayout/MenuSider/MenuLocale';
 import classNames from 'classnames/bind';
-import styles from '../(Admin)/adminStyle.module.scss';
+import styles from '../../(Admin)/adminStyle.module.scss';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import MenuHeaderLocale from '@/app/[locale]/Layouts/MainLayout/MenuSider/MenuLocale';
 
 export default function LayoutSuperAdmin({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();

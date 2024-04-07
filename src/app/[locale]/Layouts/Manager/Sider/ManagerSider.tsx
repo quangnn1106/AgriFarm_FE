@@ -40,14 +40,14 @@ import { ROLES } from '@/constants/roles';
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
 const cx = classNames.bind(styles);
 
-type Props = { path: string, visible: boolean };
+type Props = { path: string; visible: boolean };
 
 const ManagerSider = ({ path, visible }: Props) => {
   const t = useTranslations('Nav');
 
   const { data: session } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
-  
+
   const handleSignOut = () => {
     switch (userRole) {
       case ROLES.SUPER_ADMIN:
@@ -183,26 +183,26 @@ const ManagerSider = ({ path, visible }: Props) => {
           type='link'
           onClick={handleSignOut}
           danger
-          style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
+          style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
         >
           <Flex
             gap='small'
             align='center'
+            style={{ color: 'red' }}
           >
             {t('logout')}
           </Flex>
         </Button>,
-      'logout',
-      <Button
+        'logout',
+        <Button
           className=''
           type='link'
           onClick={handleSignOut}
-          style={{margin: 0, padding: '0', color:'#5F5F5F', fontWeight:'600'}}
+          style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
         >
-            <FaRightFromBracket />
+          <FaRightFromBracket color='red' />
         </Button>
-      
-    )
+      )
     ])
   ];
   return (
