@@ -154,7 +154,7 @@ const UpdateSupplierDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='email'
@@ -169,7 +169,7 @@ const UpdateSupplierDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='phone'
@@ -184,7 +184,7 @@ const UpdateSupplierDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='address'
@@ -195,11 +195,11 @@ const UpdateSupplierDrawer = ({
             }}
             label={
               <>
-                <EnvironmentOutlined style={{ marginRight: '0.5rem' }} /> Address
+                <EnvironmentOutlined style={{ marginRight: '0.5rem' }} /> {t('Address')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='description'
@@ -216,7 +216,7 @@ const UpdateSupplierDrawer = ({
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -228,13 +228,13 @@ const UpdateSupplierDrawer = ({
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Flex
@@ -248,7 +248,7 @@ const UpdateSupplierDrawer = ({
               icon={<FileOutlined />}
               className='bg-btn'
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
         </Form>

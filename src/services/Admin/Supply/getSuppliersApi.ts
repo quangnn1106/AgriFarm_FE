@@ -14,7 +14,11 @@ const getSuppliersApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<SupplierResponse[]>> = async (http) => {
     try {
-        const res = await http?.get(`/sup/suppliers/get`);
+        const res = await http?.get(`/sup/suppliers/get`, {
+            headers: {
+                pageSize: 400
+            }
+        });
         return res?.data;
 
     } catch (error: unknown) {

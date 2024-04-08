@@ -192,7 +192,7 @@ const SeedDetailFormDrawer = ({
               margin: '0px 0px 8px 0px',
               padding: '0px 0px'
             }}
-            label='Unit Price'
+            label={t('Unit_Price')}
           >
             <InputNumber addonAfter='VND'></InputNumber>
           </Form.Item>
@@ -205,25 +205,25 @@ const SeedDetailFormDrawer = ({
                     key={field.key}
                     style={{ display: 'flex', marginBottom: '4px' }}
                     align='baseline'
-                    title='Properties'
+                    title={t('Properties')}
                   >
                     <Form.Item
                       name={[field.name, 'name']}
                       rules={[{ required: true, message: 'Missing name' }]}
                     >
-                      <Input placeholder='Name' />
+                      <Input placeholder={t('Name')} />
                     </Form.Item>
                     <Form.Item
                       name={[field.name, 'value']}
                       rules={[{ required: true, message: 'Missing value' }]}
                     >
-                      <InputNumber placeholder='Value' />
+                      <InputNumber placeholder={t('Value')} />
                     </Form.Item>
                     <Form.Item
                       name={[field.name, 'unit']}
                       rules={[{ required: true, message: 'Missing unit' }]}
                     >
-                      <Input placeholder='Unit' />
+                      <Input placeholder={t('Unit')} />
                     </Form.Item>
                     <CloseOutlined
                       onClick={() => {
@@ -237,7 +237,7 @@ const SeedDetailFormDrawer = ({
                   onClick={() => add()}
                   block
                 >
-                  + Add new property
+                  {t('add_new_property')}
                 </Button>
               </div>
             )}

@@ -193,7 +193,7 @@ const UpdateDocumentDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='fileLink'
@@ -208,7 +208,7 @@ const UpdateDocumentDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='createdDate'
@@ -223,7 +223,7 @@ const UpdateDocumentDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='type'
@@ -238,7 +238,7 @@ const UpdateDocumentDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Upload {...props}>
             <Button icon={<UploadOutlined />}>Upload</Button>
@@ -254,7 +254,7 @@ const UpdateDocumentDrawer = ({
               icon={<FileOutlined />}
               className='bg-btn'
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
         </Form>

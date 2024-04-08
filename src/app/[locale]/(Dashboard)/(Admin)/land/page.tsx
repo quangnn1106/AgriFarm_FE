@@ -75,7 +75,7 @@ const LandPage = (props: Props) => {
   const t = useTranslations('Common');
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
       title: <Link href={`/land`}>Land</Link>

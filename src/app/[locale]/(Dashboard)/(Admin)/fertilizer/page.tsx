@@ -64,7 +64,7 @@ const FertilizerManagement = (props: Props) => {
   const pathName = usePathname();
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
       title: <Link href={`/fertilizer`}>Fertilizer</Link>

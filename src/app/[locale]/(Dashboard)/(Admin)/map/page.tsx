@@ -60,7 +60,7 @@ const SitePage = (props: Props) => {
   const router = useRouter();
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
       title: <Link href={`/map`}>Map</Link>

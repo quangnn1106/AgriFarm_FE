@@ -152,7 +152,7 @@ const AddSupplierDrawer: React.FC = () => {
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='email'
@@ -167,7 +167,7 @@ const AddSupplierDrawer: React.FC = () => {
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='phone'
@@ -182,7 +182,7 @@ const AddSupplierDrawer: React.FC = () => {
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='address'
@@ -193,11 +193,11 @@ const AddSupplierDrawer: React.FC = () => {
             }}
             label={
               <>
-                <EnvironmentOutlined style={{ marginRight: '0.5rem' }} /> Address
+                <EnvironmentOutlined style={{ marginRight: '0.5rem' }} /> {t('Address')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='description'
@@ -214,7 +214,7 @@ const AddSupplierDrawer: React.FC = () => {
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -226,13 +226,13 @@ const AddSupplierDrawer: React.FC = () => {
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Flex
@@ -246,7 +246,7 @@ const AddSupplierDrawer: React.FC = () => {
               icon={<FileOutlined />}
               className='bg-btn'
             >
-              Save
+              {t('Save')}
             </Button>
             </Flex>
         </Form>

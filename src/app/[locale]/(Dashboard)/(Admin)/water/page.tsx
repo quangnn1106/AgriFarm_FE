@@ -76,7 +76,7 @@ const WaterPage = (props: Props) => {
   const t = useTranslations('Common');
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
       title: <Link href={`/water`}>water</Link>
