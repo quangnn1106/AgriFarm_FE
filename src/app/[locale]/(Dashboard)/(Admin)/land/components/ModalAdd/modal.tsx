@@ -70,6 +70,7 @@ const AddLand = ({
 
   const [displayMarker, setDisplayMarker] = React.useState<boolean>(true);
   const tM = useTranslations('Message');
+  const t = useTranslations('Common');
   const handleMapLoading = () => setLoading(false);
   const [marker, setMarker] = React.useState<any>();
   const path = usePathname();
