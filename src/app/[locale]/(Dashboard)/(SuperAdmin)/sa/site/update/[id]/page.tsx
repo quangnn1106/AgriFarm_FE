@@ -16,6 +16,7 @@ import {
   Input,
   Row,
   Select,
+  Upload,
   UploadFile,
   UploadProps,
   message,
@@ -52,15 +53,18 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
+import { useSession } from 'next-auth/react';
+import { UploadOutlined } from '@ant-design/icons';
 
 const cx = classNames.bind(styles);
 type Props = {};
 
 const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const path = usePathname();
+  const { data: session } = useSession();
   const [form] = Form.useForm();
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
   const [loadingMap, setLoading] = useState<boolean>(true);
   const [displayMarker, setDisplayMarker] = useState<boolean>(true);
   const [stateBtnConfirm, setStateBtnConfirm] = useState<boolean>(true);
@@ -142,22 +146,30 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     return e && e.fileList;
   };
   // logic update + upload file image
+  var bearer = 'Bearer ' + session?.user.accessToken;
   const handleForm = async (values: any) => {
     console.log('value form: ', values);
     let count: number = 0;
     const formData = new FormData();
     fileList.forEach(file => {
-      formData.append('files[]', file as FileType);
+      formData.append('file', file as FileType);
     });
 
     // You can use any AJAX library you like
-    fetch('https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', {
-      method: 'POST',
-      body: formData
-    })
+    fetch(
+      'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/upload',
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: bearer
+        }
+      }
+    )
       .then(res => {
-        res.json();
         console.log('res.json(): ', res);
+
+        return res.json();
       })
       .then(() => {
         setFileList([]);
@@ -186,6 +198,21 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  const props: UploadProps = {
+    onRemove: file => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: file => {
+      setFileList([...fileList, file]);
+
+      return false;
+    },
+
+    fileList
+  };
   const handleConfirmPosition = async () => {
     const payLoadAddPos: Position[] = [
       { lat: events?.onDragEnd?.lat, long: events?.onDragEnd?.lng }
@@ -206,7 +233,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   //  console.log('fileList out return: ', fileList);
 
-  // console.log('fileList all: ', fileList[0]?.status);
+  console.log('fileList all: ', fileList[0]?.status);
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
@@ -338,6 +365,9 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                       return false;
                     }}
                   />
+                  {/* <Upload {...props}>
+                    <Button icon={<UploadOutlined />}>Select File</Button>
+                  </Upload> */}
                 </Form.Item>
                 <Form.Item
                   name='siteCode'

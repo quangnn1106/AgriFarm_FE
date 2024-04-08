@@ -42,10 +42,10 @@ export default function DashBoardLayout({ children }: Props) {
         return <LayoutMember>{children}</LayoutMember>;
       case ROLES.MANAGER:
         return <LayoutManager>{children}</LayoutManager>;
-      default:
-        // Default layout for other roles
-        console.log('loi roi');
-        return <div>Lỗi rồi fix đi</div>;
+      // default:
+      //   // Default layout for other roles
+      //   console.log('loi roi');
+      //   return <div>Lỗi rồi fix đi</div>;
     }
   };
 
