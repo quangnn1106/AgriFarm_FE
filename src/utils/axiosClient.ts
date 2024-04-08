@@ -42,7 +42,7 @@ const UseAxiosAuth = () => {
           //Chuyển hướng trang về trang login
           //  alert('lỗi kh co quyen call api');
           console.log('Status 401 || 403 during HTTP request.');
-          //signOut();
+          signOut();
           // router.push(LOGIN_PATH);
           // console.log(error.response.message);
         }

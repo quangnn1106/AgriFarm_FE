@@ -61,12 +61,11 @@ const UploadImgAgri = ({
       <Upload
         action={action}
         listType='picture'
-        maxCount={1}
+        //   maxCount={1}
         onChange={onChange}
         onPreview={onPreview}
         customRequest={customRequest}
         beforeUpload={beforeUpload}
-       // fileList={fileList}
       >
         {/* {fileList.length < 5 && '+ Upload'} */}
         <Button icon={<UploadOutlined />}>Upload your Image</Button>

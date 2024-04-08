@@ -15,7 +15,11 @@ export default function LayoutRoleAdmin({ children }: Props) {
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
 
-  if (userRole !== ROLES.ADMIN && userRole !== ROLES.MANAGER) {
+  if (
+    userRole !== ROLES.ADMIN &&
+    userRole !== ROLES.MANAGER &&
+    status === 'authenticated'
+  ) {
     return (
       <>
         <DeniedPage />
