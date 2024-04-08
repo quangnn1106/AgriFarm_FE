@@ -79,8 +79,8 @@ const SAdminSider = ({ path, visible }: Props) => {
       null,
       [
         getItem(
-          <Link href={`sa/site`}>{t('site')}</Link>,
-          `sa/site`,
+          <Link href={`/sa/site`}>{t('site')}</Link>,
+          `/sa/site`,
           <FaMapLocationDot />
         ),
         // getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),

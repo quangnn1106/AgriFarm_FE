@@ -1,0 +1,37 @@
+.divF {
+    align-items: center;
+    background-color: var(--Neutral-Black, #263238);
+    display: flex;
+    font-size: 10px;
+    color: var(--Neutral-Silver, #f5f7fa);
+    font-weight: 400;
+    text-align: center;
+    line-height: 143%;
+    justify-content: center;
+    padding: 43px 60px;
+}
+
+@media (max-width: 991px) {
+    .divF {
+        padding: 0 20px;
+    }
+}
+
+.div-2F {
+    display: flex;
+    width: 221px;
+    max-width: 100%;
+    flex-direction: column;
+}
+
+.imgF {
+    width: 138px;
+    height: 39px;
+    align-self: center;
+    max-width: 100%;
+}
+
+.div-3F {
+    font-family: Inter, sans-serif;
+    margin-top: 18px;
+}
