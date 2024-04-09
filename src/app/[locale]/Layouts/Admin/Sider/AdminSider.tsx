@@ -82,8 +82,8 @@ const AdminSider = ({ path, visible }: Props) => {
         <FaCircleUser />
       ),
       getItem(
-        <Link href={`/subscription`}>{t('subscription')}</Link>,
-        `/subscription`,
+        <Link href={`/billing-payment`}>{t('subscription')}</Link>,
+        `/billing-payment`,
         <FaClipboard />
       )
     ]),
