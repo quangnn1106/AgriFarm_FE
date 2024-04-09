@@ -1,4 +1,4 @@
-import { landDef } from '@/app/[locale]/(Dashboard)/(Disease)/diagnostic-add/model/diseaseDiagnosticModel';
+import { landDef } from '@/app/[locale]/(Dashboard)/(SuperAdmin)/sa/diagnostic/add/model/diseaseDiagnosticModel';
 import { AxiosInstance } from 'axios';
 
 const getListLandApi = async (http: AxiosInstance | null, siteId : string) => {
@@ -6,7 +6,8 @@ const getListLandApi = async (http: AxiosInstance | null, siteId : string) => {
         // Call api land
         const response = await http?.get('/soil/lands/get', {
             params: {
-                siteId: siteId
+                siteId: siteId,
+                key: "L"
             }
         });
         const normalizedData : landDef[] = response?.data.data.map((item : any) => ({

@@ -3,10 +3,10 @@ import { Content } from 'antd/es/layout/layout';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
-import styles from '../disease.module.scss';
+import styles from './disease.module.scss';
 import SearchConditionForm from './component/SearchCondition/searchConditionForm';
-import { Button, Flex } from 'antd';
-import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, ConfigProvider, Flex } from 'antd';
+import { PlusOutlined, ExportOutlined, HomeOutlined } from '@ant-design/icons';
 import TableComponent from './component/Table/table';
 import { diseaseModel } from './model/disease-model';
 import fetchDiseaseDataForExport from '@/services/Disease/exportDiseaseDiagnosesApi';
@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
+import Link from 'next/link';
 
 const cx = classNames.bind(styles);
 const DiseaseDiagnostic = () => {
@@ -24,8 +25,10 @@ const DiseaseDiagnostic = () => {
     const [dateTo, setDateTo] = useState('');
     const [apiData, setApiData] = useState<diseaseModel[]>([]);
     const t = useTranslations('Disease');
+    const tCom = useTranslations('Common');
     const router = useRouter();
     const http = UseAxiosAuth();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
@@ -99,45 +102,86 @@ const DiseaseDiagnostic = () => {
         setDateFrom(dateStrings[0]);
         setDateTo(dateStrings[1]);
     };
+    const breadCrumb = [
+        {
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
+            title: t('disease_diagnostic')
+        }
+    ];
     return (
-    <Content style={{ padding: '30px 48px' }}>
-        <h1 className={cx('disease__title')}>{t('diagnostic')}</h1>
-        {/* Search condition */}
-        <ColoredLine text={t('search_condition')}/> 
-        <div>
-            <SearchConditionForm 
-                handleDate={handleDate}
-                handleKeyword={handleKeyword}
-                searchAction={searchAction}
-            />
-        </div>
-        {/* Search result */}
-        <ColoredLine text={t('search_result')}/>
-        <Flex gap="small" wrap="wrap">
-            <Button
-                type='primary'
-                htmlType='submit'
-                icon={<PlusOutlined />} 
-                size='large'
-                className={cx('disease__btn')}
-                onClick={handleDiagnoses}
-            >
-                {t('add_diagnosis')}
-            </Button>
-            <Button
-                type='primary'
-                htmlType='submit'
-                size='large'
-                icon= {<ExportOutlined />}
-                className={cx('disease__btn')}
-                disabled = {apiData.length == 0}
-                onClick={exportExcel}
-            >
-                {t('export_excel')}
-            </Button>
-        </Flex>
-        <TableComponent data={apiData} loading={loading} />
-    </Content>
+        <>
+            <ConfigProvider
+            theme={{
+                components: {
+                Button: {
+                    contentFontSizeLG: 24,
+                    fontWeight: 700,
+                    groupBorderColor: 'transparent',
+                    onlyIconSizeLG: 24,
+                    paddingBlockLG: 0,
+                    defaultBorderColor: 'transparent',
+                    defaultBg: 'transparent',
+                    defaultShadow: 'none',
+                    primaryShadow: 'none',
+                    linkHoverBg: 'transparent',
+                    paddingInlineLG: 24,
+                    defaultGhostBorderColor: 'transparent'
+                }
+            }
+        }}
+        >
+        {' '}
+        <Button
+            className={cx('home-btn')}
+            href='#'
+            size={'large'}
+        >
+            <HomeOutlined />
+            {tCom('home')}
+        </Button>
+        </ConfigProvider>
+        <Content style={{ padding: '20px 48px' }}>
+            <h3 className={cx('disease__title')}>{t('diagnostic')}</h3>
+            <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
+            {/* Search condition */}
+            <ColoredLine text={t('search_condition')}/> 
+            <div>
+                <SearchConditionForm 
+                    handleDate={handleDate}
+                    handleKeyword={handleKeyword}
+                    searchAction={searchAction}
+                />
+            </div>
+            {/* Search result */}
+            <ColoredLine text={t('search_result')}/>
+            <Flex gap="small" wrap="wrap">
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    icon={<PlusOutlined />} 
+                    size='large'
+                    className={cx('disease__btn')}
+                    onClick={handleDiagnoses}
+                >
+                    {t('add_diagnosis')}
+                </Button>
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    size='large'
+                    icon= {<ExportOutlined />}
+                    className={cx('disease__btn')}
+                    disabled = {apiData.length == 0}
+                    onClick={exportExcel}
+                >
+                    {t('export_excel')}
+                </Button>
+            </Flex>
+            <TableComponent data={apiData} loading={loading} />
+        </Content>
+    </>
     );
 };
 interface ColoredLineProps {

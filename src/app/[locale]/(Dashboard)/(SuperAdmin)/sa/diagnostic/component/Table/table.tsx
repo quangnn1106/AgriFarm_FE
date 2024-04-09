@@ -16,34 +16,37 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
             title: '#',
             dataIndex: 'no',
             key: 'no',
-            width: 100,
+            width: '5%',
         },
         {
             title: t('col_name_predict'),
             dataIndex: 'predictResult',
             key: 'predictResult',
-            sorter: (a : any, b : any) => a.predictResult - b.predictResult,
-            width: 250,
+            width: '10%',
         },
         {
             title: t('col_name_description'),
             dataIndex: 'description',
             key: 'description',
-            sorter: (a : any, b : any) => a.description - b.description
         },
         {
             title: t('col_name_feedback'),
             dataIndex: 'feedback',
             key: 'feedback',
-            sorter: (a : any, b : any) => a.feedback - b.feedback,
-            width: 300,
+            width: '25%',
         },
         {
             title: t('col_name_date'),
-            dataIndex: 'date',
+            // dataIndex: 'date',
             key: 'date',
-            sorter: (a : any, b : any) => a.date - b.date,
-            width: 250,
+            width: '10%',
+            render: (_: any, item: any) => {
+                const date = new Date(item.date);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
         },
     ];
     return <Table loading={loading} columns={columns} dataSource={data} onRow={(record, rowIndex) => {

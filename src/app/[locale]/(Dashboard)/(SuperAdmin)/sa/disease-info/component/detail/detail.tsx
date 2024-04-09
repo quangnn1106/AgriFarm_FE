@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row, Select, Table } from 'antd';
 import { useTranslations } from 'next-intl';
 import classNames from 'classnames/bind';
-import styles from '../../../disease.module.scss';
+import styles from '../../disease.module.scss';
 import "./content-styles.css";
 
 interface DiseaseInfo {

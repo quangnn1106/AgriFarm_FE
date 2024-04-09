@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import styles from '../../../disease.module.scss';
+import styles from '../../../../diagnostic/disease.module.scss';
 
 const MapComponent = () => {
     const cx = classNames.bind(styles);

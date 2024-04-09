@@ -1,7 +1,7 @@
 'use client'
 import React, { ChangeEvent, ReactElement } from 'react';
 import { Form, Input, DatePicker, Button } from 'antd';
-import styles from '../../../disease.module.scss';
+import styles from '../../disease.module.scss';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';

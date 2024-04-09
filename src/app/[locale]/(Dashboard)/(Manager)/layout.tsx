@@ -13,7 +13,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function LayoutRoleAdmin({ children }: Props) {
+export default function LayoutRoleManager({ children }: Props) {
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
   const router = useRouter();

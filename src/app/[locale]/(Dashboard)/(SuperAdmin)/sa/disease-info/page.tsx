@@ -1,20 +1,21 @@
 'use client'
 import Link from "next/link";
-import styles from '../disease.module.scss';
+import styles from './disease.module.scss';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import { Content } from "antd/es/layout/layout";
-import { Breadcrumb, Button, Divider, Select, Space, App } from "antd";
+import { Breadcrumb, Button, Divider, Select, Space, App, ConfigProvider } from "antd";
 import { useEffect, useState } from "react";
 import diseaseInfoDetailApi from "@/services/Disease/diseaseInfoDetailApi";
 import DetailComponent from "./component/detail/detail";
 import { useRouter } from 'next/navigation';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import diseaseInfoListApi from "@/services/Disease/diseaseInfoListApi";
 import diseaseInfoDeleteApi from "@/services/Disease/diseaseInfoDeleteApi";
 import { STATUS_OK } from "@/constants/https";
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
+import { DASH_BOARD_PATH } from "@/constants/routes";
 
 interface DiseaseInfo {
     id: string;
@@ -33,6 +34,7 @@ const DetailPage = () => {
     const router = useRouter();
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
+    const tCom = useTranslations('Common');
     const [diseaseInfoDetail, setDiseaseInfoDetail] = useState<DiseaseInfo | null>(null);
     const [diseaseId, setDiseaseId] = useState("");
     const [optionDiseaseName, setOptionDiseaseName] = useState<Array<SelectDiseaseName>>([]);
@@ -129,10 +131,40 @@ const DetailPage = () => {
         message.error('Error!');
     };
     return (
-        <Content style={{ padding: '30px 48px' }}>
-            <h1 className={cx('disease__title')}>{t('disease_info_detail')}</h1>
-            <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb}>
-            </Breadcrumb>
+        <>
+        <ConfigProvider
+            theme={{
+                components: {
+                Button: {
+                    contentFontSizeLG: 24,
+                    fontWeight: 700,
+                    groupBorderColor: 'transparent',
+                    onlyIconSizeLG: 24,
+                    paddingBlockLG: 0,
+                    defaultBorderColor: 'transparent',
+                    defaultBg: 'transparent',
+                    defaultShadow: 'none',
+                    primaryShadow: 'none',
+                    linkHoverBg: 'transparent',
+                    paddingInlineLG: 24,
+                    defaultGhostBorderColor: 'transparent'
+                }
+            }
+        }}
+        >
+        {' '}
+        <Button
+            className={cx('home-btn')}
+            href={DASH_BOARD_PATH}
+            size={'large'}
+        >
+            <HomeOutlined />
+            {tCom('home')}
+        </Button>
+        </ConfigProvider>
+        <Content style={{ padding: '20px 48px' }}>
+            <h3 className={cx('disease__title')}>{t('disease_info_detail')}</h3>
+            <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {optionDiseaseName && (
                 <Select
                     style={{ width: 300 }}
@@ -176,6 +208,7 @@ const DetailPage = () => {
                 </>
             )}
         </Content>
+        </>
     );
 }
 

@@ -124,7 +124,7 @@
     "approve": "Approve",
     "reject": "Reject",
     "lbl_feedback_content": "Feedback",
-    "lbl_user": "User",
+    "lbl_user": "User (email)",
     "save_btn": "Save",
     "back_btn": "Back",
     "edit_btn": "Update",
@@ -264,7 +264,13 @@
     "btn_detail": "Detail",
     "btn_edit": "Edit",
     "btn_cancel": "Cancel",
-    "btn_yes": "Yes"
+    "btn_yes": "Yes",
+    "home": "Home",
+    "warning": "Warning",
+    "btn_close": "Close",
+    "result_text": "Total %%ITEM%% items",
+    "page": "page",
+    "all": "All"
   },
   "Services": {
     "RiskAsm": {
@@ -314,6 +320,20 @@
         "msg_update_fail": "Update fail!",
         "msg_item_required": "Item is required!"
       }
+    },
+    "SystemSetting" : {
+        "label" : {
+            "system_setting": "Cài đặt hệ thống",
+            "setting_disease": "Chức năng chẩn đoán bệnh",
+            "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
+            "distance_input": "Khoảng cách",
+            "distance_input_placeholder": "Nhập số km"
+        },
+        "message": {
+            "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
+            "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
+            "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là"
+        }
     }
   },
   "Pesticide": {

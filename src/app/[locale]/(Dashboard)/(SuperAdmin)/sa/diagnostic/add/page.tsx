@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
 import getListLandApi from "@/services/Disease/getListLandApi";
-import { Button, Col, Row, Select, Spin, Tabs, TabsProps } from "antd";
+import { Breadcrumb, Button, Col, ConfigProvider, Row, Select, Spin, Tabs, TabsProps } from "antd";
 import { Input } from 'antd';
 import diseaseDiagnosesAddApi from "@/services/Disease/diseaseDiagnosesAddApi";
 import ModalComponent from "./component/modal/modal";
@@ -17,11 +17,14 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import { useSession } from "next-auth/react";
 import axios from 'axios';
+import { HomeOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
+    const tCom = useTranslations('Common');
     const [listLand, setListLand] = useState<Array<landDef>>([]);
     const [loadings, setLoadings] = useState<boolean>(false);
     const [selLand, setSelLand] = useState("");
@@ -209,12 +212,51 @@ const DiseaseDiagnosticAdd = () => {
         }
     };
 
+    const breadCrumb = [
+        {
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
+            title: t('disease_diagnostic')
+        }
+    ];
     const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
     return (
         <>
+            <ConfigProvider
+                theme={{
+                    components: {
+                    Button: {
+                        contentFontSizeLG: 24,
+                        fontWeight: 700,
+                        groupBorderColor: 'transparent',
+                        onlyIconSizeLG: 24,
+                        paddingBlockLG: 0,
+                        defaultBorderColor: 'transparent',
+                        defaultBg: 'transparent',
+                        defaultShadow: 'none',
+                        primaryShadow: 'none',
+                        linkHoverBg: 'transparent',
+                        paddingInlineLG: 24,
+                        defaultGhostBorderColor: 'transparent'
+                    }
+                }
+            }}
+            >
+            {' '}
+            <Button
+                className={cx('home-btn')}
+                href='#'
+                size={'large'}
+            >
+                <HomeOutlined />
+                {tCom('home')}
+            </Button>
+            </ConfigProvider>
             <Content style={{ padding: '30px 48px' }}>
-                <h1 className={cx('disease__title')}>{t('disease_diagnostic')}</h1>
+                <h3 className={cx('disease__title')}>{t('disease_diagnostic')}</h3>
+                <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
                 {diagnosticRs == true && msgAdd == "" && plantDisease ? (
                     <>
                         <div className={cx('dd')}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row, Select, Table } from 'antd';
 import { useTranslations } from 'next-intl';
 import classNames from 'classnames/bind';
-import styles from '../../../disease.module.scss';
+import styles from '../../../../diagnostic/disease.module.scss';
 
 interface TableComponentProps {
     data: any;
@@ -66,7 +66,7 @@ const DetailComponent: React.FC<TableComponentProps> = ({ data , handleSel}) => 
                     <label className={cx('dd__label')}>{t('lbl_user')}</label>
                 </Col>
                 <Col span={12}>
-                    <p className={cx('dd__content')}>{`Ten (${data.createBy})`}</p>
+                    <p className={cx('dd__content')}>{`${data.createBy}(${data.email})`}</p>
                 </Col>
                 <Col span={8}></Col>
             </Row>

@@ -1,6 +1,6 @@
 'use client'
 import { Content } from 'antd/es/layout/layout';
-import { App, Breadcrumb, Button, Empty, Form, Input, Radio, RadioChangeEvent, Spin, message } from 'antd';
+import { App, Breadcrumb, Button, ConfigProvider, Empty, Form, Input, Radio, RadioChangeEvent, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { RiskItemDef } from '../../interface';
 import { useTranslations } from 'next-intl';
@@ -8,7 +8,7 @@ import TextArea from 'antd/es/input/TextArea';
 import styles from "../../components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -186,6 +186,9 @@ const Edit = ({ params }: { params: { id: string } }) => {
     
     const breadCrumb = [
       {
+          title: <Link href={`/`}>{tCom('home')}</Link>
+      },
+      {
           title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
       },
       {
@@ -232,9 +235,39 @@ const Edit = ({ params }: { params: { id: string } }) => {
     }
   return(
     <>
+      <ConfigProvider
+          theme={{
+              components: {
+              Button: {
+                  contentFontSizeLG: 24,
+                  fontWeight: 700,
+                  groupBorderColor: 'transparent',
+                  onlyIconSizeLG: 24,
+                  paddingBlockLG: 0,
+                  defaultBorderColor: 'transparent',
+                  defaultBg: 'transparent',
+                  defaultShadow: 'none',
+                  primaryShadow: 'none',
+                  linkHoverBg: 'transparent',
+                  paddingInlineLG: 24,
+                  defaultGhostBorderColor: 'transparent'
+              }
+          }
+      }}
+      >
+      {' '}
+      <Button
+          className={cx('home-btn')}
+          href='#'
+          size={'large'}
+      >
+          <HomeOutlined />
+          {session?.user?.userInfo.siteName}
+      </Button>
+      </ConfigProvider>
       {contextHolder}
-      <Content style={{ padding: '30px 48px' }}>
-        <h2>{tLbl('risk_assessment_edit')}</h2>
+      <Content style={{ padding: '20px 48px' }}>
+        <h3>{tLbl('risk_assessment_edit')}</h3>
         <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
         <Spin spinning={loadings}>
         {riskName ? (

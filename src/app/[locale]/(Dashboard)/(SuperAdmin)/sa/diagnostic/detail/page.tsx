@@ -3,8 +3,8 @@ import { Content } from 'antd/es/layout/layout';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
-import styles from '../disease.module.scss';
-import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
+import styles from '../../diagnostic/disease.module.scss';
+import { Breadcrumb, Button, Col, ConfigProvider, Flex, Row } from 'antd';
 import Link from 'next/link';
 import DetailComponent from './component/detail/detail';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,6 +15,8 @@ import fetchDiseaseDetailData from '@/services/Disease/diseaseDiagnosesDetailApi
 import diseaseDiagnosesUpdateFeedback from '@/services/Disease/diseaseDiagnosesUpdateApi';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
+import { HomeOutlined } from '@ant-design/icons';
+import { useSession } from 'next-auth/react';
 
 const DiseaseDiagnosticDetail = () => {
     const router = useRouter();
@@ -22,10 +24,12 @@ const DiseaseDiagnosticDetail = () => {
     const [fbStatusVal, setFbStatusVal] = useState(1);
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
+    const tCom = useTranslations('Common');
     const id = useSearchParams().get("id");
     const [dataDetail, setDataDetail] = useState();
     const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
     const http = UseAxiosAuth();
+    const { data: session, status } = useSession();
 
     useEffect(()=> {
         diseaseDetail(http, id);
@@ -82,6 +86,36 @@ const DiseaseDiagnosticDetail = () => {
     ];
     return (
         <>
+        <ConfigProvider
+            theme={{
+                components: {
+                Button: {
+                    contentFontSizeLG: 24,
+                    fontWeight: 700,
+                    groupBorderColor: 'transparent',
+                    onlyIconSizeLG: 24,
+                    paddingBlockLG: 0,
+                    defaultBorderColor: 'transparent',
+                    defaultBg: 'transparent',
+                    defaultShadow: 'none',
+                    primaryShadow: 'none',
+                    linkHoverBg: 'transparent',
+                    paddingInlineLG: 24,
+                    defaultGhostBorderColor: 'transparent'
+                }
+            }
+        }}
+        >
+        {' '}
+        <Button
+            className={cx('home-btn')}
+            href='#'
+            size={'large'}
+        >
+            <HomeOutlined />
+            {tCom('home')}
+        </Button>
+        </ConfigProvider>
             <Content style={{ padding: '30px 48px' }}>
                 <h1 className={cx('disease__title')}>{t('diagnostic')}</h1>
                 <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
@@ -89,7 +123,7 @@ const DiseaseDiagnosticDetail = () => {
                 {dataDetail && (
                     <>
                         <DetailComponent handleSel={handleChangeSel} data={dataDetail}/>
-                        <MapComponent/>
+                        {/* <MapComponent/> */}
                         <Button
                             type="primary"
                             htmlType="submit"

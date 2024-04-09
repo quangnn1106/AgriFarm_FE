@@ -115,7 +115,7 @@
     "col_name_date": "Ngày",
     "detail": "Chi tiết",
     "lbl_predict_result": "Kết quả chẩn đoán",
-    "lbl_location": "Location_vi",
+    "lbl_location": "Địa điểm chẩn đoán",
     "lbl_description": "Mô tả",
     "lbl_feedback": "Phản hồi",
     "lbl_feedback_status": "Trạng thái phản hồi",
@@ -123,7 +123,7 @@
     "approve": "Đã xử lý",
     "reject": "Từ chối",
     "lbl_feedback_content": "Nội dung phản hồi",
-    "lbl_user": "Người sử dụng (Id)",
+    "lbl_user": "Người sử dụng (email)",
     "save_btn": "Lưu",
     "back_btn": "Quay về",
     "edit_btn": "Sửa",
@@ -251,6 +251,88 @@
     "Value": "Giá trị",
     "Unit": "Đơn vị",
     "Stock": "Số lượng còn lại trong kho"
+  },
+  "common": {
+    "btn_add": "Thêm",
+    "btn_delete": "Xóa",
+    "btn_back": "Quay về",
+    "btn_save": "Lưu",
+    "btn_submit": "Nộp",
+    "btn_search": "Tìm kiếm",
+    "btn_detail": "Chi tiết",
+    "btn_edit": "Chỉnh sửa",
+    "btn_cancel": "Hủy",
+    "btn_yes": "Đồng ý",
+    "home": "Trang chủ",
+    "warning": "Cảnh báo",
+    "btn_close": "Đóng",
+    "result_text": "Tổng %%ITEM%% mục",
+    "page": "trang",
+    "all": "Tất cả"
+  },
+  "Services": {
+    "RiskAsm": {
+      "label": {
+        "risk_assessment": "Đánh giá rủi ro",
+        "risk_assessment_add": "Thêm mới đánh giá rủi ro",
+        "risk_assessment_detail": "Chi tiết đánh giá rủi ro",
+        "risk_assessment_impl": "Thực hiện đánh giá rủi ro",
+        "risk_assessment_edit": "Chỉnh sửa đánh giá rủi ro",
+        "single": "Chọn một",
+        "multi": "Chọn nhiều",
+        "text": "Văn bản",
+        "photo": "Hình ảnh",
+        "file": "Tệp",
+        "required": "Bắt buộc",
+        "must": "Must",
+        "text_placeholder": "Nhập nội dung",
+        "risk_name": "Tên đánh giá rủi ro",
+        "risk_description": "Mô tả đánh giá rủi ro",
+        "risk_is_draft": "Bản nháp",
+        "basic_information": "Thông tin cơ bản",
+        "item_list": "Danh sách mục",
+        "btn_add_new_item": "Thêm mục mới",
+        "btn_create_new_item": "Thêm mục mới",
+        "risk_title_placeholder": "Nhập tiêu đề hạng mục đánh giá rủi ro",
+        "title_default_text": "Hạng mục đánh giá rủi ro No.%ITEM%",
+        "basic": "Cơ bản",
+        "advance": "Mục đánh giá rủi ro",
+        "draft": "Nháp",
+        "publish": "Công khai",
+        "search_condition": "Điều kiện tìm kiếm",
+        "search_result": "Kết quả tìm kiếm",
+        "search_by_keyword": "Từ khóa",
+        "keyword_text_placeholder": "Tìm kiếm theo mô tả, tên rủi ro,...",
+        "risk_create_date": "Ngày tạo"
+      },
+      "message": {
+        "msg_upload_img": "Bạn chỉ có thể tải lên tệp JPG/PNG!",
+        "msg_max_size_img": "Hình ảnh phải nhỏ hơn 2MB!",
+        "msg_max_upload_img": "Bạn có thể tải lên tối đa 3 hình ảnh!",
+        "msg_required": "Vui lòng nhập %ITEM% của bạn!",
+        "msg_add_success": "Thêm thành công!",
+        "msg_confirm_delete": "Bạn có muốn xóa không 「%ITEM%」?",
+        "msg_delete_success": "Xóa thành công!",
+        "msg_delete_fail": "Xóa thất bại!",
+        "msg_update_success": "Cập nhật thành công!",
+        "msg_update_fail": "Cập nhật thất bại!",
+        "msg_item_required": "Mục này là bắt buộc!"
+      }
+    },
+    "SystemSetting" : {
+        "label" : {
+            "system_setting": "Cài đặt hệ thống",
+            "setting_disease": "Chức năng chẩn đoán bệnh",
+            "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
+            "distance_input": "Khoảng cách",
+            "distance_input_placeholder": "Nhập số km"
+        },
+        "message": {
+            "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
+            "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
+            "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là "
+        }
+    }
   },
   "Pesticide": {
     "Pesticide": "Thuốc bảo vệ thực vật",
