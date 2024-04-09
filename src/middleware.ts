@@ -12,7 +12,9 @@ import {
   HOME_PATH,
   DENIED_PATH,
   DASH_BOARD_PATH,
-  DASHBOARD_ADMIN
+  DASHBOARD_ADMIN,
+  FORGOT_PATH,
+  RESET_PASS_PATH
 } from './constants/routes';
 import { ROLES } from './constants/roles';
 const publicPages = [
@@ -21,7 +23,9 @@ const publicPages = [
   SALOGIN_PATH,
   SUCCESS_PATH,
   ERROR_PATH,
-  HOME_PATH
+  HOME_PATH,
+  FORGOT_PATH,
+  RESET_PASS_PATH
   // (/secret requires auth)
 ];
 

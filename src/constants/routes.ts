@@ -5,7 +5,9 @@ export const LOGIN_PATH = '/login',
   ERROR_PATH = '/error',
   SALOGIN_PATH = '/salogin',
   HOME_PATH = '/home',
-  DENIED_PATH = '/denied';
+  DENIED_PATH = '/denied',
+  FORGOT_PATH = '/forgot',
+  RESET_PASS_PATH = '/reset-password';
 
 //----- private paths---------//
 //admin

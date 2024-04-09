@@ -3,7 +3,7 @@ import { ModalFooterRender } from 'antd/es/modal/interface';
 import React from 'react';
 
 type Props = {
-  title?: string;
+  title?: React.ReactNode;
   width?: number | string; // An optional width prop of type number or string
   open: boolean; // A required boolean prop for controlling the modal's open state
   onOk?: () => void; // An optional function prop for handling the OK action
@@ -44,7 +44,6 @@ const ModalCustom = ({
       className={className}
       closeIcon={closeIcon}
       closable={closable}
-      
     >
       {children}
     </Modal>
