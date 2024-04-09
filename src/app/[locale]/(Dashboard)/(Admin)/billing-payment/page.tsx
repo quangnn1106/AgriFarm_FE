@@ -1,28 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  ConfigProvider,
-  Divider,
-  Drawer,
-  Flex,
-  Layout,
-  Modal,
-  Space,
-  Table,
-  TableProps,
-  Tooltip,
-  theme
-} from 'antd';
+import { Breadcrumb, Button, ConfigProvider, Divider, Layout, Table, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import {
-  HomeOutlined,
-  PlusOutlined,
-  MinusOutlined,
-  WarningOutlined
-} from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
 import FilterSection from './components/FilterSection/filterSection';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
@@ -38,25 +19,47 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { deleteLandApi } from '@/services/Admin/Land/deleteLand';
 import { BillPaymentTableColumns } from './components/Table/column-type';
 import { BillModel } from './models/bill-model';
+import TimeRemainingComponent from './components/TimeRemaning/timeremain';
 
 const cx = classNames.bind(styles);
 
 type Props = {};
 const billData = [
-  { id: '1', subscription: 'Basic', date: '11/04/2024', billAmount: 99, isLockout: true },
+  {
+    id: '1',
+    subscription: 'Cơ bản',
+    date: '11/04/2024',
+    billAmount: 790000,
+    isLockout: 0
+  },
   {
     id: '2',
-    subscription: 'Standard',
+    subscription: 'Tiêu chuẩn',
     date: '11/04/2024',
-    billAmount: 95,
-    isLockout: true
+    billAmount: 890000,
+    isLockout: 1
   },
   {
     id: '3',
-    subscription: 'Standard',
+    subscription: 'Tiêu chuẩn',
     date: '11/04/2024',
-    billAmount: 87,
-    isLockout: false
+    billAmount: 890000,
+    isLockout: 1
+  },
+
+  {
+    id: '4',
+    subscription: 'Tiêu chuẩn',
+    date: '11/04/2024',
+    billAmount: 890000,
+    isLockout: 2
+  },
+  {
+    id: '5',
+    subscription: 'Cao cấp',
+    date: '11/04/2024',
+    billAmount: 999999,
+    isLockout: 1
   }
 ];
 const LandPage = (props: Props) => {
@@ -184,7 +187,8 @@ const LandPage = (props: Props) => {
           {t('search_condition')}
         </Divider>
 
-        <FilterSection></FilterSection>
+        {/* <FilterSection></FilterSection> */}
+        <TimeRemainingComponent />
         <Divider
           orientation='left'
           plain

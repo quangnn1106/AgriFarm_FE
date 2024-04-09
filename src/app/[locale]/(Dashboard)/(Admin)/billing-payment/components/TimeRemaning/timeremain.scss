@@ -1,0 +1,180 @@
+.subscription-card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(117, 117, 117, 0.3);
+    background-color: #f5f7fa;
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
+}
+
+.subscription-card__header {
+    border-radius: 8px;
+    align-self: start;
+    display: flex;
+    margin-left: 19px;
+    gap: 12px;
+    font-size: 15px;
+    color: #373737;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    line-height: 133%;
+    padding: 10px 12px;
+}
+
+@media (max-width: 991px) {
+    .subscription-card__header {
+        margin-left: 10px;
+    }
+}
+
+.subscription-card__icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.subscription-card__next-invoice {
+    font-family: Inter, sans-serif;
+    margin: auto 0;
+}
+
+.subscription-card__content {
+    border-radius: 0px 0px 10px 10px;
+    border: 1px solid rgba(117, 117, 117, 0.3);
+    background-color: #fff;
+    z-index: 10;
+    width: 100%;
+    padding: 26px 50px;
+}
+
+// @media (max-width: 991px) {
+//     .subscription-card__content {
+//         max-width: 100%;
+//         padding: 0 20px;
+//     }
+// }
+.subscription-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// @media (max-width: 991px) {
+//     .subscription-info {
+//         flex-direction: column;
+//         align-items: stretch;
+//         gap: 0px;
+//     }
+// }
+.subscription-info__item {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    width: 21.33%
+}
+
+// @media (max-width: 991px) {
+//     .subscription-info__item {
+//         width: 100%;
+//         margin-top: 40px;
+//     }
+// }
+.subscription-info__label {
+    color: #373737;
+    font: 600 15px Poppins, sans-serif;
+}
+
+.subscription-info__progress-bar {
+    border-radius: 100px;
+    background-color: rgba(217, 217, 217, 1);
+    height: 10px;
+    margin-top: 18px;
+}
+
+.subscription-info__progress {
+    border-radius: 100px;
+    background-color: #4caf4f;
+    height: 100%;
+    width: 40%;
+}
+
+.subscription-info__days-remaining {
+    color: #656565;
+    margin-top: 9px;
+    font: 400 11px/153% Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.subscription-info__plan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background-color: var(--Tint-T5, #e8f5e9);
+    margin-top: 14px;
+    font-size: 18px;
+    color: var(--Brand-Primary, #4caf4f);
+    font-weight: 500;
+    text-align: center;
+    line-height: 133%;
+    padding: 6px 32px;
+}
+
+@media (max-width: 991px) {
+    .subscription-info__plan {
+        white-space: initial;
+        padding: 0 20px;
+    }
+}
+
+.subscription-info__price {
+    display: flex;
+    gap: 4px;
+    color: #000;
+    font-weight: 700;
+    align-self: center;
+}
+
+@media (max-width: 991px) {
+    .subscription-info__price {
+        white-space: initial;
+    }
+}
+
+.subscription-info__price-symbol {
+    font-size: 12px;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+}
+
+.subscription-info__price-value {
+    font-size: 32;
+    font-family: Inter, sans-serif;
+}
+
+@media (max-width: 991px) {
+    .subscription-info__price-value {
+        font-size: 40px;
+    }
+}
+
+.subscription-info__price-period {
+    align-self: end;
+    margin-top: 21px;
+    font-size: 13px;
+    font-family: Inter, sans-serif;
+}
+
+.subscription-info__renew-button {
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    background-color: #19ea14;
+    margin-top: 8px;
+    color: var(--Neutral-White, #fff);
+    text-align: center;
+    padding: 11px 0;
+    font: 569 17px/120% Inter, -apple-system, Roboto, Helvetica, sans-serif;
+    cursor: pointer;
+    border: none;
+}

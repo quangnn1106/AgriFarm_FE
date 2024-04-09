@@ -22,7 +22,11 @@ export default function LayoutRoleMember({ children }: Props) {
     userRole !== ROLES.MANAGER &&
     userRole !== ROLES.MEMBER
   ) {
-    return router.push(DENIED_PATH);
+    return (
+      <>
+        <DeniedPage />
+      </>
+    );
   }
 
   return (

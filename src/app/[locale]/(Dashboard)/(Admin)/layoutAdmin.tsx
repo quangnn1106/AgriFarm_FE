@@ -21,14 +21,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 export default function LayoutAdmin({ children }: { children: any }) {
   const { data: session, status } = useSession();
   const pathName = usePathname();
-  // if (status === 'loading') {
-  //   return (
-  //     <Loader
-  //       fullScreen
-  //       spinning
-  //     />
-  //   );
-  // }
+
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const toggleCollapsed = () => {
@@ -36,7 +29,7 @@ export default function LayoutAdmin({ children }: { children: any }) {
   };
 
   const cx = classNames.bind(styles);
-
+  
   return themeConfig(
     <Layout className='layout'>
       <Layout

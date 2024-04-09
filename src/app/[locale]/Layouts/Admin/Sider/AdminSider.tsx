@@ -72,8 +72,8 @@ const AdminSider = ({ path, visible }: Props) => {
 
     getItem(`${t('gr_dash')}`, 'dashboard', <HomeFilled />, [
       getItem(
-        <Link href={`/statistic`}>{t('dashboard')}</Link>,
-        `/dashboard`,
+        <Link href={`/statistic_admin`}>{t('dashboard')}</Link>,
+        `/statistic_admin`,
         <HomeFilled />
       ),
       getItem(

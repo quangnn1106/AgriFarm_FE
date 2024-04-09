@@ -79,11 +79,11 @@ const MemberSider = ({ path, visible }: Props) => {
       [
         getItem(<Link href={`/site`}>{t('site')}</Link>, `/site`, <FaMapLocationDot />),
         // getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
-        getItem(
-          <Link href={`/subscription`}>{t('subscription')}</Link>,
-          `/subscription`,
-          <FaClipboard />
-        ),
+        // getItem(
+        //   <Link href={`/subscription`}>{t('subscription')}</Link>,
+        //   `/subscription`,
+        //   <FaClipboard />
+        // ),
         getItem(
           <Link href={`/time-table`}>{t('schedule')}</Link>,
           `/time-table`,

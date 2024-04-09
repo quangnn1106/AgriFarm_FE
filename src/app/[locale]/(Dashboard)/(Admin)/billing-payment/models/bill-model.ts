@@ -5,7 +5,7 @@ export type BillModel = {
   subscription?: string | '';
   date?: string | '';
   billAmount?: number | '';
-  isLockout?: boolean;
+  isLockout?: number;
   // solution?: Solution;
   onDelete?: () => void;
   onUpdate?: () => void;
