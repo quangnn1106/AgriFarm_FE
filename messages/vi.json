@@ -319,19 +319,45 @@
         "msg_item_required": "Mục này là bắt buộc!"
       }
     },
+    "Checklist": {
+      "label": {
+          "date_execution": "Date of execution",
+          "status": "Status",
+          "keyword_placeholder": "Input search text",
+          "screen_name_checklist": "GlobalG.A.P Check list",
+          "screen_name_implement": "GlobalG.A.P Check list implement",
+          "search_condition": "Search Condition",
+          "search_result": "Search Result",
+          "in_progress": "In progress",
+          "done": "Done",
+          "not_yet": "Not yet",
+          "check_all": "All",
+          "checklist_name": "Name",
+          "checklist_start_date": "Start Date",
+          "checklist_end_date": "End Date",
+          "checklist_status": "Status",
+          "checklist_create_date": "Create date",
+          "major_must": "Major must",
+          "minor_must": "Minor must",
+          "recommandation": " Recommandation"
+      },
+      "message": {
+          "msg_confirm_delete":"Do you want to delete 「%ITEM%」?"
+      }
+    },
     "SystemSetting" : {
-        "label" : {
-            "system_setting": "Cài đặt hệ thống",
-            "setting_disease": "Chức năng chẩn đoán bệnh",
-            "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
-            "distance_input": "Khoảng cách",
-            "distance_input_placeholder": "Nhập số km"
-        },
-        "message": {
-            "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
-            "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
-            "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là "
-        }
+      "label" : {
+          "system_setting": "Cài đặt hệ thống",
+          "setting_disease": "Chức năng chẩn đoán bệnh",
+          "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
+          "distance_input": "Khoảng cách",
+          "distance_input_placeholder": "Nhập số km"
+      },
+      "message": {
+          "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
+          "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
+          "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là"
+      }
     }
   },
   "Pesticide": {
