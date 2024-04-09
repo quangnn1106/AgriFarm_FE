@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import { Col, Layout, Row } from 'antd';
 import loginBanner from '~/loginbanner.png';
@@ -60,8 +60,8 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
   //console.log('callbackUrl: ', callbackUrl);
 
-  if (status === 'authenticated') {
-    router.replace(callbackUrl);
+  if (session?.user.accessToken) {
+    router.push(callbackUrl);
   } else {
     if (status === 'loading') {
       return (

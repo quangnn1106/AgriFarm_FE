@@ -1,6 +1,6 @@
 import { NextRequestWithAuth, withAuth } from 'next-auth/middleware';
 import { locales } from './navigation';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 // export { default } from 'next-auth/middleware';
 import createMiddleware from 'next-intl/middleware';
 import {
@@ -9,8 +9,12 @@ import {
   REGISTER_PATH,
   SALOGIN_PATH,
   SUCCESS_PATH,
-  HOME_PATH
+  HOME_PATH,
+  DENIED_PATH,
+  DASH_BOARD_PATH,
+  DASHBOARD_ADMIN
 } from './constants/routes';
+import { ROLES } from './constants/roles';
 const publicPages = [
   LOGIN_PATH,
   REGISTER_PATH,
@@ -34,6 +38,24 @@ const authMiddleware = withAuth(
   // the `authorized` callback has returned `true`
   // and not for pages listed in `pages`.
   req => {
+    // Kiểm tra nếu đường dẫn là "/statistic" và người dùng không phải là admin
+    // if (
+    //   req.nextUrl.pathname.startsWith('/statistic') &&
+    //   req.nextauth.token?.role !== ROLES.SUPER_ADMIN
+    // ) {
+    //   return NextResponse.rewrite(new URL(DENIED_PATH, req.url));
+    // }
+    // if (
+    //   req.nextUrl.pathname.startsWith('/en/login') &&
+    //   req.nextauth.token?.role === ROLES.SUPER_ADMIN
+    // ) {
+    //   return NextResponse.rewrite(new URL(DASH_BOARD_PATH, req.url));
+    // }
+
+    // if (req.nextUrl.pathname.startsWith(LOGIN_PATH)) {
+    //   return NextResponse.rewrite(new URL(DASHBOARD_ADMIN, req.url));
+    // }
+
     return intlMiddleware(req);
   },
   {
@@ -41,7 +63,7 @@ const authMiddleware = withAuth(
       authorized: ({ token }) => token != null
     },
     pages: {
-      signIn: '/login' || '/salogin',
+      signIn: '/login' || '/en/salogin',
       newUser: '/register'
     }
   }
@@ -55,7 +77,12 @@ export default function middleware(req: NextRequestWithAuth) {
     'i'
   );
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-
+  //console.log('req.nextauth.token?.role: ', req?.nextauth?.token?.user_info);
+  //console.log('req.nextUrl.pathname ', req.nextUrl.pathname);
+  // if (req.nextUrl.pathname.startsWith('/en/login')) {
+  //   console.log('123123123 123213123123123123');
+  //   return NextResponse.redirect(new URL('/register', req.url));
+  // }
   if (isPublicPage) {
     return intlMiddleware(req);
   } else {
@@ -66,4 +93,5 @@ export default function middleware(req: NextRequestWithAuth) {
 export const config = {
   // Skip all paths that should not be internationalized
   matcher: ['/((?!api|_next|.*\\..*).*)']
+  //matcher: ['/login']
 };

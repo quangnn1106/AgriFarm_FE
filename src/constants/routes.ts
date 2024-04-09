@@ -4,12 +4,13 @@ export const LOGIN_PATH = '/login',
   SUCCESS_PATH = '/success',
   ERROR_PATH = '/error',
   SALOGIN_PATH = '/salogin',
-  HOME_PATH = '/home';
+  HOME_PATH = '/home',
+  DENIED_PATH = '/denied';
 
 //----- private paths---------//
 //admin
-export const DASH_BOARD_PATH = 'sa/statistic',
-  SITE_MAP_PATH = 'sa/site';
+export const DASH_BOARD_PATH = '/sa/statistic',
+  SITE_MAP_PATH = '/sa/site';
 
 // admin path + manager
 export const DASHBOARD_ADMIN = '/statistic_admin';

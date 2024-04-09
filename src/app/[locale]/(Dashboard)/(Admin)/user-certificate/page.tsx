@@ -2,8 +2,8 @@ import React from 'react';
 
 type Props = {};
 
-const Task = (props: Props) => {
-  return <div>Task</div>;
+const UserCertificate = (props: Props) => {
+  return <div>UserCertificate</div>;
 };
 
-export default Task;
+export default UserCertificate;
