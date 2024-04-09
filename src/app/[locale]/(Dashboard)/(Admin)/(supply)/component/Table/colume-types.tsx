@@ -20,7 +20,7 @@ import { SupplierResponse } from '../../models/supplier-models';
 
  export function SupplierTableColumns() {
   const t = useTranslations('Common');
-
+  const sup = useTranslations('Supplier');
 
   const supplierTableColumn: TableColumnsType<SupplierResponse> = [
     {
@@ -73,7 +73,7 @@ import { SupplierResponse } from '../../models/supplier-models';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this suppliers',
+                      title: sup('Do_you_want_to_delete_this_suppliers'),
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

@@ -43,24 +43,8 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
   const { data: session } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
 
-  // const handleSignOut = () => {
-  //   switch (userRole) {
-  //     case ROLES.SUPER_ADMIN:
-  //       signOut({ callbackUrl: SALOGIN_PATH });
-
-  //       break;
-  //     case ROLES.ADMIN:
-  //       signOut({ callbackUrl: LOGIN_PATH });
-
-  //       break;
-  //     default:
-  //       signOut({ callbackUrl: LOGIN_PATH });
-
-  //       break;
-  //   }
-  // };
-
   const t = useTranslations('Nav');
+
   return getItem(
     <>
       {!visible ? (
@@ -85,7 +69,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
           <Flex style={{padding: '10px 16px'}} justify='space-between'>
             <Flex align='center' gap={10}>
               <FaBell /> 
-              <span> Notification</span>
+              <span> {t('notification')}</span>
             </Flex>
             <div className={cx('noti-number')}>8</div>
           </Flex>
@@ -108,43 +92,6 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
         </div>
         
       )}
-      {/* <div className='d-flex' style={{padding: '1rem'}}>
-        <Image
-          src={sampleAva}
-          width={40}
-          height={40}
-          priority={true}
-          placeholder='empty'
-          alt='123'
-        />
-        <div className={cx('d-flex flex-col', 'text_sidebar')}>
-          <p className={cx('p_role')}>{session?.user?.userInfo?.role}</p>
-          <p className={cx('p_name')}>{session?.user?.userInfo?.fullName}</p>
-        </div>
-      </div> */}
-
-      {/* <Flex justify='center'>
-        <Button
-          style={{ width: '154px' }}
-          className=''
-          type='link'
-          onClick={handleSignOut}
-          danger
-        >
-          <Flex
-            gap='small'
-            align='center'
-          >
-            <Image
-              src={logoutIcon}
-              width={17}
-              height={17}
-              alt='logout icon'
-            />
-            {t('logout')}
-          </Flex>
-        </Button>
-      </Flex> */}
     </>,
     'user',
     null,

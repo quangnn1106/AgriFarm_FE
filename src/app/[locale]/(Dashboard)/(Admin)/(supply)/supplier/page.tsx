@@ -47,6 +47,8 @@ const SupplierManagement = (props: Props) => {
   } = theme.useToken();
 
   const t = useTranslations('Common');
+  const sup = useTranslations('Supplier');
+
 
   //style
   const cx = classNames.bind(styles);
@@ -62,10 +64,10 @@ const SupplierManagement = (props: Props) => {
   const pathName = usePathname();
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/Supplier`}>Supplier</Link>
+      title: <Link href={`/Supplier`}>{sup('Supplier')}</Link>
     }
   ];
 
@@ -234,7 +236,7 @@ const SupplierManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this suppliers?</span>
+                  <span>{sup('Do_you_want_to_delete_this_suppliers')}</span>
                 </div>
               }
               open={deleteState}

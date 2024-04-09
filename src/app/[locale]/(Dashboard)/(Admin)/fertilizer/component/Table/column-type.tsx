@@ -14,7 +14,8 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
@@ -44,15 +45,17 @@ import { Fertilizer } from '../../models/fertilizer-models';
       }
     },
     {
-      title: 'Stock',
+      title: t('Stock'),
       dataIndex: 'stock',
       width: 'max-content',
+      align: 'end',
       render: (_,fertilizerItem) => `${fertilizerItem.stock} ${fertilizerItem.measureUnit}`
     },
     {
-        title: 'Price',
+        title: t('Unit_Price'),
         dataIndex: 'unitPrice',
         width: 'max-content',
+        align: 'end',
         render: (_,fertilizerItem) => `${fertilizerItem.unitPrice} VND`
       },
     {
@@ -91,7 +94,7 @@ import { Fertilizer } from '../../models/fertilizer-models';
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Xem lịch sử
+                    <ClockCircleOutlined /> {t('View_history')}
                   </Space>
                 </a>
               ),

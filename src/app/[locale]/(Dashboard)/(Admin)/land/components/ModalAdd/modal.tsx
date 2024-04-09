@@ -70,6 +70,7 @@ const AddLand = ({
 
   const [displayMarker, setDisplayMarker] = React.useState<boolean>(true);
   const tM = useTranslations('Message');
+  const t = useTranslations('Common');
   const handleMapLoading = () => setLoading(false);
   const [marker, setMarker] = React.useState<any>();
   const path = usePathname();
@@ -267,13 +268,13 @@ const AddLand = ({
                             align='baseline'
                           >
                             <Form.Item name={[field.name, 'name']}>
-                              <Input placeholder='Name' />
+                              <Input placeholder={t('Name')} />
                             </Form.Item>
                             <Form.Item name={[field.name, 'value']}>
-                              <InputNumber placeholder='Value' />
+                              <InputNumber placeholder={t('Value')} />
                             </Form.Item>
                             <Form.Item name={[field.name, 'unit']}>
-                              <Input placeholder='Unit' />
+                              <Input placeholder={t('Unit')} />
                             </Form.Item>
                             <CloseOutlined
                               onClick={() => {
@@ -288,7 +289,7 @@ const AddLand = ({
                           onClick={() => add()}
                           block
                         >
-                          + Add new property
+                          {t('add_new_property')}
                         </Button>
                       </div>
                     )}

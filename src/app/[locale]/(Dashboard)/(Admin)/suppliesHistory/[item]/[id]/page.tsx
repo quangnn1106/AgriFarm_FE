@@ -299,7 +299,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     />
                     <IconText
                       icon={<DollarOutlined></DollarOutlined>}
-                      label='Unit Price: '
+                      label= {t('Unit_Price:') }
                       value={<p>{itemDetails?.unitPrice.toString() as string} VND</p>}
                     />
                   </Flex>

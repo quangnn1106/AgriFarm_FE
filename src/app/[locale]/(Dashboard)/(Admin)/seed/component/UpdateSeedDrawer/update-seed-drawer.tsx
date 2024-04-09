@@ -182,7 +182,7 @@ const UpdateSeedFormDrawer = ({
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='description'
@@ -199,7 +199,7 @@ const UpdateSeedFormDrawer = ({
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -211,13 +211,13 @@ const UpdateSeedFormDrawer = ({
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -229,7 +229,7 @@ const UpdateSeedFormDrawer = ({
             }}
             label={
               <>
-                <HomeOutlined style={{ marginRight: '0.5rem' }} /> Stock
+                <HomeOutlined style={{ marginRight: '0.5rem' }} /> {t('Stock')}
               </>
             }
           >
@@ -247,7 +247,7 @@ const UpdateSeedFormDrawer = ({
             }}
             label={
               <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')}
               </>
             }
           >
@@ -259,7 +259,7 @@ const UpdateSeedFormDrawer = ({
                   label: 'kg'
                 }
               ]}
-              placeholder='Chọn giá trị'
+              placeholder={t('Select_value')}
             ></Select>
           </Form.Item>
           <Form.Item
@@ -271,7 +271,7 @@ const UpdateSeedFormDrawer = ({
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Unit Price 
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')} 
               </>
             }
           >
@@ -284,7 +284,7 @@ const UpdateSeedFormDrawer = ({
           >
             <label>
               <BarsOutlined style={{ marginRight: '0.5rem' }} />
-              Properties
+              {t('Properties')}
             </label>
             <Form.List name='properties'>
               {(fields, { add, remove }) => (
@@ -294,16 +294,16 @@ const UpdateSeedFormDrawer = ({
                       key={field.key}
                       style={{ display: 'flex', marginBottom: '4px' }}
                       align='baseline'
-                      title='Properties'
+                      title={t('Properties')}
                     >
                       <Form.Item name={[field.name, 'name']}>
-                        <Input placeholder='Name' />
+                        <Input placeholder={t('Name')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'value']}>
-                        <InputNumber placeholder='Value' />
+                        <InputNumber placeholder={t('Value')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'unit']}>
-                        <Input placeholder='Unit' />
+                        <Input placeholder={t('Unit')} />
                       </Form.Item>
                       <CloseOutlined
                         onClick={() => {
@@ -318,7 +318,7 @@ const UpdateSeedFormDrawer = ({
                     onClick={() => add()}
                     block
                   >
-                    + Add new property
+                    {t('add_new_property')}
                   </Button>
                 </div>
               )}
@@ -335,7 +335,7 @@ const UpdateSeedFormDrawer = ({
               icon={<FileOutlined />}
               className='bg-btn'
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
         </Form>
