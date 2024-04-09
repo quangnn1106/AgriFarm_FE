@@ -28,7 +28,7 @@ import ActivityParticipantSection from '../ActivityParticipant/activityParticipa
 import { useEffect, useState } from 'react';
 import ActivityLocationSection from '../ActivityLocation/activityLocationSection';
 import ActivityMaterialSection from '../ActivityMaterial/activityMaterialSection';
-import ActivityTaskAdditionSection from './activityTaskAdditionSection';
+import ActivityTaskAdditionSection from '../activityAdditions/activityTaskAdditionSection';
 import ActivityInviteWaitingSection from './activityInviteWaitingSection';
 import { useRouter } from '@/navigation';
 import { getActivityByIdService } from '@/services/Admin/Activities/activityService';
@@ -104,39 +104,7 @@ export default function ActivityFullDetail(props: IProps) {
                   );
                 })}
 
-              {/* <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry s standard dummy text ever since the
-                1500s, when an unknown printer took a galley of type and scrambled it to
-                make a type specimen book. It has survived not only five centuries, but
-                also the leap into electronic typesetting, remaining essentially
-                unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
-              </p>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry s standard dummy text ever since the
-                1500s, when an unknown printer took a galley of type and scrambled it to
-                make a type specimen book. It has survived not only five centuries, but
-                also the leap into electronic typesetting, remaining essentially
-                unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
-              </p>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry s standard dummy text ever since the
-                1500s, when an unknown printer took a galley of type and scrambled it to
-                make a type specimen book. It has survived not only five centuries, but
-                also the leap into electronic typesetting, remaining essentially
-                unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
-              </p> */}
+              
             </Flex>
           </Col>
 
@@ -246,7 +214,7 @@ export default function ActivityFullDetail(props: IProps) {
                   }}
                 />
               )}
-              {value === 3 && <ActivityTaskAdditionSection />}
+              {value === 3 && <ActivityTaskAdditionSection activity={item}/>}
             </Flex>
           </Col>
           {/* <Col span={24}>title</Col> */}

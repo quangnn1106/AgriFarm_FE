@@ -114,11 +114,7 @@ const AdminSider = ({ path, visible }: Props) => {
         <FaClipboardList />
       ),
       getItem(`${t('training')}`, 'training', <BranchesOutlined />, [
-        getItem(
-          <Link href={`/training/contents`}>{t('t_content')}</Link>,
-          `/training/contents`,
-          <BookOutlined />
-        ),
+        
         getItem(
           <Link href={`/training/experts`}>{t('expert')}</Link>,
           `/training/experts`,

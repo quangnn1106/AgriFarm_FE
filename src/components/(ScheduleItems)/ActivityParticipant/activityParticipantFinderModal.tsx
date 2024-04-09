@@ -24,14 +24,15 @@ import {
 import { useState } from 'react';
 
 interface IProps {
-  type:number
+  type: number;
   onSelected: (location: ActivityParticipant) => void;
   onClose: () => void;
+  init: ActivityParticipant[];
 }
 
 export default function ActivityParticipantFinderModal(props: IProps) {
-  const { onClose, onSelected, type } = props;
-  
+  const { onClose, onSelected, type, init } = props;
+
   const [selectedItem, setSelectedItem] = useState<ActivityParticipant | null>(null);
   const [list, setList] = useState<ActivityParticipant[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,10 +57,13 @@ export default function ActivityParticipantFinderModal(props: IProps) {
       if (res.status === 200) {
         const body = res.data.data as ActivityParticipant[];
         // console.log('page ', getPaginationResponse(res));
-        console.log('List ', body);
+        
         if (body.length > 0) {
+          console.log('init ', init);
           setPage(getPaginationResponse(res));
-          setList([...list, ...body]);
+          const newList = body.filter(e => !init.find(x=>x.id===e.id));
+          console.log('List ', newList);
+          setList([...list, ...newList]);
         }
       }
 

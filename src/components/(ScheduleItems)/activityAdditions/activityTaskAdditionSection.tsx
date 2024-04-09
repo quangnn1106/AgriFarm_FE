@@ -1,16 +1,33 @@
 import { CloseCircleTwoTone } from '@ant-design/icons';
 import { Button, Flex, Modal, Space, Typography } from 'antd';
 import { useState } from 'react';
+import AdditionAttachModal from './additionAttachModal';
+import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 
-export default function ActivityTaskAdditionSection() {
+
+interface IProps{
+  activity: ActivityResponse
+}
+
+export default function ActivityTaskAdditionSection(props: IProps) {
+  const {activity}=props
   const fakeItem = {
     value: 1,
     title: 'wqwqwq'
   };
   const [item, setItem] = useState<typeof fakeItem | null>(fakeItem);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [finderOpen, setFinderOpen] = useState(false);
 
-  const handleDeleteDetail = () => {};
+  const handleDeleteDetail = () => {
+    setItem(null)
+    setDeleteOpen(false)
+  };
+
+  const handleAddDetail=(data:any)=>{
+    
+    setFinderOpen(false)
+  }
 
   const itemDetail = (
     <Flex
@@ -63,7 +80,7 @@ export default function ActivityTaskAdditionSection() {
             <Typography.Text type='secondary'>
               There no specific activity request attached.
             </Typography.Text>
-            <Button type='dashed'>Click to add more</Button>
+            <Button type='dashed' onClick={()=>setFinderOpen(true)}>Click to add more</Button>
           </Space>
         )}
       </Flex>
@@ -89,6 +106,11 @@ export default function ActivityTaskAdditionSection() {
           )}
         ></Modal>
       )}
+      {finderOpen && <AdditionAttachModal
+          curActivity={activity}
+          onSelected={()=>{}}
+          onClose={()=>setFinderOpen(false)}
+      />}
     </>
   );
 }

@@ -172,12 +172,14 @@ export const removeParticipantService: (
   http: AxiosInstance,
   activityId: string,
   participantId: string,
-) => Promise<boolean> = async (http, activityId, locationId) => {
+  role?: number
+) => Promise<boolean> = async (http, activityId, participantId, role=2) => {
   const res = await http.delete(
     `${subPath2}/remove`,{
       params:{
         activityId: activityId,
-        locationId: locationId
+        userId: participantId,
+        role: role
       }
     }
     
