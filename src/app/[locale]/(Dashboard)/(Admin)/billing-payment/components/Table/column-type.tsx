@@ -40,7 +40,7 @@ export function BillPaymentTableColumns() {
     {
       title: t('Unit_Price'),
       dataIndex: 'billAmount',
-      render: (_, item) => `$${item.billAmount}`,
+      render: (_, item) => `${item.billAmount?.toLocaleString()}VNĐ`,
       width: 'max-content',
       align: 'start'
     },
@@ -51,8 +51,22 @@ export function BillPaymentTableColumns() {
       // filterMode: 'tree',
       // onFilter: (value: boolean, record)=> record.is_active.,
       render: (_, { isLockout }) => {
-        let color = isLockout == false ? 'red' : 'green';
-        let key = isLockout == true ? 'Successful' : 'Cancel';
+        let color: string;
+        let key: string;
+
+        if (isLockout === 0) {
+          color = 'yellow';
+          key = 'Pending';
+        } else if (isLockout === 1) {
+          color = 'green';
+          key = 'Successful';
+        } else if (isLockout === 2) {
+          color = 'red';
+          key = 'Cancel';
+        } else {
+          color = 'black';
+          key = 'NAN';
+        }
         return (
           <Tag
             color={color}
@@ -63,7 +77,7 @@ export function BillPaymentTableColumns() {
         );
       },
       width: 'max-content',
-      align: 'start'
+      align: 'center'
     },
     {
       width: 'max-content',
