@@ -38,7 +38,8 @@
     "subscription": "Quản lý gói đăng ký",
     "logout": "Đăng xuất   ",
     "t_content": "Chủ đề tập huấn",
-    "training": "Tập huấn"
+    "training": "Tập huấn",
+    "notification": "Thông báo"
   },
   "LocaleSwitcher": {
     "switchLocale": "Convert {locale, select, vi {vi} "
@@ -228,6 +229,49 @@
     "Please_select_end_date!": "Bạn hãy nhập ngày kết thúc!",
     "Add": "Thêm",
     "Submit": "Hoàn thành",
-    "save_change": "Lưu thay đổi"
+    "save_change": "Lưu thay đổi",
+    "delete_confirm": "Bạn có muốn xóa",
+    "Type_data": "Nhập dữ liệu",
+    "Please_enter_data": "Vui lòng nhập dữ liệu!",
+    "Select_value": "Chọn giá trị",
+    "Quantity": "Số lượng",
+    "Unit_Price": "Đơn giá",
+    "Unit_Price:": "Đơn giá: ",
+    "Measure_Unit": "Đơn vị đo lường",
+    "Notes": "Ghi chú",
+    "add_new_property": "+ Thêm thuộc tính mới",
+    "Content": "Nội dung",
+    "Supplier": "Nhà cung cấp",
+    "Supplier_Name": "Tên nhà cung cấp",
+    "Address": "Địa chỉ",
+    "Save": "Lưu",
+    "Properties": "Các thuộc tính",
+    "Add_new_fertilizer": "Thêm phân bón mới",
+    "View_history": "Xem lịch sử",
+    "Value": "Giá trị",
+    "Unit": "Đơn vị",
+    "Stock": "Số lượng còn lại trong kho"
+  },
+  "Pesticide": {
+    "Pesticide": "Thuốc bảo vệ thực vật",
+    "pesticides": "những loại thuốc bảo vệ thực vật này",
+    "Details_Pesticide": "Chi tiết thuốc bảo vệ thực vật",
+    "Create_new_pesticide": "Thêm thuốc bảo vệ thực vật mới",
+    "Add_more_pesticide": "Nhập thêm thuốc bảo vệ thực vật"
+  },
+  "Fertilizer": {
+    "Fertilizer": "Phân bón",
+    "Fertilizers": "những loại phân bón này",
+    "Details_Fertilizer": "Chi tiết phân bón",
+    "Create_new_fertilizer": "Thêm phân bón mới",
+    "Add_more_pesticide": "Nhập thêm phân bón"
+  },
+  "Seed": {
+    "Seed": "Hạt giống",
+    "Details_Seed": "Chi tiết hạt giống",
+    "Do_you_want_to_delete_this_seeds": "Bạn có muốn xóa những hạt giống này?"
+  },
+  "Supplier": {
+    "Do_you_want_to_delete_this_suppliers": "Bạn có muốn xóa những nhà cung cấp này?"
   }
 }

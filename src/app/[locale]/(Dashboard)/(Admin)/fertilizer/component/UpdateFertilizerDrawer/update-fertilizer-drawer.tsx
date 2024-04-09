@@ -53,6 +53,7 @@ const UpdateFertilizerFormDrawer = ({
   const cx = classNames.bind(styles);
 
   const t = useTranslations('Common');
+  const f = useTranslations('Fertilizer');
   const tM = useTranslations('Message');
 
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -138,14 +139,14 @@ const UpdateFertilizerFormDrawer = ({
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
-        <Tooltip title='Nhập thêm phân bón'>
+        <Tooltip title={f('Add_more_fertilizer')}>
           <Button
             size='middle'
             className={cx('bg-btn')}
             icon={<PlusOutlined />}
             onClick={showAddSupplyModal}
           >
-            Nhập thêm phân bón
+            {f('Add_more_fertilizer')}
           </Button>
         </Tooltip>
         <AddFertilizerSupplyModal
@@ -190,7 +191,7 @@ const UpdateFertilizerFormDrawer = ({
                   </>
                 }
               >
-                <Input placeholder='Nhập dữ liệu' />
+                <Input placeholder={t('Type_data')} />
               </Form.Item>
               <Form.Item
                 name='stock'
@@ -201,7 +202,7 @@ const UpdateFertilizerFormDrawer = ({
                 }}
                 label={
                   <>
-                    <HomeOutlined style={{ marginRight: '0.5rem' }} /> Stock
+                    <HomeOutlined style={{ marginRight: '0.5rem' }} /> {t('Stock')}
                   </>
                 }
               >
@@ -220,7 +221,7 @@ const UpdateFertilizerFormDrawer = ({
                 }}
                 label={
                   <>
-                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit
+                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')}
                   </>
                 }
               >
@@ -232,7 +233,7 @@ const UpdateFertilizerFormDrawer = ({
                       label: 'kg'
                     }
                   ]}
-                  placeholder='Chọn giá trị'
+                  placeholder={t('Select_value')}
                 ></Select>
               </Form.Item>
               <Form.Item
@@ -244,7 +245,7 @@ const UpdateFertilizerFormDrawer = ({
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Unit Price
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')}
               </>
             }
           >
@@ -277,7 +278,7 @@ const UpdateFertilizerFormDrawer = ({
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -291,13 +292,13 @@ const UpdateFertilizerFormDrawer = ({
             wrapperCol={{ span: 19 }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
 
@@ -309,7 +310,7 @@ const UpdateFertilizerFormDrawer = ({
           >
             <label>
               <BarsOutlined style={{ marginRight: '0.5rem' }} />
-              Properties
+              {t('Properties')}
             </label>
             <Form.List name='properties'>
               {(fields, { add, remove }) => (
@@ -319,16 +320,16 @@ const UpdateFertilizerFormDrawer = ({
                       key={field.key}
                       style={{ display: 'flex', marginBottom: '4px' }}
                       align='baseline'
-                      title='Properties'
+                      title={t('Properties')}
                     >
                       <Form.Item name={[field.name, 'name']}>
-                        <Input placeholder='Name' />
+                        <Input placeholder={t('Name')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'value']}>
-                        <InputNumber placeholder='Value' />
+                        <InputNumber placeholder={t('Value')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'unit']}>
-                        <Input placeholder='Unit' />
+                        <Input placeholder={t('Unit')} />
                       </Form.Item>
                       <CloseOutlined
                         onClick={() => {
@@ -343,7 +344,7 @@ const UpdateFertilizerFormDrawer = ({
                     onClick={() => add()}
                     block
                   >
-                    + Add new property
+                    {t('add_new_property')}
                   </Button>
                 </div>
               )}
@@ -360,7 +361,7 @@ const UpdateFertilizerFormDrawer = ({
               icon={<FileOutlined />}
               className='bg-btn'
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
           <Form.Item

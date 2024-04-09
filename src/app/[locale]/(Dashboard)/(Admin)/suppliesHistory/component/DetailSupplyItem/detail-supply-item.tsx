@@ -36,12 +36,12 @@ const SupplyDetailsDrawer = ({
     <>
     
       <IconText
-        icon={FileTextOutlined}
+        icon={<FileTextOutlined />}
         label='Ngày nhập/Ngày xuất: '
         value={dayjs(params.item?.createdDate).format(dateFormat) as string}
       />
       <IconText
-        icon={NumberOutlined}
+        icon={<NumberOutlined />}
         label='Số lượng: '
         value={
             <p>
@@ -51,7 +51,7 @@ const SupplyDetailsDrawer = ({
         }
       />
       <IconText
-        icon={DollarOutlined}
+        icon={<DollarOutlined />}
         label='Đơn giá: '
         value={
             <p>
@@ -60,7 +60,7 @@ const SupplyDetailsDrawer = ({
         }
       />
       <IconText
-        icon={DollarOutlined}
+        icon={<DollarOutlined />}
         label='Tổng chi phí: '
         value={
             <p>
@@ -75,7 +75,7 @@ const SupplyDetailsDrawer = ({
           Nhà cung cấp
      </Divider>
      <IconText
-        icon={ShopOutlined}
+        icon={<ShopOutlined />}
         label='Tên: '
         value={
             <p>
@@ -84,7 +84,7 @@ const SupplyDetailsDrawer = ({
         }
       />
       <IconText
-        icon={HomeOutlined}
+        icon={<HomeOutlined/>}
         label='Địa chỉ '
         value={
             <p>
@@ -93,7 +93,7 @@ const SupplyDetailsDrawer = ({
         }
       />
       <IconText
-        icon={PhoneOutlined}
+        icon={<PhoneOutlined/>}
         label='Số điện thoại: '
         value={
             <p>
@@ -102,7 +102,7 @@ const SupplyDetailsDrawer = ({
         }
       />
       <IconText
-        icon={MailOutlined}
+        icon={<MailOutlined/>}
         label='Email: '
         value={
             <p>

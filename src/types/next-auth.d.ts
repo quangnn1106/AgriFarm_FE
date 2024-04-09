@@ -1,5 +1,5 @@
 import { ROLES } from '@/constants/roles';
-import NextAuth, { DefaultSession } from 'next-auth';
+import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
 
 declare module 'next-auth' {
   /**
@@ -20,6 +20,12 @@ declare module 'next-auth' {
   }
 }
 
+declare module 'next-auth/jwt' {
+  interface JWT extends DefaultJWT {
+    role: string;
+  }
+}
+
 export type Contents = {
   token: string;
   userInfo: UserInfo;
@@ -34,5 +40,5 @@ export type UserInfo = {
   siteId: string;
   siteCode: string;
   role: string;
-  siteName: string
+  siteName: string;
 };

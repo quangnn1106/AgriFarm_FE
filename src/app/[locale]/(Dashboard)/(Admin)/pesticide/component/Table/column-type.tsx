@@ -14,7 +14,8 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
@@ -22,6 +23,7 @@ import { Pesticide } from '../../models/pesticide-models';
 
  export function PesticideTableColumns() {
   const t = useTranslations('Common');
+  const p = useTranslations('Pesticide');
 
   const pesticideTableColumn: TableColumnsType<Pesticide> = [
     {
@@ -44,15 +46,17 @@ import { Pesticide } from '../../models/pesticide-models';
       }
     },
     {
-      title: 'Stock',
+      title: t('Stock'),
       dataIndex: 'stock',
+      align: 'end',
       width: 'max-content',
       render: (_,pesticideItem) => `${pesticideItem.stock} ${pesticideItem.measureUnit}`
     },
     {
-        title: 'Price',
+        title: t('Unit_Price'),
         dataIndex: 'unitPrice',
         width: 'max-content',
+        align: 'end',
         render: (_,pesticideItem) => `${pesticideItem.unitPrice} VND`
       },
     {
@@ -91,7 +95,7 @@ import { Pesticide } from '../../models/pesticide-models';
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Xem lịch sử
+                    <ClockCircleOutlined /> {t('View_history')}
                   </Space>
                 </a>
               ),
@@ -105,7 +109,7 @@ import { Pesticide } from '../../models/pesticide-models';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this Pesticides',
+                      title: `${t('delete_confirm')} ${p('pesticides')} ?`,
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

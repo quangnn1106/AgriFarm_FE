@@ -1,38 +1,144 @@
 'use client';
+
+import VirtualList from 'rc-virtual-list';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Expert } from '@/services/Admin/Training/response/training.response';
-import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
-import { Button, Image, List, Popconfirm, Space, Table, TableProps } from 'antd';
-import { useState } from 'react';
+import {
+  DeleteTwoTone,
+  EditOutlined,
+  EditTwoTone,
+  EllipsisOutlined,
+  PlusOutlined,
+  SettingOutlined
+} from '@ant-design/icons';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Divider,
+  Flex,
+  Image,
+  Input,
+  List,
+  Popconfirm,
+  Row,
+  Skeleton,
+  Space,
+  Table,
+  TableProps,
+  Typography
+} from 'antd';
+import { useEffect, useState } from 'react';
 import ExpertDetail from '../ExpertDetail/expertDetail';
-import CreateExpert from '../CreateExpert/createExpert';
+import AddExpert from '../CreateExpert/addExpert';
 import UpdateExpert from '../UpdateExpert/updateExpert';
 import AgriImage from '@/components/(ImageItem)/AgriImage/agriImage';
+import { AxiosInstance } from 'axios';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { getExpertsService } from '@/services/Admin/Training/expertService';
+import Meta from 'antd/es/card/Meta';
+import { PaginationResponse } from '@/types/pagination';
+import { useRouter } from '@/navigation';
 
 interface IProps {
-  list: Expert[] | [];
-  isFetching: boolean;
-  setHasChanged: (value: boolean) => void;
+  list?: Expert[] | [];
+  isFetching?: boolean;
+  setIsFetching?: (val: boolean) => void;
+  setHasChanged?: (value: boolean) => void;
 }
 
 export default function ExpertList(props: IProps) {
-  const { list, isFetching, setHasChanged } = props;
+  const [experts, setExperts] = useState<Expert[] | []>();
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasChanged, setHasChanged] = useState(true);
+  const [page, setPage] = useState<PaginationResponse>({
+    CurrentPage: 1,
+    PageSize: 0,
+    TotalCount: 0,
+    TotalPages: 1
+  });
+
+  const farmRouter = useRouter();
+  const http = UseAxiosAuth();
+
+  const fetchExperts = async (http: AxiosInstance) => {
+    try {
+      console.log('Fetching data..');
+      const responseData = await getExpertsService(http);
+      console.log('Data here: ', responseData);
+      setExperts(responseData?.data.data as Expert[]);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API training content:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchExperts(http);
+  // }, [http, hasChanged]);
+
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
-  const [createOpen, setCreateOpen] = useState<boolean>(false);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [detailOpen, setDetailOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    const exps: Expert[] = [];
+    for (let index = 0; index < 10; index++) {
+      exps.push({
+        id: 'sdasdads-q243-asd412-dasd' + index,
+        fullName: `Expert ${index}`,
+        description: 'very good technical',
+        expertField: 'Math'
+      });
+    }
+    setExperts(exps);
+    setPage({
+      CurrentPage: 1,
+      PageSize: 10,
+      TotalCount: 12,
+      TotalPages: 2
+    });
+  }, [hasChanged]);
+
   const renderHeader = () => {
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>Expert Profiles</span>
-        <Button
-          icon={<PlusOutlined />}
-          type='primary'
-          onClick={() => setCreateOpen(true)}
+      <>
+        <Flex
+          vertical
+          gap={20}
+          justify='space-between'
+          style={{ margin: '1rem', width: '100%' }}
         >
-          Add Expert
-        </Button>
-      </div>
+          <Flex
+            style={{ marginLeft: '5%', width: '100%' }}
+            justify='center'
+            align='center'
+          >
+            <Col span={18}>
+              <Input type='text' />
+            </Col>
+            <Col span={4}>
+              <Button type='primary'>Search</Button>
+            </Col>
+          </Flex>
+
+          <Flex
+            style={{ paddingRight: '5vw' }}
+            justify='end'
+            align='right'
+          >
+            <Button
+              icon={<PlusOutlined />}
+              type='primary'
+              onClick={() => farmRouter.push('experts/add')}
+            >
+              Add Expert
+            </Button>
+          </Flex>
+        </Flex>
+      </>
     );
   };
 
@@ -41,7 +147,6 @@ export default function ExpertList(props: IProps) {
   };
 
   const handleDetailClick = (content: Expert) => {
-    //console.log('On click, detail = ', content);
     setSelectedExpert(content);
     setDetailOpen(true);
   };
@@ -56,91 +161,238 @@ export default function ExpertList(props: IProps) {
     );
   };
 
-  const columns: TableProps<Expert>['columns'] = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (_, record) => (
-        <a onClick={() => handleDetailClick(record)}>{record.fullName}</a>
-      )
-    },
-
-    {
-      title: 'Description',
-      key: 'description',
-      dataIndex: 'description',
-      render: (_, { description }) => (
-        <>
-          <Space>
-            {description && description.length > 20
-              ? description.substring(0, 20) + '...'
-              : description ?? 'none'}
-          </Space>
-        </>
-      )
-    },
-    {
-      title: 'Profession',
-      key: 'profession',
-      dataIndex: 'profession',
-      render: (_, { expertField }) => (
-        <>
-          <Space>{expertField ?? 'none'}</Space>
-        </>
-      )
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <>
-          <EditTwoTone
-            twoToneColor='#f57800'
-            style={{ cursor: 'pointer', margin: '0 20px' }}
-            onClick={() => {
-              setUpdateOpen(true);
-              setSelectedExpert(record);
-            }}
-          />
-
-          <Popconfirm
-            placement='leftTop'
-            title={'Do you want to delete this expert information?'}
-            description={
-              'This expert information will be deleted permanently after you accept this action.'
-            }
-            onConfirm={() => handleDelete(record)}
-            okText='Accept'
-            cancelText='Cancel'
-          >
-            <span style={{ cursor: 'pointer' }}>
-              <DeleteTwoTone twoToneColor='#ff4d4f' />
-            </span>
-          </Popconfirm>
-        </>
-      )
+  const loadMoreData = () => {
+    console.log('Page: ', page);
+    if (isFetching) {
+      return;
     }
-  ];
+    setIsFetching(true);
+    console.log('Start Fetching');
+    getExpertsService(http)
+      .then(res => res.data)
+      .then(body => {
+        console.log('body ', body);
+        setExperts([...(experts as Expert[]), ...(body.data as Expert[])]);
+        setIsFetching(false);
+      })
+      .catch(() => {
+        setIsFetching(false);
+      });
+  };
+
+  const renderListSection = () => {
+    return (
+      <div
+        id='scrollableDiv'
+        style={{
+          height: '80vh',
+          width: '100%',
+          overflow: 'auto',
+          padding: '0 16px',
+          border: '1px solid rgba(140, 140, 140, 0.35)'
+        }}
+      >
+        <InfiniteScroll
+          dataLength={page.PageSize}
+          next={loadMoreData}
+          hasMore={!!experts && experts?.length < page.TotalCount}
+          loader={
+            <Skeleton
+              avatar
+              paragraph={{ rows: 1 }}
+              active
+            />
+          }
+          endMessage={
+            page.TotalCount > 0 ? (
+              <Divider plain>It is all, nothing more</Divider>
+            ) : (
+              <Divider>No thing to display! Please add more.</Divider>
+            )
+          }
+          scrollableTarget='scrollableDiv'
+        >
+          <List
+            itemLayout='horizontal'
+            dataSource={experts}
+            renderItem={(item, index) => (
+              <List.Item
+                key={index}
+                style={{ minHeight: 100 }}
+              >
+                <Card
+                  style={{
+                    width: '100%',
+                    //width: 500,
+                    //height: 200,
+                    marginTop: 16
+                  }}
+                  loading={isFetching}
+                  bordered={true}
+                >
+                  <Flex justify='space-between'>
+                    <Flex
+                      justify='start'
+                      gap={30}
+                    >
+                      <Avatar
+                        alt='avatar'
+                        src='#'
+                        style={{ width: 100, height: 100, display: 'block' }}
+                      />
+                      <Flex
+                        vertical
+                        align='space-between'
+                        justify='center'
+                        //style={{ padding: 10 }}
+                      >
+                        <Typography.Title level={5}>
+                          <a onClick={() => handleDetailClick(item)}>{item.fullName}</a>
+                        </Typography.Title>
+                        <Typography.Paragraph>
+                          <div
+                            style={{
+                              height: 50
+                            }}
+                          >
+                            {item?.description?.length ?? 0 > 30
+                              ? `${item.description?.substring(0, 30)}...`
+                              : item.description ?? 'No thing to display'}
+                          </div>
+                        </Typography.Paragraph>
+                      </Flex>
+                    </Flex>
+
+                    <Flex
+                      vertical
+                      style={{ width: '5%' }}
+                      align='center'
+                      justify='space-between'
+                    >
+                      <SettingOutlined key='setting' />
+                      <EditOutlined key='edit' />
+                      <EllipsisOutlined key='ellipsis' />
+                    </Flex>
+                  </Flex>
+                </Card>
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      </div>
+    );
+  };
+
+  const renderProfileSection = () => {
+    return (
+      <>
+        <Flex>
+          <Typography.Title level={3}>Preview</Typography.Title>
+        </Flex>
+        {/* <div style={{}}> */}
+        <Flex
+          vertical
+          align='center'
+          style={{
+            //margin: 20,
+            border: '1px solid black',
+            padding: 20,
+            borderRadius: 20,
+
+            //marginTop: 20,
+            height: '60vh',
+            overflowY: 'auto'
+          }}
+        >
+          {!!selectedExpert ? (
+            <>
+              <Flex justify='space-between'>
+                <Col span={10}>
+                  <Avatar
+                    shape='square'
+                    alt='avatar'
+                    src='#'
+                    size={150}
+                  />
+                </Col>
+
+                <Col span={10}>
+                  <Row
+                    gutter={[16, 16]}
+                    style={{ height: '80%' }}
+                  >
+                    <Col>
+                      <Descriptions title='Name' />
+                      {selectedExpert.fullName}
+                    </Col>
+                    <Col>
+                      <Descriptions title='Expert' />
+                      {selectedExpert.expertField}
+                    </Col>
+                  </Row>
+                </Col>
+              </Flex>
+              <Row gutter={[16, 16]}>
+                <Divider></Divider>
+
+                <Col>
+                  <Descriptions title='Description' />
+                  {selectedExpert.description ?? 'No thing to display'}
+                </Col>
+
+                <Col>
+                  <Descriptions title='Certificates'></Descriptions>
+                  {selectedExpert.certificates?.map((e, i) => (
+                    <Row key={i}>
+                      <Col span={12}>
+                        - <a href={e.reference}>{e.name}</a>
+                      </Col>
+                    </Row>
+                  ))}
+                  {!selectedExpert.certificates ||
+                    (selectedExpert.certificates.length === 0 && (
+                      <span>No certificate to display</span>
+                    ))}
+                </Col>
+              </Row>
+            </>
+          ) : (
+            <div><Typography.Text italic type='secondary'>Select an expert profile to preview</Typography.Text></div>
+          )}
+        </Flex>
+        {/* </div> */}
+      </>
+    );
+  };
 
   return (
     <>
-      <Table
-        title={renderHeader}
-        loading={isFetching}
-        dataSource={list}
-        rowKey={'id'}
-        columns={columns}
-      />
-      <div>
-        <AgriImage
-          height={200}
-          width={200}
-          path='123/41347038-ecc3_bg.png'
-          alt='ok'
-        />
-      </div>
-      {detailOpen && selectedExpert && (
+      <Divider orientation='left'>
+        <Typography.Title level={3}>Expert Profiles</Typography.Title>
+      </Divider>
+      <Flex
+        justify='space-around'
+        align='start'
+        style={{ paddingInline: 30 }}
+      >
+        <Col span={14}>
+          <Flex
+            vertical
+            align='center'
+          >
+            {renderHeader()}
+            {renderListSection()}
+          </Flex>
+        </Col>
+        <Col span={8}>
+          <Flex
+            vertical
+            style={{marginTop:'5vh'}}
+          >{renderProfileSection()}</Flex>
+        </Col>
+      </Flex>
+
+      {/* {detailOpen && selectedExpert && (
         <ExpertDetail
           detail={selectedExpert ?? ({} as Expert)}
           onClose={() => {
@@ -148,13 +400,8 @@ export default function ExpertList(props: IProps) {
             setHasChanged(false);
           }}
         />
-      )}
-      {createOpen && (
-        <CreateExpert
-          //isOpen={createOpen}
-          onClose={() => setCreateOpen(false)}
-        />
-      )}
+      )} */}
+
       {updateOpen && (
         <UpdateExpert
           onClose={() => {
@@ -165,4 +412,15 @@ export default function ExpertList(props: IProps) {
       )}
     </>
   );
+}
+
+{
+  /* <div>
+        <AgriImage
+          height={200}
+          width={200}
+          path='123/41347038-ecc3_bg.png'
+          alt='ok'
+        />
+      </div> */
 }

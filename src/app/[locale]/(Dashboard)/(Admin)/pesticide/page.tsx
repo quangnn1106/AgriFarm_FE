@@ -48,6 +48,7 @@ const PesticideManagement = (props: Props) => {
   } = theme.useToken();
 
   const t = useTranslations('Common');
+  const p = useTranslations('Pesticide');
 
   //style
   const cx = classNames.bind(styles);
@@ -63,10 +64,10 @@ const PesticideManagement = (props: Props) => {
   const pathName = usePathname();
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/pesticide`}>Pesticide</Link>
+      title: <Link href={`/pesticide`}>{p('Pesticide')}</Link>
     }
   ];
 
@@ -232,7 +233,7 @@ const PesticideManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this pesticides?</span>
+                  <span>{t('delete_confirm')} {p('pesticides')} ?</span>
                 </div>
               }
               open={deleteState}
@@ -308,7 +309,7 @@ const PesticideManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Pesticide"
+        title={p('Details_Pesticide')}
         placement="right"
         onClose={closePesticideDetailDrawer}
         open={openPesticideDetailDrawer}
@@ -319,7 +320,7 @@ const PesticideManagement = (props: Props) => {
           }}></UpdatePesticideFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title={p('Create_new_pesticide')}
         placement="right"
         onClose={closeAddPesticideDrawer}
         open={openAddPesticide}

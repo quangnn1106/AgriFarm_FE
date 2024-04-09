@@ -11,7 +11,8 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
@@ -19,6 +20,8 @@ import { Seed } from '../../models/seed-models';
 
  export function SeedTableColumns() {
   const t = useTranslations('Common');
+  const s = useTranslations('Seed');
+
 
 
   const seedTableColumn: TableColumnsType<Seed> = [
@@ -28,13 +31,15 @@ import { Seed } from '../../models/seed-models';
       width: 'max-content',
     },
     {
-      title: 'Stock',
+      title: t('Stock'),
+      align: 'end',
       dataIndex: 'stock',
       width: 'max-content',
       render: (_,seedItem) => `${seedItem.stock} ${seedItem.measureUnit}`
     },
     {
-        title: 'Price',
+        title: t('Unit_Price'),
+        align: 'end',
         dataIndex: 'unitPrice',
         width: 'max-content',
         render: (_,seedItem) => `${seedItem.unitPrice} VND`
@@ -75,7 +80,7 @@ import { Seed } from '../../models/seed-models';
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Xem lịch sử
+                    <ClockCircleOutlined /> {t('View_history')}
                   </Space>
                 </a>
               ),
@@ -89,7 +94,7 @@ import { Seed } from '../../models/seed-models';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this seeds',
+                      title: s('Do_you_want_to_delete_this_seeds'),
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

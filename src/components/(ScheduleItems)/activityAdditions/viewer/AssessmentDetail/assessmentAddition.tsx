@@ -1,7 +1,7 @@
 import { useRouter } from '@/navigation';
 import { getAssessmentDetailService } from '@/services/Admin/Activities/additionService';
-import { AssessmentDetail } from '@/services/Admin/Activities/Payload/request/activity-detail';
-import { RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activities';
+import { AssessmentDetail } from '@/services/Admin/Activities/Payload/request/activityAdditionRequest';
+import { RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Button } from 'antd';
 import { AxiosInstance } from 'axios';

@@ -1,11 +1,11 @@
-import { ActivityResponse, RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activities';
+import { ActivityResponse, RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 import {
   AssessmentDetail,
   TreatmentDetail,
   UsingDetail
-} from './Payload/request/activity-detail';
+} from './Payload/request/activityAdditionRequest';
 import { TrainingDetail } from '../Training/response/training.response';
 
 export const getUsingDetailService: (

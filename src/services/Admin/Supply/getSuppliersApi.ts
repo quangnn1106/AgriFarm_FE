@@ -1,5 +1,5 @@
 
-import { SupplierResponse } from "@/app/[locale]/(Dashboard)/(Admin)/supply/models/supplier-models";
+import { SupplierResponse } from "@/app/[locale]/(Dashboard)/(Admin)/(supply)/models/supplier-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
@@ -14,7 +14,11 @@ const getSuppliersApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<SupplierResponse[]>> = async (http) => {
     try {
-        const res = await http?.get(`/sup/suppliers/get`);
+        const res = await http?.get(`/sup/suppliers/get`, {
+            headers: {
+                pageSize: 400
+            }
+        });
         return res?.data;
 
     } catch (error: unknown) {

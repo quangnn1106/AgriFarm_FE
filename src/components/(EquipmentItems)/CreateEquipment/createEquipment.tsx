@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   message,
+  Result,
   Row,
   Space,
   Steps,
@@ -84,7 +85,7 @@ export default function CreateEquipment(props: IProps) {
   };
 
   const handleSupply = () => {
-    const data = createForm.getFieldsValue() as SupplyEquipmentRequest;
+    const data = supplyForm.getFieldsValue() as SupplyEquipmentRequest;
     let rs: HttpResponseCommon<equipmentResponses.EquipmentResponse> | null = null;
     console.log("Cur id: ", currentId)
     supplyEquipmentsService(http, currentId ?? '', data)
@@ -108,7 +109,7 @@ export default function CreateEquipment(props: IProps) {
     return (
       <>
         {current === 0 && <CreateEquipmentForm form={createForm} />}
-        {current === 1 && <SupplyEquipmentForm form={createForm} />}
+        {current === 1 && <SupplyEquipmentForm form={supplyForm} />}
       </>
     );
   };
@@ -161,7 +162,12 @@ export default function CreateEquipment(props: IProps) {
             }}
             //justify='center'
           >
-            <Typography.Title color='green'>Success</Typography.Title>
+            <Result
+              status='success'
+              title='Successfully!'
+              subTitle='Click "Back to list" to return list page.'
+              
+            />
           </Flex>
         )}
         <Divider orientation='right'>

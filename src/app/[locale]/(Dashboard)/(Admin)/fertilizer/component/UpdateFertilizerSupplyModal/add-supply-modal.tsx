@@ -26,7 +26,7 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import stylesFertilizerManagement from '../../fertilizerStyle.module.scss';
@@ -51,6 +51,7 @@ const AddFertilizerSupplyModal = ({
   const http = UseAxiosAuth();
   const tM = useTranslations('Message');
   const t = useTranslations('Common');
+  const f = useTranslations('Fertilizer');
   const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const openNotification = (
@@ -165,7 +166,7 @@ const AddFertilizerSupplyModal = ({
         }}
       >
         <Modal
-          title='Nhập thêm phân bón'
+          title={f('Add_more_fertilizer')}
           open={params.visible}
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
@@ -193,11 +194,11 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity 
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Quantity')} 
                 </>
               }
             >
-              <InputNumber placeholder='Quantity' />
+              <InputNumber placeholder={t('Quantity')} />
             </Form.Item>
             <Form.Item
               name='unitPrice'
@@ -208,11 +209,11 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice 
+                  <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')} 
                 </>
               }
             >
-              <InputNumber placeholder='UnitPrice' />
+              <InputNumber placeholder={t('Unit_Price')} />
             </Form.Item>
             <Form.Item
               name='measureUnit'
@@ -223,13 +224,13 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit 
+                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')} 
                 </>
               }
             >
               <Select
               size='middle'
-              placeholder='Chọn 1 giá trị'
+              placeholder= {t('Select_value')}
                 options={[
                   {
                     value: 'kg',
@@ -247,13 +248,13 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Content 
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Content')} 
                 </>
               }
             >
               <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
             </Form.Item>
             <Form.Item
@@ -265,7 +266,7 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Supplier 
+                  <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier')} 
                 </>
               }
             >
@@ -285,7 +286,7 @@ const AddFertilizerSupplyModal = ({
                     (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
                   )
               }
-              placeholder='Chọn 1 giá trị'
+              placeholder= {t('Select_value')}
               optionLabelProp='label'
               options={options}
               value={selectedSupplierId}
@@ -301,11 +302,11 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Supplier Name 
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier_Name')} 
                 </>
               }
             >
-              <Input placeholder='Nhập dữ liệu' />
+              <Input placeholder={t('Type_data')} />
             </Form.Item>
             <Form.Item
               name='address'
@@ -316,11 +317,11 @@ const AddFertilizerSupplyModal = ({
               }}
               label={
                 <>
-                  <FormOutlined style={{ marginRight: '0.5rem' }} /> Address 
+                  <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Address')} 
                 </>
               }
             >
-              <Input placeholder='Nhập dữ liệu' />
+              <Input placeholder={t('Type_data')} />
             </Form.Item>
             <Flex
             style={{ width: '100%' }}
@@ -331,7 +332,7 @@ const AddFertilizerSupplyModal = ({
               type='primary'
               icon={<FileOutlined />}
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
             <Form.Item

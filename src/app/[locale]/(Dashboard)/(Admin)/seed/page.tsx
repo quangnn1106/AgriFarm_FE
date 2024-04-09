@@ -47,6 +47,7 @@ const SeedManagement = (props: Props) => {
   } = theme.useToken();
 
   const t = useTranslations('Common');
+  const s = useTranslations('Seed');
 
   //style
   const cx = classNames.bind(styles);
@@ -62,10 +63,10 @@ const SeedManagement = (props: Props) => {
   const pathName = usePathname();
   const breadCrumb = [
     {
-      title: <Link href={`/`}>Home</Link>
+      title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/seed`}>Seed</Link>
+      title: <Link href={`/seed`}>{s('Seed')}</Link>
     }
   ];
 
@@ -229,7 +230,7 @@ const SeedManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this seeds?</span>
+                  <span>{s('Do_you_want_to_delete_this_seeds')}?</span>
                 </div>
               }
               open={deleteState}
@@ -305,7 +306,7 @@ const SeedManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Seed"
+        title={s('Details_Seed')}
         placement="right"
         onClose={closeSeedDetailDrawer}
         open={openSeedDetailDrawer}

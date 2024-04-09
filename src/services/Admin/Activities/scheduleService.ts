@@ -1,4 +1,4 @@
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activities';
+import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 

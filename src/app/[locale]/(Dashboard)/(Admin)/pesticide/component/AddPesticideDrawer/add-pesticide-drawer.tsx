@@ -33,7 +33,7 @@ import {
 
 import { useSession } from 'next-auth/react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import {
@@ -72,11 +72,11 @@ const AddPesticideFormDrawer: React.FC = () => {
     name: '',
     description: '',
     notes: '',
-    defaultUnit: 'kg',
+    defaultUnit: 'chai',
     properties: [{ name: '', value: 0, unit: '' }], // Default value for the properties field
     quantity: 0,
     unitPrice: 0,
-    measureUnit: 'kg',
+    measureUnit: 'chai',
     content: '',
     supplierId: '', // Default value for supplierId field
     supplierName: '',
@@ -233,9 +233,9 @@ const AddPesticideFormDrawer: React.FC = () => {
                     <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Name')}
                   </>
                 }
-                rules={[{ required: true, message: 'Vui lòng nhập dữ liệu' }]}
+                rules={[{ required: true, message: t('Please_enter_data') }]}
               >
-                <Input placeholder='Nhập dữ liệu' />
+                <Input placeholder={t('Type_data')} />
               </Form.Item>
               <Form.Item
                 name='defaultUnit'
@@ -254,11 +254,11 @@ const AddPesticideFormDrawer: React.FC = () => {
                   size={'middle'}
                   options={[
                     {
-                      value: 'kg',
-                      label: 'kg'
+                      value: 'chai',
+                      label: 'chai'
                     }
                   ]}
-                  placeholder='Chọn giá trị'
+                  placeholder={t('Select_value')}
                 ></Select>
               </Form.Item>
               <Form.Item
@@ -270,11 +270,11 @@ const AddPesticideFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Quantity')}
               </>
             }
           >
-            <InputNumber placeholder='Quantity' />
+            <InputNumber placeholder={t('Quantity')} />
           </Form.Item>
           <Form.Item
             name='unitPrice'
@@ -285,11 +285,11 @@ const AddPesticideFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')}
               </>
             }
           >
-            <InputNumber placeholder='UnitPrice' />
+            <InputNumber placeholder={t('Unit_Price')} />
           </Form.Item>
           <Form.Item
             name='measureUnit'
@@ -300,17 +300,17 @@ const AddPesticideFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')}
               </>
             }
           >
             <Select
               size='middle'
-              placeholder='Chọn 1 giá trị'
+              placeholder= {t('Select_value')}
               options={[
                 {
-                  value: 'kg',
-                  label: 'kg'
+                  value: 'chai',
+                  label: 'chai'
                 }
               ]}
             ></Select>
@@ -341,7 +341,7 @@ const AddPesticideFormDrawer: React.FC = () => {
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -355,13 +355,13 @@ const AddPesticideFormDrawer: React.FC = () => {
             wrapperCol={{ span: 19 }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
 
@@ -372,7 +372,7 @@ const AddPesticideFormDrawer: React.FC = () => {
           >
             <label>
               <BarsOutlined style={{ marginRight: '0.5rem' }} />
-              Properties
+              {t('Properties')}
             </label>
             <Form.List name='properties'>
               {(fields, { add, remove }) => (
@@ -384,13 +384,13 @@ const AddPesticideFormDrawer: React.FC = () => {
                       align='baseline'
                     >
                       <Form.Item name={[field.name, 'name']}>
-                        <Input placeholder='Name' />
+                        <Input placeholder={t('Name')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'value']}>
-                        <InputNumber placeholder='Value' />
+                        <InputNumber placeholder={t('Value')} />
                       </Form.Item>
                       <Form.Item name={[field.name, 'unit']}>
-                        <Input placeholder='Unit' />
+                        <Input placeholder={t('Unit')} />
                       </Form.Item>
                       <CloseOutlined
                         onClick={() => {
@@ -405,7 +405,7 @@ const AddPesticideFormDrawer: React.FC = () => {
                     onClick={() => add()}
                     block
                   >
-                    + Add new property
+                    {t('add_new_property')}
                   </Button>
                 </div>
               )}
@@ -423,13 +423,13 @@ const AddPesticideFormDrawer: React.FC = () => {
             wrapperCol={{ span: 19 }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Content
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Content')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -443,7 +443,7 @@ const AddPesticideFormDrawer: React.FC = () => {
             wrapperCol={{ span: 19 }}
             label={
               <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Supplier
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier')}
               </>
             }
           >
@@ -463,7 +463,7 @@ const AddPesticideFormDrawer: React.FC = () => {
                     (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
                   )
               }
-              placeholder='Chọn 1 giá trị'
+              placeholder= {t('Select_value')}
               optionLabelProp='label'
               options={options}
               value={selectedSupplierId}
@@ -481,11 +481,11 @@ const AddPesticideFormDrawer: React.FC = () => {
             wrapperCol={{ span: 19 }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Supplier Name
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier_Name')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='address'
@@ -499,11 +499,11 @@ const AddPesticideFormDrawer: React.FC = () => {
             label={
               <>
                 <FormOutlined style={{ marginRight: '0.5rem' }} />
-                Address
+                {t('Address')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
 
           <Form.Item
@@ -526,7 +526,7 @@ const AddPesticideFormDrawer: React.FC = () => {
               loading={isFetching}
               icon={<FileOutlined />}
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
         </Form>

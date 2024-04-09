@@ -17,16 +17,13 @@ export const getEquipmentsService: (
   pageSize = 10
 ) => {
   const res = await http?.get(`${basePath}/get`, {
-    // params: {
-    //   seasonId: seasonId
-    // }
+    
     headers: {
       pageSize: pageSize,
       pageNumber: pageNumber
     }
   });
 
-  //console.log('response staffsService: ', res);
   return res as AxiosResponse<HttpResponseCommon<EquipmentResponse[]>>;
 };
 
@@ -79,7 +76,7 @@ export const deleteEquipmentsService: (
   const res = await http?.delete(`${basePath}/delete?id=${id}`);
 
   //console.log('response staffsService: ', res);
-  return res?.status===204?true:false;
+  return res?.status===204;
 };
 
 export const getEquipmentSupplyDetailsService: (

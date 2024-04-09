@@ -9,6 +9,7 @@ type Props = {
   style?: React.CSSProperties | undefined;
   onLoaded?(map: mapboxgl.Map): void;
   loadingMap?: boolean;
+  mapStyle?: string;
   latInit?: number;
   lngInit?: number;
   zoom?: number;
@@ -21,6 +22,7 @@ const MapBoxAgriFarm = ({
   height,
   style,
   onLoaded,
+  mapStyle,
   loadingMap,
   latInit,
   lngInit,
@@ -56,7 +58,7 @@ const MapBoxAgriFarm = ({
       //   zoom: zoom
       // }}
       style={style ? style : { width: '100%', height: 400, margin: '25px 0' }}
-      mapStyle='mapbox://styles/mapbox/streets-v11'
+      mapStyle={mapStyle || 'mapbox://styles/mapbox/streets-v11'}
       mapboxAccessToken={MAPBOX_TOKEN}
     >
       {children}

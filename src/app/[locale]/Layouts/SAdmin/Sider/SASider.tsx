@@ -1,16 +1,24 @@
 import React from 'react';
 import MenuSider from '../../MainLayout/MenuSider/MenuSider';
-import { FaMapLocationDot, FaUser, FaClipboard } from 'react-icons/fa6';
+import {
+  FaMapLocationDot,
+  FaUser,
+  FaClipboard,
+  FaRightFromBracket
+} from 'react-icons/fa6';
 import { MdOutlineFeedback } from 'react-icons/md';
 import { GiHighGrass } from 'react-icons/gi';
 
 import styles from './SASider.module.scss';
 import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
-import { type MenuProps } from 'antd';
+import { Button, Flex, type MenuProps } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 import classNames from 'classnames/bind';
+import { signOut, useSession } from 'next-auth/react';
+import { ROLES } from '@/constants/roles';
+import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
 
 import {
   GetUserInfoGroup,
@@ -20,12 +28,33 @@ const cx = classNames.bind(styles);
 
 type Props = {
   path: string;
+  visible: boolean;
 };
 
-const SAdminSider = ({ path }: Props) => {
+const SAdminSider = ({ path, visible }: Props) => {
   const t = useTranslations('Nav');
+  const { data: session } = useSession();
+  const userRole = session?.user?.userInfo?.role as ROLES;
+
+  const handleSignOut = () => {
+    switch (userRole) {
+      case ROLES.SUPER_ADMIN:
+        signOut({ callbackUrl: SALOGIN_PATH });
+
+        break;
+      case ROLES.ADMIN:
+        signOut({ callbackUrl: LOGIN_PATH });
+
+        break;
+      default:
+        signOut({ callbackUrl: LOGIN_PATH });
+
+        break;
+    }
+  };
+
   const items: MenuProps['items'] = [
-    GetUserInfoGroup(),
+    GetUserInfoGroup(visible),
 
     { type: 'divider' },
 
@@ -49,16 +78,20 @@ const SAdminSider = ({ path }: Props) => {
       'management',
       null,
       [
-        getItem(<Link href={`/site`}>{t('site')}</Link>, `/site`, <FaMapLocationDot />),
+        getItem(
+          <Link href={`/sa/site`}>{t('site')}</Link>,
+          `/sa/site`,
+          <FaMapLocationDot />
+        ),
         // getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
         getItem(
-          <Link href={`/subscription`}>{t('subscription')}</Link>,
-          `/subscription`,
+          <Link href={`/sa/subscription`}>{t('subscription')}</Link>,
+          `/sa/subscription`,
           <FaClipboard />
         ),
         getItem(
-          <Link href={`/riceplant`}>{t('rice_plant')}</Link>,
-          `/riceplant`,
+          <Link href={`/sa/riceplant`}>{t('rice_plant')}</Link>,
+          `/sa/riceplant`,
           <GiHighGrass />
         ),
         getItem(
@@ -73,6 +106,33 @@ const SAdminSider = ({ path }: Props) => {
         // )
       ],
       'group'
+    ),
+    { type: 'divider' },
+    getItem(
+      <Button
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        danger
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <Flex
+          gap='small'
+          align='center'
+          style={{ color: 'red' }}
+        >
+          {t('logout')}
+        </Flex>
+      </Button>,
+      'logout',
+      <Button
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <FaRightFromBracket color='red' />
+      </Button>
     )
   ];
   return (

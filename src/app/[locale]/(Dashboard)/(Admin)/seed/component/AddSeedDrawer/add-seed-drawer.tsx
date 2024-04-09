@@ -14,7 +14,8 @@ import {
   notification,
   Select,
   SelectProps,
-  Flex
+  Flex,
+  AutoComplete
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
@@ -32,11 +33,12 @@ import { CreateAllInfoOfSeedDto, CreateSeedDto, Seed } from '../../models/seed-m
 import { createSeedApi } from '@/services/Admin/Seed/createSeedApi';
 import { useSession } from 'next-auth/react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import { SupplierResponse } from '../../../supply/models/supplier-models';
+import { SupplierResponse } from '../../../(supply)/models/supplier-models';
 import getSuppliersApi from '@/services/Admin/Supply/getSuppliersApi';
 import { AxiosInstance } from 'axios';
 import { createSupplyInfoApi } from '@/services/Admin/Seed/createSupplyInfoApi';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
+import { useDebounceSearch } from '@/utils/debounceSearch';
 
 const AddSeedFormDrawer: React.FC = () => {
   const t = useTranslations('Common');
@@ -74,7 +76,7 @@ const AddSeedFormDrawer: React.FC = () => {
     content: '',
     supplierId: '', // Default value for supplierId field
     supplierName: '',
-    address: '',
+    address: ''
   };
 
   //Set selection supplier
@@ -86,7 +88,8 @@ const AddSeedFormDrawer: React.FC = () => {
     setSelectedSupplierId(value);
     try {
       await getSupplierDetailApi(value, http).then(res => {
-        let selected = res?.data as SupplierResponse
+        let selected = res?.data as SupplierResponse;
+        form.setFieldValue('supplierId', selected?.id);
         form.setFieldValue('supplierName', selected?.name);
         form.setFieldValue('address', selected?.address);
       });
@@ -155,7 +158,10 @@ const AddSeedFormDrawer: React.FC = () => {
       }).then(async res => {
         const seedNew = res?.data as Seed;
         // setCreatedSeed(res.data as Seed);
-        if(form.getFieldValue('quantity') > 0 && form.getFieldValue('quantity') < 10000) {
+        if (
+          form.getFieldValue('quantity') > 0 &&
+          form.getFieldValue('quantity') < 10000
+        ) {
           await createSupplyInfoApi(seedNew.id, http, {
             quantity: value.quantity,
             unitPrice: value.unitPrice,
@@ -171,7 +177,7 @@ const AddSeedFormDrawer: React.FC = () => {
               openNotification('top', t('Create_successfully'), 'success');
               console.log('create success', res.status);
             } else {
-              openNotification('top', t('Create_fail')+ res?.message , 'error');
+              openNotification('top', t('Create_fail') + res?.message, 'error');
               console.log('create fail', res.status);
             }
             form.resetFields();
@@ -181,14 +187,14 @@ const AddSeedFormDrawer: React.FC = () => {
             openNotification('top', t('Create_successfully'), 'success');
             console.log('create success', res.status);
           } else {
-            openNotification('top', t('Create_fail')+ res?.message , 'error');
+            openNotification('top', t('Create_fail') + res?.message, 'error');
             console.log('create fail', res.status);
           }
           form.resetFields();
         }
       });
     } catch (error) {
-      openNotification('top', t('Create_fail') , 'error');
+      openNotification('top', t('Create_fail'), 'error');
       console.error('Error occurred while updating season:', error);
     }
   };
@@ -234,9 +240,9 @@ const AddSeedFormDrawer: React.FC = () => {
                 <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Name')}
               </>
             }
-            rules={[{ required: true, message: 'Vui lòng nhập dữ liệu' }]}
+            rules={[{ required: true, message: t('Please_enter_data') }]}
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
             name='description'
@@ -253,7 +259,7 @@ const AddSeedFormDrawer: React.FC = () => {
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -265,13 +271,13 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Notes
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Notes')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
@@ -295,7 +301,7 @@ const AddSeedFormDrawer: React.FC = () => {
                   label: 'kg'
                 }
               ]}
-              placeholder='Chọn giá trị'
+              placeholder={t('Select_value')}
             ></Select>
           </Form.Item>
           <Flex
@@ -305,7 +311,7 @@ const AddSeedFormDrawer: React.FC = () => {
           >
             <label>
               <BarsOutlined style={{ marginRight: '0.5rem' }} />
-              Properties
+              {t('Properties')}
             </label>
             <Form.List name='properties'>
               {(fields, { add, remove }) => (
@@ -316,20 +322,14 @@ const AddSeedFormDrawer: React.FC = () => {
                       style={{ display: 'flex', marginBottom: '0.5rem' }}
                       align='baseline'
                     >
-                      <Form.Item
-                        name={[field.name, 'name']}
-                      >
-                        <Input placeholder='Name'/>
+                      <Form.Item name={[field.name, 'name']}>
+                        <Input placeholder={t('Name')} />
                       </Form.Item>
-                      <Form.Item
-                        name={[field.name, 'value']}
-                      >
-                        <InputNumber placeholder='Value'/>
+                      <Form.Item name={[field.name, 'value']}>
+                        <InputNumber placeholder={t('Value')} />
                       </Form.Item>
-                      <Form.Item
-                        name={[field.name, 'unit']}
-                      >
-                        <Input placeholder='Unit'/>
+                      <Form.Item name={[field.name, 'unit']}>
+                        <Input placeholder={t('Unit')} />
                       </Form.Item>
                       <CloseOutlined
                         onClick={() => {
@@ -344,7 +344,7 @@ const AddSeedFormDrawer: React.FC = () => {
                     onClick={() => add()}
                     block
                   >
-                    + Add new property
+                    {t('add_new_property')}
                   </Button>
                 </div>
               )}
@@ -359,11 +359,12 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> Quantity 
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                {t('Quantity')}
               </>
             }
           >
-            <InputNumber placeholder='Quantity' />
+            <InputNumber placeholder={t('Quantity')} />
           </Form.Item>
           <Form.Item
             name='unitPrice'
@@ -374,11 +375,12 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> UnitPrice 
+                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                {t('Unit_Price')}
               </>
             }
           >
-            <InputNumber placeholder='UnitPrice' />
+            <InputNumber placeholder={t('Unit_Price')} />
           </Form.Item>
           <Form.Item
             name='measureUnit'
@@ -389,13 +391,14 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> MeasureUnit 
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                {t('Measure_Unit')}
               </>
             }
           >
             <Select
               size='middle'
-              placeholder='Chọn 1 giá trị'
+              placeholder={t('Select_value')}
               options={[
                 {
                   value: 'kg',
@@ -413,16 +416,17 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Content 
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Content')}
               </>
             }
           >
             <TextArea
               autoSize={{ minRows: 1, maxRows: 6 }}
-              placeholder='Nhập dữ liệu'
+              placeholder={t('Type_data')}
             />
           </Form.Item>
           <Form.Item
+            hidden
             name='supplierId'
             style={{
               maxWidth: '100%',
@@ -431,7 +435,7 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> Supplier 
+                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier')}
               </>
             }
           >
@@ -451,7 +455,7 @@ const AddSeedFormDrawer: React.FC = () => {
                     (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
                   )
               }
-              placeholder='Chọn 1 giá trị'
+              placeholder={t('Select_value')}
               optionLabelProp='label'
               options={options}
               value={selectedSupplierId}
@@ -467,11 +471,31 @@ const AddSeedFormDrawer: React.FC = () => {
             }}
             label={
               <>
-                <FormOutlined style={{ marginRight: '0.5rem' }} /> Supplier Name 
+                <FormOutlined style={{ marginRight: '0.5rem' }} /> {t('Supplier_Name')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            {/* <Input placeholder={t('Type_data')} /> */}
+            <AutoComplete
+              onSelect={onSelectSupplier}
+              showSearch
+              optionFilterProp='label'
+              filterOption={(input, option) =>
+                (option?.label?.toString().toLowerCase() ?? '').includes(
+                  input.toLowerCase()
+                )
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label?.toString() ?? '')
+                  .toLowerCase()
+                  .localeCompare(
+                    (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
+                  )
+              }
+              placeholder={t('Select_value')}
+              options={options}
+              value={selectedSupplierId}
+            ></AutoComplete>
           </Form.Item>
           <Form.Item
             name='address'
@@ -483,11 +507,14 @@ const AddSeedFormDrawer: React.FC = () => {
             label={
               <>
                 <FormOutlined style={{ marginRight: '0.5rem' }} />
-                Address 
+                {t('Address')}
               </>
             }
           >
-            <Input placeholder='Nhập dữ liệu' />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 4 }}
+              placeholder={t('Type_data')}
+            />
           </Form.Item>
 
           <Form.Item
@@ -510,7 +537,7 @@ const AddSeedFormDrawer: React.FC = () => {
               loading={isFetching}
               icon={<FileOutlined />}
             >
-              Save
+              {t('Save')}
             </Button>
           </Flex>
         </Form>
