@@ -37,27 +37,7 @@ const authMiddleware = withAuth(
   // Note that this callback is only invoked if
   // the `authorized` callback has returned `true`
   // and not for pages listed in `pages`.
-  req => {
-    // Kiểm tra nếu đường dẫn là "/statistic" và người dùng không phải là admin
-    // if (
-    //   req.nextUrl.pathname.startsWith('/statistic') &&
-    //   req.nextauth.token?.role !== ROLES.SUPER_ADMIN
-    // ) {
-    //   return NextResponse.rewrite(new URL(DENIED_PATH, req.url));
-    // }
-    // if (
-    //   req.nextUrl.pathname.startsWith('/en/login') &&
-    //   req.nextauth.token?.role === ROLES.SUPER_ADMIN
-    // ) {
-    //   return NextResponse.rewrite(new URL(DASH_BOARD_PATH, req.url));
-    // }
-
-    // if (req.nextUrl.pathname.startsWith(LOGIN_PATH)) {
-    //   return NextResponse.rewrite(new URL(DASHBOARD_ADMIN, req.url));
-    // }
-
-    return intlMiddleware(req);
-  },
+  req => intlMiddleware(req),
   {
     callbacks: {
       authorized: ({ token }) => token != null

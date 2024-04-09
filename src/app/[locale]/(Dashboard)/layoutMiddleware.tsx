@@ -7,8 +7,9 @@ import LayoutAdmin from './(Admin)/layoutAdmin';
 
 import LayoutMember from './(Member)/layoutMember';
 import LayoutManager from './(Manager)/layoutManager';
-import LayoutRoleSA from './(SuperAdmin)/sa/layout';
+
 import LayoutSuperAdmin from './(SuperAdmin)/sa/layoutSuperAdmin';
+import Loader from '@/components/Loader/Loader';
 //import LayoutRoleSA from './(SuperAdmin)/layout';
 
 type Props = {
@@ -19,14 +20,6 @@ export default function DashBoardLayout({ children }: Props) {
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
 
-  // if (status === 'loading') {
-  //   return (
-  //     <Loader
-  //       fullScreen
-  //       spinning
-  //     />
-  //   );
-  // }
   // Choose the layout based on the user's role
   const getLayout = () => {
     switch (userRole) {
@@ -48,6 +41,13 @@ export default function DashBoardLayout({ children }: Props) {
       //   return <div>Lỗi rồi fix đi</div>;
     }
   };
-
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning
+      />
+    );
+  }
   return <>{getLayout()}</>;
 }
