@@ -16,7 +16,10 @@ import {
   Select,
   SelectProps,
   Flex,
-  Image
+  Image,
+  GetProp, UploadFile, UploadProps,
+  Upload,
+  AutoComplete
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
@@ -43,6 +46,10 @@ import {
 import { createPesticideApi } from '@/services/Admin/Pesticide/createPesticideApi';
 import { createSupplyInfoApi } from '@/services/Admin/Pesticide/createSuppyInfoApi';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
+
+import ImgCrop from 'antd-img-crop';
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 const AddPesticideFormDrawer: React.FC = () => {
   const t = useTranslations('Common');
@@ -184,19 +191,34 @@ const AddPesticideFormDrawer: React.FC = () => {
     }
   };
 
-  // const InputUnit = (
-  //   <Form.Item
-  //     name='measureUnit'
-  //     style={{
-  //       maxWidth: '100%',
-  //       margin: '0px 0px 8px 0px',
-  //       padding: '0px 0px'
-  //     }}
-  //     label='Unit'
-  //   >
-  //     <Input />
-  //   </Form.Item>
-  // );
+  // config upload image
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    },
+  ]);
+
+  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as FileType);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new (Image as any);
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
 
   return (
     <>
@@ -237,7 +259,7 @@ const AddPesticideFormDrawer: React.FC = () => {
               >
                 <Input placeholder={t('Type_data')} />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 name='defaultUnit'
                 style={{
                   maxWidth: '100%',
@@ -260,67 +282,81 @@ const AddPesticideFormDrawer: React.FC = () => {
                   ]}
                   placeholder={t('Select_value')}
                 ></Select>
+              </Form.Item> */}
+              <Form.Item
+                name='quantity'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Quantity')}
+                  </>
+                }
+              >
+                <InputNumber placeholder={t('Quantity')} />
               </Form.Item>
               <Form.Item
-            name='quantity'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Quantity')}
-              </>
-            }
-          >
-            <InputNumber placeholder={t('Quantity')} />
-          </Form.Item>
-          <Form.Item
-            name='unitPrice'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')}
-              </>
-            }
-          >
-            <InputNumber placeholder={t('Unit_Price')} />
-          </Form.Item>
-          <Form.Item
-            name='measureUnit'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')}
-              </>
-            }
-          >
-            <Select
-              size='middle'
-              placeholder= {t('Select_value')}
-              options={[
-                {
-                  value: 'chai',
-                  label: 'chai'
+                name='unitPrice'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Unit_Price')}
+                  </>
                 }
-              ]}
-            ></Select>
-          </Form.Item>
+              >
+                <InputNumber placeholder={t('Unit_Price')} />
+              </Form.Item>
+              <Form.Item
+                name='measureUnit'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Measure_Unit')}
+                  </>
+                }
+              >
+                <Select
+                  size='middle'
+                  placeholder={t('Select_value')}
+                  options={[
+                    {
+                      value: 'chai',
+                      label: 'chai'
+                    }
+                  ]}
+                ></Select>
+              </Form.Item>
             </Flex>
             <Flex style={{ width: '30%' }}>
-            <Image
+              {/* <Image
               style={{ borderRadius: '10px' }}
               src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-            />
+            /> */}
+              <ImgCrop rotationSlider>
+                <Upload
+                  action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+                  listType='picture-card'
+                  fileList={fileList}
+                  onChange={onChange}
+                  onPreview={onPreview}
+                >
+                  {fileList.length < 5 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
             </Flex>
           </Flex>
 
@@ -411,7 +447,7 @@ const AddPesticideFormDrawer: React.FC = () => {
               )}
             </Form.List>
           </Flex>
-          
+
           <Form.Item
             name='content'
             style={{
@@ -433,6 +469,7 @@ const AddPesticideFormDrawer: React.FC = () => {
             />
           </Form.Item>
           <Form.Item
+            hidden
             name='supplierId'
             style={{
               maxWidth: '100%',
@@ -463,7 +500,7 @@ const AddPesticideFormDrawer: React.FC = () => {
                     (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
                   )
               }
-              placeholder= {t('Select_value')}
+              placeholder={t('Select_value')}
               optionLabelProp='label'
               options={options}
               value={selectedSupplierId}
@@ -485,7 +522,27 @@ const AddPesticideFormDrawer: React.FC = () => {
               </>
             }
           >
-            <Input placeholder={t('Type_data')} />
+            {/* <Input placeholder={t('Type_data')} />*/}
+            <AutoComplete
+              onSelect={onSelectSupplier}
+              showSearch
+              optionFilterProp='label'
+              filterOption={(input, option) =>
+                (option?.label?.toString().toLowerCase() ?? '').includes(
+                  input.toLowerCase()
+                )
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label?.toString() ?? '')
+                  .toLowerCase()
+                  .localeCompare(
+                    (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
+                  )
+              }
+              placeholder={t('Select_value')}
+              options={options}
+              value={selectedSupplierId}
+            ></AutoComplete>
           </Form.Item>
           <Form.Item
             name='address'
@@ -503,7 +560,10 @@ const AddPesticideFormDrawer: React.FC = () => {
               </>
             }
           >
-            <Input placeholder={t('Type_data')} />
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 4 }}
+              placeholder={t('Type_data')}
+            />
           </Form.Item>
 
           <Form.Item
