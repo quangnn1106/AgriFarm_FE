@@ -2,17 +2,23 @@ import { Flex, Image, Progress } from 'antd';
 import * as React from 'react';
 import './timeremain.scss';
 import { Content } from 'antd/es/layout/layout';
+import ModalCustom from '@/components/ModalCustom/ModalCustom';
 interface SubscriptionInfoProps {
   daysRemaining: number;
   subscriptionPlan: string;
   price: number;
+  buttonProps: React.ReactNode;
 }
 
 const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
   daysRemaining,
   subscriptionPlan,
-  price
+  price,
+  buttonProps
 }) => {
+  const handleOnClick = () => {
+    console.log('123123');
+  };
   return (
     <div className='subscription-info'>
       <div className='subscription-info__item'>
@@ -43,13 +49,23 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
           </div>
         </div>
         {/* <div className='subscription-info__price-period'>/month</div> */}
-        <button className='subscription-info__renew-button'>Gia hạn gói</button>
+        {/* <button
+          onClick={handleOnClick}
+          className='subscription-info__renew-button'
+        >
+          Gia hạn gói
+        </button> */}
+        {buttonProps}
       </div>
     </div>
   );
 };
 
-const TimeRemainingComponent: React.FC = () => {
+const TimeRemainingComponent = ({
+  params
+}: {
+  params: { buttonProps: React.ReactNode };
+}) => {
   return (
     <Content style={{ padding: '0 24px' }}>
       <div className='subscription-card'>
@@ -68,6 +84,7 @@ const TimeRemainingComponent: React.FC = () => {
             daysRemaining={10}
             subscriptionPlan='Cơ bản'
             price={790000}
+            buttonProps={params.buttonProps}
           />
         </div>
       </div>

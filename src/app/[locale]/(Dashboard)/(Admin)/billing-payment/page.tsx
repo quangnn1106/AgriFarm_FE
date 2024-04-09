@@ -20,6 +20,7 @@ import { deleteLandApi } from '@/services/Admin/Land/deleteLand';
 import { BillPaymentTableColumns } from './components/Table/column-type';
 import { BillModel } from './models/bill-model';
 import TimeRemainingComponent from './components/TimeRemaning/timeremain';
+import AddModal from './components/TimeRemaning/AddModal';
 
 const cx = classNames.bind(styles);
 
@@ -188,7 +189,26 @@ const LandPage = (props: Props) => {
         </Divider>
 
         {/* <FilterSection></FilterSection> */}
-        <TimeRemainingComponent />
+        <TimeRemainingComponent
+          params={{
+            buttonProps: (
+              <>
+                <button
+                  onClick={() => setCreateState(true)}
+                  className='subscription-info__renew-button'
+                >
+                  Gia hạn gói
+                </button>
+              </>
+            )
+          }}
+        />
+        <AddModal
+          params={{
+            visible: createState,
+            onCancel: () => setCreateState(false)
+          }}
+        />
         <Divider
           orientation='left'
           plain
@@ -319,7 +339,7 @@ const LandPage = (props: Props) => {
                   }))}
                   // onChange={onChange}
                   pagination={{
-                    showTotal: total => `Total ${total} Items`,
+                    showTotal: total => `Tổng cộng ${total} cột`,
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '20', '30'],
                     total: bills?.length
