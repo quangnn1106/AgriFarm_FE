@@ -2,9 +2,11 @@ import Image from 'next/image';
 import React from 'react';
 import logo from '@/assets/Images/Logo.png';
 
-type Props = {};
+type Props = {
+  style?: React.CSSProperties | undefined;
+};
 
-const LogoImage = (props: Props) => {
+const LogoImage = ({ style }: Props) => {
   return (
     <Image
       src={logo}
@@ -12,7 +14,7 @@ const LogoImage = (props: Props) => {
       height={41}
       alt='logo'
       priority={true}
-      style={{ position: 'absolute', left: '0' }}
+      style={style ? style : { position: 'absolute', left: '0' }}
     />
   );
 };
