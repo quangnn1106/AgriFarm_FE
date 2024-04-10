@@ -65,7 +65,7 @@ const DetailPage = () => {
     }
     const breadCrumb = [
         {
-            title: <Link href={`/disease-info`}>{t('disease_info')}</Link>
+            title: <Link href={`/`}>{tCom('home')}</Link>
         },
         {
             title: t('disease_info_detail')
@@ -73,7 +73,7 @@ const DetailPage = () => {
     ];
     const editAction = () => {
         console.log("Edit action.....");
-        router.push(`/disease-info-edit?id=${diseaseId}`);
+        router.push(`/sa/disease-info/update/${diseaseId}`);
     };
     const deleteAction = async () => {
         console.log("Delete action.....");
@@ -93,8 +93,7 @@ const DetailPage = () => {
     };
 
     const addItem = () => {
-        console.log("Add action.....");
-        router.push(`/disease-info-add`);
+        router.push(`/sa/disease-info/add`);
     }
     const selectDiseaseName = (value : string) => {
         console.log(value);

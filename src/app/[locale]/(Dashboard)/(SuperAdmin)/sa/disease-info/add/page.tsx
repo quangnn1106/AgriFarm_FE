@@ -18,7 +18,10 @@ const DiseaseInfoAdd = () => {
     
     const breadCrumb = [
         {
-            title: <Link href={`/disease-info-detail`}>{t('disease_info')}</Link>
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
+            title: <Link href={`/sa/disease-info`}>{t('disease_info')}</Link>
         },
         {
             title: t('disease_info_add')

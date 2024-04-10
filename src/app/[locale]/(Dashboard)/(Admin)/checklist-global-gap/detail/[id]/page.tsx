@@ -1,5 +1,5 @@
 'use client'
-import { Breadcrumb, Button, Card, Col, ConfigProvider, Divider, Empty, Radio, RadioChangeEvent, Row, Space, Spin, Tag, Upload } from "antd";
+import { Breadcrumb, Button, Card, Col, Divider, Empty, Radio, RadioChangeEvent, Row, Space, Spin, Tag, Upload } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -16,9 +16,8 @@ import getDataChecklistApi from "@/services/Checklist/getDataChecklistApi";
 import TextArea from "antd/es/input/TextArea";
 import { CHECKLIST } from "@/constants/routes";
 import { useRouter } from "next/navigation";
-import { ExportOutlined, HomeOutlined } from "@ant-design/icons";
 
-const CheklistImplement = ({ params }: { params: { id: string } }) => {
+const CheklistDetail = ({ params }: { params: { id: string } }) => {
     const tCom = useTranslations('common');
     const tLbl = useTranslations('Services.Checklist.label');
     const tMsg = useTranslations('Services.Checklist.message');
@@ -84,37 +83,7 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
     ];
     return (
         <>
-        <ConfigProvider
-            theme={{
-                components: {
-                Button: {
-                    contentFontSizeLG: 24,
-                    fontWeight: 700,
-                    groupBorderColor: 'transparent',
-                    onlyIconSizeLG: 24,
-                    paddingBlockLG: 0,
-                    defaultBorderColor: 'transparent',
-                    defaultBg: 'transparent',
-                    defaultShadow: 'none',
-                    primaryShadow: 'none',
-                    linkHoverBg: 'transparent',
-                    paddingInlineLG: 24,
-                    defaultGhostBorderColor: 'transparent'
-                }
-            }
-        }}
-        >
-        {' '}
-        <Button
-            className={cx('home-btn')}
-            href='#'
-            size={'large'}
-        >
-            <HomeOutlined />
-            {session?.user?.userInfo.siteName}
-        </Button>
-        </ConfigProvider>
-            <Content style={{ padding: '20px 48px' }}>
+            <Content style={{ padding: '30px 48px' }}>
                 <h3>{tLbl('screen_name_implement')}</h3>
                 <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
                 <Spin spinning={loading}>
@@ -125,14 +94,6 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                 {siteName && (
                                     <Tag color='#4CAF4F'>{siteName}</Tag>
                                 )}
-                                <Button
-                                    type='primary'
-                                    htmlType='button'
-                                    size='small'
-                                    icon={<ExportOutlined />}
-                                >
-                                    {tLbl('btn_export_pdf')}
-                                </Button>
                             </Space>
                             <Divider />
                             <Space size={22} direction="vertical" style={{width: '100%'}}>
@@ -226,4 +187,4 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
     );
 }
 
-export default CheklistImplement;
+export default CheklistDetail;

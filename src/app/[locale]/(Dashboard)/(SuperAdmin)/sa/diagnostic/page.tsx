@@ -93,7 +93,7 @@ const DiseaseDiagnostic = () => {
         }
     };
     const handleDiagnoses = () => {
-        router.push("/diagnostic-add");
+        router.push("/sa/diagnostic/add");
     }
     const handleKeyword = (e : any) => {
         setKeyword(e.target.value);

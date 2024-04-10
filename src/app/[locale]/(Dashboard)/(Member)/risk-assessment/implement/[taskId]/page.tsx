@@ -1,10 +1,10 @@
 'use client'
-import { Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Form, Radio, Space, Spin, Tag, Upload, message } from "antd";
+import { Breadcrumb, Button, Card, Checkbox, Collapse, ConfigProvider, Divider, Empty, Form, Radio, Space, Spin, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { FormProps, GetProp, RadioChangeEvent, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from "@/utils/axiosClient";
 import { AxiosInstance } from "axios";
 import riskAssessementDetailApi from "@/services/RiskAssessment/riskAssessementDetailApi";
@@ -17,6 +17,7 @@ import { RiskMasterResponseDef } from "@/app/[locale]/(Dashboard)/(Admin)/risk-a
 import { ItemModeValue } from "@/app/[locale]/(Dashboard)/(Admin)/risk-assessment/enum";
 import riskAssessmentImplApi from "@/services/RiskAssessment/riskAssessmentImplApi";
 import { STATUS_NO_CONTENT, STATUS_OK } from "@/constants/https";
+import { useSession } from "next-auth/react";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 type CheckboxValueType = GetProp<typeof Checkbox.Group, 'value'>[number];
@@ -42,6 +43,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     const [riskMappingId, setRiskMappingId] = useState("");
     const [itemResponse, setItemResponse] = useState<ItemResponseDef[]>([]);
     const [loadings, setLoadings] = useState(false);
+    const { data: session } = useSession();
     useEffect(() => {
         getRiskMapping(http, taskId);
         if (riskMasterId != "" && riskMappingId != "") {
@@ -122,7 +124,7 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
                 {
                     uid: file.uid,
                     name: file.name,
-                    url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                    url: "https://raw.githubusercontent.com/nqanh312/share/main/viewimage.png"
                 }
             ]
             fileList[indexItem] = info;
@@ -141,14 +143,13 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     
     const breadCrumb = [
         {
-            title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
+            title: <Link href={`/`}>{tCom('home')}</Link>
         },
         {
             title: tLbl('risk_assessment_impl')
         }
       ];
     const submitAction = async () => {
-        console.log("Submit action ...");
         try {
             setLoadings(true);
             const res = await riskAssessmentImplApi(http, itemResponse);
@@ -210,9 +211,39 @@ const Implement = ({ params }: { params: { taskId: string } }) => {
     };
     return (
         <>
+        <ConfigProvider
+            theme={{
+                components: {
+                Button: {
+                    contentFontSizeLG: 24,
+                    fontWeight: 700,
+                    groupBorderColor: 'transparent',
+                    onlyIconSizeLG: 24,
+                    paddingBlockLG: 0,
+                    defaultBorderColor: 'transparent',
+                    defaultBg: 'transparent',
+                    defaultShadow: 'none',
+                    primaryShadow: 'none',
+                    linkHoverBg: 'transparent',
+                    paddingInlineLG: 24,
+                    defaultGhostBorderColor: 'transparent'
+                }
+            }
+        }}
+        >
+        {' '}
+        <Button
+            className={cx('home-btn')}
+            href='#'
+            size={'large'}
+        >
+            <HomeOutlined />
+            {session?.user?.userInfo.siteName}
+        </Button>
+        </ConfigProvider>
         {contextHolder}
-        <Content style={{ padding: '30px 48px' }}>
-            <h2>{tLbl('risk_assessment_impl')}</h2>
+        <Content style={{ padding: '20px 48px' }}>
+            <h3>{tLbl('risk_assessment_impl')}</h3>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
             <Spin spinning={loadings}>

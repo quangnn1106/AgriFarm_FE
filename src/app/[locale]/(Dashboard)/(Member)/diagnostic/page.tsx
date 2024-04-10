@@ -1,7 +1,7 @@
 'use client'
 import { Content } from "antd/es/layout/layout";
 import classNames from "classnames/bind";
-import styles from '../disease.module.scss';
+import styles from './disease.module.scss';
 import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";

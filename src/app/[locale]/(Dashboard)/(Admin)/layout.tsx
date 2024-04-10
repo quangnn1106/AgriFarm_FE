@@ -27,7 +27,7 @@ export default function LayoutRoleAdmin({ children }: Props) {
       />
     );
   } else {
-    if (userRole !== ROLES.ADMIN && userRole !== ROLES.MANAGER) {
+    if (userRole !== ROLES.ADMIN && userRole !== ROLES.MANAGER && userRole !== ROLES.SUPER_ADMIN) {
       return (
         <>
           <DeniedPage />

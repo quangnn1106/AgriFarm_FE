@@ -52,7 +52,7 @@
     "firstN": "First Name",
     "lastN": "Last Name",
     "phone": "Phone Number",
-    "Addressed": "Địa chỉ: ",
+    "Addressed": "Address: ",
     "date_of_birth": "Date of birth",
     "gender": "Gender",
     "male": "Male",
@@ -191,6 +191,7 @@
     "delete_confirm_sentence": "Do you really want to delete this season?",
     "Land_name": "Land name",
     "Stock": "Stock",
+    "edit_information": "Edit information",
     "Land_&_Seed": "Land & Seed",
     "Seed_name": "Seed name",
     "Please_input_season_title!": "Please input season title !",
@@ -264,7 +265,18 @@
     "btn_detail": "Detail",
     "btn_edit": "Edit",
     "btn_cancel": "Cancel",
-    "btn_yes": "Yes"
+    "btn_yes": "Yes",
+    "home": "Home",
+    "warning": "Warning",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "keyword": "Keyword",
+    "btn_close": "Close",
+    "result_text": "Total %%ITEM%% items",
+    "page": "page",
+    "all": "All",
+    "btn_implement": "Implement",
+    "btn_result": "Result"
   },
   "Services": {
     "RiskAsm": {
@@ -307,12 +319,54 @@
         "msg_max_upload_img": "You can upload up to 3 images!",
         "msg_required": "Please input your %ITEM%!",
         "msg_add_success": "Add success!",
-        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?",
+        "msg_confirm_delete":"Do you want to delete 「%ITEM%」?",
         "msg_delete_success": "Delete success!",
         "msg_delete_fail": "Delete fail!",
         "msg_update_success": "Update success!",
         "msg_update_fail": "Update fail!",
         "msg_item_required": "Item is required!"
+      }
+    },
+    "Checklist": {
+      "label": {
+        "date_execution": "Date of execution",
+        "status": "Status",
+        "keyword_placeholder": "Input search text",
+        "screen_name_checklist": "GlobalG.A.P Check list",
+        "screen_name_implement": "GlobalG.A.P Check list implement",
+        "search_condition": "Search Condition",
+        "search_result": "Search Result",
+        "in_progress": "In progress",
+        "done": "Done",
+        "not_yet": "Not yet",
+        "check_all": "All",
+        "checklist_name": "Name",
+        "checklist_start_date": "Start Date",
+        "checklist_end_date": "End Date",
+        "checklist_status": "Status",
+        "checklist_create_date": "Create date",
+        "major_must": "Major must",
+        "minor_must": "Minor must",
+        "recommandation": " Recommandation",
+        "btn_export_pdf": "Export PDF",
+        "btn_add_new": "Add new checklist"
+      },
+      "message": {
+        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?"
+      }
+    },
+    "SystemSetting" : {
+      "label" : {
+          "system_setting": "System Setting",
+          "setting_disease": "Service Disease",
+          "distance_receive_warnings": "Distance to receive warnings about rice diseases",
+          "distance_input": "Distance",
+          "distance_input_placeholder": "Enter the number of kilometers"
+      },
+      "message": {
+          "msg_update_success": "Setting information changed successfully",
+          "msg_distance_input": "Distance greater than 1km and less than 10km",
+          "msg_distance_des": "The distance to receive the warning from land A to land B is "
       }
     }
   },

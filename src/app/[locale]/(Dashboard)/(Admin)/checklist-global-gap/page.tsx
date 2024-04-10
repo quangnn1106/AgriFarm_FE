@@ -22,7 +22,6 @@ import styles from '../adminStyle.module.scss';
 import checklistStyle from './checklistStyle.module.scss';
 import classNames from 'classnames/bind';
 import FilterSection from './component/FilterSection/filterSection';
-import { CheckListInspectionModel } from './models/checklist-inspection-model';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -31,10 +30,8 @@ import { ChecklistMappingDef, SearchConditionDef } from './models';
 import { AxiosInstance } from 'axios';
 import UseAxiosAuth from '@/utils/axiosClient';
 import checklistApi from '@/services/Checklist/checklistApi';
-import { STATUS_OK } from '@/constants/https';
 import { useRouter } from "next/navigation";
 import { usePathname } from "@/navigation";
-import SearchConditionForm from '../../(Disease)/diagnostic/component/SearchCondition/searchConditionForm';
 import { useSession } from 'next-auth/react';
 import { ROLES } from '@/constants/roles';
 
@@ -71,7 +68,7 @@ const CheckListInspection = () => {
               perPage: 10,
               pageId: 1
             };
-            if (session?.user?.userInfo.role != ROLES.SUPER_ADMIN) {
+            if (roles != ROLES.SUPER_ADMIN) {
               const userId = session?.user?.userInfo.id;
               searchCondition = {
                 userId: userId
@@ -113,7 +110,7 @@ const CheckListInspection = () => {
         }
     };
     getData(http);
-  }, [http, session?.user?.userInfo.role, session?.user?.userInfo.id]);
+  }, [http, roles, session?.user?.userInfo.id]);
   const searchAction = async (saerchCondition: SearchConditionDef | undefined, pagination: TablePaginationConfig) => {
     const searchCondition: SearchConditionDef = {
         keyword: saerchCondition?.keyword,
@@ -166,7 +163,7 @@ const CheckListInspection = () => {
         title: <Link href={`/`}>{tCom('home')}</Link>
     },
     {
-        title: tLbl('screen_name')
+        title: tLbl('screen_name_checklist')
     }
   ];
 
@@ -178,8 +175,38 @@ const CheckListInspection = () => {
 
   return (
     <>
-      <Content style={{ padding: '30px 48px' }}>
-        <h2>{tLbl('screen_name_checklist')}</h2>
+      <ConfigProvider
+          theme={{
+              components: {
+              Button: {
+                  contentFontSizeLG: 24,
+                  fontWeight: 700,
+                  groupBorderColor: 'transparent',
+                  onlyIconSizeLG: 24,
+                  paddingBlockLG: 0,
+                  defaultBorderColor: 'transparent',
+                  defaultBg: 'transparent',
+                  defaultShadow: 'none',
+                  primaryShadow: 'none',
+                  linkHoverBg: 'transparent',
+                  paddingInlineLG: 24,
+                  defaultGhostBorderColor: 'transparent'
+              }
+          }
+      }}
+      >
+      {' '}
+      <Button
+          className={cx('home-btn')}
+          href='#'
+          size={'large'}
+      >
+          <HomeOutlined />
+          {session?.user?.userInfo.siteName}
+      </Button>
+      </ConfigProvider>
+      <Content style={{ padding: '20px 48px' }}>
+        <h3>{tLbl('screen_name_checklist')}</h3>
         <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
         <Divider orientation='left' plain >{tLbl('search_condition')}</Divider>
         <FilterSection searchAction={searchAction} setSearchCondition={setSearchCondition}></FilterSection>

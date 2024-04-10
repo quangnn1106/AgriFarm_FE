@@ -1,5 +1,6 @@
 import { Button, Dropdown, MenuProps, Modal, Space, TableColumnsType, Tag } from "antd";
 import {
+    AppstoreAddOutlined,
   CheckCircleOutlined,
     CloseCircleOutlined,
     EditOutlined,
@@ -100,7 +101,7 @@ const CheckListInspectionTableColumn = () => {
                                 }}
                             >
                                 <Space>
-                                <ExclamationCircleOutlined /> {tCom('btn_detail')}
+                                <ExclamationCircleOutlined /> {tCom('btn_implement')}
                                 </Space>
                             </a>
                         ),
@@ -113,15 +114,32 @@ const CheckListInspectionTableColumn = () => {
                         label: (
                             <a
                             onClick={() => {
-                                // router.push(`${pathName}/update/${id}`);
+                                router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
                             }}
                             >
                             <Space>
-                                <EditOutlined /> {tCom('btn_edit')}
+                                <EditOutlined /> {tCom('btn_result')}
                             </Space>
                             </a>
                         ),
                         key: '1'
+                    },
+                    {
+                        type: 'divider'
+                    },
+                    {
+                        label: (
+                            <a
+                            onClick={() => {
+                                router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+                            }}
+                            >
+                            <Space>
+                                <AppstoreAddOutlined /> {tLbl('btn_add_new')}
+                            </Space>
+                            </a>
+                        ),
+                        key: '2'
                     }
                 ];
             };

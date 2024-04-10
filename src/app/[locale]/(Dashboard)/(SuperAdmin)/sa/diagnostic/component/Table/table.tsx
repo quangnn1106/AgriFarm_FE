@@ -52,7 +52,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
     return <Table loading={loading} columns={columns} dataSource={data} onRow={(record, rowIndex) => {
             return {
                 onClick: (e) => {
-                    router.push(`/diagnostic-detail?id=${record.key}`);
+                    router.push(`/sa/diagnostic/detail/${record.key}`);
                 }
             }
         }}

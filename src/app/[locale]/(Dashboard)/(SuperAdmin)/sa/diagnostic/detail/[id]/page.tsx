@@ -3,7 +3,7 @@ import { Content } from 'antd/es/layout/layout';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
-import styles from '../../diagnostic/disease.module.scss';
+import styles from '../../disease.module.scss';
 import { Breadcrumb, Button, Col, ConfigProvider, Flex, Row } from 'antd';
 import Link from 'next/link';
 import DetailComponent from './component/detail/detail';
@@ -18,18 +18,17 @@ import { AxiosInstance } from 'axios';
 import { HomeOutlined } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 
-const DiseaseDiagnosticDetail = () => {
+const DiseaseDiagnosticDetail = ({ params }: { params: { id: string } }) => {
     const router = useRouter();
     const [msgUpdate, setMsgUpdate] = useState("");
     const [fbStatusVal, setFbStatusVal] = useState(1);
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
     const tCom = useTranslations('Common');
-    const id = useSearchParams().get("id");
+    const id = params.id;
     const [dataDetail, setDataDetail] = useState();
     const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
     const http = UseAxiosAuth();
-    const { data: session, status } = useSession();
 
     useEffect(()=> {
         diseaseDetail(http, id);
@@ -73,12 +72,14 @@ const DiseaseDiagnosticDetail = () => {
     };
 
     const backAction = () => {
-        console.log("Back action.....");
-        router.back();
+        router.push(`/sa/diagnostic`);
     };
     const breadCrumb = [
         {
-            title: <Link href={`/diagnostic`}>{t('diagnostic')}</Link>
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
+            title: <Link href={`/sa/diagnostic`}>{t('diagnostic')}</Link>
         },
         {
             title: t('detail')
@@ -116,8 +117,8 @@ const DiseaseDiagnosticDetail = () => {
             {tCom('home')}
         </Button>
         </ConfigProvider>
-            <Content style={{ padding: '30px 48px' }}>
-                <h1 className={cx('disease__title')}>{t('diagnostic')}</h1>
+            <Content style={{ padding: '20px 48px' }}>
+                <h3 className={cx('disease__title')}>{t('diagnostic')}</h3>
                 <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
                 </Breadcrumb>
                 {dataDetail && (

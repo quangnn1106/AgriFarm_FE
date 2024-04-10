@@ -217,6 +217,9 @@ const DiseaseDiagnosticAdd = () => {
             title: <Link href={`/`}>{tCom('home')}</Link>
         },
         {
+            title: <Link href={`/sa/diagnostic`}>{t('diagnostic')}</Link>
+        },
+        {
             title: t('disease_diagnostic')
         }
     ];
@@ -254,7 +257,7 @@ const DiseaseDiagnosticAdd = () => {
                 {tCom('home')}
             </Button>
             </ConfigProvider>
-            <Content style={{ padding: '30px 48px' }}>
+            <Content style={{ padding: '20px 48px' }}>
                 <h3 className={cx('disease__title')}>{t('disease_diagnostic')}</h3>
                 <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
                 {diagnosticRs == true && msgAdd == "" && plantDisease ? (

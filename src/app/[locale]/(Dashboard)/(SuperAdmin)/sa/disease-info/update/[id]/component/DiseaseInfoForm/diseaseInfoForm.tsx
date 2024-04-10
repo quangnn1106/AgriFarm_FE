@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
-import styles from '../../../disease.module.scss';
+import styles from '../../../../disease.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,7 +23,7 @@ interface DiseaseInfo {
   suggest: string;
 }
 
-const DiseaseInfoForm = () => {
+const DiseaseInfoForm = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const cx = classNames.bind(styles);
   const t = useTranslations('Disease');
@@ -34,7 +34,7 @@ const DiseaseInfoForm = () => {
     useState<string>('');
   const [editorDataSuggest, setEditorDataSuggest] = useState<string>('');
   const [loadings, setLoadings] = useState<boolean>(false);
-  const id = useSearchParams().get('id');
+  const id = params.id;
   const [diseaseInfoDeatail, setDiseaseInfoDeatail] = useState<DiseaseInfo | null>(null);
   const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
   const [msgUpdate, setMsgUpdate] = useState('');
@@ -110,7 +110,6 @@ const DiseaseInfoForm = () => {
     setDisplayModalUpdate(false);
   };
   const backAction = () => {
-    console.log('Back action.....');
     router.back();
   };
   return (
