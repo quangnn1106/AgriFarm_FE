@@ -4,10 +4,11 @@ import { useSession } from 'next-auth/react';
 import { ReactNode } from 'react';
 
 import Loader from '@/components/Loader/Loader';
-import DashBoardLayout from '../layoutMiddleware';
+
 import DeniedPage from '../../(Result)/denied/page';
 import { useRouter } from '@/navigation';
 import { DENIED_PATH } from '@/constants/routes';
+import DashBoardLayout from '../layoutMiddleware';
 
 type Props = {
   children: React.ReactNode;
