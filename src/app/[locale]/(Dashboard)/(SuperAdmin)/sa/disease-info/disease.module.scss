@@ -1,0 +1,70 @@
+.disease__title {
+    color: #373737;
+    font-weight: 700;
+}
+.disease__line {
+    border-top: 2px solid #CFD0D2;
+}
+.disease__btn {
+    margin: 10px;
+    min-width: 8rem;
+}
+.disease__btn--save {
+    background: #4caf4f !important;
+}
+.disease__btn--edit {
+    background: #4caf4f !important;
+}
+.disease__btn--delete {
+    background: #E53835 !important;
+}
+.disease__btn--cancel {
+    background: #F5F5F5 !important;
+}
+.disease__btn--back {
+    background: #ffffff !important;
+    border: 1px solid #4caf4f !important;
+    color: #4caf4f !important;
+}
+.disease__searchBtn {
+    background: #4caf4f !important;
+    width: 10rem;
+}
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+// Disagnostic detail
+.dd {
+    margin-top: 20px;
+    text-align: left;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    .dd__row {
+        margin: 15px 0px;
+        align-items: center;
+        min-height: 45px;
+    }
+    .dd__label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #666666;
+    }
+
+    .dd__content {
+        font-size: 16px;
+        color: #373737;
+    }
+    .dd__result {
+        .dd__row {
+            margin-left: 3rem;
+            .dd__content {
+                margin-left: 3rem;
+            }
+        }
+        .dd__result--label {
+            color: #ff4d4f !important;
+        }
+    }
+}

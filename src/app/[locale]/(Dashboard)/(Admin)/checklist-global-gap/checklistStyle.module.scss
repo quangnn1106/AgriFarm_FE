@@ -4,3 +4,71 @@
     padding: 0px 24px;
     align-items: center;
 }
+
+.row-item-text {
+    background-color: #DBEFDC;
+    border-radius: 5px;
+    border: 1.5px solid #cccccc;
+    min-height: 5rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    padding-bottom: 15px;
+    .col-left {
+        padding-top: 10px;
+        padding-left: 15px;
+        font-weight: 600;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+    .col-right {
+        white-space: pre;
+        padding-top: 10px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+}
+.row-item-text--response {
+    border-radius: 5px;
+    border: 1.5px solid #cccccc;
+    min-height: 5rem;
+    padding-bottom: 15px;
+    .col-left {
+        padding-top: 10px;
+        padding-left: 15px;
+        font-weight: 600;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+    .col-right {
+        white-space: pre;
+        padding-top: 10px;
+        padding-right: 20px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+}
+.checklist__btn {
+    margin: 10px;
+    min-width: 8rem;
+}
+.checklist__btn--save {
+    background: #4caf4f !important;
+}
+.checklist__btn--edit {
+    background: #4caf4f !important;
+}
+.checklist__btn--delete {
+    background: #E53835 !important;
+}
+.checklist__btn--cancel {
+    background: #F5F5F5 !important;
+}
+.checklist__btn--back {
+    background: #ffffff !important;
+    border: 1px solid #4caf4f !important;
+    color: #4caf4f !important;
+}
+.checklist__searchBtn {
+    background: #4caf4f !important;
+    width: 10rem;
+}

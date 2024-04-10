@@ -1,4 +1,4 @@
-import { diseaseModel } from "@/app/[locale]/(Dashboard)/(Disease)/diagnostic/model/disease-model";
+import { diseaseModel } from '@/app/[locale]/(Dashboard)/(SuperAdmin)/sa/diagnostic/model/disease-model';
 import { AxiosInstance } from 'axios';
 
 const fetchDiseaseData = async (

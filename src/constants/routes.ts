@@ -15,7 +15,9 @@ export const DASH_BOARD_PATH = '/sa/statistic',
   SITE_MAP_PATH = '/sa/site';
 
 // admin path + manager
-export const DASHBOARD_ADMIN = '/statistic_admin';
+export const DASHBOARD_ADMIN = '/statistic_admin',
+  CHECKLIST = '/checklist-global-gap',
+  CHECKLIST_IMPLEMENT = '/checklist-global-gap/implement';
 
 //member path
 export const TIME_TABLE_PATH = '/time-table';
