@@ -21,8 +21,7 @@ export default function LayoutRoleMember({ children }: Props) {
   if (
     userRole !== ROLES.ADMIN &&
     userRole !== ROLES.MANAGER &&
-    userRole !== ROLES.MEMBER &&
-    userRole !== ROLES.SUPER_ADMIN
+    userRole !== ROLES.MEMBER
   ) {
     return (
       <>
