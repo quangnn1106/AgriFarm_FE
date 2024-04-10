@@ -90,8 +90,8 @@ const SAdminSider = ({ path, visible }: Props) => {
           <FaClipboard />
         ),
         getItem(
-          <Link href={`/sa/riceplant`}>{t('rice_plant')}</Link>,
-          `/sa/riceplant`,
+          <Link href={`/disease-info-detail`}>{t('rice_plant')}</Link>,
+          `/disease-info-detail`,
           <GiHighGrass />
         ),
         getItem(
