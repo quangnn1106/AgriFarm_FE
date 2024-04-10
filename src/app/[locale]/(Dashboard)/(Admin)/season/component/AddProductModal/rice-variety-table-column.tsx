@@ -22,16 +22,6 @@ export function RiceVarietyColumns() {
             title: tSeason('Stock'),
             dataIndex: 'stock',
             width: 'max-content',
-        },
-        {
-            title: t('Description'),
-            dataIndex: 'description',
-            width: 'max-content',
-        },
-        {
-            title: t('History'),
-            dataIndex: 'history',
-            width: 'max-content',
         }
     ];
     return seedColumn;

@@ -90,28 +90,7 @@ const FilterSection = () => {
               style={{ width: '50%' }}
             ></Input>
           </Form.Item>
-          <Form.Item
-            label={t('Date_of_execution')}
-            name='dateRange'
-          >
-            <RangePicker
-              defaultValue={[
-                dayjs('2015/01/01', dateFormat),
-                dayjs('2015/01/01', dateFormat)
-              ]}
-              format={dateFormat}
-            />
-          </Form.Item>
-          <Form.Item
-            label={t('Status')}
-            name='status'
-          >
-            <CheckboxGroup
-              options={plainOptions}
-              value={checkedList}
-              onChange={onChange}
-            />
-          </Form.Item>
+          
           <Form.Item label=''>
             <Flex
               align='center'

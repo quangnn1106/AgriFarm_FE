@@ -29,11 +29,6 @@ export function LandColumn() {
             title: t('Description'),
             dataIndex: 'description',
             width: 'max-content',
-        },
-        {
-            title: t('History'),
-            dataIndex: 'history',
-            width: 'max-content',
         }
     ];
     return landTableColumn;

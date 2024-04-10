@@ -181,6 +181,7 @@ const LandPage = (props: Props) => {
             size={'large'}
           >
             <HomeOutlined />
+            Hạt Ngọc Cửu Long
             {/* {siteName} */}
           </Button>
         </ConfigProvider>
