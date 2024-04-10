@@ -100,8 +100,8 @@ const AdminSider = ({ path, visible }: Props) => {
       getItem(<Link href={`/staff`}>{t('user')}</Link>, `/staff`, <FaUser />),
       getItem(<Link href={`/role`}>{t('user_role')}</Link>, `/role`, <FaClipboardUser />),
       getItem(
-        <Link href={`/certificate`}>{t('user_cer')}</Link>,
-        `/certificate`,
+        <Link href={`/user-certificate`}>{t('user_cer')}</Link>,
+        `/user-certificate`,
         <SafetyCertificateFilled />
       )
     ]),
