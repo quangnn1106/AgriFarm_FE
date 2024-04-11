@@ -27,11 +27,6 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   //   dataIndex: 'siteCode'
   // },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    width: 'max-content'
-  },
-  {
     title: 'Phone Number',
     dataIndex: 'phoneNumber',
     width: 'max-content'
@@ -90,7 +85,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <ExclamationCircleOutlined /> Details
+                  <ExclamationCircleOutlined /> Chi tiết
                 </Space>
               </a>
             ),
@@ -120,7 +115,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <CheckOutlined /> Approve
+                  <CheckOutlined /> Nâng cấp
                 </Space>
               </a>
             ),
@@ -150,7 +145,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <DeleteOutlined /> Delete
+                  <DeleteOutlined /> Vô hiệu hóa
                 </Space>
               </a>
             ),

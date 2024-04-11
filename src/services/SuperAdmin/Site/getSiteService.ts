@@ -12,7 +12,9 @@ export const getSitesService: (
       params: {
         Id: siteId
       },
-      headers: {}
+      headers: {
+        pageSize: 40
+      }
     });
     //  console.log('/farm/sites/get ', res);
     return res?.data;
