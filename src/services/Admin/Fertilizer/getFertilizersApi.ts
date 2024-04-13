@@ -12,12 +12,15 @@ export interface Pagination {
 
 const getFertilizersApi: (
     siteId?: string | null,
-    http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Fertilizer[]>> = async (siteId, http) => {
+    http?: AxiosInstance | null,
+    keySearch?: string
+    ) => Promise<HttpResponseCommon<Fertilizer[]>> = async (siteId, http, keySearch) => {
     try {
         const res = await http?.get(`/fert/farm-fertilizers/get`, {
             params: {
-              siteId: siteId
+              siteId: siteId,
+              key: keySearch
+
             }, headers: {
                 pageSize: 40
               }

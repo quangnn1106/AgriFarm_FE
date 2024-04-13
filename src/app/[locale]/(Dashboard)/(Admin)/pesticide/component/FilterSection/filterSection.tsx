@@ -10,7 +10,8 @@ import {
   Flex,
   Form,
   Input,
-  ConfigProvider
+  ConfigProvider,
+  FormInstance
 } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -25,11 +26,11 @@ import Search from 'antd/es/input/Search';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-type Props = {
-  children: React.ReactNode;
-};
+interface Props {
+  form: FormInstance;
+}
 
-const FilterSection = () => {
+const FilterSection = (props: Props) => {
   const cx = classNames.bind(styles);
   const st = classNames.bind(pesticideStyle);
   const t = useTranslations('Common');
@@ -71,6 +72,7 @@ const FilterSection = () => {
         }}
       >
         <Form
+          form={props.form}
           name='basic'
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
@@ -96,6 +98,7 @@ const FilterSection = () => {
               justify='center'
             >
               <Button
+                htmlType='submit'
                 className={cx('bg-btn')}
                 icon={<SearchOutlined />}
               >

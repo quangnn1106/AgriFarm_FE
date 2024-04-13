@@ -15,6 +15,7 @@ import { FaBell } from 'react-icons/fa6';
 
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
 import { ROLES } from '@/constants/roles';
+import Link from 'next/link';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +43,7 @@ export function getItem(
 export function GetUserInfoGroup(visible: boolean): MenuItem {
   const { data: session } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
+  const userId = session?.user.userInfo.id
 
   const t = useTranslations('Nav');
 
@@ -49,6 +51,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
     <>
       {!visible ? (
         <div>
+          <Link href={`/user-profile`}>
           <div
             className='d-flex'
             style={{ padding: '1rem' }}
@@ -66,6 +69,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
               <p className={cx('p_name')}>{session?.user?.userInfo?.fullName}</p>
             </div>
           </div>
+          </Link>
           <Flex style={{padding: '10px 16px'}} justify='space-between'>
             <Flex align='center' gap={10}>
               <FaBell /> 
@@ -73,6 +77,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
             </Flex>
             <div className={cx('noti-number')}>8</div>
           </Flex>
+          
         </div>
       ) : (
         <div
