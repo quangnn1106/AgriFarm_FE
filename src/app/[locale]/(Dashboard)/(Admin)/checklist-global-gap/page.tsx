@@ -8,9 +8,12 @@ import {
   Flex,
   Layout,
   Table,
+  TableColumnsType,
+  TablePaginationConfig,
   TableProps,
   Tag,
   Tooltip,
+  message,
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
@@ -19,30 +22,150 @@ import styles from '../adminStyle.module.scss';
 import checklistStyle from './checklistStyle.module.scss';
 import classNames from 'classnames/bind';
 import FilterSection from './component/FilterSection/filterSection';
-import { CheckListInspectionModel } from './models/checklist-inspection-model';
-import { useState } from 'react';
-import { CheckListInspectionTableColumn } from './component/Table/CheckListInspection/column-type';
+import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import CheckListInspectionTableColumn from './component/Table/CheckListInspection/column-type';
+import { ChecklistMappingDef, SearchConditionDef } from './models';
+import { AxiosInstance } from 'axios';
+import UseAxiosAuth from '@/utils/axiosClient';
+import checklistApi from '@/services/Checklist/checklistApi';
+import { useRouter } from "next/navigation";
+import { usePathname } from "@/navigation";
+import { useSession } from 'next-auth/react';
+import { ROLES } from '@/constants/roles';
 
+interface TableParams {
+  pagination?: TablePaginationConfig;
+}
 const CheckListInspection = () => {
   const cx = classNames.bind(styles);
   const pageStyle = classNames.bind(checklistStyle);
-  const {
-    token: { colorBgContainer, borderRadiusLG }
-  } = theme.useToken();
+  const [checkListData, setChecklistData] = useState<ChecklistMappingDef[]>([]);
+  const http = UseAxiosAuth();
+  const [loading, setLoading] = useState(false);
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+  });
+  const tCom = useTranslations('common');
+  const tLbl = useTranslations('Services.Checklist.label');
+  const tMsg = useTranslations('Services.Checklist.message');
+  const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
+  const pathName = usePathname();
+  const [searchCodition, setSearchCondition] = useState<SearchConditionDef>();
+  const { data: session, status } = useSession();
+  const roles = session?.user?.userInfo.role;
 
-//   const [data, setData] = useState<CheckListInspectionModel[] | undefined>([]);
-  const data : CheckListInspectionModel[] = [] ;
-//   setData([]);
-  for (let i = 0; i < 5; i++ ){
-    data?.push({
-        id: "Id" +i,
-        name: "Name",
-        userName: "User",
-        score: 4.5,
-        dateConducted: "12 Dec 2024",
-        status: "Done"
-    })
+  useEffect(() => {
+    const getData = async (http: AxiosInstance | null) => {
+        try {
+            setLoading(true);
+            let searchCondition: SearchConditionDef = {
+              perPage: 10,
+              pageId: 1
+            };
+            if (roles != ROLES.SUPER_ADMIN) {
+              const userId = session?.user?.userInfo.id;
+              searchCondition = {
+                userId: userId
+              }
+            }
+            const responseData = await checklistApi(http, searchCondition);
+            const normalizedData: ChecklistMappingDef[] = responseData['data'].map(
+                (item: ChecklistMappingDef, index: number) => ({
+                    key : item.id,
+                    no: index + 1,
+                    checklistName: item.checklistMaster.name,
+                    startDate: item.startDate,
+                    endDate: item.endDate,
+                    status: item.status,
+                    createdDate: item.createdDate
+                })
+            );
+            setChecklistData(normalizedData);
+            const pagination: TablePaginationConfig = {
+                pageSize: 10,
+                current: 1
+            }
+            setTableParams({
+                ...pagination,
+                pagination: {
+                  ...pagination,
+                  total: responseData.pagination.totalRecord,
+                },
+              });
+        } catch (error: unknown) {
+            // Assert the type of error to be an instance of Error
+            if (error instanceof Error) {
+                throw new Error(`Error calling API: ${error.message}`);
+            } else {
+                throw new Error(`Unknown error occurred: ${error}`);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    getData(http);
+  }, [http, roles, session?.user?.userInfo.id]);
+  const searchAction = async (saerchCondition: SearchConditionDef | undefined, pagination: TablePaginationConfig) => {
+    const searchCondition: SearchConditionDef = {
+        keyword: saerchCondition?.keyword,
+        searchByDate: saerchCondition?.searchByDate,
+        status: saerchCondition?.status,
+        perPage: pagination?.pageSize,
+        pageId: pagination?.current
+    };
+    try {
+        setLoading(true);
+        const responseData = await checklistApi(http, searchCondition);
+        const normalizedData: ChecklistMappingDef[] = responseData['data'].map(
+            (item: ChecklistMappingDef, index: number) => ({
+              key : item.id,
+              no: index + 1,
+              checklistName: item.checklistMaster.name,
+              startDate: item.startDate,
+              endDate: item.endDate,
+              status: item.status,
+              createdDate: item.createdDate
+            })
+        );
+        setChecklistData(normalizedData);
+        setTableParams({
+            ...pagination,
+            pagination: {
+              ...pagination,
+              total: responseData.pagination.totalRecord,
+            },
+          });
+    } catch (error) {
+        console.error('Error calling API:', error);
+    } finally {
+        setLoading(false);
+    }
   }
+  const handleTableChange: TableProps['onChange'] = (pagination) => {
+      setTableParams({
+        pagination
+      });
+      console.log(searchCodition);
+      searchAction(searchCodition, pagination);
+      // `dataSource` is useless since `pageSize` changed
+      if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+        setChecklistData([]);
+      }
+    };
+  const breadCrumb = [
+    {
+        title: <Link href={`/`}>{tCom('home')}</Link>
+    },
+    {
+        title: tLbl('screen_name_checklist')
+    }
+  ];
 
   const handleDetails = async (id: string) => {
   };
@@ -52,70 +175,42 @@ const CheckListInspection = () => {
 
   return (
     <>
-      <Content style={{ padding: '20px 0px' }}>
-        <ConfigProvider
+      <ConfigProvider
           theme={{
-            components: {
+              components: {
               Button: {
-                contentFontSizeLG: 24,
-                fontWeight: 700,
-                groupBorderColor: 'transparent',
-                onlyIconSizeLG: 24,
-                paddingBlockLG: 0,
-                defaultBorderColor: 'transparent',
-                defaultBg: 'transparent',
-                defaultShadow: 'none',
-                primaryShadow: 'none',
-                linkHoverBg: 'transparent',
-                paddingInlineLG: 24,
-                defaultGhostBorderColor: 'transparent'
+                  contentFontSizeLG: 24,
+                  fontWeight: 700,
+                  groupBorderColor: 'transparent',
+                  onlyIconSizeLG: 24,
+                  paddingBlockLG: 0,
+                  defaultBorderColor: 'transparent',
+                  defaultBg: 'transparent',
+                  defaultShadow: 'none',
+                  primaryShadow: 'none',
+                  linkHoverBg: 'transparent',
+                  paddingInlineLG: 24,
+                  defaultGhostBorderColor: 'transparent'
               }
-            }
-          }}
-        >
-          {' '}
-          <Button
-            className={cx('home-btn')}
-            href='#'
-            size={'large'}
-          >
-            <HomeOutlined />
-            Farm Name
-          </Button>
-        </ConfigProvider>
-        <Breadcrumb style={{ margin: '0px 24px' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>GlobalG.A.P Check list</Breadcrumb.Item>
-        </Breadcrumb>
-
-        <label className={cx('title-header')}> GlobalG.A.P Check list </label>
-        <div className={pageStyle('checklist-info-header')}>
-            <span className={cx('h2-info')}>
-                IFA V4.2
-            </span>
-            <span>
-            GGN: 739399274931847
-            </span>
-            <Tag color="#4CAF4F">Site Name</Tag>
-
-        </div>
-        <Divider plain style={{margin: '12px 0px 20px 0px'}} />
-        <FilterSection></FilterSection>
-        <Divider orientation='left' plain > Search result </Divider>
-        <Flex
-          justify={'flex-start'}
-          align={'center'}
-          className={cx('flex-space')}
-          style={{ padding: '0px 24px 20px 24px' }}
-        >
-          <Tooltip title='Add new'>
-            <Button
-              className={cx('bg-btn')}
-              icon={<PlusOutlined />}
-              title='Add'
-            >Add</Button>
-          </Tooltip>
-        </Flex>
+          }
+      }}
+      >
+      {' '}
+      <Button
+          className={cx('home-btn')}
+          href='#'
+          size={'large'}
+      >
+          <HomeOutlined />
+          {session?.user?.userInfo.siteName}
+      </Button>
+      </ConfigProvider>
+      <Content style={{ padding: '20px 48px' }}>
+        <h3>{tLbl('screen_name_checklist')}</h3>
+        <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
+        <Divider orientation='left' plain >{tLbl('search_condition')}</Divider>
+        <FilterSection searchAction={searchAction} setSearchCondition={setSearchCondition}></FilterSection>
+        <Divider orientation='left' plain >{tLbl('search_result')}</Divider>
         <ConfigProvider
           theme={{
             components: {
@@ -129,45 +224,24 @@ const CheckListInspection = () => {
             }
           }}
         >
-          <Content style={{ padding: '0px' }}>
-            <Layout
-              style={{
-                padding: '0px 0',
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG
-              }}
-            >
-              <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <Table
-                //   loading={loading}
-                  rowKey={'id'}
-                  bordered
-
-
-                  rowSelection={{
-                    type: 'checkbox',
-                    // ...checkRowSelection
-                  }}
-                  columns={CheckListInspectionTableColumn}
-                  dataSource={data?.map(item => ({
-                    ...item,
-                    onDetails: () => handleDetails(item.id!),
-                    onDelete: () => handleDelete(item.id!),
-                    onUpdate: () => handleUpdate(item.id!)
-                  }))}
-                //   onChange={onChange}
-                  pagination={{
+          <Table
+              // loading={loading}
+              rowKey={(record) => record.key}
+              dataSource={checkListData}
+              columns={CheckListInspectionTableColumn()}
+              pagination={
+                  {
+                    ...tableParams.pagination,
                     showTotal: total => `Total ${total} Items`,
                     showSizeChanger: true,
-                    pageSizeOptions: ['10', '20', '30'],
-                    total: data?.length
-                  }}
-                  scroll={{ x: 'max-content' }}
-                  className={cx('table_style')}
-                />
-              </Content>
-            </Layout>
-          </Content>
+                    pageSizeOptions: ['10', '20', '30']
+                  }
+              }
+              loading={loading}
+              scroll={{ x: 'max-content' }}
+              className={cx('table_style')}
+              onChange={handleTableChange}
+            />
         </ConfigProvider>
       </Content>
     </>

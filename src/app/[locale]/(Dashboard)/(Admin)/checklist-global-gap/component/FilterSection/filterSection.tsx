@@ -9,7 +9,11 @@ import {
   Flex,
   Form,
   Input,
-  ConfigProvider
+  ConfigProvider,
+  CheckboxProps,
+  FormProps,
+  Space,
+  TablePaginationConfig
 } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -21,7 +25,9 @@ import seasonStyle from '../../../../(Admin)/season/seasonStyle.module.scss';
 
 import classNames from 'classnames/bind';
 import Search from 'antd/es/input/Search';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { SearchConditionDef } from '../../models';
 
 const cx = classNames.bind(styles);
 const st = classNames.bind(seasonStyle);
@@ -35,29 +41,76 @@ const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
   console.log(info?.source, value);
 
 type Props = {
-  children: React.ReactNode;
+  searchAction: (searchCondition: SearchConditionDef, pagination: TablePaginationConfig) => void;
+  setSearchCondition: (condition: SearchConditionDef) => void;
+};
+
+type FieldType = {
+  keyword?: string;
+  dateRange?: string[];
+  status?: number[];
 };
 
 type CheckboxValueType = GetProp<typeof Checkbox.Group, 'value'>[number];
 
 const CheckboxGroup = Checkbox.Group;
 
-const plainOptions = ['In progress', 'Done', 'Cancel', 'Pending'];
 
-const FilterSection = () => {
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>();
+const FilterSection: React.FC<Props> = ({ searchAction , setSearchCondition }: Props): ReactElement => {
+  const tCom = useTranslations('common');
+  const tLbl = useTranslations('Services.Checklist.label');
+  const tMsg = useTranslations('Services.Checklist.message');
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
+  const [searchDate, setSearchDate] = useState<string[]>([]);
   const onChange = (list: CheckboxValueType[]) => {
+    console.log(list);
     setCheckedList(list);
   };
+  const plainOptions = [
+    {
+      label: tLbl('not_yet'),
+      value: 0
+    },
+    {
+      label: tLbl('in_progress'),
+      value: 1
+    },
+    {
+      label: tLbl('done'),
+      value: 2
+    }
+  ];
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    const keyword = values.keyword ?? "";
+    const searchByDate = searchDate;
+    const status = checkedList as number[];
+    setSearchCondition(
+      {
+        keyword: keyword,
+        searchByDate: searchByDate,
+        status: status
+      }
+    );
+    searchAction(
+      {
+        keyword,
+        searchByDate,
+        status
+      },
+      {
+        pageSize: 10,
+        current: 1
+      }
+    );
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-
+  const handleSelectDate = (dates: any, dateStrings: string[]) => {
+    setSearchDate(dateStrings);
+  }
   return (
     <>
       <ConfigProvider
@@ -80,28 +133,22 @@ const FilterSection = () => {
           className={st('margin-form-item')}
         >
           <Form.Item
-            label='Key word'
+            label={tCom('keyword')}
             name='keyword'
           >
             <Input
-              placeholder='Input search text'
+              placeholder={tLbl('keyword_placeholder')}
               style={{ width: '50%' }}
             ></Input>
           </Form.Item>
           <Form.Item
-            label='Date of execution'
+            label={tLbl('date_execution')}
             name='dateRange'
           >
-            <RangePicker
-              defaultValue={[
-                dayjs('2015/01/01', dateFormat),
-                dayjs('2015/01/01', dateFormat)
-              ]}
-              format={dateFormat}
-            />
+            <RangePicker allowEmpty={[true, true]} placeholder={[tCom('start_date'),tCom('end_date')]} onChange={handleSelectDate} format={dateFormat} />
           </Form.Item>
           <Form.Item
-            label='Status'
+            label={tLbl('status')}
             name='status'
           >
             <CheckboxGroup
@@ -110,18 +157,16 @@ const FilterSection = () => {
               onChange={onChange}
             />
           </Form.Item>
-          <Form.Item label=''>
-            <Flex
-              align='center'
-              justify='center'
+          <Form.Item 
+            wrapperCol={{offset: 9}}
+          >
+            <Button
+              className={cx('bg-btn')}
+              icon={<SearchOutlined />}
+              htmlType='submit'
             >
-              <Button
-                className={cx('bg-btn')}
-                icon={<SearchOutlined />}
-              >
-                Search
-              </Button>
-            </Flex>
+              {tCom('btn_search')}
+            </Button>
           </Form.Item>
         </Form>
       </ConfigProvider>

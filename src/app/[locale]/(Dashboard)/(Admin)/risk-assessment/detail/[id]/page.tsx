@@ -1,10 +1,10 @@
 'use client'
-import { App, Breadcrumb, Button, Card, Checkbox, Collapse, Divider, Empty, Radio, Space, Spin, Tag, Upload, message } from "antd";
+import { App, Breadcrumb, Button, Card, Checkbox, Collapse, ConfigProvider, Divider, Empty, Radio, Space, Spin, Tag, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from "@/utils/axiosClient";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AxiosInstance } from "axios";
@@ -17,6 +17,7 @@ import { RiskMasterResponseDef } from "../../interface";
 import { DeleteTwoTone , PushpinTwoTone } from '@ant-design/icons';
 import { ItemModeValue } from "../../enum";
 import { usePathname } from "@/navigation";
+import { useSession } from "next-auth/react";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -33,6 +34,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
     const router = useRouter();
     const [loadings, setLoadings] = useState(false);
     const pathName = usePathname();
+    const { data: session } = useSession();
     
     useEffect(() => {
         getData(http, riskId);
@@ -86,6 +88,9 @@ const Detail = ({ params }: { params: { id: string } }) => {
     
     const breadCrumb = [
         {
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
             title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
         },
         {
@@ -94,9 +99,39 @@ const Detail = ({ params }: { params: { id: string } }) => {
       ];
     return (
         <>
+        <ConfigProvider
+            theme={{
+                components: {
+                Button: {
+                    contentFontSizeLG: 24,
+                    fontWeight: 700,
+                    groupBorderColor: 'transparent',
+                    onlyIconSizeLG: 24,
+                    paddingBlockLG: 0,
+                    defaultBorderColor: 'transparent',
+                    defaultBg: 'transparent',
+                    defaultShadow: 'none',
+                    primaryShadow: 'none',
+                    linkHoverBg: 'transparent',
+                    paddingInlineLG: 24,
+                    defaultGhostBorderColor: 'transparent'
+                }
+            }
+        }}
+        >
+        {' '}
+        <Button
+            className={cx('home-btn')}
+            href='#'
+            size={'large'}
+        >
+            <HomeOutlined />
+            {session?.user?.userInfo.siteName}
+        </Button>
+        </ConfigProvider>
         {contextHolder}
-        <Content style={{ padding: '30px 48px' }}>
-            <h2>{tLbl('risk_assessment_detail')}</h2>
+        <Content style={{ padding: '20px 48px' }}>
+            <h3>{tLbl('risk_assessment_detail')}</h3>
             <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
             {/* Item */}
             <Spin spinning={loadings}>
@@ -143,7 +178,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
                                                                         </Space>
                                                                     </Radio.Group>
                                                                     ,
-                                                                extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                             }
                                                         ]
                                                     }
@@ -172,7 +207,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
                                                                     </Space>
                                                                 </Checkbox.Group>
                                                                     ,
-                                                                extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                             }
                                                         ]
                                                     }
@@ -189,7 +224,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
                                                                 key: index,
                                                                 label: item.riskItemTitle,
                                                                 children:<TextArea cols={45} rows={3} className={cx('text-content')}></TextArea>,
-                                                                extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                             }
                                                         ]
                                                     }
@@ -209,7 +244,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
                                                                 <Upload {...props} listType="picture-card">
                                                                     {uploadButton}
                                                                 </Upload>,
-                                                                extra:  item.must == 1 ? <Tag color="#f50">Required</Tag> : ""
+                                                                extra:  item.must == 1 ? <Tag color="#f50">{tLbl('required')}</Tag> : ""
                                                             }
                                                         ]
                                                     }

@@ -3,7 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import styles from "./components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import { useTranslations } from "next-intl";
-import { App, Button, Dropdown, Form, Input, MenuProps, Modal, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
+import { App, Breadcrumb, Button, ConfigProvider, Dropdown, Form, Input, MenuProps, Modal, Radio, RadioChangeEvent, Space, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import UseAxiosAuth from "@/utils/axiosClient";
 import { AxiosInstance } from "axios";
@@ -18,12 +18,14 @@ import {
   WarningOutlined,
   PushpinTwoTone,
   DeleteTwoTone,
-  PlusOutlined
+  PlusOutlined,
+  HomeOutlined
 } from '@ant-design/icons';
 import { useRouter } from "next/navigation";
 import riskAssessmentDeleteApi from "@/services/RiskAssessment/riskAssessmentDeleteApi";
 import { STATUS_OK } from "@/constants/https";
-import { usePathname } from "@/navigation";
+import { Link, usePathname } from "@/navigation";
+import { useSession } from "next-auth/react";
 
 interface ColoredLineProps {
     text: string;
@@ -52,6 +54,7 @@ const List = () => {
     const router = useRouter();
     const [messageApi, contextHolder] = message.useMessage();
     const pathName = usePathname();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
@@ -179,18 +182,18 @@ const List = () => {
             width: '5%',
         },
         {
-            title: 'Risk Name',
+            title: tLbl('risk_name'),
             dataIndex: 'riskName',
             width: '20%',
         },
         {
-            title: 'Risk Description',
+            title: tLbl('risk_description'),
             render: ((_,riskMaster) => (
                 <p style={{whiteSpace: 'pre'}}>{riskMaster.riskDescription}</p>
             ))
         },
         {
-            title: 'Is Draft',
+            title: tLbl('risk_is_draft'),
             dataIndex: 'isDraft',
             width: '10%',
             render: (_,riskMaster) => {
@@ -202,7 +205,7 @@ const List = () => {
             }
         },
         {
-            title: 'Created Date',
+            title: tLbl('risk_create_date'),
             // dataIndex: 'createdDate',
             width: '20%',
             render: (_, item) => {
@@ -326,11 +329,51 @@ const List = () => {
     const handleCreateNewRisk = () => {
         router.push(`${pathName}/add`);
     }
+    
+    const breadCrumb = [
+        {
+            title: <Link href={`/`}>{tCom('home')}</Link>
+        },
+        {
+            title: tLbl('risk_assessment')
+        }
+    ];
     return (
         <>
             {contextHolder}
-            <Content style={{ padding: '30px 48px' }}>
-                <h2>{tLbl('risk_assessment')}</h2>
+            <ConfigProvider
+                theme={{
+                    components: {
+                    Button: {
+                        contentFontSizeLG: 24,
+                        fontWeight: 700,
+                        groupBorderColor: 'transparent',
+                        onlyIconSizeLG: 24,
+                        paddingBlockLG: 0,
+                        defaultBorderColor: 'transparent',
+                        defaultBg: 'transparent',
+                        defaultShadow: 'none',
+                        primaryShadow: 'none',
+                        linkHoverBg: 'transparent',
+                        paddingInlineLG: 24,
+                        defaultGhostBorderColor: 'transparent'
+                    }
+                }
+            }}
+            >
+            {' '}
+            <Button
+                className={cx('home-btn')}
+                href='#'
+                size={'large'}
+            >
+                <HomeOutlined />
+                {session?.user?.userInfo.siteName}
+            </Button>
+            </ConfigProvider>
+            <Content style={{ padding: '20px 48px' }}>
+                <h3>{tLbl('risk_assessment')}</h3>
+                <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
                 <ColoredLine text={tLbl('search_condition')}/>
                     <Form
                         labelCol={{ span: 8 }}
@@ -345,7 +388,7 @@ const List = () => {
                         </Form.Item>
                         <Form.Item label={tLbl('risk_is_draft')}>
                             <Radio.Group onChange={handleOnchecked} defaultValue="all">
-                                <Radio value="all">All</Radio>
+                                <Radio value="all">{tCom('all')}</Radio>
                                 <Radio value={true}>{tLbl('draft')}</Radio>
                                 <Radio value={false}>{tLbl('publish')}</Radio>
                             </Radio.Group>
@@ -386,9 +429,12 @@ const List = () => {
                     pagination={
                         {
                             ...tableParams.pagination,
-                            showTotal: total => `Total ${total} Items`,
+                            showTotal: total => tCom('result_text').replace('%%ITEM%%', total.toString()),
                             showSizeChanger: true,
-                            pageSizeOptions: ['10', '20', '30']
+                            pageSizeOptions: ['10', '20', '30'],
+                            locale: {
+                              items_per_page: `/${tCom('page')}`,
+                            },
                         }
                     }
                     loading={loading}
