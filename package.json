@@ -26,6 +26,7 @@
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@microsoft/signalr": "^8.0.0",
     "@nivo/bar": "^0.85.1",
+    "@react-pdf/renderer": "^3.4.2",
     "@reduxjs/toolkit": "^2.0.1",
     "@types/lodash": "^4.17.0",
     "antd": "^5.13.3",

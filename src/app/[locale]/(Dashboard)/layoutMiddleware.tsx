@@ -10,6 +10,8 @@ import LayoutManager from './(Manager)/layoutManager';
 
 import LayoutSuperAdmin from './(SuperAdmin)/sa/layoutSuperAdmin';
 import Loader from '@/components/Loader/Loader';
+import { NotificationContextProvider } from '@/components/context/notification/SignalRNotifyContext';
+import NotificationBell from '@/components/(NotificationItems)/NotificationBell/notificationBell';
 //import LayoutRoleSA from './(SuperAdmin)/layout';
 
 type Props = {
@@ -49,5 +51,12 @@ export default function DashBoardLayout({ children }: Props) {
       />
     );
   }
-  return <>{getLayout()}</>;
+  return (
+    <>
+      <NotificationContextProvider>
+        <NotificationBell />
+        {getLayout()}
+      </NotificationContextProvider>
+    </>
+  );
 }
