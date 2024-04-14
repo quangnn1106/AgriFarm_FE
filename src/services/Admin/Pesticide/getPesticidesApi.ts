@@ -10,10 +10,14 @@ export interface Pagination {
   }
 
 const getPesticidesApi: (
-    http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Pesticide[]>> = async (http) => {
+    http?: AxiosInstance | null,
+    keySearch?: string
+    ) => Promise<HttpResponseCommon<Pesticide[]>> = async (http, keySearch) => {
     try {
         const res = await http?.get(`/ppp/farm-pesticides/get`, {
+            params: {
+                key: keySearch
+            },
             headers: {
                 pageSize: 40
             }
