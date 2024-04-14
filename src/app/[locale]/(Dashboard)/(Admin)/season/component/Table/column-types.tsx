@@ -20,6 +20,7 @@ import {
   QuestionCircleOutlined,
   WarningOutlined
 } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 import { SeasonModel } from '../../models/season-model';
 import { useTranslations } from 'next-intl';
@@ -27,6 +28,8 @@ import { useTranslations } from 'next-intl';
  export function SeasonTableColumns() {
   const t = useTranslations('Common');
   const tSeason = useTranslations('Season');
+  const dateFormat = 'YYYY/MM/DD';
+
   const seasonTableColumn: TableColumnsType<SeasonModel> = [
     {
       title: t('Name'),
@@ -64,12 +67,24 @@ import { useTranslations } from 'next-intl';
     {
       title: t('Start_Date'),
       dataIndex: 'startIn',
-      width: 'max-content'
+      width: 'max-content', 
+      render: (_, item) => {
+        const dateAfterFormat = dayjs(item.startIn, dateFormat)
+        return(
+          <><div>{dateAfterFormat.format('DD/MM/YYYY')}</div></>
+        )
+      }
     },
     {
       title: t('End_Date'),
       dataIndex: 'endIn',
-      width: 'max-content'
+      width: 'max-content',
+      render: (_, item) => {
+        const dateAfterFormat = dayjs(item.endIn, dateFormat)
+        return(
+          <><div>{dateAfterFormat.format('DD/MM/YYYY')}</div></>
+        )
+      }
     },
     {
       width: 'max-content',

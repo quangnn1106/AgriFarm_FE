@@ -69,83 +69,37 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
       const renderItems = (
         id: string,
         onDetailsUser: () => void,
-        onRemoveUser: () => void,
-        onApprovedUser: () => void
       ): MenuProps['items'] => {
         return [
+
           {
             label: (
               <a
                 onClick={() => {
-                  onDetailsUser();
+                  Modal.confirm({
+                    title: 'Bạn có muốn vô hiệu hóa nông trại này?',
+                    centered: true,
+                    width: '400px',
+                    onOk: () => {
+                      onDetailsUser();
+                    },
+                    okText: 'Có',
+                    cancelText: 'Hủy',
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    )
+                  });
                 }}
               >
                 <Space>
-                  <ExclamationCircleOutlined /> Details
+                  <CheckOutlined /> Vô hiệu hóa
                 </Space>
               </a>
             ),
             key: '0'
-          },
-          {
-            type: 'divider'
-          },
-          {
-            label: (
-              <a
-                onClick={() => {
-                  Modal.confirm({
-                    title: 'Are you want to approve this user ?',
-                    centered: true,
-                    width: '400px',
-                    onOk: () => {
-                      onApprovedUser();
-                    },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    )
-                  });
-                }}
-              >
-                <Space>
-                  <CheckOutlined /> Approve
-                </Space>
-              </a>
-            ),
-            key: '1'
-          },
-          {
-            type: 'divider'
-          },
-          {
-            label: (
-              <a
-                onClick={() => {
-                  Modal.confirm({
-                    title: 'Do you really want to delete this user ?',
-                    centered: true,
-                    width: '400px',
-                    onOk: () => {
-                      onRemoveUser();
-                    },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    )
-                  });
-                }}
-              >
-                <Space>
-                  <DeleteOutlined /> Delete
-                </Space>
-              </a>
-            ),
-            key: '2'
           }
         ];
       };
@@ -154,9 +108,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
           menu={{
             items: renderItems(
               sitesItem.id!,
-              sitesItem.onDetails!,
-              sitesItem.onDelete!,
-              sitesItem.onUpdate!
+              sitesItem.onDetails!
             )
           }}
         >

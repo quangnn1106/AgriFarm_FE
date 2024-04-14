@@ -1,4 +1,4 @@
-import { diseaseDiagnosticDef } from '@/app/[locale]/(Dashboard)/(Disease)/diagnostic-add/model/diseaseDiagnosticModel';
+import { diseaseDiagnosticDef } from '@/app/[locale]/(Dashboard)/(SuperAdmin)/sa/diagnostic/add/model/diseaseDiagnosticModel';
 import { AxiosInstance } from 'axios';
 
 interface params {

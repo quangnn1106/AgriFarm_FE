@@ -90,7 +90,7 @@ const SeasonCreate = (props: Props) => {
 
   //form
   const [form] = Form.useForm();
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = 'DD/MM/YYYY';
 
   //handle change date picker
   const handleChangeStartIn: DatePickerProps['onChange'] = (date, dateString) => {

@@ -1,6 +1,6 @@
 'use client'
 import { Content } from 'antd/es/layout/layout';
-import { App, Breadcrumb, Button, Form, Input, Radio, RadioChangeEvent, message } from 'antd';
+import { App, Breadcrumb, Button, ConfigProvider, Form, Input, Radio, RadioChangeEvent, message } from 'antd';
 import React, { useState } from 'react';
 import RiskItem from '../components/RiskItem';
 import { RiskItemDef, RiskMasterInputDef } from '../interface';
@@ -9,7 +9,7 @@ import TextArea from 'antd/es/input/TextArea';
 import styles from "../components/risk-assessment-style.module.scss";
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import UseAxiosAuth from '@/utils/axiosClient';
 import riskAssessmentAddApi from '@/services/RiskAssessment/riskAssessmentAddApi';
 import { useSession } from 'next-auth/react';
@@ -151,6 +151,9 @@ const Add = () => {
     
     const breadCrumb = [
       {
+          title: <Link href={`/`}>{tCom('home')}</Link>
+      },
+      {
           title: <Link href={`/risk-assessment`}>{tLbl('risk_assessment')}</Link>
       },
       {
@@ -191,9 +194,39 @@ const Add = () => {
     }
   return(
     <>
+      <ConfigProvider
+          theme={{
+              components: {
+              Button: {
+                  contentFontSizeLG: 24,
+                  fontWeight: 700,
+                  groupBorderColor: 'transparent',
+                  onlyIconSizeLG: 24,
+                  paddingBlockLG: 0,
+                  defaultBorderColor: 'transparent',
+                  defaultBg: 'transparent',
+                  defaultShadow: 'none',
+                  primaryShadow: 'none',
+                  linkHoverBg: 'transparent',
+                  paddingInlineLG: 24,
+                  defaultGhostBorderColor: 'transparent'
+              }
+          }
+      }}
+      >
+      {' '}
+      <Button
+          className={cx('home-btn')}
+          href='#'
+          size={'large'}
+      >
+          <HomeOutlined />
+          {session?.user?.userInfo.siteName}
+      </Button>
+      </ConfigProvider>
       {contextHolder}
-      <Content style={{ padding: '30px 48px' }}>
-        <h2>{tLbl('risk_assessment_add')}</h2>
+      <Content style={{ padding: '20px 48px' }}>
+        <h3>{tLbl('risk_assessment_add')}</h3>
         <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
         <ColoredLine text={tLbl('basic_information')}/>
         <Form

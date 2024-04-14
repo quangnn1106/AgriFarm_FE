@@ -44,13 +44,8 @@ import Link from 'next/link';
       }
     },
     {
-        title: 'Created date',
+        title: 'Ngày tạo',
         dataIndex: 'createdDate',
-        width: 'max-content',
-      },
-      {
-        title: 'Type',
-        dataIndex: 'type',
         width: 'max-content',
       },
     {
@@ -89,7 +84,7 @@ import Link from 'next/link';
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Download
+                    <ExclamationCircleOutlined /> Tải xuống
                   </Space>
                 </a>
               ),
