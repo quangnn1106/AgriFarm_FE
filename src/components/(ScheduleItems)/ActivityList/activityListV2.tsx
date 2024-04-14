@@ -314,7 +314,7 @@ export default function ActivityListV2(props: IProp) {
                   level={4}
                   underline
                 >
-                  {dayjs(selectedDate).format('DD/MM/YYYY')}
+                  {dayjs(selectedDate).add(-1, 'day').format('DD/MM/YYYY')}
                 </Typography.Title>
               </Space>
             </Flex>

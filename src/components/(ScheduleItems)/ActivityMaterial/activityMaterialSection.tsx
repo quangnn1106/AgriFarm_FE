@@ -141,7 +141,7 @@ export default function ActivityMaterialSection(props: IProps) {
           offset={2}
           span={10}
         >
-          <Descriptions title={'Material to use'} />
+          <Descriptions title={'Vật phẩm sử dụng'} />
         </Col>
         <Col span={8}></Col>
         <Col span={2}>
@@ -155,7 +155,8 @@ export default function ActivityMaterialSection(props: IProps) {
                   fontSize: 10
                 }}
               >
-                Click to find and add more
+                {/* Click to find and add more */}
+                Nhấn để tìm
               </div>
             }
             arrow={false}
@@ -200,19 +201,22 @@ export default function ActivityMaterialSection(props: IProps) {
     <Modal
       centered
       okType={'danger'}
+      okText={'Xác nhận'}
+      okButtonProps={{type:'primary'}}
+      cancelText={"Hủy bỏ"}
       open={true}
       onCancel={() => {
         setConfirmOpen(false);
         setSelectedMaterial(null);
       }}
       onOk={() => handleDelete(data)}
-      title={`Do you want remove ` + data.name}
+      title={`Bạn có muốn gỡ vật phẩm ` + data.name}
     ></Modal>
   );
 
   const columns: TableProps<ActivityMaterial>['columns'] = [
     {
-      title: 'Item',
+      title: 'Vật phẩm',
       dataIndex: 'Item',
       key: 'name',
       width: '45%',
@@ -235,7 +239,7 @@ export default function ActivityMaterialSection(props: IProps) {
     },
 
     {
-      title: 'Use Value',
+      title: 'Số lượng sử dụng',
       key: 'duration',
       dataIndex: 'duration',
       render: (_, record) => (

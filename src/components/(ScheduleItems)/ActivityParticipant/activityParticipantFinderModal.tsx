@@ -30,6 +30,27 @@ interface IProps {
   init: ActivityParticipant[];
 }
 
+const fakeData:ActivityParticipant[] = [
+  {
+    id: 'x',
+    name: "Nguyễn Văn An",
+    role :"x",
+    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+  },
+  {
+    id: 'y',
+    name: "Nguyễn Ngọc Bích",
+    role :"x",
+    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+  },
+  {
+    id: 'z',
+    name: "Nguyễn Văn Xoài",
+    role :"x",
+    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+  }
+]
+
 export default function ActivityParticipantFinderModal(props: IProps) {
   const { onClose, onSelected, type, init } = props;
 
@@ -49,7 +70,8 @@ export default function ActivityParticipantFinderModal(props: IProps) {
   };
 
   const handleSearch = async (val: string) => {
-    // console.log('key: ', val);
+    console.log('key: ', val);
+    
     if (val && val.trim().length > 0) {
       setIsLoading(true);
       const res = await getActivityParticipantService(http, val);
@@ -66,7 +88,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
           setList([...list, ...newList]);
         }
       }
-
+      // setList(fakeData);
       setIsLoading(false);
     }
   };
@@ -79,6 +101,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
     <>
       <Modal
         open
+        cancelText={'Hủy bỏ'}
         width={'60vw'}
         style={{
           minWidth: 700
@@ -88,7 +111,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
-            <Button onClick={() => handleConfirm()}>Confirm</Button>
+            <Button type='primary' onClick={() => handleConfirm()}>Xác nhận</Button>
           </>
         )}
       >
@@ -114,12 +137,13 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                 strong
                 underline
               >
-                Search
+                {/* Search */}
+                Tìm kiếm
               </Typography.Text>
             </Col>
             <Col span={19}>
               <Input
-                placeholder={'Find user name'}
+                placeholder={false?'Find user name':'Nhập tên người dùng'}
                 type='text'
                 //onClick={e => onSearch(e.currentTarget.value)}
                 onChange={e => onSearch(e.target.value)}
@@ -148,7 +172,10 @@ export default function ActivityParticipantFinderModal(props: IProps) {
               }}
             >
               {!isLoading && list.length === 0 && (
-                <Typography.Text type='secondary'>No land available!</Typography.Text>
+                <Typography.Text type='secondary'>
+                  {/* No land available! */}
+                  Hãy nhập để tìm người dùng
+                  </Typography.Text>
               )}
               {!isLoading && list.length > 0 && (
                 <Flex
@@ -185,9 +212,10 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                             alt=''
                             shape='square'
                             size={80}
+                            src={selectedItem?.img??""}
                           />
                           <Typography.Text strong>{e.name}</Typography.Text>
-                          <Button onClick={() => handleSelect(e)}>Select</Button>
+                          <Button onClick={() => handleSelect(e)}>Chọn</Button>
                         </Flex>
                       </>
                     );
@@ -199,7 +227,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
           </Flex>
           <Divider></Divider>
           <Col offset={1}>
-            <Descriptions title={'Your selected land:'} />
+            <Descriptions title={'Người dùng được chọn:'} />
           </Col>
           <Flex
             vertical
@@ -231,7 +259,10 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                 </div>
               </Flex>
             ) : (
-              <Typography typeof='secondary'>You did not select any land.</Typography>
+              <Typography typeof='secondary'>
+                {/* You did not select any land. */}
+                Bạn hãy chọn người dùng để xem trước
+                </Typography>
             )}
           </Flex>
         </Flex>

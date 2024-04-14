@@ -78,11 +78,12 @@ export default function ActivityLocationFinderModal(props: IProps) {
           minWidth: 700
         }}
         centered
+        cancelText={'Hủy bỏ'}
         onCancel={() => onClose()}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
-            <Button onClick={() => handleConfirm()}>Confirm</Button>
+            <Button type='primary' onClick={() => handleConfirm()}>Xác nhận</Button>
           </>
         )}
       >
@@ -108,12 +109,12 @@ export default function ActivityLocationFinderModal(props: IProps) {
                 strong
                 underline
               >
-                Search
+                TÌm kiếm
               </Typography.Text>
             </Col>
             <Col span={19}>
               <Input
-                placeholder={'Find farm land name'}
+                placeholder={'Nhập tên lô đất muốn tìm'}
                 type='text'
                 //onClick={e => onSearch(e.currentTarget.value)}
                 onChange={e => onSearch(e.target.value)}
@@ -142,7 +143,10 @@ export default function ActivityLocationFinderModal(props: IProps) {
               }}
             >
               {!isLoading && list.length === 0 && (
-                <Typography.Text type='secondary'>No land available!</Typography.Text>
+                <Typography.Text type='secondary'>
+                  {/* No land available! */}
+                  Hãy nhập tên để tìm kiếm
+                  </Typography.Text>
               )}
               {!isLoading && list.length > 0 && (
                 <Flex
@@ -181,7 +185,7 @@ export default function ActivityLocationFinderModal(props: IProps) {
                             size={80}
                           />
                           <Typography.Text strong>{e.name}</Typography.Text>
-                          <Button onClick={() => handleSelect(e)}>Select</Button>
+                          <Button onClick={() => handleSelect(e)}>Chọn</Button>
                         </Flex>
                       </>
                     );
@@ -193,7 +197,7 @@ export default function ActivityLocationFinderModal(props: IProps) {
           </Flex>
           <Divider></Divider>
           <Col offset={1}>
-            <Descriptions title={'Your selected land:'} />
+            <Descriptions title={'Lô đất bạn chọn:'} />
           </Col>
           <Flex
             vertical
@@ -225,7 +229,7 @@ export default function ActivityLocationFinderModal(props: IProps) {
                 </div>
               </Flex>
             ) : (
-              <Typography typeof='secondary'>You did not select any land.</Typography>
+              <Typography typeof='secondary'>Vui lòng chọn một lô đất để hiển thị.</Typography>
             )}
           </Flex>
         </Flex>

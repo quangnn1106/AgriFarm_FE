@@ -1,6 +1,6 @@
 import { Link } from '@/navigation';
 import { ActivityParticipant } from '@/services/Admin/Activities/Payload/response/activityResponse';
-import { PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -97,10 +97,13 @@ export default function ActivityParticipantSection(props: IProps) {
     <Modal
       centered
       okType={'danger'}
+      okText={"Xác nhận"}
+      cancelText={'Hủy bỏ'}
+      okButtonProps={{type:'primary'}}
       open={true}
       onCancel={() => setConfirmOpen(false)}
       onOk={() => handleDelete()}
-      title={`Do you want remove this user?`}
+      title={`Bạn có muốn gỡ người tham dự này khỏi tác vụ không?`}
     ></Modal>
   );
 
@@ -117,13 +120,10 @@ export default function ActivityParticipantSection(props: IProps) {
             //border: '1px solid black'
           }}
         >
-          {/* <Col span={24}>
-            <Descriptions title='Participants' />
-          </Col> */}
           <Col span={6}>
             <Flex
               style={{
-                borderInlineEnd: '2px solid ' + token.colorBgTextHover,
+                // borderInlineEnd: '2px solid ' + token.colorBgTextHover,
                 height: '100%',
                 paddingInline: 20
               }}
@@ -142,20 +142,14 @@ export default function ActivityParticipantSection(props: IProps) {
                   type='secondary'
                   strong
                 >
-                  Assigner
+                  {/* Assigner */}
+                  Người giao nhiệm vụ
                 </Typography.Text>
-                {/* <Button
-                onClick={()=>{
-                  setRoleType(2)
-                  setFindOpen(true)
-                }}
-                 type='primary'>
-                  <PlusOutlined />
-                </Button> */}
               </Flex>
               <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
+                  // marginTop:1,
                   maxHeight: 230,
                   overflow: 'auto',
                   padding: 10,
@@ -171,25 +165,41 @@ export default function ActivityParticipantSection(props: IProps) {
                   .map(e => (
                     <div key={'z'}>
                       <Popover
+                        showArrow={false}
+                        key={e.id}
                         content={() => {
                           return (
                             <>
                               <Flex
-                                gap={5}
+                                gap={15}
+                                justify='center'
                                 align='baseline'
                               >
-                                <Link href={'#'}>Go to detail</Link>
-                                {/* <Button type='link'>Remove</Button> */}
+                                {/* <Link href={'#'}>Go to detail</Link> */}
+                                <Link href={'#'}>
+                                  {e.name}
+                                  {/* Nguyễn Văn An */}
+                                </Link>
+                                {/* <Button
+                                  onClick={() => {
+                                    setSelectedUser(e);
+                                    setConfirmOpen(true);
+                                  }}
+                                  type='primary'
+                                  shape='circle'
+                                  danger
+                                >
+                                  <CloseOutlined />
+                                </Button> */}
                               </Flex>
                             </>
                           );
                         }}
-                        title={e.name}
+                        // title={e.name}
                       >
                         <Avatar
-                          key={e.id.toLowerCase().substring(0, 7)}
                           size={60}
-                          src={`#`}
+                          src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
                         />
                       </Popover>
                     </div>
@@ -219,7 +229,8 @@ export default function ActivityParticipantSection(props: IProps) {
                   type='secondary'
                   strong
                 >
-                  Inspector
+                  {/* Inspector */}
+                  Người giám sát
                 </Typography.Text>
                 <Button
                   shape='circle'
@@ -233,7 +244,7 @@ export default function ActivityParticipantSection(props: IProps) {
                   <PlusOutlined />
                 </Button>
               </Flex>
-              {/* <Flex
+              <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
                   maxHeight: 230,
@@ -244,60 +255,54 @@ export default function ActivityParticipantSection(props: IProps) {
                 wrap='wrap'
                 gap={20}
                 justify='flex-start'
-              > */}
-              <List
-                style={{
-                  //borderInlineEnd: '1px solid ' + token.colorBgMask
-                  maxHeight: 230,
-                  overflow: 'auto',
-                  padding: 10,
-                  width: '100%',
-                  minWidth:200
-                }}
-                grid={{ gutter: 16, column: 2}}
-                dataSource={list.filter(e => e.role === 'Inspector')}
-                renderItem={e => (
-                  <List.Item>
+                align='start'
+              >
+                {list
+                  .filter(e => e.role === 'Inspector')
+                  .map(e => (
                     <Popover
-                      key={'i' + e.id}
+                      showArrow={false}
+                      key={e.id}
                       content={() => {
                         return (
                           <>
                             <Flex
-                              gap={5}
+                              gap={15}
+                              justify='center'
                               align='baseline'
                             >
-                              <Link href={'#'}>Go to detail</Link>
+                              {/* <Link href={'#'}>Go to detail</Link> */}
+                              <Link href={'#'}>
+                                {/* {e.name} */}
+                                Nguyễn Văn An
+                              </Link>
                               <Button
                                 onClick={() => {
                                   setSelectedUser(e);
                                   setConfirmOpen(true);
                                 }}
-                                type='link'
+                                type='primary'
+                                shape='circle'
+                                danger
                               >
-                                Remove
+                                {/* Remove */}
+                                <MinusOutlined />
+                                {/* Gỡ */}
                               </Button>
                             </Flex>
                           </>
                         );
                       }}
-                      title={e.name}
+                      // title={e.name}
                     >
                       <Avatar
                         size={60}
-                        src={`#`}
+                        src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
                       />
                     </Popover>
-                  </List.Item>
-                )}
-              />
-              {/* {list
-                  .filter(e => e.role === 'Inspector')
-                  .map(e => (
-                    
-                  ))} */}
+                  ))}
+              </Flex>
             </Flex>
-            {/* </Flex> */}
           </Col>
           <Col span={10}>
             <Flex
@@ -320,7 +325,8 @@ export default function ActivityParticipantSection(props: IProps) {
                   type='secondary'
                   strong
                 >
-                  Follower
+                  {/* Follower */}
+                  Người thực hiện
                 </Typography.Text>
                 <Button
                   shape='circle'
@@ -335,7 +341,7 @@ export default function ActivityParticipantSection(props: IProps) {
                 </Button>
               </Flex>
 
-              {/* <Flex
+              <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
                   maxHeight: 230,
@@ -343,55 +349,56 @@ export default function ActivityParticipantSection(props: IProps) {
                   padding: 10,
                   width: '100%'
                 }}
-                justify='flex-start'
                 wrap='wrap'
                 gap={20}
-              > */}
-              <List
-                style={{
-                  //borderInlineEnd: '1px solid ' + token.colorBgMask
-                  maxHeight: 230,
-                  overflow: 'auto',
-                  padding: 10,
-                  width: '100%'
-                }}
-                grid={{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }}
-                dataSource={list.filter(e => e.role === 'Assignee')}
-                renderItem={e => (
-                  <List.Item>
+                justify='flex-start'
+                align='start'
+              >
+                {list
+                  .filter(e => e.role === 'Assignee')
+                  .map(e => (
                     <Popover
-                      key={'w' + e.id}
+                      showArrow={false}
+                      key={e.id}
                       content={() => {
                         return (
                           <>
                             <Flex
-                              gap={5}
+                              gap={15}
+                              justify='center'
                               align='baseline'
                             >
-                              <Link href={'#'}>Go to detail</Link>
+                              {/* <Link href={'#'}>Go to detail</Link> */}
+                              <Link href={'#'}>
+                                {e.name}
+                                {/* Nguyễn Văn An */}
+                              </Link>
                               <Button
                                 onClick={() => {
                                   setSelectedUser(e);
                                   setConfirmOpen(true);
                                 }}
-                                type='link'
+                                type='primary'
+                                shape='circle'
+                                danger
                               >
-                                Remove
+                                {/* Remove */}
+                                <MinusOutlined />
+                                {/* Gỡ */}
                               </Button>
                             </Flex>
                           </>
                         );
                       }}
-                      title={e.name}
+                      // title={e.name}
                     >
                       <Avatar
                         size={60}
-                        src={`#`}
+                        src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
                       />
                     </Popover>
-                  </List.Item>
-                )}
-              />
+                  ))}
+              </Flex>
             </Flex>
             {/* </Flex> */}
           </Col>

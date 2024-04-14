@@ -85,11 +85,14 @@ export default function ActivityLocationSection(props: IProps) {
   const confirmPopup = (
     <Modal
       centered
-      okType={confirmModal.okType ?? 'default'}
+      okType={'danger'}
+      okButtonProps={{type:'primary'}}
+      okText={'Xác nhận'}
+      cancelText={'Hủy bỏ'}
       open={true}
       onCancel={() => setConfirmOpen(false)}
       onOk={() => confirmModal.onOk()}
-      title={confirmModal.title}
+      title={"Bạn có muốn xóa khu vực hoạt động này khỏi tác vụ không?"}
     ></Modal>
   );
 
@@ -110,7 +113,7 @@ export default function ActivityLocationSection(props: IProps) {
             offset={2}
             span={12}
           >
-            <Descriptions title='Land' />
+            <Descriptions title='Lô đất thực hiện' />
           </Col>
         </Row>
         <Row
@@ -153,11 +156,19 @@ export default function ActivityLocationSection(props: IProps) {
                       shape='square'
                       size={150}
                     />
-                    <div>{locationDetail.name}</div>
+                    <div>Lô đất: <Typography.Text strong>
+                      {/* M02 */}
+                    
+                      {locationDetail.name}
+                    </Typography.Text>
+                      </div>
                   </Flex>
                 ) : (
                   <Flex>
-                    <Typography.Text type='secondary'>No location set</Typography.Text>
+                    <Typography.Text type='secondary'>
+                      {/* No location set */}
+                      Không có vị trí được chọn
+                      </Typography.Text>
                   </Flex>
                 ))}
               {isLoading && (
@@ -183,7 +194,8 @@ export default function ActivityLocationSection(props: IProps) {
                 block
               >
                 <PlusOutlined />
-                Add
+                {/* Add */}
+                Thêm
               </Button>
               <Button
                 disabled={!locationDetail}
@@ -194,7 +206,9 @@ export default function ActivityLocationSection(props: IProps) {
                 block
                 loading={isLoading}
               >
-                <SwapOutlined /> Change
+                <SwapOutlined /> 
+                {/* Change */}
+                Đổi
               </Button>
               <Button
                 loading={isLoading}
@@ -212,7 +226,8 @@ export default function ActivityLocationSection(props: IProps) {
                 block
               >
                 <CloseOutlined />
-                Remove
+                {/* Remove */}
+                Gỡ
               </Button>
             </Flex>
           </Col>
@@ -229,7 +244,7 @@ export default function ActivityLocationSection(props: IProps) {
                 strong
                 underline
               >
-                Go to view detail
+                {/* Go to view detail */}
               </Typography.Link>
             </Link>
           </Col>

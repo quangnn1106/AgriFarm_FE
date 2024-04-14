@@ -82,3 +82,19 @@ export const postActivitiesService: (
   );
   return res?.data as HttpResponseCommon<ActivityResponse>;
 };
+
+export const deleteActivitiesService: (
+  http: AxiosInstance,
+  id: string
+) => Promise<boolean> = async (http, id) => {
+  const res = await http.delete(
+    `${basePath}/delete`,
+    {
+      params:{
+        id: id
+      }
+    }
+    
+  );
+  return res?.status === 204;
+};

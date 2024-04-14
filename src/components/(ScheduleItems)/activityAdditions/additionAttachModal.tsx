@@ -95,6 +95,16 @@ export default function AdditionAttachModal(props: IProps) {
   // });
 
   const handleCreateHarvest = () => {};
+  const riskList = [
+    {
+      id: "74c81bad-13d6-4440-94e2-5a97c1bbbc44",
+      value: 'Đánh giá chất lượng đất'
+    },
+    {
+      id: "74c81bad-13d6-4440-94e2-5a97c1bbbc44",
+      value: 'Đánh giá chất lượng sản phẩm'
+    }
+  ]
 
   const handleSelect = async (data: Addition) => {
     switch (type) {
@@ -156,21 +166,21 @@ export default function AdditionAttachModal(props: IProps) {
           <>
             <Flex
             vertical>
-              <Descriptions title='Training Content'></Descriptions>
+              <Descriptions title='Nội dung tập huấn'></Descriptions>
               <Form.Item
                 //label=''
                 name={['addition', 'content']}
                 //rules={[{ required: true, message: 'Please input your email!' }]}
               >
                 <TextArea
-                  placeholder={'Content here'}
+                  placeholder={'nội dung'}
                   rows={4}
                   maxLength={500}
                   showCount
                   style={{ resize: 'none' }}
                 ></TextArea>
               </Form.Item>
-              <Descriptions title='Trainer Expert'></Descriptions>
+              <Descriptions title='Chuyên gia'></Descriptions>
               <Form.Item
                 name={['addition', 'expert']}
                 //rules={[{ required: true, message: 'Please input your email!' }]}
@@ -178,7 +188,7 @@ export default function AdditionAttachModal(props: IProps) {
                 <Select
                   //value={}
                   //onChange={hanldeChooseItem}
-                  placeholder='Select item type'
+                  placeholder='Chọn chuyên gia'
                   options={experts}
                 ></Select>
               </Form.Item>
@@ -188,7 +198,7 @@ export default function AdditionAttachModal(props: IProps) {
       case ASSESSMENT_ADDITION:
         return (
           <>
-          <Descriptions title='Risk Checklist'></Descriptions>
+          <Descriptions title='Bảng đánh giá'></Descriptions>
             <Form.Item
               // label=''
               name={['addition', 'checkList']}
@@ -197,8 +207,8 @@ export default function AdditionAttachModal(props: IProps) {
               <Select
                 //value={}
                 onChange={hanldeChooseItem}
-                placeholder='Select item type'
-                //options={checklists}
+                placeholder='Chọn bảng đánh giá'
+                options={riskList}
               ></Select>
             </Form.Item>
           </>
@@ -209,7 +219,7 @@ export default function AdditionAttachModal(props: IProps) {
             <Flex>
               {curActivity.location ? (
                 <Flex vertical>
-                  You choose harvest action for this location:
+                  Lô đất thu hoạch là
                   <Typography.Title level={3}>
                     {curActivity.location?.name}
                   </Typography.Title>
@@ -217,7 +227,7 @@ export default function AdditionAttachModal(props: IProps) {
               ) : (
                 <Space>
                   <Typography.Text type='secondary'>
-                    You must choose a land to harvest
+                    Bạn phải chọn lô đất mới có thể thu hoạch
                   </Typography.Text>
                 </Space>
               )}
@@ -347,11 +357,11 @@ export default function AdditionAttachModal(props: IProps) {
                     checked={true}
                     value={ASSESSMENT_ADDITION}
                   >
-                    Assessment
+                    Đánh giá
                   </Select.Option>
-                  <Radio.Button value={HARVEST_ADDITION}>Harvest</Radio.Button>
-                  <Radio.Button value={TRAINING_ADDITION}>Training</Radio.Button>
-                  <Radio.Button value={TREATMENT_ADDITION}>Treatment</Radio.Button>
+                  <Radio.Button value={HARVEST_ADDITION}>Thu hoạch</Radio.Button>
+                  <Radio.Button value={TRAINING_ADDITION}>Tập huấn</Radio.Button>
+                  <Radio.Button value={TREATMENT_ADDITION}>Xử lý</Radio.Button>
                 </Select>
               </Form.Item>
               <Flex

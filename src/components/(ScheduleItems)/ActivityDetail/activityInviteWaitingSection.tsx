@@ -50,7 +50,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
               justify='center'
             >
               <Typography.Text strong>
-                You have been assigned to this activity, do you want to join this?
+                Bạn được mời tham gia hoạt động này, xác nhận tham gia?
               </Typography.Text>
             </Flex>
           </Col>
@@ -65,7 +65,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 setIsAccept(1);
               }}
             >
-              <Typography.Text type='success'>Accept</Typography.Text>
+              <Typography.Text type='success'>Đồng ý</Typography.Text>
               <CheckSquareTwoTone twoToneColor='#8fce00' />
             </Button>
           </Col>
@@ -78,7 +78,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 setIsAccept(2);
               }}
             >
-              <Typography.Text type='danger'>Reject</Typography.Text>
+              <Typography.Text type='danger'>Từ chối</Typography.Text>
               <CloseSquareTwoTone twoToneColor='#d52727' />
             </Button>
           </Col>
@@ -94,14 +94,14 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 strong
                 type='success'
               >
-                Confirm to accept this activity?
+                Bạn xác nhận tham gia nhiệm vụ?
               </Typography.Text>
             ) : isAccept === 2 ? (
               <Typography.Text
                 strong
                 type='danger'
               >
-                Confirm to reject this activity?
+                Bạn xác nhận từ chối nhiệm vụ?
               </Typography.Text>
             ) : (
               'Confirm'
@@ -134,7 +134,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 type='secondary'
                 italic
               >
-                After you accept, you will join this activity.
+                {/* Sau đó */}
               </Typography.Text>
             </div>
           )}
@@ -144,7 +144,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 type='secondary'
                 italic
               >
-                After you reject, this activity detail will disappear.
+                {/* After you reject, this activity detail will disappear. */}
               </Typography.Text>
             </div>
           )}

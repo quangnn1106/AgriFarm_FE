@@ -4,13 +4,12 @@ import { useState } from 'react';
 import AdditionAttachModal from './additionAttachModal';
 import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 
-
-interface IProps{
-  activity: ActivityResponse
+interface IProps {
+  activity: ActivityResponse;
 }
 
 export default function ActivityTaskAdditionSection(props: IProps) {
-  const {activity}=props
+  const { activity } = props;
   const fakeItem = {
     value: 1,
     title: 'wqwqwq'
@@ -20,14 +19,13 @@ export default function ActivityTaskAdditionSection(props: IProps) {
   const [finderOpen, setFinderOpen] = useState(false);
 
   const handleDeleteDetail = () => {
-    setItem(null)
-    setDeleteOpen(false)
+    setItem(null);
+    setDeleteOpen(false);
   };
 
-  const handleAddDetail=(data:any)=>{
-    
-    setFinderOpen(false)
-  }
+  const handleAddDetail = (data: any) => {
+    setFinderOpen(false);
+  };
 
   const itemDetail = (
     <Flex
@@ -52,8 +50,22 @@ export default function ActivityTaskAdditionSection(props: IProps) {
           type='text'
           shape='circle'
         >
-          <CloseCircleTwoTone twoToneColor={'#e74040'} style={{ fontSize: '150%' }} />
+          <CloseCircleTwoTone
+            twoToneColor={'#e74040'}
+            style={{ fontSize: '150%' }}
+          />
         </Button>
+      </Flex>
+      <Flex
+        vertical
+        style={{ width: '100%', height: '100%' }}
+        justify='center'
+        align='center'
+      >
+        <Typography.Text strong>
+          Bạn đã chọn thu hoạch lô đất: {activity.location?.name}
+        </Typography.Text>
+        <Typography.Text strong>cho hoạt động này</Typography.Text>
       </Flex>
     </Flex>
   );
@@ -78,16 +90,22 @@ export default function ActivityTaskAdditionSection(props: IProps) {
             align='center'
           >
             <Typography.Text type='secondary'>
-              There no specific activity request attached.
+              Chưa có hoạt động nâng cao nào được đính kèm
             </Typography.Text>
-            <Button type='dashed' onClick={()=>setFinderOpen(true)}>Click to add more</Button>
+            <Button
+              type='dashed'
+              onClick={() => setFinderOpen(true)}
+            >
+              Nhấn để thêm
+            </Button>
           </Space>
         )}
       </Flex>
       {deleteOpen && (
         <Modal
           centered
-          title='Do you want delete this addition request?'
+          title='Bạn có muốn xóa bỏ hành động này?'
+          cancelText={'Hủy bỏ'}
           open={true}
           //onOk={()=>handleDeleteDetail()}
           onCancel={() => setDeleteOpen(false)}
@@ -96,21 +114,22 @@ export default function ActivityTaskAdditionSection(props: IProps) {
               <CancelBtn />
               <Button
                 type='primary'
-                style={{ background: "#e74040"}}
-                
+                style={{ background: '#e74040' }}
                 onClick={() => handleDeleteDetail()}
               >
-                Delete
+                Xác nhận
               </Button>
             </>
           )}
         ></Modal>
       )}
-      {finderOpen && <AdditionAttachModal
+      {finderOpen && (
+        <AdditionAttachModal
           curActivity={activity}
-          onSelected={()=>{}}
-          onClose={()=>setFinderOpen(false)}
-      />}
+          onSelected={() => {}}
+          onClose={() => setFinderOpen(false)}
+        />
+      )}
     </>
   );
 }
