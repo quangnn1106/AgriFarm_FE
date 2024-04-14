@@ -160,9 +160,9 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                             </Row>
                                                         </Col>
                                                         <Col span={8} style={{textAlign: 'right'}}>
-                                                            {item.checklistItemResponses[0].level == 1 ? (
+                                                            {item.levelRoute.split(",")[0] == "1" ? (
                                                                 <Tag color="red">{tLbl('major_must')}</Tag>
-                                                            ) : item.checklistItemResponses[0].level == 2 ? (
+                                                            ) : item.levelRoute.split(",")[0] == "2" ? (
                                                                 <Tag color="green">{tLbl('minor_must')}</Tag>
                                                             ) : (
                                                                 <Tag color="blue">{tLbl('recommandation')}</Tag>
@@ -174,13 +174,13 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                     <Divider type="vertical" style={{height: '100%'}} orientationMargin={90}/>
                                                 </Col>
                                                 <Col span={7} className={cxPage('col-right')}>
-                                                    {item.checklistItemResponses[0].result == 1 ? (
+                                                    {item.levelRoute.split(",")[1] == "1" ? (
                                                         <Radio.Group name="radiogroup" defaultValue={3}>
                                                             <Radio value={1}>Yes</Radio>
                                                             <Radio value={2}>No</Radio>
                                                             <Radio value={3}>N/A</Radio>
                                                         </Radio.Group>
-                                                    ) : item.checklistItemResponses[0].result == 2 ? (
+                                                    ) : item.levelRoute.split(",")[1] == "2" ? (
                                                         <TextArea
                                                             // value={value}
                                                             // onChange={(e) => setValue(e.target.value)}

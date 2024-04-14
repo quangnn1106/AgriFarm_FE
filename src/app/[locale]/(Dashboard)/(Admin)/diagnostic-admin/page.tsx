@@ -5,21 +5,19 @@ import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import styles from './disease.module.scss';
 import SearchConditionForm from './component/SearchCondition/searchConditionForm';
-import { Breadcrumb, Button, ConfigProvider, Flex, TablePaginationConfig } from 'antd';
+import { Breadcrumb, Button, ConfigProvider, Flex } from 'antd';
 import { PlusOutlined, ExportOutlined, HomeOutlined } from '@ant-design/icons';
 import TableComponent from './component/Table/table';
 import { diseaseModel } from './model/disease-model';
-import { fetchDiseaseDataForExport } from '@/services/Disease/exportDiseaseDiagnosesApi';
-import { fetchDiseaseData } from '@/services/Disease/diseaseDiagnosesApi';
+import { fetchDiseaseDataForExportAdmin } from '@/services/Disease/exportDiseaseDiagnosesApi';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import Link from 'next/link';
+import { getListLandAdminApi } from '@/services/Disease/getListLandApi';
+import { fetchDiseaseDataAdmin } from '@/services/Disease/diseaseDiagnosesApi';
 
-interface TableParams {
-    pagination?: TablePaginationConfig;
-}
 const cx = classNames.bind(styles);
 const DiseaseDiagnostic = () => {
     const [loading, setLoading] = useState(false);
@@ -32,40 +30,17 @@ const DiseaseDiagnostic = () => {
     const router = useRouter();
     const http = UseAxiosAuth();
     const { data: session, status } = useSession();
-    const [tableParams, setTableParams] = useState<TableParams>({
-      pagination: {
-        current: 1,
-        pageSize: 10,
-      },
-    });
+    const [listLand, setListLand] = useState<string[] | undefined>();
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
             try {
                 setLoading(true);
-                const pagination: TablePaginationConfig = {
-                    pageSize: 10,
-                    current: 1
+                const listLands = await getListLandAdmin(http, session?.user?.userInfo.siteId as string);
+                if (listLands != undefined) {
+                    const responseData = await fetchDiseaseDataAdmin(http,"","","", listLands);
+                    setApiData(responseData);
                 }
-                const responseData = await fetchDiseaseData(http,"","","", pagination.pageSize, pagination.current);
-                const normalizedData: diseaseModel[] = responseData['data'].map(
-                    (item: any, index: number) => ({
-                        key : item.id,
-                        no: index + 1,
-                        predictResult: item.plantDisease.diseaseName,
-                        description: item.description,
-                        feedback: item.feedback,
-                        date: item.createdDate,
-                    })
-                );
-                setApiData(normalizedData);
-                setTableParams({
-                    ...pagination,
-                    pagination: {
-                      ...pagination,
-                      total: responseData.pagination.totalRecord,
-                    },
-                  });
             } catch (error: unknown) {
                 // Assert the type of error to be an instance of Error
                 if (error instanceof Error) {
@@ -78,30 +53,25 @@ const DiseaseDiagnostic = () => {
             }
         };
         getData(http);
-    },[http]);
+    },[http, session?.user?.userInfo.siteId]);
 
-    const searchAction = async (pagination: TablePaginationConfig) => {
+    // get list land
+    const getListLandAdmin = async (http: AxiosInstance | null, siteId : string): Promise<string[] | undefined> =>  {
+        try {
+            const res = await getListLandAdminApi(http, siteId);
+            setListLand(res);
+            return res;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const searchAction = async () => {
         try {
             setLoading(true);
-            const responseData = await fetchDiseaseData(http, keyword, dateFrom, dateTo, pagination.pageSize, pagination.current);
-            const normalizedData: diseaseModel[] = responseData['data'].map(
-                (item: any, index: number) => ({
-                    key : item.id,
-                    no: index + 1 + (pagination.pageSize ?? 10) * ((pagination.current ?? 1) - 1),
-                    predictResult: item.plantDisease.diseaseName,
-                    description: item.description,
-                    feedback: item.feedback,
-                    date: item.createdDate,
-                })
-            );
-            setApiData(normalizedData);
-            setTableParams({
-                ...pagination,
-                pagination: {
-                  ...pagination,
-                  total: responseData.pagination.totalRecord,
-                },
-              });
+            if (listLand != undefined) {
+                const responseData = await fetchDiseaseDataAdmin(http, keyword, dateFrom, dateTo, listLand);
+                setApiData(responseData);
+            }
         } catch (error: unknown) {
             // Assert the type of error to be an instance of Error
             if (error instanceof Error) {
@@ -115,7 +85,7 @@ const DiseaseDiagnostic = () => {
     };
     const exportExcel = async () => {
         try {
-            const responseData = await fetchDiseaseDataForExport(http, keyword, dateFrom, dateTo);
+            const responseData = await fetchDiseaseDataForExportAdmin(http, keyword, dateFrom, dateTo, listLand);
             const binaryString = window.atob(responseData.data);
             const uint8Array = new Uint8Array(binaryString.length);
 
@@ -140,7 +110,7 @@ const DiseaseDiagnostic = () => {
         }
     };
     const handleDiagnoses = () => {
-        router.push("/sa/diagnostic/add");
+        router.push("/diagnostic-admin/add");
     }
     const handleKeyword = (e : any) => {
         setKeyword(e.target.value);
@@ -226,7 +196,7 @@ const DiseaseDiagnostic = () => {
                     {t('export_excel')}
                 </Button>
             </Flex>
-            <TableComponent data={apiData} loading={loading} searchAction={searchAction} tablePag={tableParams}/>
+            <TableComponent data={apiData} loading={loading} />
         </Content>
     </>
     );

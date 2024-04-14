@@ -5,8 +5,8 @@ import styles from './disease.module.scss';
 import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
-import getListLandApi from "@/services/Disease/getListLandApi";
-import { Breadcrumb, Button, Col, ConfigProvider, Row, Select, Spin, Tabs, TabsProps } from "antd";
+import { getListLandApi } from "@/services/Disease/getListLandApi";
+import { Breadcrumb, Button, Col, ConfigProvider, Empty, Row, Select, Spin, Tabs, TabsProps } from "antd";
 import { Input } from 'antd';
 import diseaseDiagnosesAddApi from "@/services/Disease/diseaseDiagnosesAddApi";
 import ModalComponent from "./component/modal/modal";
@@ -20,12 +20,17 @@ import axios from 'axios';
 import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
 
+interface positionDef {
+    lat: string;
+    long: string;
+}
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
-    const tCom = useTranslations('Common');
+    const tCom = useTranslations('common');
     const [listLand, setListLand] = useState<Array<landDef>>([]);
+    const [posiontionsLand, setPositionsLand] = useState<positionDef>();
     const [loadings, setLoadings] = useState<boolean>(false);
     const [selLand, setSelLand] = useState("");
     const [description, setDescription] = useState("");
@@ -35,16 +40,13 @@ const DiseaseDiagnosticAdd = () => {
     const [diagnoeseId, setDiagnoeseId] = useState("");
     const [plantDisease, setPlantDisease] = useState<plantDiseaseDef | null>(null);
     const [feedback, setFeedback] = useState("");
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
     const http = UseAxiosAuth();
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
     const [defaultActiveKey, setDefaultActiveKey] = useState<string>("");
 
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
-        getLocation();
     },[http, session?.user?.userInfo.siteId]);
     // get list land
     const getListLand = async (http: AxiosInstance | null, siteId : string) => {
@@ -55,23 +57,7 @@ const DiseaseDiagnosticAdd = () => {
             console.log(error)
         }
     }
-    
-    // location
-    const getLocation = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              setLatitude(position.coords.latitude);
-              setLongitude(position.coords.longitude);
-            },
-            error => {
-              console.error('Error getting geolocation:', error);
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-        }
-    };
+
     // Call api AI disease
     const submitAction = async () => {
         try {
@@ -99,7 +85,7 @@ const DiseaseDiagnosticAdd = () => {
                                 plantDiseaseId: element,
                                 description: description,
                                 feedback: "",
-                                location: `${latitude},${longitude}`,
+                                location: `${posiontionsLand?.lat},${posiontionsLand?.long}`,
                                 createBy: session?.user?.userInfo.id as string,
                                 landId: selLand,
                             };
@@ -154,7 +140,7 @@ const DiseaseDiagnosticAdd = () => {
                     
                 })
                 .catch((error : any) => {
-                    console.error(error);
+                    throw new Error(error);
             });
         } catch (error) {
             console.log(error);
@@ -169,6 +155,8 @@ const DiseaseDiagnosticAdd = () => {
         setMsgAdd("");
         setLoadings(false);
         setDiagnosticRs(false);
+        setDescription("");
+        setSelLand("");
     }
     const sendFeedback = async () => {
         try {
@@ -185,7 +173,14 @@ const DiseaseDiagnosticAdd = () => {
         setDescription(e.target.value);
     }
     const handleSelectLand = (value: string) => {
-        setSelLand(value);
+        const arrVal = value.split(",");
+        setSelLand(arrVal[0]);
+        setPositionsLand(
+            {
+                lat: arrVal[1],
+                long: arrVal[2]
+            }
+        );
     }
     const handleClose = () => {
         setDisplayModalAdd(false);
@@ -258,112 +253,118 @@ const DiseaseDiagnosticAdd = () => {
             <Content style={{ padding: '20px 48px' }}>
                 <h3 className={cx('disease__title')}>{t('disease_diagnostic')}</h3>
                 <Breadcrumb style={{ margin: '0px 24px 24px 24px' }} items={breadCrumb} />
-                {diagnosticRs == true && msgAdd == "" && plantDisease ? (
+                {diagnosticRs == true && msgAdd == "" ? (
                     <>
-                        <div className={cx('dd')}>
-                            <Row>
-                                <label className={cx('dd__label')}>{t('lbl_description')}</label>
-                            </Row>
-                            <Row className={cx('dd__row')}>
-                                <p className={cx('dd__content')}>{description}</p>
-                            </Row>
-                            <Spin spinning={loadings}>
-                            <div className={cx('dd__result')}>
-                                <h3 className={cx('dd__result--label')}>{t('diagnostic_result')}</h3>
-                                
-                                <Row className={cx('dd__row')}>
-                                    <Tabs defaultActiveKey={defaultActiveKey} items={itemsDisease} onChange={onChange} />
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <Col span={2}>
-                                        <label className={cx('dd__label')}>{t('lbl_disease_name')}</label>
-                                    </Col>
-                                    <Col span={12}>
-                                        <p className={cx('dd__content')}>{plantDisease.diseaseName}</p>
-                                    </Col>
-                                    <Col span={8}></Col>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <label className={cx('dd__label')}>{t('lbl_symptoms')}</label>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.symptoms}}></div>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <label className={cx('dd__label')}>{t('lbl_cause')}</label>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.cause}}></div>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <label className={cx('dd__label')}>{t('lbl_preventive_measures')}</label>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.preventiveMeasures}}></div>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <label className={cx('dd__label')}>{t('lbl_suggest')}</label>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.suggest}}></div>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <label className={cx('dd__label')}>{t('lbl_feedback')}</label>
-                                </Row>
-                                <Row className={cx('dd__row')}>
-                                    <TextArea onChange={handleFeedback} className={cx('dd__content')} rows={3} placeholder={t('lbl_feedback')} style={{width: "100%"}}/>
-                                </Row>
-                                <Row className={cx('dd__row')} style={{flexDirection: "row-reverse"}}>
-                                    <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            size="large"
-                                            className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
-                                            onClick={sendFeedback}
-                                            loading={loadings}
-                                        >   
-                                        {t('send_feedback')}
-                                    </Button>
-                                </Row>
-                            </div>
-                            </Spin>
-                        </div>
+                        {plantDisease && (
+                            <>
+                                <div className={cx('dd')}>
+                                    <Row>
+                                        <label className={cx('dd__label')}>{t('lbl_description')}</label>
+                                    </Row>
+                                    <Row className={cx('dd__row')}>
+                                        <p className={cx('dd__content')}>{description}</p>
+                                    </Row>
+                                    <Spin spinning={loadings}>
+                                    <div className={cx('dd__result')}>
+                                        <h3 className={cx('dd__result--label')}>{t('diagnostic_result')}</h3>
+                                        
+                                        <Row className={cx('dd__row')}>
+                                            <Tabs defaultActiveKey={defaultActiveKey} items={itemsDisease} onChange={onChange} />
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <Col span={2}>
+                                                <label className={cx('dd__label')}>{t('lbl_disease_name')}</label>
+                                            </Col>
+                                            <Col span={12}>
+                                                <p className={cx('dd__content')}>{plantDisease.diseaseName}</p>
+                                            </Col>
+                                            <Col span={8}></Col>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <label className={cx('dd__label')}>{t('lbl_symptoms')}</label>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.symptoms}}></div>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <label className={cx('dd__label')}>{t('lbl_cause')}</label>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.cause}}></div>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <label className={cx('dd__label')}>{t('lbl_preventive_measures')}</label>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.preventiveMeasures}}></div>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <label className={cx('dd__label')}>{t('lbl_suggest')}</label>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <div className="ck-content" dangerouslySetInnerHTML={{__html: plantDisease.suggest}}></div>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <label className={cx('dd__label')}>{t('lbl_feedback')}</label>
+                                        </Row>
+                                        <Row className={cx('dd__row')}>
+                                            <TextArea onChange={handleFeedback} className={cx('dd__content')} rows={3} placeholder={t('lbl_feedback')} style={{width: "100%"}}/>
+                                        </Row>
+                                        <Row className={cx('dd__row')} style={{flexDirection: "row-reverse"}}>
+                                            <Button
+                                                    type="primary"
+                                                    htmlType="submit"
+                                                    size="large"
+                                                    className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
+                                                    onClick={sendFeedback}
+                                                    loading={loadings}
+                                                >   
+                                                {t('send_feedback')}
+                                            </Button>
+                                        </Row>
+                                    </div>
+                                    </Spin>
+                                </div>
+                            </>
+                        )}
                     </>
                 ) : (
                     <>
-                        <div className={cx('dd')}>
-                            <Row className={cx('dd__row')}>
-                                <label className={cx('dd__label')}>{t('land_name')}</label>
-                            </Row>
-                            <Row>
-                                <Select 
-                                    disabled={loadings}
-                                    showSearch
-                                    placeholder={t('select_land')}
-                                    filterOption={filterOption}
-                                    options={listLand}
-                                    optionFilterProp="children"
-                                    style={{width: "40%"}}
-                                    onChange={handleSelectLand}
-                                />
-                            </Row>
-                            <Row className={cx('dd__row')}>
-                                <label className={cx('dd__label')}>{t('enter_description_disease')}</label>
-                            </Row>
-                            <Row>
-                                <TextArea onChange={handleInputDescription} disabled={loadings} rows={6} cols={7} placeholder={t('enter_description_disease')} style={{width: "70%"}}/>
-                            </Row>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                size="large"
-                                className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
-                                onClick={submitAction}
-                                loading={loadings}
-                            >   
-                            {t('save_btn')}
-                            </Button>
-                        </div>
+                        <Spin spinning={loadings}>
+                            <div className={cx('dd')}>
+                                <Row className={cx('dd__row')}>
+                                    <label className={cx('dd__label')}>{t('land_name')}</label>
+                                </Row>
+                                <Row>
+                                    <Select 
+                                        disabled={loadings}
+                                        showSearch
+                                        placeholder={t('select_land')}
+                                        filterOption={filterOption}
+                                        options={listLand}
+                                        optionFilterProp="children"
+                                        style={{width: "40%"}}
+                                        onChange={handleSelectLand}
+                                        notFoundContent= {<Empty description={tCom('no_data')}/>}
+                                    />
+                                </Row>
+                                <Row className={cx('dd__row')}>
+                                    <label className={cx('dd__label')}>{t('enter_description_disease')}</label>
+                                </Row>
+                                <Row>
+                                    <TextArea onChange={handleInputDescription} disabled={loadings} rows={6} cols={7} placeholder={t('enter_description_disease')} style={{width: "70%"}}/>
+                                </Row>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    size="large"
+                                    className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
+                                    onClick={submitAction}
+                                >   
+                                {t('save_btn')}
+                                </Button>
+                            </div>
+                        </Spin>
                     </>
                 )}
             </Content>

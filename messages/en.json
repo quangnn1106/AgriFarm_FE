@@ -276,7 +276,8 @@
     "page": "page",
     "all": "All",
     "btn_implement": "Implement",
-    "btn_result": "Result"
+    "btn_result": "Result",
+    "no_data": "No data"
   },
   "Services": {
     "RiskAsm": {
@@ -349,10 +350,25 @@
         "minor_must": "Minor must",
         "recommandation": " Recommandation",
         "btn_export_pdf": "Export PDF",
-        "btn_add_new": "Add new checklist"
+        "btn_add_new": "Add new checklist",
+        "checklist_create": "GlobalG.A.P Check list create",
+        "name": "Checklist name",
+        "palaceholder": "Please input %%ITEM%%",
+        "type_yes_no": "Yes no",
+        "type_text": "Text",
+        "order_no": "Order no",
+        "af_num": "AF Number",
+        "item_title": "Title",
+        "item_level": "Level",
+        "item_type": "Yes/No or Text",
+        "item_content": "Content",
+        "item_is_response": "Is Response"
       },
       "message": {
-        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?"
+        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?",
+        "msg_required": "Please input %%ITEM%%!",
+        "msg_add_fail": "Add checklist fail!",
+        "msg_add_success": "Add checklist success!"
       }
     },
     "SystemSetting" : {

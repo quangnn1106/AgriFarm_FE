@@ -5,7 +5,6 @@ import styles from '../disease.module.scss';
 import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
-import { getListLandApi } from "@/services/Disease/getListLandApi";
 import { Breadcrumb, Button, Col, ConfigProvider, Empty, Row, Select, Spin, Tabs, TabsProps } from "antd";
 import { Input } from 'antd';
 import diseaseDiagnosesAddApi from "@/services/Disease/diseaseDiagnosesAddApi";
@@ -19,13 +18,19 @@ import { useSession } from "next-auth/react";
 import axios from 'axios';
 import { HomeOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { getListLandApi } from "@/services/Disease/getListLandApi";
 
+interface positionDef {
+    lat: string;
+    long: string;
+}
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
     const tCom = useTranslations('common');
     const [listLand, setListLand] = useState<Array<landDef>>([]);
+    const [posiontionsLand, setPositionsLand] = useState<positionDef>();
     const [loadings, setLoadings] = useState<boolean>(false);
     const [selLand, setSelLand] = useState("");
     const [description, setDescription] = useState("");
@@ -35,8 +40,6 @@ const DiseaseDiagnosticAdd = () => {
     const [diagnoeseId, setDiagnoeseId] = useState("");
     const [plantDisease, setPlantDisease] = useState<plantDiseaseDef | null>(null);
     const [feedback, setFeedback] = useState("");
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
     const http = UseAxiosAuth();
     const { data: session, status } = useSession();
     const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
@@ -44,7 +47,6 @@ const DiseaseDiagnosticAdd = () => {
 
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
-        getLocation();
     },[http, session?.user?.userInfo.siteId]);
     // get list land
     const getListLand = async (http: AxiosInstance | null, siteId : string) => {
@@ -55,23 +57,6 @@ const DiseaseDiagnosticAdd = () => {
             console.log(error)
         }
     }
-    
-    // location
-    const getLocation = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              setLatitude(position.coords.latitude);
-              setLongitude(position.coords.longitude);
-            },
-            error => {
-              console.error('Error getting geolocation:', error);
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-        }
-    };
     // Call api AI disease
     const submitAction = async () => {
         try {
@@ -99,7 +84,7 @@ const DiseaseDiagnosticAdd = () => {
                                 plantDiseaseId: element,
                                 description: description,
                                 feedback: "",
-                                location: `${latitude},${longitude}`,
+                                location: `${posiontionsLand?.lat},${posiontionsLand?.long}`,
                                 createBy: session?.user?.userInfo.id as string,
                                 landId: selLand,
                             };
@@ -189,6 +174,12 @@ const DiseaseDiagnosticAdd = () => {
     const handleSelectLand = (value: string) => {
         const arrVal = value.split(",");
         setSelLand(arrVal[0]);
+        setPositionsLand(
+            {
+                lat: arrVal[1],
+                long: arrVal[2]
+            }
+        );
     }
     const handleClose = () => {
         setDisplayModalAdd(false);
@@ -220,7 +211,7 @@ const DiseaseDiagnosticAdd = () => {
             title: <Link href={`/`}>{tCom('home')}</Link>
         },
         {
-            title: <Link href={`/sa/diagnostic`}>{t('diagnostic')}</Link>
+            title: <Link href={`/diagnostic-admin`}>{t('diagnostic')}</Link>
         },
         {
             title: t('disease_diagnostic')

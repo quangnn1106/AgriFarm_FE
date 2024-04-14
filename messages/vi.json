@@ -124,7 +124,7 @@
     "approve": "Đã xử lý",
     "reject": "Từ chối",
     "lbl_feedback_content": "Nội dung phản hồi",
-    "lbl_user": "Người sử dụng (Id)",
+    "lbl_user": "Người sử dụng",
     "save_btn": "Lưu",
     "back_btn": "Quay về",
     "edit_btn": "Sửa",
@@ -276,7 +276,8 @@
     "page": "trang",
     "all": "Tất cả",
     "btn_implement": "Thực hiện",
-    "btn_result": "Kết quả"
+    "btn_result": "Kết quả",
+    "no_data": "Không có dữ liệu"
   },
   "Services": {
     "RiskAsm": {

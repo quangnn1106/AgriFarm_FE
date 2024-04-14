@@ -90,13 +90,13 @@ const SAdminSider = ({ path, visible }: Props) => {
           <FaClipboard />
         ),
         getItem(
-          <Link href={`/disease-info-detail`}>{t('rice_plant')}</Link>,
-          `/disease-info-detail`,
+          <Link href={`/sa/disease-info`}>{t('rice_plant')}</Link>,
+          `/sa/disease-info`,
           <GiHighGrass />
         ),
         getItem(
-          <Link href={`/diagnostic`}>{t('diagnostic')}</Link>,
-          `/diagnostic`,
+          <Link href={`/sa/diagnostic`}>{t('diagnostic')}</Link>,
+          `/sa/diagnostic`,
           <ClusterOutlined />
         )
         // getItem(

@@ -218,14 +218,12 @@ const CheckListInspection = () => {
                 cellPaddingBlock: 8,
                 headerSortHoverBg: '#F2F3F5',
                 borderColor: '#F2F3F5',
-                headerBg: '#F2F3F5',
                 rowHoverBg: '#F2F3F5'
               }
             }
           }}
         >
           <Table
-              // loading={loading}
               rowKey={(record) => record.key}
               dataSource={checkListData}
               columns={CheckListInspectionTableColumn()}
