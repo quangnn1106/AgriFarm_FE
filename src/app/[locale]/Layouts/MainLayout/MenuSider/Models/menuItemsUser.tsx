@@ -42,15 +42,17 @@ export function getItem(
 // Function to generate user information group
 export function GetUserInfoGroup(visible: boolean): MenuItem {
   const { data: session } = useSession();
-  const userRole = session?.user?.userInfo?.role as ROLES;
-  const userId = session?.user.userInfo.id
+  const userRole = session?.user?.userInfo?.role;
+  const userId = session?.user.userInfo.id;
 
   const t = useTranslations('Nav');
+
 
   return getItem(
     <>
       {!visible ? (
         <div>
+          {/* if admin */}
           <Link href={`/user-profile`}>
           <div
             className='d-flex'
