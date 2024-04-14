@@ -12,6 +12,8 @@ import {
   Table,
   TableProps,
   Tooltip,
+  Input,
+  Form,
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
@@ -19,7 +21,8 @@ import {
   HomeOutlined,
   PlusOutlined,
   MinusOutlined,
-  WarningOutlined
+  WarningOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
 import stylesSeedManagement from './seedStyle.module.scss';
@@ -39,6 +42,9 @@ import AddSeedFormDrawer from './component/AddSeedDrawer/add-seed-drawer';
 import UpdateSeedFormDrawer from './component/UpdateSeedDrawer/update-seed-drawer';
 import { deleteSeedApi } from '@/services/Admin/Seed/deleteSeedApi';
 
+interface SearchForm {
+  keyword: string
+}
 
 type Props = {};
 const SeedManagement = (props: Props) => {
@@ -58,6 +64,8 @@ const SeedManagement = (props: Props) => {
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
 
+  const [form] = Form.useForm<SearchForm>();
+
   // Navigation
   const router = useRouter();
   const pathName = usePathname();
@@ -74,15 +82,30 @@ const SeedManagement = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [seeds, setSeeds] = useState<Seed[] | undefined>([]);
 
-  const getListSeedsApi = async (http: AxiosInstance, siteId: string | undefined) => {
+  const getListSeedsApi = async (http: AxiosInstance, siteId: string | undefined, keySearch?: string) => {
     try {
-      const responseData = await getSeedsApi(siteId, http);
+      let responseData:any;
+      if(keySearch=="" || keySearch?.trim()=="" || keySearch==undefined || keySearch==null) {
+        responseData = await getSeedsApi(siteId, http);
+      } else {
+        responseData = await getSeedsApi(siteId, http, keySearch);
+      }
       setSeeds(responseData.data as Seed[]);
       setLoading(false);
+      onResetSearchSubmit();
     } catch (error) {
       console.error('Error calling API getListSeedsApi:', error);
     }
   };
+
+      //handle search
+      const [searchSubmit, setSearchSubmit] = useState(false);
+      const onSearchSubmit = () => {
+        setSearchSubmit(true)
+      }
+      const onResetSearchSubmit = () => {
+        setSearchSubmit(false)
+      }
 
 
   //handle load details
@@ -155,8 +178,8 @@ const SeedManagement = (props: Props) => {
   };
 
   useEffect(() => {
-    getListSeedsApi(http, siteId);
-  }, [http, siteId, openAddSeed, openSeedDetailDrawer, openSeedUpdateDrawer]);
+    getListSeedsApi(http, siteId, form.getFieldValue('keyword'));
+  }, [http, siteId, openAddSeed, openSeedDetailDrawer, openSeedUpdateDrawer, searchSubmit]);
 
   return (
     <>
@@ -203,7 +226,52 @@ const SeedManagement = (props: Props) => {
           {t('search_condition')}
         </Divider>
 
-        <FilterSection></FilterSection>
+        <ConfigProvider
+        theme={{
+          components: {
+            Form: {
+              itemMarginBottom: 8
+            }
+          }
+        }}
+      >
+        <Form
+          form={form}
+          name='basic'
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          autoComplete='off'
+          className={styleSeedManagement('margin-form-item')}
+          style={{padding: '0px 24px'}}
+          
+        >
+          <Form.Item
+            label={t('keyword')}
+            name='keyword'
+          >
+            <Input
+              placeholder={t('Input_search_text')}
+              style={{ width: '50%' }}
+            ></Input>
+          </Form.Item>
+          <Form.Item label=''>
+            <Flex
+              align='center'
+              justify='center'
+            >
+              <Button
+                htmlType='submit'
+                className={cx('bg-btn')}
+                icon={<SearchOutlined />}
+                onClick={onSearchSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
+        {/* <FilterSection></FilterSection> */}
         <Divider
           orientation='left'
           plain

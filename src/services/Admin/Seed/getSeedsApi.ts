@@ -12,12 +12,14 @@ export interface Pagination {
 
 const getSeedsApi: (
     siteId?: string | null,
-    http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Seed[]>> = async (siteId, http) => {
+    http?: AxiosInstance | null,
+    keySearch?: string
+    ) => Promise<HttpResponseCommon<Seed[]>> = async (siteId, http, keySearch) => {
     try {
         const res = await http?.get(`/seed/farm-seeds/get`, {
             params: {
-              siteId: siteId
+              siteId: siteId,
+              key: keySearch
             }, headers: {
                 pageSize: 40
               }

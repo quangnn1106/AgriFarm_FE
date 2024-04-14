@@ -12,6 +12,8 @@ import {
   Table,
   TableProps,
   Tooltip,
+  Form,
+  Input,
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
@@ -19,7 +21,8 @@ import {
   HomeOutlined,
   PlusOutlined,
   MinusOutlined,
-  WarningOutlined
+  WarningOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import styles from '../../adminStyle.module.scss';
 import stylesSupplierManagement from '../supplierStyle.module.scss';
@@ -39,6 +42,9 @@ import { SupplierTableColumns } from '../component/Table/colume-types';
 import UpdateSupplierDrawer from '../component/UpdateSupplierDrawer/update-supplier-drawer';
 import AddSupplierDrawer from '../component/CreateSupplierDrawer/create-supplier-drawer';
 
+interface SearchForm {
+  keyword: string
+}
 
 type Props = {};
 const SupplierManagement = (props: Props) => {
@@ -59,6 +65,8 @@ const SupplierManagement = (props: Props) => {
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
 
+  const [form] = Form.useForm<SearchForm>();
+
   // Navigation
   const router = useRouter();
   const pathName = usePathname();
@@ -75,16 +83,31 @@ const SupplierManagement = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [suppliers, setSuppliers] = useState<SupplierResponse[] | undefined>([]);
 
-  const getListSuppliersApi = async (http: AxiosInstance) => {
+  const getListSuppliersApi = async (http: AxiosInstance, keySearch?: string) => {
     try {
-      const responseData = await getSuppliersApi(http);
+      let responseData:any;
+      if(keySearch=="" || keySearch?.trim()=="" || keySearch==undefined || keySearch==null) {
+        responseData = await getSuppliersApi(http);
+      } else {
+        responseData = await getSuppliersApi(http, keySearch);
+      }
+      
       setSuppliers(responseData.data as SupplierResponse[]);
       setLoading(false);
+      onResetSearchSubmit();
     } catch (error) {
       console.error('Error calling API getListSuppliersApi:', error);
     }
   };
 
+    //handle search
+    const [searchSubmit, setSearchSubmit] = useState(false);
+    const onSearchSubmit = () => {
+      setSearchSubmit(true)
+    }
+    const onResetSearchSubmit = () => {
+      setSearchSubmit(false)
+    }
 
   //handle load details
   const [supplierId, setSupplierId] = useState<string>('');
@@ -161,8 +184,8 @@ const SupplierManagement = (props: Props) => {
   };
 
   useEffect(() => {
-    getListSuppliersApi(http);
-  }, [http, siteId, openAddSupplier, openSupplierDetailDrawer, openSupplierUpdateDrawer]);
+    getListSuppliersApi(http, form.getFieldValue('keyword'));
+  }, [http, siteId, openAddSupplier, openSupplierDetailDrawer, openSupplierUpdateDrawer, searchSubmit]);
 
   return (
     <>
@@ -209,7 +232,52 @@ const SupplierManagement = (props: Props) => {
           {t('search_condition')}
         </Divider>
 
-        <FilterSection></FilterSection>
+        <ConfigProvider
+        theme={{
+          components: {
+            Form: {
+              itemMarginBottom: 8
+            }
+          }
+        }}
+      >
+        <Form
+          form={form}
+          name='basic'
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          autoComplete='off'
+          className={styleSupplierManagement('margin-form-item')}
+          style={{padding: '0px 24px'}}
+          
+        >
+          <Form.Item
+            label={t('keyword')}
+            name='keyword'
+          >
+            <Input
+              placeholder={t('Input_search_text')}
+              style={{ width: '50%' }}
+            ></Input>
+          </Form.Item>
+          <Form.Item label=''>
+            <Flex
+              align='center'
+              justify='center'
+            >
+              <Button
+                htmlType='submit'
+                className={cx('bg-btn')}
+                icon={<SearchOutlined />}
+                onClick={onSearchSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
+        {/* <FilterSection></FilterSection> */}
         <Divider
           orientation='left'
           plain

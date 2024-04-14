@@ -6,10 +6,13 @@ import {
   Divider,
   Drawer,
   Flex,
+  Form,
+  FormInstance,
   Layout,
   Modal,
   Space,
   Table,
+  Input,
   TableProps,
   Tooltip,
   theme
@@ -19,11 +22,13 @@ import {
   HomeOutlined,
   PlusOutlined,
   MinusOutlined,
-  WarningOutlined
+  WarningOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
 import stylesPesticideManagement from './pesticideStyle.module.scss';
 import classNames from 'classnames/bind';
+import pesticideStyle from './pesticideStyle.module.scss';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from '@/navigation';
@@ -39,7 +44,9 @@ import { PesticideTableColumns } from './component/Table/column-type';
 import UpdatePesticideFormDrawer from './component/UpdatePesticideDrawer/update-pesticide-drawer';
 import AddPesticideFormDrawer from './component/AddPesticideDrawer/add-pesticide-drawer';
 
-
+interface SearchForm {
+  keyword: string
+}
 
 type Props = {};
 const PesticideManagement = (props: Props) => {
@@ -52,12 +59,16 @@ const PesticideManagement = (props: Props) => {
 
   //style
   const cx = classNames.bind(styles);
+  const st = classNames.bind(pesticideStyle);
   const stylePesticideManagement = classNames.bind(stylesPesticideManagement);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
+
+  const [form] = Form.useForm<SearchForm>();
+
 
   // Navigation
   const router = useRouter();
@@ -75,11 +86,18 @@ const PesticideManagement = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [pesticides, setPesticides] = useState<Pesticide[] | undefined>([]);
 
-  const getListPesticidesApi = async (http: AxiosInstance) => {
+  const getListPesticidesApi = async (http: AxiosInstance, keySearch?: string) => {
     try {
-      const responseData = await getPesticidesApi(http);
+      // let responseData = await getPesticidesApi(http);
+      let responseData:any;
+      if(keySearch=="" || keySearch?.trim()=="" || keySearch==undefined || keySearch==null) {
+        responseData = await getPesticidesApi(http);
+      } else {
+        responseData = await getPesticidesApi(http, keySearch);
+      }
       setPesticides(responseData.data as Pesticide[]);
       setLoading(false);
+      onResetSearchSubmit();
     } catch (error) {
       console.error('Error calling API getListPesticidesApi:', error);
     }
@@ -157,9 +175,18 @@ const PesticideManagement = (props: Props) => {
     setOpenAddPesticide(false);
   };
 
+  //handle search
+  const [searchSubmit, setSearchSubmit] = useState(false);
+  const onSearchSubmit = () => {
+    setSearchSubmit(true)
+  }
+  const onResetSearchSubmit = () => {
+    setSearchSubmit(false)
+  }
+
   useEffect(() => {
-    getListPesticidesApi(http);
-  }, [http, siteId, openAddPesticide, openPesticideDetailDrawer, openPesticideUpdateDrawer]);
+    getListPesticidesApi(http, form?.getFieldValue('keyword'));
+  }, [http, siteId, openAddPesticide, openPesticideDetailDrawer, openPesticideUpdateDrawer, searchSubmit]);
 
   return (
     <>
@@ -205,8 +232,52 @@ const PesticideManagement = (props: Props) => {
         >
           {t('search_condition')}
         </Divider>
-
-        <FilterSection></FilterSection>
+        <ConfigProvider
+        theme={{
+          components: {
+            Form: {
+              itemMarginBottom: 8
+            }
+          }
+        }}
+      >
+        <Form
+          form={form}
+          name='basic'
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          autoComplete='off'
+          className={st('margin-form-item')}
+          style={{padding: '0px 24px'}}
+          
+        >
+          <Form.Item
+            label={t('keyword')}
+            name='keyword'
+          >
+            <Input
+              placeholder={t('Input_search_text')}
+              style={{ width: '50%' }}
+            ></Input>
+          </Form.Item>
+          <Form.Item label=''>
+            <Flex
+              align='center'
+              justify='center'
+            >
+              <Button
+                htmlType='submit'
+                className={cx('bg-btn')}
+                icon={<SearchOutlined />}
+                onClick={onSearchSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
+        {/* <FilterSection form={form}></FilterSection> */}
         <Divider
           orientation='left'
           plain
