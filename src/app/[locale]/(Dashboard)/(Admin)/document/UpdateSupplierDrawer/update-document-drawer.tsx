@@ -45,7 +45,7 @@ import { AxiosInstance } from 'axios';
 import { CreateDocumentDto, DocumentResponse } from '../models/document-models';
 
 const props: UploadProps = {
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+  action: 'ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/upload',
   onChange({ file, fileList }) {
     if (file.status !== 'uploading') {
       console.log(file, fileList);
@@ -109,7 +109,6 @@ const UpdateDocumentDrawer = ({
     name: 'Tài liệu',
     fileLink: 'http://www.baidu.com/yyy.png',
     createdDate: '20-10-2024',
-    type: 'Tài liệu',
   };
 
   //Set selection document
@@ -220,21 +219,6 @@ const UpdateDocumentDrawer = ({
             label={
               <>
                 <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Create date
-              </>
-            }
-          >
-            <Input placeholder={t('Type_data')} />
-          </Form.Item>
-          <Form.Item
-            name='type'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <MenuOutlined style={{ marginRight: '0.5rem' }} /> Type
               </>
             }
           >

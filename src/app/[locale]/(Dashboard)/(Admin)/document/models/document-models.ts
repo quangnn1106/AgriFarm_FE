@@ -1,22 +1,20 @@
 export interface DocumentResponse {
     id: string
-    name: string
-    fileLink: string
+    title: string
+    description: string
+    url: string
     createdDate: string
-    type: string
     onDelete?: () => void;
     onDownload?: () => void
     onDetails?: () => void;
 }
 export interface CreateDocumentDto {
-    name: string
-    fileLink: string
-    createdDate: string
-    type: string
+    title: string
+    description: string
+    url: string
 }
 export interface UpdateDocumentDto {
-    name: string
-    fileLink: string
-    createdDate: string
-    type: string
+    title: string
+    description: string
+    url: string
 }

@@ -86,42 +86,36 @@ const DocumentManagement = (props: Props) => {
           "name": "Document 1",
           "fileLink": "http://www.example.com/1.png",
           "createdDate": "15/7/2023",
-          "type": "Tài liệu A"
       },
       {
           "id": "A1",
           "name": "Document 2",
           "fileLink": "http://www.example.com/2.png",
           "createdDate": "8/4/2022",
-          "type": "Tài liệu B"
       },
       {
           "id": "A2",
           "name": "Document 3",
           "fileLink": "http://www.example.com/3.png",
           "createdDate": "25/12/2024",
-          "type": "Tài liệu C"
       },
       {
           "id": "A3",
           "name": "Document 4",
           "fileLink": "http://www.example.com/4.png",
           "createdDate": "10/9/2023",
-          "type": "Tài liệu A"
       },
       {
           "id": "A4",
           "name": "Document 5",
           "fileLink": "http://www.example.com/5.png",
           "createdDate": "3/11/2022",
-          "type": "Tài liệu B"
       },
       {
           "id": "A5",
           "name": "Document 6",
           "fileLink": "http://www.example.com/6.png",
           "createdDate": "18/6/2024",
-          "type": "Tài liệu C"
       }
   ]
   );
