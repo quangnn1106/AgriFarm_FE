@@ -1,20 +1,45 @@
+import { checkInviteActivitiesService } from '@/services/Admin/Activities/activityService';
+import UseAxiosAuth from '@/utils/axiosClient';
 import {
   CheckSquareTwoTone,
   CloseSquareTwoTone,
   NotificationTwoTone
 } from '@ant-design/icons';
-import { Affix, Flex, Col, Typography, Button, Modal } from 'antd';
+import { Affix, Flex, Col, Typography, Button, Modal, message } from 'antd';
 import { useState } from 'react';
 
 interface IProps {
+  activityId: string;
   onAccept: () => void;
   onReject: () => void;
 }
 
 export default function ActivityInviteWaitingSection(props: IProps) {
-  const { onAccept, onReject } = props;
+  const { onAccept, onReject, activityId } = props;
   const [modalOn, setModalOn] = useState(false);
   const [isAccept, setIsAccept] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const http = UseAxiosAuth();
+
+  const handleSubmit = () => {
+    setIsFetching(true);
+    const rep = isAccept === 1;
+    checkInviteActivitiesService(http, activityId, rep)
+      .then(res => {
+        if (res) {
+          if (rep) {
+            onAccept();
+          } else {
+            onReject();
+          }
+        }else throw new Error()
+      })
+      .catch(err => {
+        message.error('Xảy ra lỗi, vui lòng thử lại!');
+      })
+      .finally(() => setIsFetching(false));
+  };
 
   return (
     <>
@@ -59,6 +84,8 @@ export default function ActivityInviteWaitingSection(props: IProps) {
             span={2}
           >
             <Button
+              loading={isFetching}
+              disabled={isFetching}
               type='text'
               onClick={() => {
                 setModalOn(true);
@@ -72,6 +99,8 @@ export default function ActivityInviteWaitingSection(props: IProps) {
           <Col span={1}></Col>
           <Col span={2}>
             <Button
+              loading={isFetching}
+              disabled={isFetching}
               type='text'
               onClick={() => {
                 setModalOn(true);
@@ -117,8 +146,9 @@ export default function ActivityInviteWaitingSection(props: IProps) {
               <Button
                 onClick={() => {
                   setModalOn(false);
-                  if (isAccept === 1) onAccept();
-                  if (isAccept === 2) onReject();
+                  // if (isAccept === 1) onAccept();
+                  // if (isAccept === 2) onReject();
+                  handleSubmit();
                   setIsAccept(0);
                 }}
                 type='primary'

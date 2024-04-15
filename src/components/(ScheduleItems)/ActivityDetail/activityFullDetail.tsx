@@ -54,12 +54,14 @@ interface IProps {
 export default function ActivityFullDetail(props: IProps) {
   const { item } = props;
 
+  console.log('Data: ', item);
+
   const viewDate = new Date();
   const farmRouter = useRouter();
   const [value, setValue] = useState(1);
   const [delOpen, setDelOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-
+  const [isWaiting, setIsWaiting] = useState(item.isWaiting)
   const [isLoading, setIsLoading] = useState(false);
   const path = usePathname();
   const { token } = theme.useToken();
@@ -143,9 +145,14 @@ export default function ActivityFullDetail(props: IProps) {
                 <Descriptions title='Thông tin chung' />
               </Col>
               <Col span={3}>
-                <Button type='link' onClick={()=>setEditOpen(true)}>
+              {item.editAble && (
+                <Button
+                  type='link'
+                  onClick={() => setEditOpen(true)}
+                >
                   <EditTwoTone twoToneColor={'#3660C1'} />
                 </Button>
+              )}
               </Col>
             </Row>
             <Flex
@@ -199,6 +206,7 @@ export default function ActivityFullDetail(props: IProps) {
         </Row>
         <Divider></Divider>
         <ActivityParticipantSection
+          editable={item.editAble ?? false}
           activityId={item.id}
           participants={item.participants ?? []}
         />
@@ -269,12 +277,14 @@ export default function ActivityFullDetail(props: IProps) {
             >
               {value === 1 && (
                 <ActivityMaterialSection
+                  editable={item.editAble ?? false}
                   activityId={item.id}
                   details={item.materials}
                 />
               )}
               {value === 2 && (
                 <ActivityLocationSection
+                  editable={item.editAble ?? false}
                   activityId={item.id}
                   detail={item.location as ActivityLocation}
                   setDetail={data => {
@@ -282,7 +292,12 @@ export default function ActivityFullDetail(props: IProps) {
                   }}
                 />
               )}
-              {value === 3 && <ActivityTaskAdditionSection activity={item} />}
+              {value === 3 && (
+                <ActivityTaskAdditionSection
+                  editable={item.editAble ?? false}
+                  activity={item}
+                />
+              )}
             </Flex>
           </Col>
         </Flex>
@@ -300,34 +315,46 @@ export default function ActivityFullDetail(props: IProps) {
           {/* Back to list */}
           Trở về trang quản lý
         </Button>
-        <Button
-          //size='large'
-          danger
-          type='primary'
-          onClick={() => setDelOpen(true)}
-        >
-          {/* Delete */}
-          Xóa
-        </Button>
-        <Button
-          //size='large'
-          disabled={item.isCompleted}
-          type='primary'
-          onClick={() => {}}
-        >
-          {/* Mark Complete */}
-          Hoàn thành
-        </Button>
+        {item.editAble && (
+          <>
+            <Button
+              //size='large'
+              danger
+              type='primary'
+              onClick={() => setDelOpen(true)}
+            >
+              {/* Delete */}
+              Xóa
+            </Button>
+            <Button
+              //size='large'
+              disabled={item.isCompleted}
+              type='primary'
+              onClick={() => {}}
+            >
+              {/* Mark Complete */}
+              Hoàn thành
+            </Button>
+          </>
+        )}
       </Flex>
       {delOpen && deleteConfirmModal()}
-      {editOpen && <EditActivityInfoModal detail={item} onClose={()=>setEditOpen(false)}/>}
-      {!true && (
+      {editOpen && (
+        <EditActivityInfoModal
+          detail={item}
+          onClose={() => setEditOpen(false)}
+        />
+      )}
+      {isWaiting && (
         <ActivityInviteWaitingSection
+          activityId={item.id}
           onAccept={() => {
             console.log('Accept task');
+            setIsWaiting(false)
           }}
           onReject={() => {
             console.log('Reject task');
+            farmRouter.push("/activities")
           }}
         />
       )}
