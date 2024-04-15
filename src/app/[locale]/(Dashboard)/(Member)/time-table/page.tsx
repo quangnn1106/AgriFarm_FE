@@ -8,7 +8,8 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
 
-const CalendarPage = () => {
+const CalendarPage = (props: any) => {
+  const defaultVal = props?.searchParams?.act;
   const [activities, setActivities] = useState<ActivityResponse[] | []>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const http = UseAxiosAuth();
@@ -31,6 +32,7 @@ const CalendarPage = () => {
   return (
     <>
       <Schedule
+        defaultValue={activities.find(e=>e.id === defaultVal)??null}
         allActivities={activities}
         isFetching={isFetching}
       />

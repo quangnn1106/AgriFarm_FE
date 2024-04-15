@@ -53,6 +53,7 @@ export default function CreateActivityV2() {
     postActivitiesService(http, data)
       .then(rs => {
         if (rs && rs.data) {
+          console.log('data: ', rs.data);
           const body = rs.data as ActivityResponse;
           console.log(body);
           message.success('Create success');
@@ -306,7 +307,7 @@ export default function CreateActivityV2() {
             style={{
               width: '100%',
               height: '100%',
-              minHeight:200,
+              minHeight: 200,
               border: '1px dashed',
               borderRadius: 20
             }}
@@ -332,7 +333,7 @@ export default function CreateActivityV2() {
                 justify='space-around'
                 style={{
                   width: '80%',
-                  height: '80%',
+                  height: '80%'
                   // border: '1px dashed',
                   // borderRadius: 20
                 }}
@@ -354,17 +355,28 @@ export default function CreateActivityV2() {
             vertical
           >
             <Space direction='vertical'>
-              <Button block>
+              <Button
+                block
+                disabled={!selectedLocation}
+                onClick={() => setSelectedLocation(null)}
+              >
                 <CloseOutlined style={{ color: 'red' }} />
                 Clear Location
               </Button>
-              <Button block>
+              <Button
+                block
+                onClick={() => setLocationOpen(true)}
+                disabled={!selectedLocation}
+              >
                 <SwapOutlined style={{ color: '#1480e0' }} />
                 Change Other
               </Button>
             </Space>
 
-            <Button disabled type='primary'>
+            <Button
+              disabled
+              type='primary'
+            >
               <ExpandAltOutlined />
               Preview Land
             </Button>

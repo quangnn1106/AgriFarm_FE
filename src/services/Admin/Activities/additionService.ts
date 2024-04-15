@@ -5,8 +5,10 @@ import {
   AssessmentDetail,
   TreatmentDetail,
   UsingDetail
-} from './Payload/request/activityAdditionRequest';
+} from './Payload/response/activityAdditionResponse';
 import { TrainingDetail } from '../Training/response/training.response';
+
+const basePath ="/additions"
 
 export const getUsingDetailService: (
   activityId: string,
@@ -84,11 +86,72 @@ export const getHarvestDetailService: (
     params: {
       activityId: activityId
     }
-    // headers: {
-    //   pageSize: 4,
-    //   pageNumber: 1
-    // }
+    
   });
-  //console.log('response staffsService: ', res);
+  return res?.data;
+};
+
+
+export const createHarvestActionService: (
+  http: AxiosInstance,
+  activityId: string,
+  payload: HarvestCreateRequest
+) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
+  const res = await http?.post(`${basePath}/"create-harvest`, 
+  payload,
+  {
+    params: {
+      activityId: activityId
+    }
+    
+  });
+  return res?.data;
+};
+
+export const createTrainingActionService: (
+  http: AxiosInstance,
+  activityId: string,
+  payload: TrainingCreateRequest
+) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
+  const res = await http?.post(`${'basePath'}/create-training`,
+  payload,
+  {
+    params: {
+      activityId: activityId
+    }
+    
+  });
+  return res?.data;
+};
+
+export const createTreatmentActionService:(
+  http: AxiosInstance,
+  activityId: string,
+  payload: TreatmentCreateRequest
+) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
+  const res = await http?.post(`${'basePath'}/create-treatment`, 
+  payload,
+  {
+    params: {
+      activityId: activityId
+    }
+    
+  });
+  return res?.data;
+};
+
+export const createAssessmentActionService: (
+  http: AxiosInstance,
+  activityId: string,
+  payload: AssessmentCreateRequest
+) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
+  const res = await http.post(`${'basePath'}/create-assessment`, 
+  payload,
+  {
+    params: {
+      activityId: activityId
+    }
+    
+  });
   return res?.data;
 };

@@ -109,23 +109,27 @@ export default function ExpertList(props: IProps) {
           vertical
           gap={20}
           justify='space-between'
-          style={{ margin: '1rem', width: '100%' }}
+          style={{ 
+            // margin: '1rem', 
+            width: '100%' }}
         >
           <Flex
-            style={{ marginLeft: '5%', width: '100%' }}
+            style={{ 
+              //marginLeft: '5%',
+               width: '100%' }}
             justify='center'
             align='center'
           >
-            <Col span={18}>
+            <Col span={22}>
               <Input type='text' />
             </Col>
-            <Col span={4}>
+            <Col span={2}>
               <Button type='primary'>Search</Button>
             </Col>
           </Flex>
 
           <Flex
-            style={{ paddingRight: '5vw' }}
+            style={{ paddingRight: '5vw', marginBottom:30 }}
             justify='end'
             align='right'
           >
@@ -148,7 +152,8 @@ export default function ExpertList(props: IProps) {
 
   const handleDetailClick = (content: Expert) => {
     setSelectedExpert(content);
-    setDetailOpen(true);
+    //setDetailOpen(true);
+    farmRouter.push('experts/sdas-dads-q243-asd412-das1')
   };
 
   const renderDetail = () => {
@@ -283,87 +288,7 @@ export default function ExpertList(props: IProps) {
     );
   };
 
-  const renderProfileSection = () => {
-    return (
-      <>
-        <Flex>
-          <Typography.Title level={3}>Preview</Typography.Title>
-        </Flex>
-        {/* <div style={{}}> */}
-        <Flex
-          vertical
-          align='center'
-          style={{
-            //margin: 20,
-            border: '1px solid black',
-            padding: 20,
-            borderRadius: 20,
-
-            //marginTop: 20,
-            height: '60vh',
-            overflowY: 'auto'
-          }}
-        >
-          {!!selectedExpert ? (
-            <>
-              <Flex justify='space-between'>
-                <Col span={10}>
-                  <Avatar
-                    shape='square'
-                    alt='avatar'
-                    src='#'
-                    size={150}
-                  />
-                </Col>
-
-                <Col span={10}>
-                  <Row
-                    gutter={[16, 16]}
-                    style={{ height: '80%' }}
-                  >
-                    <Col>
-                      <Descriptions title='Name' />
-                      {selectedExpert.fullName}
-                    </Col>
-                    <Col>
-                      <Descriptions title='Expert' />
-                      {selectedExpert.expertField}
-                    </Col>
-                  </Row>
-                </Col>
-              </Flex>
-              <Row gutter={[16, 16]}>
-                <Divider></Divider>
-
-                <Col>
-                  <Descriptions title='Description' />
-                  {selectedExpert.description ?? 'No thing to display'}
-                </Col>
-
-                <Col>
-                  <Descriptions title='Certificates'></Descriptions>
-                  {selectedExpert.certificates?.map((e, i) => (
-                    <Row key={i}>
-                      <Col span={12}>
-                        - <a href={e.reference}>{e.name}</a>
-                      </Col>
-                    </Row>
-                  ))}
-                  {!selectedExpert.certificates ||
-                    (selectedExpert.certificates.length === 0 && (
-                      <span>No certificate to display</span>
-                    ))}
-                </Col>
-              </Row>
-            </>
-          ) : (
-            <div><Typography.Text italic type='secondary'>Select an expert profile to preview</Typography.Text></div>
-          )}
-        </Flex>
-        {/* </div> */}
-      </>
-    );
-  };
+  
 
   return (
     <>
@@ -375,7 +300,7 @@ export default function ExpertList(props: IProps) {
         align='start'
         style={{ paddingInline: 30 }}
       >
-        <Col span={14}>
+        <Col span={20}>
           <Flex
             vertical
             align='center'
@@ -384,12 +309,12 @@ export default function ExpertList(props: IProps) {
             {renderListSection()}
           </Flex>
         </Col>
-        <Col span={8}>
+        {/* <Col span={8}>
           <Flex
             vertical
             style={{marginTop:'5vh'}}
           >{renderProfileSection()}</Flex>
-        </Col>
+        </Col> */}
       </Flex>
 
       {/* {detailOpen && selectedExpert && (

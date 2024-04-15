@@ -30,6 +30,7 @@ import {
   DeleteTwoTone,
   FireTwoTone,
   HourglassTwoTone,
+  PlusOutlined,
   PlusSquareTwoTone,
   PushpinTwoTone,
   RightOutlined,
@@ -122,8 +123,6 @@ export default function ActivityListV2(props: IProp) {
     }
   }, [selectedDate]);
 
-  
-
   const ActivitiesCalendar = () => {
     const handleDateClick = (info: DateClickArg) => {
       const calApi = calendarRef.current?.getApi();
@@ -191,7 +190,7 @@ export default function ActivityListV2(props: IProp) {
           events={monthView.map(e => ({
             title: `${e.activityCount} activity`,
             start: e.date,
-            allDay:true
+            allDay: true
           }))}
           //eventBackgroundColor='#1480e0'
           eventInteractive={false}
@@ -260,7 +259,6 @@ export default function ActivityListV2(props: IProp) {
           <Col
             offset={1}
             span={6}
-            
           >
             <Flex
               vertical
@@ -268,50 +266,57 @@ export default function ActivityListV2(props: IProp) {
               justify='center'
               style={{
                 width: '100%',
-                height:'25%',
-                overflow:'hidden',
-                marginBlockEnd:20,
-                border:'1px solid',
-                borderRadius:10
+                height: '25%',
+                overflow: 'hidden',
+                marginBlockEnd: 20,
+                border: '1px solid',
+                borderRadius: 10
               }}
             >
-              <Space align='baseline'>
-                <CalendarTwoTone style={{ fontSize: '150%' }} />
-                <Typography.Title
-                  level={4}
-                  underline
-                >
-                  {dayjs(selectedDate).format('DD/MM/YYYY')}
-                </Typography.Title>
-              </Space>
               <Flex
                 gap={10}
                 align='center'
-                justify='center'
+                justify='start'
                 style={{
-                  //width: '80%',
+                  width: '90%',
                   border: `1px solid ${token.colorBorderSecondary}`,
                   borderRadius: 10,
                   padding: 10,
                   backgroundColor: `${token.colorBorderSecondary}`
                 }}
               >
-                <Button onClick={() => farmRouter.push('/activities/add')}>
-                  <PlusSquareTwoTone
-                    style={{ fontSize: '150%' }}
-                    twoToneColor={'#60c136'}
-                  />
+                <Button
+                  type='primary'
+                  block
+                  onClick={() => farmRouter.push('/activities/add')}
+                >
+                  <Space align='center'>
+                    <PlusOutlined
+                      style={{ fontSize: '150%' }}
+                      twoToneColor={'#60c136'}
+                    />{' '}
+                    New Activity
+                  </Space>
                 </Button>
-                <Button>
+                {/* <Button>
                   <DeleteTwoTone
                     style={{ fontSize: '150%' }}
                     twoToneColor={'#e74040'}
                   />
-                </Button>
-                <Button>
+                </Button> */}
+                {/* <Button>
                   <AppstoreOutlined style={{ fontSize: '150%' }} />
-                </Button>
+                </Button> */}
               </Flex>
+              <Space align='baseline'>
+                <CalendarTwoTone style={{ fontSize: '150%' }} />
+                <Typography.Title
+                  level={4}
+                  underline
+                >
+                  {dayjs(selectedDate).add(-1, 'day').format('DD/MM/YYYY')}
+                </Typography.Title>
+              </Space>
             </Flex>
 
             <Flex
@@ -366,7 +371,7 @@ export default function ActivityListV2(props: IProp) {
                       >
                         <Col
                           offset={1}
-                          span={4}
+                          span={5}
                         >
                           <Typography.Text strong>
                             {dayjs(item.start).format('HH:mm')}
@@ -379,7 +384,7 @@ export default function ActivityListV2(props: IProp) {
                           <Button
                             onClick={() => {
                               //setSelectedActivity(item);
-                              farmRouter.push(`/activities/${item.id}`)
+                              farmRouter.push(`/activities/${item.id}`);
                             }}
                           >
                             View
