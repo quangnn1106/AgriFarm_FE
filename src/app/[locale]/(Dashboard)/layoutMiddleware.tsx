@@ -25,11 +25,25 @@ export default function DashBoardLayout({ children }: Props) {
     switch (userRole) {
       case ROLES.SUPER_ADMIN:
         console.log('return <LayoutRoleSA>{children}</LayoutRoleSA>;');
-
+        if (status === 'loading') {
+          return (
+            <Loader
+              fullScreen
+              spinning
+            />
+          );
+        }
         return <LayoutSuperAdmin>{children}</LayoutSuperAdmin>;
       case ROLES.ADMIN:
         console.log('return <LayoutAdmin>{children}</LayoutAdmin>;');
-
+        if (status === 'loading') {
+          return (
+            <Loader
+              fullScreen
+              spinning
+            />
+          );
+        }
         return <LayoutAdmin>{children}</LayoutAdmin>;
       case ROLES.MEMBER:
         return <LayoutMember>{children}</LayoutMember>;
