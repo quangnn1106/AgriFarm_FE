@@ -6,10 +6,12 @@ import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/a
 
 interface IProps {
   activity: ActivityResponse;
+
+  editable: boolean;
 }
 
 export default function ActivityTaskAdditionSection(props: IProps) {
-  const { activity } = props;
+  const { activity, editable } = props;
   const fakeItem = {
     value: 1,
     title: 'wqwqwq'
@@ -28,23 +30,13 @@ export default function ActivityTaskAdditionSection(props: IProps) {
   };
 
   const itemDetail = (
-    <Flex
-      vertical
-      align='center'
-      style={{
-        width: '100%',
-        height: '100%',
-        //minWidth:500,
-        minHeight: 300,
-        border: '1px solid black',
-        borderRadius: 20
-      }}
-    >
+    <>
       <Flex
         style={{ width: '100%', paddingInline: 10, paddingBlockStart: 10 }}
         justify='end'
         align='center'
       >
+        {editable && (
         <Button
           onClick={() => setDeleteOpen(true)}
           type='text'
@@ -55,6 +47,7 @@ export default function ActivityTaskAdditionSection(props: IProps) {
             style={{ fontSize: '150%' }}
           />
         </Button>
+        )}
       </Flex>
       <Flex
         vertical
@@ -62,12 +55,12 @@ export default function ActivityTaskAdditionSection(props: IProps) {
         justify='center'
         align='center'
       >
-        <Typography.Text strong>
-          Bạn đã chọn thu hoạch lô đất: {activity.location?.name}
-        </Typography.Text>
-        <Typography.Text strong>cho hoạt động này</Typography.Text>
+        <Typography.Title level={4}>
+          Thu hoạch lô đất: <Typography.Text mark>{activity.location?.name}</Typography.Text>
+        </Typography.Title>
+        <Typography.Text strong>được chọn cho hoạt động này</Typography.Text>
       </Flex>
-    </Flex>
+    </>
   );
 
   return (
@@ -82,24 +75,40 @@ export default function ActivityTaskAdditionSection(props: IProps) {
         align='center'
         justify='center'
       >
-        {item ? (
-          itemDetail
-        ) : (
-          <Space
-            direction='vertical'
-            align='center'
-          >
-            <Typography.Text type='secondary'>
-              Chưa có hoạt động nâng cao nào được đính kèm
-            </Typography.Text>
-            <Button
-              type='dashed'
-              onClick={() => setFinderOpen(true)}
+        <Flex
+          vertical
+          justify='center'
+          align='center'
+          style={{
+            width: '100%',
+            height: '100%',
+            //minWidth:500,
+            minHeight: 300,
+            border: '1px solid black',
+            borderRadius: 20
+          }}
+        >
+          {item ? (
+            itemDetail
+          ) : (
+            <Space
+              direction='vertical'
+              align='center'
             >
-              Nhấn để thêm
-            </Button>
-          </Space>
-        )}
+              <Typography.Text type='secondary'>
+                Chưa có hoạt động nâng cao nào được đính kèm
+              </Typography.Text>
+              {editable && (
+              <Button
+                type='dashed'
+                onClick={() => setFinderOpen(true)}
+              >
+                Nhấn để thêm
+              </Button>
+              )}
+            </Space>
+          )}
+        </Flex>
       </Flex>
       {deleteOpen && (
         <Modal

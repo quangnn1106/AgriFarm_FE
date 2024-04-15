@@ -19,7 +19,7 @@ import Search from 'antd/es/input/Search';
 
 const fakeData: FarmProductResponse[] = Array.from({ length: 10 }, (_, i) => ({
   id: 'asdis' + i * 5 + i * 8,
-  name: 'p0' + i,
+  name: 'Gạo ' + i+1,
   quantity: 100 + 23 * i,
   seedRef: {
     id: 'asdis' + i * 4 + i * 9,
@@ -44,14 +44,15 @@ export default function ProductList() {
         // console.log(expanded);
       },
       defaultExpandAllRows: false,
-      expandedRowRender: record => <ProductionDetailList productId={record.id} />
+      expandedRowRender: record => <ProductionDetailList productId={record.id}
+      productions={[]} />
       // rowExpandable: (record) => record.id % 2 === 0,
     };
   }, [expanded]);
 
   const columns: TableColumnsType<FarmProductResponse> = [
     {
-      title: 'Name',
+      title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
       width: '50%',
@@ -82,7 +83,7 @@ export default function ProductList() {
       )
     },
     {
-      title: 'Stock',
+      title: 'Lưu giữ trong kho',
       dataIndex: 'quantity',
       key: 'quantity',
       render: (_, record) => (
@@ -98,16 +99,16 @@ export default function ProductList() {
     //     <Space>{dayjs(record.)}</Space>
     // </>) },
     {
-      title: 'Action',
+      title: 'Chi tiết',
       key: 'operation',
-      render: () => <a onClick={() => farmRouter.push('/products/id')}>Detail</a>
+      render: () => <a onClick={() => farmRouter.push('/products/id')}>Xem</a>
     }
   ];
 
   return (
     <>
       <Divider orientation='left'>
-        <Typography.Title level={3}>Product List</Typography.Title>
+        <Typography.Title level={3}>Danh sách sản phẩm</Typography.Title>
       </Divider>
 
       <Flex

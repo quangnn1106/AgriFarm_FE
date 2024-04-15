@@ -18,6 +18,7 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { ProductionDetailList } from '../ProductList/productionDetailList';
+import { PushpinTwoTone } from '@ant-design/icons';
 
 interface IProps {
   detail: FarmProductResponse;
@@ -34,7 +35,7 @@ export default function FullProductDetail(props: IProps) {
   useEffect(() => {
     setSeed({
       id: '4994-asdasd043-32432-sadas',
-      name: 'ABC',
+      name: 'Gạo Đài Loan',
       description: 'asdasd jdjadjasjdajd kakjdkajdajsdj'
     });
   }, []);
@@ -53,13 +54,16 @@ export default function FullProductDetail(props: IProps) {
           }}
         >
           <Flex
-            //vertical
-            align='center'
+            vertical
+            align='start'
             justify='flex-start'
             //gap={20}
-            style={{ height: 100, width: '100%', border: '1px solid', borderRadius: 10 }}
+            style={{ height: 10, width: '100%', 
+            //border: '1px solid', 
+            //borderRadius: 10 
+          }}
           >
-            <Col
+            {/* <Col
               offset={4}
               span={7}
             >
@@ -68,15 +72,15 @@ export default function FullProductDetail(props: IProps) {
                 shape='square'
                 size={80}
               />
-            </Col>
+            </Col> */}
             <Col
-              offset={3}
-              span={7}
+              //offset={3}
+              span={10}
             >
-              <Typography.Text strong>{item.name}</Typography.Text>
+              <Typography.Text strong><PushpinTwoTone />{item.name}</Typography.Text>
             </Col>
           </Flex>
-          <Flex
+          {/* <Flex
             style={{ width: '100' }}
             justify='end'
           >
@@ -84,9 +88,9 @@ export default function FullProductDetail(props: IProps) {
               type='link'
               onClick={() => farmRouter.push('')}
             >
-              {'Go to seed detail page'}
-            </Button>
-          </Flex>
+              {/* {'Go to seed detail page'} */}
+            {/* </Button> */}
+          {/* </Flex> */}
         </Flex>
       </>
     );
@@ -95,7 +99,7 @@ export default function FullProductDetail(props: IProps) {
   return (
     <>
       <Divider orientation='left'>
-        <Typography.Title level={3}>{'Product detail'}</Typography.Title>
+        <Typography.Title level={3}>{'Chi tiết sản phẩm'}</Typography.Title>
       </Divider>
       <Flex
         vertical
@@ -141,7 +145,7 @@ export default function FullProductDetail(props: IProps) {
                   alt={detail.name}
                 /> */}
                 <Avatar
-                  src={!!detail.img ? '/../' + detail.img : '#'}
+                  src={!!detail.img ? '/../' + detail.img : 'https://gaosachsonghau.com/upload/images/gao-dai-loan.jpg'}
                   alt={detail.name}
                   shape='square'
                   size={400}
@@ -163,19 +167,22 @@ export default function FullProductDetail(props: IProps) {
                 }}
               >
                 <Flex>
-                  <Descriptions title={'Product name'}>
-                    <Typography.Text>{detail.name}</Typography.Text>
+                  <Descriptions title={'Tên sản phẩm'}>
+                    <Typography.Text>
+                      {/* {detail.name} */}
+                      Gạo Đài Loan
+                      </Typography.Text>
                   </Descriptions>
                 </Flex>
                 <Flex>
-                  <Descriptions title={'Stock'}>
+                  <Descriptions title={'Lưu giữ'}>
                     <Typography.Text>
                       {detail.quantity}
                       {detail.unit}
                     </Typography.Text>
                   </Descriptions>
                 </Flex>
-                <Descriptions title={'Rice seed'} />
+                <Descriptions title={'Giống tham chiếu'} />
                 {seed && SeedInfoSection(seed)}
               </Flex>
             </Col>
@@ -192,7 +199,7 @@ export default function FullProductDetail(props: IProps) {
             >
               <Descriptions title={'Description'} />
               <Typography.Text>
-                {seed.description}
+                {/* {seed.description} */}
                 Rice is a cereal grain, and in its domesticated form is the staple food
                 for over half of the worlds human population, particularly in Asia and
                 Africa, due to the vast amount of soil that is able to grow rice. Rice is
@@ -228,7 +235,10 @@ export default function FullProductDetail(props: IProps) {
               height: '80%'
             }}
           >
-            <ProductionDetailList productId='sasd' />
+            <ProductionDetailList productId='sasd' 
+            productions={[]}
+              productName='Gạo Đài Loan'
+            />
           </div>
         </Flex>
         <Flex

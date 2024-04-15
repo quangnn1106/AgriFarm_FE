@@ -6,18 +6,7 @@ export interface ActivityResponse {
   };
   location?: ActivityLocation;
   materials: ActivityMaterial[]
-  // workers:
-  //   | {
-  //       id?: string;
-  //       name?: string;
-  //     }[]
-  //   | [];
-  // inspectors:
-  //   | {
-  //       id?: string;
-  //       name?: string;
-  //     }[]
-  //   | [];
+  isWaiting: boolean,
   participants?:ActivityParticipant[]
   tag?: string;
   title?: string;
@@ -26,6 +15,7 @@ export interface ActivityResponse {
   start: Date;
   end: Date;
   addition?: Addition;
+  editAble?: boolean
 }
 
 export interface ActivityByMonthResponse {

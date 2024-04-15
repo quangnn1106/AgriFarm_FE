@@ -5,10 +5,12 @@ import {
   TREATMENT_ADDITION,
   HARVEST_ADDITION
 } from '@/constants/additionType';
+import { createAssessmentActionService, createHarvestActionService, createTrainingActionService, createTreatmentActionService } from '@/services/Admin/Activities/additionService';
 import {
   ActivityResponse,
   Addition
 } from '@/services/Admin/Activities/Payload/response/activityResponse';
+import riskAssessmentListMasterApi from '@/services/RiskAssessment/riskAssessmentListMasterApi';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useDebounceSearch } from '@/utils/debounceSearch';
 import { getPaginationResponse } from '@/utils/paginationHelper';
@@ -31,7 +33,7 @@ import {
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import TextArea from 'antd/es/input/TextArea';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IProps {
   curActivity: ActivityResponse;
@@ -84,9 +86,10 @@ export default function AdditionAttachModal(props: IProps) {
   const [selectedItem, setSelectedItem] = useState<Addition | null>(null);
   const [confirmable, setConfirmable] = useState(true);
   const [list, setList] = useState<Addition[]>([]);
+  const [risks, setRisks] = useState<Addition[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const http = UseAxiosAuth();
-  const form = useForm();
+  const [form]= useForm();
   // const [page, setPage] = useState<PaginationResponse>({
   //   CurrentPage: 1,
   //   PageSize: 0,
@@ -94,17 +97,38 @@ export default function AdditionAttachModal(props: IProps) {
   //   TotalPages: 1
   // });
 
+  const fetchRisk = async () => {
+    setIsLoading(true);
+    try {
+      const responseData = await riskAssessmentListMasterApi(http, {
+        perPage: 10,
+        pageId: 1
+      });
+
+      console.log(responseData)
+
+    } catch (e) {
+      console.log("fetch error")
+    }
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // fetchRisk()
+  }, []);
+
   const handleCreateHarvest = () => {};
   const riskList = [
     {
-      id: "74c81bad-13d6-4440-94e2-5a97c1bbbc44",
+      id: '74c81bad-13d6-4440-94e2-5a97c1bbbc44',
       value: 'Đánh giá chất lượng đất'
     },
     {
-      id: "74c81bad-13d6-4440-94e2-5a97c1bbbc44",
+      id: '74c81bad-13d6-4440-94e2-5a97c1bbbc44',
       value: 'Đánh giá chất lượng sản phẩm'
     }
-  ]
+  ];
 
   const handleSelect = async (data: Addition) => {
     switch (type) {
@@ -157,15 +181,60 @@ export default function AdditionAttachModal(props: IProps) {
     // }
   };
 
-  const handleConfirm = () => {};
+  const handleConfirm =  () => {
+    setIsLoading(true)
+    const data =form.getFieldsValue()
+    switch(type){
+      case TREATMENT_ADDITION:
+        
+        createTreatmentActionService(http, curActivity.id, {
+          isWasteProcess: false,
+
+          method: "ssss"
+        }).then(res=>{
+
+        }).catch(err=>{
+
+        })
+        break;
+      case HARVEST_ADDITION:
+        createHarvestActionService(http, curActivity.id, {
+          productionId: "x"
+        }).then(res=>{
+
+        }).catch(err=>{
+
+        })
+        break;
+      case ASSESSMENT_ADDITION:
+        createAssessmentActionService(http, curActivity.id, {
+          checkListId: "ss"
+        }).then(res=>{
+
+        }).catch(err=>{
+
+        })
+        break;
+      case TRAINING_ADDITION:
+        createTrainingActionService(http, curActivity.id, {
+          description: "des",
+          expertId: ""
+        }).then(res=>{
+
+        }).catch(err=>{
+
+        })
+        break;
+    }
+    setIsLoading(false)
+  };
 
   const renderByType = () => {
     switch (type) {
       case TRAINING_ADDITION:
         return (
           <>
-            <Flex
-            vertical>
+            <Flex vertical>
               <Descriptions title='Nội dung tập huấn'></Descriptions>
               <Form.Item
                 //label=''
@@ -198,7 +267,7 @@ export default function AdditionAttachModal(props: IProps) {
       case ASSESSMENT_ADDITION:
         return (
           <>
-          <Descriptions title='Bảng đánh giá'></Descriptions>
+            <Descriptions title='Bảng đánh giá'></Descriptions>
             <Form.Item
               // label=''
               name={['addition', 'checkList']}
@@ -262,16 +331,14 @@ export default function AdditionAttachModal(props: IProps) {
               ></Select>
             </Form.Item>
             <Descriptions title='Treatment Method'></Descriptions>
-            <FormItem
-              name={['addition', 'method']}
-            >
+            <FormItem name={['addition', 'method']}>
               <TextArea
-                  placeholder={'Content here'}
-                  rows={4}
-                  maxLength={500}
-                  showCount
-                  style={{ resize: 'none' }}
-                ></TextArea>
+                placeholder={'Content here'}
+                rows={4}
+                maxLength={500}
+                showCount
+                style={{ resize: 'none' }}
+              ></TextArea>
             </FormItem>
           </>
         );
@@ -327,8 +394,8 @@ export default function AdditionAttachModal(props: IProps) {
           >
             <Col
               style={{
-                marginTop:50,
-                height:'60%',
+                marginTop: 50,
+                height: '60%',
                 width: '80%'
               }}
               span={24}
