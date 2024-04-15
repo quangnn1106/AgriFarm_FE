@@ -41,7 +41,6 @@
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
     "next-intl": "^3.4.5",
-    // "nivo": "^0.31.0",
     "rc-tween-one": "^3.0.6",
     "rc-virtual-list": "^3.11.4",
     "react": "^18",
