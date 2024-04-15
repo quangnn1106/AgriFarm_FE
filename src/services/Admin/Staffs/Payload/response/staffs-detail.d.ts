@@ -13,5 +13,5 @@ export default interface StaffsDetails {
   role: string;
   dob?: string | null;
   onboarding: string;
-  certificates?: any[] | [];
+  //certificates?: any[] | [];
 }

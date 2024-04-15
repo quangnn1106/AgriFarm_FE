@@ -1,5 +1,5 @@
 'use client';
-import loading from '@/app/[locale]/loading';
+
 import {
   Breadcrumb,
   Button,
@@ -13,11 +13,14 @@ import {
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
-import styles from '../adminStyle.module.scss';
+import styles from '../mem.module.scss';
 import classNames from 'classnames/bind';
 import { CerTableColumns } from './components/Table/column-type';
 import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
-import { getCertsService } from '@/services/Admin/Certificates/getAllCertificates';
+import {
+  getCertsService,
+  getMemCertsService
+} from '@/services/Admin/Certificates/getAllCertificates';
 import { AxiosInstance } from 'axios';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
@@ -37,7 +40,7 @@ import ModalCustom from '@/components/ModalCustom/ModalCustom';
 const cx = classNames.bind(styles);
 type Props = {};
 
-const UserCertificate = (props: Props) => {
+const MemCertificate = (props: Props) => {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken();
@@ -62,7 +65,7 @@ const UserCertificate = (props: Props) => {
 
   const getListCertsApi = async (http: AxiosInstance, siteId: string | undefined) => {
     try {
-      const responseData = await getCertsService(siteId, http);
+      const responseData = await getMemCertsService(undefined, http);
       setCertificate(responseData.data as CertificationResponse[]);
       setLoading(false);
     } catch (error) {
@@ -116,56 +119,10 @@ const UserCertificate = (props: Props) => {
   };
   return (
     <Content style={{ padding: '20px 0px' }}>
-      <ConfigProvider
-        theme={{
-          components: {
-            Button: {
-              contentFontSizeLG: 24,
-              fontWeight: 700,
-              groupBorderColor: 'transparent',
-              onlyIconSizeLG: 24,
-              paddingBlockLG: 0,
-              defaultBorderColor: 'transparent',
-              defaultBg: 'transparent',
-              defaultShadow: 'none',
-              primaryShadow: 'none',
-              linkHoverBg: 'transparent',
-              paddingInlineLG: 24,
-              defaultGhostBorderColor: 'transparent'
-            }
-          }
-        }}
-      >
-        <Button
-          className='home-btn'
-          href='/'
-          size={'large'}
-        >
-          <HomeOutlined />
-          {siteName}
-        </Button>
-      </ConfigProvider>
-      <Breadcrumb
-        style={{ margin: '0px 24px' }}
-        items={breadCrumb}
-      ></Breadcrumb>
-      {/* <ActionBox>
-        <Button
-          onClick={() => setCreateState(true)}
-          className='bg-btn'
-          icon={<PlusOutlined />}
-        />
-        <AddCertificate
-          params={{
-            visible: createState,
-            onCancel: () => setCreateState(false)
-          }}
-        />
-      </ActionBox> */}
       <Flex
         justify={'flex-end'}
         align={'center'}
-        className={cx('flex-space')}
+        className='flex-center'
         style={{ paddingRight: '24px' }}
       >
         <Tooltip title={t('Delete')}>
@@ -198,7 +155,7 @@ const UserCertificate = (props: Props) => {
         </Tooltip>
         <Tooltip title={t('Add_new')}>
           <Button
-            className={cx('bg-btn')}
+            className='bg-btn'
             icon={<PlusOutlined />}
             onClick={() => setCreateState(true)}
           />
@@ -265,4 +222,4 @@ const UserCertificate = (props: Props) => {
   );
 };
 
-export default UserCertificate;
+export default MemCertificate;

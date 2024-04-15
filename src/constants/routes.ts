@@ -17,9 +17,11 @@ export const DASH_BOARD_PATH = '/sa/statistic',
 // admin path + manager
 export const DASHBOARD_ADMIN = '/statistic_admin',
   CHECKLIST = '/checklist-global-gap',
-  CHECKLIST_IMPLEMENT = '/checklist-global-gap/implement';
+  CHECKLIST_IMPLEMENT = '/checklist-global-gap/implement',
+  CERTIFICATE_PATH = '/user-certificate';
 
 //member path
 export const TIME_TABLE_PATH = '/time-table';
+export const MEM_PROFILE_PATH = '/mem-profile';
 // call back for OAuth2
 export const CALLBACK_URL = process.env.NEXT_PUBLIC_FE;
