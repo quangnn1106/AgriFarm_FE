@@ -1,10 +1,24 @@
 import { useSignalRNotification } from '@/components/context/notification/SignalRNotifyContext';
+import { useRouter } from '@/navigation';
 import { BellOutlined } from '@ant-design/icons';
-import { Col, Flex, FloatButton, List, Popover, Row, Typography } from 'antd';
+import { Button, Col, Flex, FloatButton, List, Popover, Row, Typography } from 'antd';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 export default function NotificationBell() {
   const { messages } = useSignalRNotification();
+  const farmRouter = useRouter();
+  const [bellCount, setBellCount] = useState(messages.length);
+
+  useEffect(() => {
+    if (messages.length > bellCount) {
+      setBellCount(prev => prev + 1);
+    }
+  }, [messages.length]);
+
+  const resetBellCount = () => {
+    setBellCount(0);
+  };
 
   const contents = (
     <>
@@ -17,7 +31,6 @@ export default function NotificationBell() {
           overflow: 'auto'
         }}
       >
-        
         <List
           dataSource={messages}
           renderItem={(e, i) => (
@@ -29,14 +42,24 @@ export default function NotificationBell() {
               >
                 <Col
                   offset={1}
-                  span={5}
+                  span={3}
                 >
-                  {dayjs(e.date).format('HH:mm DD/MM/YY')}
+                  {dayjs(e.date).format('HH:mm DD/MM')}
                 </Col>
-                <Col span={17}>
+                <Col span={14}>
                   <Flex>
-                    <Typography>{e.title}</Typography>
+                    <Typography>{e.content}</Typography>
                   </Flex>
+                </Col>
+                <Col span={3}>
+                  {e.ref && (
+                    <Button
+                      type='link'
+                      onClick={() => farmRouter.push(e.ref ?? '')}
+                    >
+                      Detail
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </List.Item>
@@ -50,22 +73,23 @@ export default function NotificationBell() {
     <>
       <Popover
         style={{
-        //   height: 300,
-        //   width: 400,
-        //   border: '1px solid',
+          //   height: 300,
+          //   width: 400,
+          //   border: '1px solid',
           borderRadius: 10,
-          overflow: 'auto',
-        //   marginRight:'3vw'
+          overflow: 'auto'
+          //   marginRight:'3vw'
         }}
-        placement="bottomRight"
+        placement='bottomRight'
         content={contents}
         title='Your Notification Message'
         trigger='click'
       >
         <FloatButton
+          onClick={() => resetBellCount()}
           style={{ right: '5vw', top: '10vh' }}
           tooltip={<div>Notify</div>}
-          badge={{ count: messages.length }}
+          badge={{ count: bellCount }}
           icon={<BellOutlined />}
         />
       </Popover>
