@@ -31,11 +31,14 @@ interface IProps {
   activityId: string;
   detail: ActivityLocation | null;
   setDetail: (location: ActivityLocation) => void;
+  editable: boolean;
 }
 
 export default function ActivityLocationSection(props: IProps) {
-  const { detail, setDetail, activityId } = props;
-  const [locationDetail, setLocationDetail] = useState<ActivityLocation | null>(detail ?? null);
+  const { detail, setDetail, activityId, editable } = props;
+  const [locationDetail, setLocationDetail] = useState<ActivityLocation | null>(
+    detail ?? null
+  );
   const [locationOpen, setLocationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -85,11 +88,14 @@ export default function ActivityLocationSection(props: IProps) {
   const confirmPopup = (
     <Modal
       centered
-      okType={confirmModal.okType ?? 'default'}
+      okType={'danger'}
+      okButtonProps={{ type: 'primary' }}
+      okText={'Xác nhận'}
+      cancelText={'Hủy bỏ'}
       open={true}
       onCancel={() => setConfirmOpen(false)}
       onOk={() => confirmModal.onOk()}
-      title={confirmModal.title}
+      title={'Bạn có muốn xóa khu vực hoạt động này khỏi tác vụ không?'}
     ></Modal>
   );
 
@@ -110,7 +116,7 @@ export default function ActivityLocationSection(props: IProps) {
             offset={2}
             span={12}
           >
-            <Descriptions title='Land' />
+            <Descriptions title='Lô đất thực hiện' />
           </Col>
         </Row>
         <Row
@@ -153,11 +159,21 @@ export default function ActivityLocationSection(props: IProps) {
                       shape='square'
                       size={150}
                     />
-                    <div>{locationDetail.name}</div>
+                    <div>
+                      Lô đất:{' '}
+                      <Typography.Text strong>
+                        {/* M02 */}
+
+                        {locationDetail.name}
+                      </Typography.Text>
+                    </div>
                   </Flex>
                 ) : (
                   <Flex>
-                    <Typography.Text type='secondary'>No location set</Typography.Text>
+                    <Typography.Text type='secondary'>
+                      {/* No location set */}
+                      Không có vị trí được chọn
+                    </Typography.Text>
                   </Flex>
                 ))}
               {isLoading && (
@@ -168,53 +184,59 @@ export default function ActivityLocationSection(props: IProps) {
             </Flex>
           </Col>
           <Col span={4}>
-            <Flex
-              vertical
-              gap={10}
-            >
-              <Button
-                onClick={() => {
-                  setLocationOpen(true);
-                }}
-                type='primary'
-                style={{ backgroundColor: '#1b8ef5' }}
-                disabled={!!locationDetail}
-                loading={isLoading}
-                block
+            {editable && (
+              <Flex
+                vertical
+                gap={10}
               >
-                <PlusOutlined />
-                Add
-              </Button>
-              <Button
-                disabled={!locationDetail}
-                onClick={() => {
-                  setLocationOpen(true);
-                }}
-                type='primary'
-                block
-                loading={isLoading}
-              >
-                <SwapOutlined /> Change
-              </Button>
-              <Button
-                loading={isLoading}
-                onClick={() => {
-                  setConfirmModal({
-                    title: 'Do you want to remove this land',
-                    onOk: () => handleDelete(),
-                    okType: 'danger'
-                  });
-                  setConfirmOpen(true);
-                }}
-                type='primary'
-                disabled={!locationDetail}
-                style={{ backgroundColor: 'red' }}
-                block
-              >
-                <CloseOutlined />
-                Remove
-              </Button>
-            </Flex>
+                <Button
+                  onClick={() => {
+                    setLocationOpen(true);
+                  }}
+                  type='primary'
+                  style={{ backgroundColor: '#1b8ef5' }}
+                  disabled={!!locationDetail}
+                  loading={isLoading}
+                  block
+                >
+                  <PlusOutlined />
+                  {/* Add */}
+                  Thêm
+                </Button>
+                <Button
+                  disabled={!locationDetail}
+                  onClick={() => {
+                    setLocationOpen(true);
+                  }}
+                  type='primary'
+                  block
+                  loading={isLoading}
+                >
+                  <SwapOutlined />
+                  {/* Change */}
+                  Đổi
+                </Button>
+                <Button
+                  loading={isLoading}
+                  onClick={() => {
+                    setConfirmModal({
+                      title: 'Do you want to remove this land',
+                      onOk: () => handleDelete(),
+                      okType: 'danger'
+                    });
+                    setConfirmOpen(true);
+                  }}
+                  type='primary'
+                  disabled={!locationDetail}
+                  style={{ backgroundColor: 'red' }}
+                  block
+                >
+                  <CloseOutlined />
+                  {/* Remove */}
+                  Gỡ
+                </Button>
+              </Flex>
+            )}
           </Col>
         </Row>
         <Row
@@ -223,13 +245,16 @@ export default function ActivityLocationSection(props: IProps) {
             //height: '100%'
           }}
         >
-          <Col offset={11} span={12}>
+          <Col
+            offset={11}
+            span={12}
+          >
             <Link href={'#'}>
               <Typography.Link
                 strong
                 underline
               >
-                Go to view detail
+                {/* Go to view detail */}
               </Typography.Link>
             </Link>
           </Col>

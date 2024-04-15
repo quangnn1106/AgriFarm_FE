@@ -53,6 +53,7 @@ const UserManagement = (props: Props) => {
 
   const fetchStaff = async (http: AxiosInstance, siteId?: string) => {
     try {
+      // const key = 'User';
       const responseData = await getStaffsService(siteId, http);
       //console.log(responseData);
       setUsers(responseData?.data as Staffs[]);

@@ -14,12 +14,14 @@ export interface Pagination {
 export const getStaffsService: (
   siteId?: string | null,
   http?: AxiosInstance | null,
-  userId?: string | null
-) => Promise<HttpResponseCommon<Staffs[]>> = async (siteId, http, userId) => {
+
+  key?: string | null
+) => Promise<HttpResponseCommon<Staffs[]>> = async (siteId, http, key) => {
   const res = await http?.get(`/user/staffs/get`, {
     params: {
       siteId: siteId,
-      userId: userId
+
+      key: key
     }
     // headers: {
     //   pageSize: 4,
@@ -40,6 +42,30 @@ export const getStaffsServiceDetails: (
   userId
 ) => {
   const res = await http?.get(`/user/staffs/get`, {
+    params: {
+      siteId: siteId,
+      userId: userId
+    }
+    // headers: {
+    //   pageSize: 4,
+    //   pageNumber: 1
+    // }
+  });
+
+  // console.log('response getStaffsServiceDetails: ', res?.data);
+  return res?.data;
+};
+
+export const getMemProfileService: (
+  siteId?: string | null,
+  http?: AxiosInstance | null,
+  userId?: string | null
+) => Promise<HttpResponseCommon<StaffsDetails | [] | undefined>> = async (
+  siteId,
+  http,
+  userId
+) => {
+  const res = await http?.get(`/user/account/profile`, {
     params: {
       siteId: siteId,
       userId: userId

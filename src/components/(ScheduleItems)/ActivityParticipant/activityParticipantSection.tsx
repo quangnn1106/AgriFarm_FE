@@ -1,13 +1,15 @@
 import { Link } from '@/navigation';
 import { ActivityParticipant } from '@/services/Admin/Activities/Payload/response/activityResponse';
-import { PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
   Col,
   Descriptions,
   Flex,
+  List,
   message,
+  Modal,
   Popover,
   Row,
   theme,
@@ -16,27 +18,37 @@ import {
 import { useEffect, useState } from 'react';
 import ActivityParticipantFinderModal from './activityParticipantFinderModal';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { setParticipantService } from '@/services/Admin/Activities/activitySubService';
+import {
+  removeParticipantService,
+  setParticipantService
+} from '@/services/Admin/Activities/activitySubService';
+import { getRole } from '../converter/roleConvert';
 
 interface IProps {
   activityId: string;
   participants: ActivityParticipant[];
+  editable: boolean;
 }
 
 export default function ActivityParticipantSection(props: IProps) {
-  const { participants, activityId } = props;
+  const { participants, activityId, editable } = props;
+  const [selectedUser, setSelectedUser] = useState<ActivityParticipant | null>(null);
   const [list, setList] = useState<ActivityParticipant[]>(participants);
   const [roleType, setRoleType] = useState<number | null>(null);
-  const [assigner, setAssigner] = useState<ActivityParticipant[]>([]);
-  const [inspector, setInspector] = useState<ActivityParticipant[]>([]);
-  const [worker, setWorker] = useState<ActivityParticipant[]>([]);
   const [findOpen, setFindOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { token } = theme.useToken();
   const http = UseAxiosAuth();
 
+  
+
+  
+
   const handleSetNewParticipant = async (data: ActivityParticipant) => {
     setIsLoading(true);
+    // console.log("Set data: ", data)
+    //data.role=
     try {
       const res = await setParticipantService(http, activityId, {
         id: data.id,
@@ -44,38 +56,61 @@ export default function ActivityParticipantSection(props: IProps) {
         role: roleType ?? 2
       });
       if (res) {
-        const l2 = list;
-        l2.push(data);
-        console.log('data add: ', data);
-        console.log('data add: ', l2);
-        const asgn = l2.filter(e => e.role === 'Assigner');
-        setAssigner(asgn);
-        const insp = l2.filter(e => e.role === 'Inspector');
-        setInspector(insp);
-        const wrk = l2.filter(e => e.role === 'Assignee');
-        setList(l2);
-        setFindOpen(false);
+        setRoleType(null);
+        const newList = [...list, {...data, role:getRole(roleType??2)}];
+        
+        setList(newList);
+        
       } else throw new Error();
     } catch {
       message.error('Something went wrong. Try again!');
     } finally {
       setIsLoading(false);
-      setRoleType(null);
+      setFindOpen(false);
     }
   };
 
-  useEffect(() => {
-    console.log('refresh');
-    const asgn = list.filter(e => e.role === 'Assigner');
-    setAssigner(asgn);
-    const insp = list.filter(e => e.role === 'Inspector');
-    setInspector(insp);
-    const wrk = list.filter(e => e.role === 'Assignee');
-    setWorker(wrk);
-  }, [list]);
+  const handleDelete = async () => {
+    setIsLoading(true);
+    if (selectedUser) {
+      try {
+        const res = await removeParticipantService(
+          http,
+          activityId,
+          selectedUser.id,
+          roleType ?? 2
+        );
+        if (res) {
+          setSelectedUser(null);
+          const newList = list.filter(e => e.id !== selectedUser.id);
+          setList(newList);
+        } else throw new Error();
+      } catch {
+        message.error('Something went wrong. Try again!');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    setConfirmOpen(false);
+  };
+
+  const removeConfirmPopup = (
+    <Modal
+      centered
+      okType={'danger'}
+      okText={'Xác nhận'}
+      cancelText={'Hủy bỏ'}
+      okButtonProps={{ type: 'primary' }}
+      open={true}
+      onCancel={() => setConfirmOpen(false)}
+      onOk={() => handleDelete()}
+      title={`Bạn có muốn gỡ người tham dự này khỏi tác vụ không?`}
+    ></Modal>
+  );
 
   return (
     <>
+      {/* {list.length > -1 && ( */}
       <Flex>
         <Row
           gutter={[16, 16]}
@@ -86,13 +121,10 @@ export default function ActivityParticipantSection(props: IProps) {
             //border: '1px solid black'
           }}
         >
-          {/* <Col span={24}>
-            <Descriptions title='Participants' />
-          </Col> */}
           <Col span={6}>
             <Flex
               style={{
-                borderInlineEnd: '2px solid ' + token.colorBgTextHover,
+                // borderInlineEnd: '2px solid ' + token.colorBgTextHover,
                 height: '100%',
                 paddingInline: 20
               }}
@@ -103,25 +135,22 @@ export default function ActivityParticipantSection(props: IProps) {
               <Flex
                 gap={10}
                 align='center'
+                style={{
+                  minHeight: 20
+                }}
               >
                 <Typography.Text
                   type='secondary'
                   strong
                 >
-                  Assigner
+                  {/* Assigner */}
+                  Người giao nhiệm vụ
                 </Typography.Text>
-                {/* <Button
-                onClick={()=>{
-                  setRoleType(2)
-                  setFindOpen(true)
-                }}
-                 type='primary'>
-                  <PlusOutlined />
-                </Button> */}
               </Flex>
               <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
+                  // marginTop:1,
                   maxHeight: 230,
                   overflow: 'auto',
                   padding: 10,
@@ -132,30 +161,40 @@ export default function ActivityParticipantSection(props: IProps) {
                 justify='flex-start'
                 align='start'
               >
-                {assigner.map(e => (
-                  <Popover
-                    key={e.id}
-                    content={() => {
-                      return (
-                        <>
-                          <Flex
-                            gap={5}
-                            align='baseline'
-                          >
-                            <Link href={'#'}>Go to detail</Link>
-                            {/* <Button type='link'>Remove</Button> */}
-                          </Flex>
-                        </>
-                      );
-                    }}
-                    title={e.name}
-                  >
-                    <Avatar
-                      size={60}
-                      src={`#`}
-                    />
-                  </Popover>
-                ))}
+                {list
+                  .filter(e => e.role === 'Assigner')
+                  .map(e => (
+                    <div key={'z'}>
+                      <Popover
+                        showArrow={false}
+                        key={e.id}
+                        content={() => {
+                          return (
+                            <>
+                              <Flex
+                                gap={15}
+                                justify='center'
+                                align='baseline'
+                              >
+                                {/* <Link href={'#'}>Go to detail</Link> */}
+                                <Link href={'#'}>
+                                  {e.name}
+                                  {/* Nguyễn Văn An */}
+                                </Link>
+                                
+                              </Flex>
+                            </>
+                          );
+                        }}
+                        // title={e.name}
+                      >
+                        <Avatar
+                          size={60}
+                          src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
+                        />
+                      </Popover>
+                    </div>
+                  ))}
               </Flex>
             </Flex>
           </Col>
@@ -173,27 +212,36 @@ export default function ActivityParticipantSection(props: IProps) {
               <Flex
                 gap={10}
                 align='center'
+                style={{
+                  minHeight: 20
+                }}
               >
                 <Typography.Text
                   type='secondary'
                   strong
                 >
-                  Inspector
+                  {/* Inspector */}
+                  Người giám sát
                 </Typography.Text>
-                <Button
-                  onClick={() => {
-                    setRoleType(3);
-                    setFindOpen(true);
-                  }}
-                  type='primary'
-                >
-                  <PlusOutlined />
-                </Button>
+                {editable && (
+                  <Button
+                    shape='circle'
+                    size='small'
+                    onClick={() => {
+                      setRoleType(3);
+                      setFindOpen(true);
+                    }}
+                    type='primary'
+                  >
+                    <PlusOutlined />
+                  </Button>
+                )}
               </Flex>
               <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
-                  maxHeight: 230,
+                  height: 230,
+                  border: '1px solid',
                   overflow: 'auto',
                   padding: 10,
                   width: '100%'
@@ -201,28 +249,50 @@ export default function ActivityParticipantSection(props: IProps) {
                 wrap='wrap'
                 gap={20}
                 justify='flex-start'
+                align='start'
               >
-                {inspector.map(e => (
+                {list.filter(e => e.role === 'Inspector').map(e => (
                   <Popover
+                    showArrow={false}
                     key={e.id}
                     content={() => {
                       return (
                         <>
                           <Flex
-                            gap={5}
+                            gap={15}
+                            key={e.id}
+                            justify='center'
                             align='baseline'
                           >
-                            <Link href={'#'}>Go to detail</Link>
-                            <Button type='link'>Remove</Button>
+                            {/* <Link href={'#'}>Go to detail</Link> */}
+                            <Link href={'#'}>
+                              {e.name}
+                              {/* Nguyễn Văn An */}
+                            </Link>
+                            {editable && (
+                              <Button
+                                onClick={() => {
+                                  setSelectedUser(e);
+                                  setConfirmOpen(true);
+                                }}
+                                type='primary'
+                                shape='circle'
+                                danger
+                              >
+                                {/* Remove */}
+                                <MinusOutlined />
+                                {/* Gỡ */}
+                              </Button>
+                            )}
                           </Flex>
                         </>
                       );
                     }}
-                    title={e.name}
+                    // title={e.name}
                   >
                     <Avatar
                       size={60}
-                      src={`#`}
+                      src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
                     />
                   </Popover>
                 ))}
@@ -242,57 +312,88 @@ export default function ActivityParticipantSection(props: IProps) {
               <Flex
                 gap={10}
                 align='center'
+                style={{
+                  minHeight: 20
+                }}
               >
                 <Typography.Text
                   type='secondary'
                   strong
                 >
-                  Follower
+                  {/* Follower */}
+                  Người thực hiện
                 </Typography.Text>
-                <Button
-                  onClick={() => {
-                    setRoleType(2);
-                    setFindOpen(true);
-                  }}
-                  type='primary'
-                >
-                  <PlusOutlined />
-                </Button>
+                {editable && (
+                  <Button
+                    shape='circle'
+                    size='small'
+                    onClick={() => {
+                      setRoleType(2);
+                      setFindOpen(true);
+                    }}
+                    type='primary'
+                  >
+                    <PlusOutlined />
+                  </Button>
+                )}
               </Flex>
 
               <Flex
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
-                  maxHeight: 230,
+                  height: 230,
+                  border: '1px solid',
                   overflow: 'auto',
                   padding: 10,
-                  width: '100%'
+                  width: '30vw'
                 }}
-                justify='flex-start'
                 wrap='wrap'
                 gap={20}
+                justify='flex-start'
+                align='start'
               >
-                {worker.map(e => (
+                {list.filter(e => e.role === 'Assignee').map(e => (
                   <Popover
+                    showArrow={false}
                     key={e.id}
                     content={() => {
                       return (
                         <>
                           <Flex
-                            gap={5}
+                            key={e.id}
+                            gap={15}
+                            justify='center'
                             align='baseline'
                           >
-                            <Link href={'#'}>Go to detail</Link>
-                            <Button type='link'>Remove</Button>
+                            {/* <Link href={'#'}>Go to detail</Link> */}
+                            <Link href={'#'}>
+                              {e.name}
+                              {/* Nguyễn Văn An */}
+                            </Link>
+                            {editable && (
+                            <Button
+                              onClick={() => {
+                                setSelectedUser(e);
+                                setConfirmOpen(true);
+                              }}
+                              type='primary'
+                              shape='circle'
+                              danger
+                            >
+                              {/* Remove */}
+                              <MinusOutlined />
+                              {/* Gỡ */}
+                            </Button>
+                            )}
                           </Flex>
                         </>
                       );
                     }}
-                    title={e.name}
+                    // title={e.name}
                   >
                     <Avatar
                       size={60}
-                      src={`#`}
+                      src={`https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png`}
                     />
                   </Popover>
                 ))}
@@ -304,13 +405,18 @@ export default function ActivityParticipantSection(props: IProps) {
       {findOpen && roleType && (
         <ActivityParticipantFinderModal
           onSelected={data => {
-            handleSetNewParticipant(data);
+            handleSetNewParticipant({...data});
             setFindOpen(false);
           }}
           onClose={() => setFindOpen(false)}
           type={roleType}
+          init={list}
         />
       )}
+      {confirmOpen && selectedUser && removeConfirmPopup}
+      {/* {list.map(e => (
+        <div key={e.id}>{e.name}</div>
+      ))} */}
     </>
   );
 }

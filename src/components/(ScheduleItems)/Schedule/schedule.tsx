@@ -15,19 +15,28 @@ import {
 
 import ActivityDetail from "../ActivityDetail/activityDetail";
 import { ActivityResponse } from "@/services/Admin/Activities/Payload/response/activityResponse";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface IProps {
   allActivities: ActivityResponse[];
   isFetching: boolean;
+  defaultValue: ActivityResponse | null
 };
 
 const Schedule: FC<IProps> = (props) => {
-  const {allActivities , isFetching} = props
+  const {allActivities , isFetching, defaultValue} = props
   //const [activities, setActivities] = useState<ActivityResponse[]>(allActivities);
   const [selectedActivity, setSelectedActivity] = useState<ActivityResponse | null>(
-    null
+    defaultValue
   );
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  useEffect(()=>{
+    // const val = defaultVal ? list.find(e => e.id == defaultVal) ?? null : null
+    setSelectedActivity(defaultValue)
+  },[allActivities])
   
+  const { replace } = useRouter();
 
 
   function handleActivityClick(arg: EventClickArg) {
@@ -35,6 +44,7 @@ const Schedule: FC<IProps> = (props) => {
     const extProps = arg.event._def.extendedProps
     const eventData: ActivityResponse = {
       ... arg.event._def,
+      isWaiting: extProps.isWaiting,
       materials:[],
       start : arg.event.start as Date,
       end : arg.event.end as Date, 
@@ -49,12 +59,16 @@ const Schedule: FC<IProps> = (props) => {
       addition: extProps.addition
     };
     if (eventData) {
+      const params = new URLSearchParams(searchParams);
+      params.set('act', eventData.id);
+      replace(`${pathname}?${params.toString()}`);
       console.log(">Real event data is: ", eventData)
       setSelectedActivity(eventData);
     }
   }
 
   const handleCloseModal = () => {
+    replace(`${pathname}`);
     setSelectedActivity(null);
   };
 
