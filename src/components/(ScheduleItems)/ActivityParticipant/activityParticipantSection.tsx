@@ -22,6 +22,7 @@ import {
   removeParticipantService,
   setParticipantService
 } from '@/services/Admin/Activities/activitySubService';
+import { getRole } from '../converter/roleConvert';
 
 interface IProps {
   activityId: string;
@@ -34,29 +35,20 @@ export default function ActivityParticipantSection(props: IProps) {
   const [selectedUser, setSelectedUser] = useState<ActivityParticipant | null>(null);
   const [list, setList] = useState<ActivityParticipant[]>(participants);
   const [roleType, setRoleType] = useState<number | null>(null);
-  const [assigner, setAssigner] = useState<ActivityParticipant[]>([]);
-  const [inspector, setInspector] = useState<ActivityParticipant[]>([]);
-  const [worker, setWorker] = useState<ActivityParticipant[]>([]);
   const [findOpen, setFindOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const { token } = theme.useToken();
   const http = UseAxiosAuth();
 
-  useEffect(() => {
-    const ins = list.filter(e => e.role === 'Inspector');
-    setInspector(ins);
-    const asne = list.filter(e => e.role === 'Assignee');
-    setWorker(asne);
-    // console.log("Set change")
-  }, [list]);
+  
 
-  // useEffect(()=>{
-  //   // console.log("ok")
-  // },[worker, inspector])
+  
 
   const handleSetNewParticipant = async (data: ActivityParticipant) => {
     setIsLoading(true);
+    // console.log("Set data: ", data)
+    //data.role=
     try {
       const res = await setParticipantService(http, activityId, {
         id: data.id,
@@ -65,14 +57,10 @@ export default function ActivityParticipantSection(props: IProps) {
       });
       if (res) {
         setRoleType(null);
-        const newList = [...list, data];
-        // const newList: ActivityParticipant[] = list;
-        // newList.push(data);
+        const newList = [...list, {...data, role:getRole(roleType??2)}];
+        
         setList(newList);
-        const ins = newList.filter(e => e.role === 'Inspector');
-        setInspector(ins);
-        const asne = newList.filter(e => e.role === 'Assignee');
-        setWorker(asne);
+        
       } else throw new Error();
     } catch {
       message.error('Something went wrong. Try again!');
@@ -263,7 +251,7 @@ export default function ActivityParticipantSection(props: IProps) {
                 justify='flex-start'
                 align='start'
               >
-                {inspector.map(e => (
+                {list.filter(e => e.role === 'Inspector').map(e => (
                   <Popover
                     showArrow={false}
                     key={e.id}
@@ -364,7 +352,7 @@ export default function ActivityParticipantSection(props: IProps) {
                 justify='flex-start'
                 align='start'
               >
-                {worker.map(e => (
+                {list.filter(e => e.role === 'Assignee').map(e => (
                   <Popover
                     showArrow={false}
                     key={e.id}
@@ -417,7 +405,7 @@ export default function ActivityParticipantSection(props: IProps) {
       {findOpen && roleType && (
         <ActivityParticipantFinderModal
           onSelected={data => {
-            handleSetNewParticipant(data);
+            handleSetNewParticipant({...data});
             setFindOpen(false);
           }}
           onClose={() => setFindOpen(false)}

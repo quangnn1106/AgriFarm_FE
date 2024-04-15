@@ -44,6 +44,7 @@ const Schedule: FC<IProps> = (props) => {
     const extProps = arg.event._def.extendedProps
     const eventData: ActivityResponse = {
       ... arg.event._def,
+      isWaiting: extProps.isWaiting,
       materials:[],
       start : arg.event.start as Date,
       end : arg.event.end as Date, 
