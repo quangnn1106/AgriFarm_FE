@@ -135,6 +135,23 @@ p {
     //overflow-x: hidden;
 }
 
+.bg-btn {
+    background: #009A29 !important;
+    color: #ffffff !important;
+}
+
+.bg-btn:hover {
+    color: #ffffff !important;
+    background: #009A29 !important;
+    border: #009A29 !important;
+    opacity: 0.6 !important;
+}
+
+.flex-center {
+    gap: 12px;
+    padding: 20px;
+}
+
 .layout {
     height: fit-content;
 

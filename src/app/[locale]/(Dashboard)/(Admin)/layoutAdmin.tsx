@@ -24,12 +24,22 @@ export default function LayoutAdmin({ children }: { children: any }) {
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
-  const toggleCollapsed = () => {
+  const toggleCollapsed = () => {      
     setCollapsed(!collapsed);
   };
 
   const cx = classNames.bind(styles);
-  
+
+ 
+
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning
+      />
+    );
+  }
   return themeConfig(
     <Layout className='layout'>
       <Layout

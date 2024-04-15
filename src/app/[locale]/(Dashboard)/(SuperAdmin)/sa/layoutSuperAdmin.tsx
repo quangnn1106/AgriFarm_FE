@@ -16,6 +16,8 @@ import classNames from 'classnames/bind';
 import styles from '../../(Admin)/adminStyle.module.scss';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import MenuHeaderLocale from '@/app/[locale]/Layouts/MainLayout/MenuSider/MenuLocale';
+import { useSession } from 'next-auth/react';
+import { ROLES } from '@/constants/roles';
 
 export default function LayoutSuperAdmin({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -34,6 +36,18 @@ export default function LayoutSuperAdmin({ children }: { children: React.ReactNo
   };
 
   const cx = classNames.bind(styles);
+
+  const { data: session, status } = useSession();
+  const userRole = session?.user?.userInfo?.role as ROLES;
+
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning
+      />
+    );
+  }
   return themeConfig(
     <Layout className='layout'>
       <Layout

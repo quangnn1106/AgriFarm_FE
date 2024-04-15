@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { ButtonProps, Modal } from 'antd';
 import { ModalFooterRender } from 'antd/es/modal/interface';
 import React from 'react';
 
@@ -15,6 +15,10 @@ type Props = {
   className?: string;
   closeIcon?: boolean | React.ReactNode;
   closable?: boolean;
+  centered?: boolean;
+  cancelText?: React.ReactNode;
+  okText?: React.ReactNode;
+  okButtonProps?: ButtonProps;
 };
 
 const ModalCustom = ({
@@ -29,7 +33,11 @@ const ModalCustom = ({
   style,
   className,
   closeIcon,
-  closable
+  closable,
+  centered,
+  cancelText,
+  okText,
+  okButtonProps
 }: Props) => {
   return (
     <Modal
@@ -44,6 +52,10 @@ const ModalCustom = ({
       className={className}
       closeIcon={closeIcon}
       closable={closable}
+      centered={centered}
+      cancelText={cancelText}
+      okText={okText}
+      okButtonProps={okButtonProps}
     >
       {children}
     </Modal>

@@ -85,7 +85,7 @@ const SAdminSider = ({ path, visible }: Props) => {
         ),
         // getItem(<Link href={`/user`}>{t('user')}</Link>, `/user`, <FaUser />),
         getItem(
-          <Link href={`/sa/subscription`}>{t('subscription')}</Link>,
+          <Link href={`/sa/subscription`}>{t('bill_subscript')}</Link>,
           `/sa/subscription`,
           <FaClipboard />
         ),
