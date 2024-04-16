@@ -135,7 +135,7 @@ const UpdateDocumentDrawer = ({
     documents?.map((item, idx) => {
       updatedOptions?.push({
         value: item.id,
-        label: item.name
+        label: item.title
       });
     });
     setOptions(updatedOptions);

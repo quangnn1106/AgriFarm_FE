@@ -17,10 +17,12 @@ import {
 import { useTranslations } from 'next-intl';
 import { DocumentResponse } from '../models/document-models';
 import Link from 'next/link';
+import dayjs from 'dayjs';
 
 
  export function DocumentTableColumns() {
   const t = useTranslations('Common');
+  const dateFormat = 'DD/MM/YYYY';
 
 
   const documentTableColumn: TableColumnsType<DocumentResponse> = [
@@ -28,11 +30,11 @@ import Link from 'next/link';
       title: '#',
       dataIndex: 'index',
       width: 'max-content',
-      render: (_, item, idx) => `${idx}`
+      render: (_, item, idx) => `${idx + 1}`
     },
     {
       title: t('Name'),
-      dataIndex: 'name',
+      dataIndex: 'title',
       width: 'max-content',
     },
     {
@@ -40,13 +42,14 @@ import Link from 'next/link';
       dataIndex: 'fileLink',
       width: 'max-content',
       render: (_, item) => {
-        return <Link href={item.fileLink}>{item.fileLink}</Link>;
+        return <Link download href={'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+item.url}>{item.url}</Link>;
       }
     },
     {
         title: 'Ngày tạo',
         dataIndex: 'createdDate',
         width: 'max-content',
+        render: (_, documentItem) => `${dayjs(documentItem.createdDate).format(dateFormat)}`
       },
     {
       width: 'max-content',

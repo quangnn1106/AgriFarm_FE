@@ -11,7 +11,7 @@ export interface DocumentResponse {
 export interface CreateDocumentDto {
     title: string
     description: string
-    url: string
+    url: string | undefined
 }
 export interface UpdateDocumentDto {
     title: string
