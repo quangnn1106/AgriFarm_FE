@@ -287,6 +287,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
                 <Input placeholder={t('Type_data')} />
               </Form.Item>
               <Form.Item
+                hidden
                 name='defaultUnit'
                 style={{
                   maxWidth: '100%',

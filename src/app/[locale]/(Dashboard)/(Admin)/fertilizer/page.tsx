@@ -74,7 +74,7 @@ const FertilizerManagement = (props: Props) => {
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/fertilizer`}>Fertilizer</Link>
+      title: <Link href={`/fertilizer`}>Phân bón</Link>
     }
   ];
 
@@ -379,7 +379,7 @@ const FertilizerManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Fertilizer"
+        title="Chi tiết phân bón"
         placement="right"
         onClose={closeFertilizerDetailDrawer}
         open={openFertilizerDetailDrawer}
@@ -390,7 +390,7 @@ const FertilizerManagement = (props: Props) => {
           }}></UpdateFertilizerFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm phân bón mới"
         placement="right"
         onClose={closeAddFertilizerDrawer}
         open={openAddFertilizer}

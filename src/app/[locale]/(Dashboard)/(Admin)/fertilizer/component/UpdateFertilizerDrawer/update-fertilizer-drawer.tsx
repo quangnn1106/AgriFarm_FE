@@ -139,14 +139,14 @@ const UpdateFertilizerFormDrawer = ({
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
-        <Tooltip title={f('Add_more_fertilizer')}>
+        <Tooltip title='Nhập thêm phân bón'>
           <Button
             size='middle'
             className={cx('bg-btn')}
             icon={<PlusOutlined />}
             onClick={showAddSupplyModal}
           >
-            {f('Add_more_fertilizer')}
+            Nhập thêm phân bón
           </Button>
         </Tooltip>
         <AddFertilizerSupplyModal

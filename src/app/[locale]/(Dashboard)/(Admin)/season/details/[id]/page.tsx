@@ -136,7 +136,7 @@ const SeasonDetails = ({
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
-  const dateFormat = 'DD/MM/YYYY';
+  const dateFormat = 'YYYY/MM/DD';
   const [form] = Form.useForm();
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
@@ -146,7 +146,7 @@ const SeasonDetails = ({
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/season`}>{t('season')}</Link>
+      title: <Link href={`/season`}>Mùa vụ</Link>
     },
     {
       title: t('Details')
@@ -197,9 +197,9 @@ const SeasonDetails = ({
         form?.setFieldsValue({
           ...responseData?.data,
           startIn: seasonDetail?.startIn
-            ? dayjs(`${seasonDetail?.startIn}`).format(dateFormat)
+            ? dayjs(`${seasonDetail?.startIn}`, dateFormat)
             : '',
-          endIn: seasonDetail?.endIn ? dayjs(`${seasonDetail?.endIn}`).format(dateFormat) : ''
+          endIn: seasonDetail?.endIn ? dayjs(`${seasonDetail?.endIn}`, dateFormat) : ''
         });
 
         //console.log(responseData?.data)

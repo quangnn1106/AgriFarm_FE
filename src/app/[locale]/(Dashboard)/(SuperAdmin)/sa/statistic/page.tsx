@@ -68,6 +68,9 @@ const Statistic = () => {
   const handleChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
+  const handleChangeMonth: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date, dateString);
+  };
 
   //get product
   const [loading, setLoading] = useState<boolean>(false);
@@ -150,12 +153,17 @@ const Statistic = () => {
             wrap='wrap'
           >
             <span style={{ fontSize: '1.25rem', fontWeight: 600 }}>Thống kê theo </span>
-            <Select
+            {/* <Select
               defaultValue=''
               style={{ width: 120 }}
               onChange={handleChangeSeason}
               options={optionSeasons}
-              placeholder='Chọn mùa'
+              placeholder='Chọn tháng'
+            /> */}
+            <DatePicker
+              onChange={handleChangeMonth}
+              picker='month'
+              placeholder='Chọn tháng'
             />
             <DatePicker
               onChange={handleChangeYear}

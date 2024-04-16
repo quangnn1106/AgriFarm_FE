@@ -116,7 +116,7 @@ const Statistic = () => {
           </Button>
         </ConfigProvider>
         <TitleHeader title='Thống kê'></TitleHeader>
-        <Flex
+        {/* <Flex
           gap={10}
           style={{ width: '100%', marginTop: '20px' }}
           wrap='wrap'
@@ -165,7 +165,7 @@ const Statistic = () => {
               value='rain'
             ></IconText>
           </div>
-        </Flex>
+        </Flex> */}
         <Flex
           className={ss('total-section')}
           vertical={true}
@@ -185,6 +185,7 @@ const Statistic = () => {
               style={{ width: 120 }}
               onChange={handleChangeSeason}
               options={optionSeasons}
+              defaultActiveFirstOption={true}
               placeholder='Chọn mùa'
             />
             <DatePicker
@@ -194,7 +195,7 @@ const Statistic = () => {
             />
           </Flex>
           <Flex
-            gap={10}
+            gap={30}
             style={{ width: '100%' }}
             wrap='wrap'
             justify='center'
@@ -255,7 +256,7 @@ const Statistic = () => {
             ></NumberBlock>
           </Flex>
         </Flex>
-        <ConfigProvider
+        {/* <ConfigProvider
           theme={{
             components: {
               Table: {
@@ -279,7 +280,7 @@ const Statistic = () => {
               ...product
             }))}
           />
-        </ConfigProvider>
+        </ConfigProvider> */}
         {/* <Typography>
                 <pre>{JSON.stringify(weather, null, 2)}</pre>
               </Typography> */}

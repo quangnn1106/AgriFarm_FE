@@ -106,13 +106,16 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
   const setLabelBreadcrumb = () => {
     switch (params.item) {
       case 'seed':
-        setItemLabel(<div>Seed</div>);
+        setItemLabel(<div>Hạt giống</div>);
         break;
       case 'pesticide':
-        setItemLabel(<div>Pesticide</div>);
+        setItemLabel(<div>Thuốc bảo vệ thực vật</div>);
         break;
       case 'fertilizer':
-        setItemLabel(<div>Fertilizer</div>);
+        setItemLabel(<div>Phân bón</div>);
+        break;
+      case 'equipment':
+        setItemLabel(<div>Thiết bị</div>);
         break;
       default:
         setItemLabel(<div>Chưa có</div>);
@@ -264,7 +267,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                 gap={16}
                 align='center'
               >
-                <Flex style={{ width: '20%' }}>
+                <Flex style={{ width: '15%' }}>
                   <Image
                     width={'110px'}
                     style={{ borderRadius: '1.5rem' }}
@@ -272,7 +275,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                   />
                 </Flex>
                 <Flex
-                  style={{ width: '80%' }}
+                  style={{ width: '85%' }}
                   vertical={true}
                   align='center'
                 >
@@ -281,15 +284,16 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     justify='space-between'
                     align='center'
                     style={{ width: '100%' }}
+                    gap={20}
                   >
                     <IconText
                       icon={<FileTextOutlined></FileTextOutlined>}
-                      label='Name: '
+                      label='Tên vật phẩm: '
                       value={itemDetails?.name as string}
                     />
                     <IconText
                       icon={<HomeOutlined></HomeOutlined>}
-                      label='Stock: '
+                      label='Số lượng còn lại trong kho: '
                       value={
                         <p>
                           {itemDetails?.stock.toString() as string}{' '}
