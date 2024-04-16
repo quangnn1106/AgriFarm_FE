@@ -189,7 +189,7 @@ const DocumentManagement = (props: Props) => {
   return (
     <>
       
-      <Content style={{ padding: '20px 0px' }}>
+      <Content style={{ padding: '20px 20px' }}>
         <ConfigProvider
           theme={{
             components: {
@@ -301,7 +301,7 @@ const DocumentManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this documents?</span>
+                  <span>Bạn có muốn xóa những tệp thông tin này?</span>
                 </div>
               }
               open={deleteState}
@@ -376,7 +376,7 @@ const DocumentManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Document"
+        title="Thông tin chi tiết"
         placement="right"
         onClose={closeDocumentDetailDrawer}
         open={openDocumentDetailDrawer}
@@ -387,7 +387,7 @@ const DocumentManagement = (props: Props) => {
           }}></UpdateDocumentDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm tài liệu mới"
         placement="right"
         onClose={closeAddDocumentDrawer}
         open={openAddDocument}

@@ -34,9 +34,9 @@ import { Fertilizer } from '../../models/fertilizer-models';
           <>
           <Flex align='center' gap='10px'>
           <Image
-              style={{borderRadius: '50%'}}
+              style={{borderRadius: '10%'}}
               height={40}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              src={fertilizerItem?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+fertilizerItem?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
             />
             <p style={{color:'#009A29', fontWeight:'600'}} >{fertilizerItem.name}</p>
             </Flex>  
@@ -56,7 +56,7 @@ import { Fertilizer } from '../../models/fertilizer-models';
         dataIndex: 'unitPrice',
         width: 'max-content',
         align: 'end',
-        render: (_,fertilizerItem) => `${fertilizerItem.unitPrice} VND`
+        render: (_,fertilizerItem) => `${fertilizerItem.unitPrice.toLocaleString()} VND`
       },
     {
       width: 'max-content',

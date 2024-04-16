@@ -27,7 +27,7 @@ export function SupplyTableColumns() {
       title: 'Đơn giá',
       dataIndex: 'unitPrice',
       width: 'max-content',
-      render: (_, supplyItems) => `${supplyItems.unitPrice} VND`
+      render: (_, supplyItems) => `${supplyItems.unitPrice.toLocaleString()} VND`
     },
     {
       title: 'Nhà cung cấp',

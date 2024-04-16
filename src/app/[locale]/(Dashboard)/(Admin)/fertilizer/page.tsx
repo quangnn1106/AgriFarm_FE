@@ -188,7 +188,7 @@ const FertilizerManagement = (props: Props) => {
   return (
     <>
       
-      <Content style={{ padding: '20px 0px' }}>
+      <Content style={{ padding: '20px 20px' }}>
         <ConfigProvider
           theme={{
             components: {

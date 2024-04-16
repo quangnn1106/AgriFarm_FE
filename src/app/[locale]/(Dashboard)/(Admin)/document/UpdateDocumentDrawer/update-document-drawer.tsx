@@ -46,10 +46,11 @@ import { AxiosInstance } from 'axios';
 import { CreateDocumentDto, DocumentResponse, UpdateDocumentDto } from '../models/document-models';
 import getDocumentsApi from '@/services/Admin/Document/getDocumentsApi';
 import { FileType } from '@/components/Upload/uploadAvatar';
-import { UploadFileApi } from '@/services/Admin/Document/createDocumentApi';
+
 import { updateDocumentApi } from '@/services/Admin/Document/updateDocumentApi';
 import getDocumentDetailApi from '@/services/Admin/Document/getDocumentDetailApi';
 import dayjs from 'dayjs';
+import { UploadFileApi } from '@/services/Admin/Media/uploadFileApi';
 
 interface FileResponse {
   data: string;
@@ -108,6 +109,7 @@ const UpdateDocumentDrawer = ({
   const [documnetDetails, setDocumentDetails] = useState<DocumentResponse>();
 
   const getDocumentDetails = async (documentId: string, http: AxiosInstance) => {
+    setIsFetching(true);
     try {
         await getDocumentDetailApi(documentId, http).then(res => {
           setDocumentDetails(res.data as DocumentResponse);
@@ -117,7 +119,7 @@ const UpdateDocumentDrawer = ({
             ? dayjs(`${documnetDetails?.createdDate}`).format(dateFormat)
             : '',
           });
-          console.log(form.getFieldsValue());
+          setIsFetching(false);
         })
     } catch (error) {
       console.error('Error occurred while get list document:', error);
@@ -239,7 +241,7 @@ const UpdateDocumentDrawer = ({
             }}
             label={
               <>
-                <LinkOutlined style={{ marginRight: '0.5rem' }} /> File link
+                <LinkOutlined style={{ marginRight: '0.5rem' }} /> Đường dẫn (url)
               </>
             }
           >
@@ -254,7 +256,7 @@ const UpdateDocumentDrawer = ({
             }}
             label={
               <>
-                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Description
+                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Mô tả
               </>
             }
           >
@@ -276,7 +278,7 @@ const UpdateDocumentDrawer = ({
             <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Upload onChange={handleChange}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
+            <Button icon={<UploadOutlined />}>Tải tệp lên</Button>
           </Upload>
           <Flex
             style={{ width: '100%' }}
@@ -288,6 +290,7 @@ const UpdateDocumentDrawer = ({
               loading={isFetching}
               icon={<FileOutlined />}
               className='bg-btn'
+              style={{marginTop:'20px'}}
             >
               {t('Save')}
             </Button>

@@ -191,7 +191,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
       title: <Link href={`/${params.item}`}>{itemLabel}</Link>
     },
     {
-      title: 'History'
+      title: 'Lịch sử'
     }
   ];
 
@@ -268,7 +268,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                   <Image
                     width={'110px'}
                     style={{ borderRadius: '1.5rem' }}
-                    src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                    src={itemDetails?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+itemDetails?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
                   />
                 </Flex>
                 <Flex
@@ -300,7 +300,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     <IconText
                       icon={<DollarOutlined></DollarOutlined>}
                       label= {t('Unit_Price:') }
-                      value={<p>{itemDetails?.unitPrice.toString() as string} VND</p>}
+                      value={<p>{itemDetails?.unitPrice.toLocaleString().toString() as string} VND</p>}
                     />
                   </Flex>
                   <Flex>

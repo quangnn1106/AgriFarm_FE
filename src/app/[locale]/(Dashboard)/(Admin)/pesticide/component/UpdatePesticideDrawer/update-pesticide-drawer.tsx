@@ -255,7 +255,7 @@ const UpdatePesticideFormDrawer = ({
             <Flex style={{ width: '30%' }}>
             <Image
               style={{ borderRadius: '10px' }}
-              src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+              src={pesticideDetail?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+pesticideDetail?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/e916984e-da9f_638488932757103379.png'}
             />
             </Flex>
             
@@ -282,6 +282,7 @@ const UpdatePesticideFormDrawer = ({
             />
           </Form.Item>
           <Form.Item
+            hidden
             name='notes'
             style={{
               maxWidth: '100%',
@@ -364,7 +365,7 @@ const UpdatePesticideFormDrawer = ({
               {t('Save')}
             </Button>
           </Flex>
-          <Form.Item
+          {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -373,7 +374,7 @@ const UpdatePesticideFormDrawer = ({
                 <pre>{JSON.stringify(formInfoCommon.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Spin>
     </>

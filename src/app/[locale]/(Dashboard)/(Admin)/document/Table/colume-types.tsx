@@ -11,7 +11,8 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
@@ -51,7 +52,7 @@ import dayjs from 'dayjs';
       width: 'max-content',
     },
     {
-      title: 'Link File',
+      title: 'Đường dẫn (url)',
       dataIndex: 'fileLink',
       width: 'max-content',
       render: (_, item) => {
@@ -102,7 +103,7 @@ import dayjs from 'dayjs';
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Tải xuống
+                  <DownloadOutlined /> Tải xuống
                   </Space>
                 </a>
               ),

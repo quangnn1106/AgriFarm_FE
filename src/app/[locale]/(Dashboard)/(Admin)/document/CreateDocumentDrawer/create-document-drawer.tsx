@@ -46,11 +46,11 @@ import { AxiosInstance } from 'axios';
 import { CreateDocumentDto, DocumentResponse } from '../models/document-models';
 import getDocumentsApi from '@/services/Admin/Document/getDocumentsApi';
 import {
-  UploadFileApi,
   createDocumentApi
 } from '@/services/Admin/Document/createDocumentApi';
 import { RcFile } from 'antd/es/upload';
 import { FileType } from '@/components/Upload/uploadAvatar';
+import { UploadFileApi } from '@/services/Admin/Media/uploadFileApi';
 
 
 interface FileResponse {
@@ -221,7 +221,7 @@ const AddDocumentDrawer: React.FC = () => {
             }}
             label={
               <>
-                <LinkOutlined style={{ marginRight: '0.5rem' }} /> Url
+                <LinkOutlined style={{ marginRight: '0.5rem' }} /> Đường dẫn (url)
               </>
             }
           >
@@ -239,7 +239,7 @@ const AddDocumentDrawer: React.FC = () => {
             }}
             label={
               <>
-                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Description
+                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Mô tả
               </>
             }
           >
@@ -249,7 +249,7 @@ const AddDocumentDrawer: React.FC = () => {
               setFile(e.target.files?.[0]);
           }}></input> */}
           <Upload onChange={handleChange}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
+            <Button icon={<UploadOutlined />}>Tải tệp lên</Button>
           </Upload>
           <Flex
             style={{ width: '100%' }}
@@ -261,6 +261,7 @@ const AddDocumentDrawer: React.FC = () => {
               loading={isFetching}
               icon={<FileOutlined />}
               className='bg-btn'
+              style={{marginTop: '1rem'}}
             >
               {t('Save')}
             </Button>
