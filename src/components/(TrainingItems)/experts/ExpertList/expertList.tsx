@@ -8,14 +8,17 @@ import {
   EditOutlined,
   EditTwoTone,
   EllipsisOutlined,
+  HomeOutlined,
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
+  Breadcrumb,
   Button,
   Card,
   Col,
+  ConfigProvider,
   Descriptions,
   Divider,
   Flex,
@@ -41,6 +44,9 @@ import { getExpertsService } from '@/services/Admin/Training/expertService';
 import Meta from 'antd/es/card/Meta';
 import { PaginationResponse } from '@/types/pagination';
 import { useRouter } from '@/navigation';
+import { Span } from 'next/dist/trace';
+import Search from 'antd/es/transfer/search';
+import { Content } from 'antd/es/layout/layout';
 
 interface IProps {
   list?: Expert[] | [];
@@ -109,14 +115,16 @@ export default function ExpertList(props: IProps) {
           vertical
           gap={20}
           justify='space-between'
-          style={{ 
-            // margin: '1rem', 
-            width: '100%' }}
+          style={{
+            // margin: '1rem',
+            width: '100%'
+          }}
         >
           <Flex
-            style={{ 
+            style={{
               //marginLeft: '5%',
-               width: '100%' }}
+              width: '100%'
+            }}
             justify='center'
             align='center'
           >
@@ -129,7 +137,7 @@ export default function ExpertList(props: IProps) {
           </Flex>
 
           <Flex
-            style={{ paddingRight: '5vw', marginBottom:30 }}
+            style={{ paddingRight: '5vw', marginBottom: 30 }}
             justify='end'
             align='right'
           >
@@ -153,7 +161,7 @@ export default function ExpertList(props: IProps) {
   const handleDetailClick = (content: Expert) => {
     setSelectedExpert(content);
     //setDetailOpen(true);
-    farmRouter.push('experts/sdas-dads-q243-asd412-das1')
+    farmRouter.push('experts/sdas-dads-q243-asd412-das1');
   };
 
   const renderDetail = () => {
@@ -288,36 +296,102 @@ export default function ExpertList(props: IProps) {
     );
   };
 
-  
+  const columns: TableProps<Expert>['columns'] = [
+    {
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
+      // width:'40vw',
+      render: (_, e) => (
+        <Space onClick={() => handleDetailClick(e)}>
+          <Avatar
+            shape='square'
+            size={100}
+          />
+          {e.fullName}
+        </Space>
+      )
+    },
+    {
+      title: 'Lĩnh vực',
+      dataIndex: 'age',
+      key: 'age',
+      render: (_, e) => (
+        <Space onClick={() => handleDetailClick(e)}>{e.expertField}</Space>
+      )
+    },
+    {
+      title: 'Mô tả',
+      dataIndex: 'address',
+      key: 'address',
+      render: (_, e) => <Space>{e.description?.substring(0, 20)}</Space>
+    },
+    {
+      title: '',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, e) => (
+        <Button
+          type='link'
+          onClick={() => handleDetailClick(e)}
+        >
+          Chi tiết
+        </Button>
+      )
+    }
+  ];
 
   return (
     <>
-      <Divider orientation='left'>
-        <Typography.Title level={3}>Expert Profiles</Typography.Title>
-      </Divider>
-      <Flex
-        justify='space-around'
-        align='start'
-        style={{ paddingInline: 30 }}
-      >
-        <Col span={20}>
-          <Flex
-            vertical
-            align='center'
+      <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
+            }
+          }}
+        >
+          {' '}
+          <Button
+            //className={cx('home-btn')}
+            href='#'
+            size={'large'}
           >
-            {renderHeader()}
-            {renderListSection()}
+            <HomeOutlined style={{ color: 'green' }} />
+            Hoa Mai
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb style={{ margin: '0px 24px' }}>
+          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item>Thông tin chuyên gia</Breadcrumb.Item>
+        </Breadcrumb>
+        <Divider orientation='left'>
+          <Typography.Title level={3}>Thông tin chuyên gia</Typography.Title>
+        </Divider>
+        <div style={{ marginLeft: 50, width: '70vw' }}>
+          <Flex style={{ marginBottom: 50 }}>
+            <Search />
           </Flex>
-        </Col>
-        {/* <Col span={8}>
-          <Flex
-            vertical
-            style={{marginTop:'5vh'}}
-          >{renderProfileSection()}</Flex>
-        </Col> */}
-      </Flex>
+          <Table
+            dataSource={experts}
+            columns={columns}
+          ></Table>
+        </div>
 
-      {/* {detailOpen && selectedExpert && (
+        {/* {detailOpen && selectedExpert && (
         <ExpertDetail
           detail={selectedExpert ?? ({} as Expert)}
           onClose={() => {
@@ -327,14 +401,15 @@ export default function ExpertList(props: IProps) {
         />
       )} */}
 
-      {updateOpen && (
-        <UpdateExpert
-          onClose={() => {
-            setUpdateOpen(false);
-          }}
-          detail={selectedExpert ?? ({} as Expert)}
-        />
-      )}
+        {updateOpen && (
+          <UpdateExpert
+            onClose={() => {
+              setUpdateOpen(false);
+            }}
+            detail={selectedExpert ?? ({} as Expert)}
+          />
+        )}
+      </Content>
     </>
   );
 }

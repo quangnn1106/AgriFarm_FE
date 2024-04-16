@@ -2,7 +2,7 @@ import HttpResponseCommon from "@/types/response";
 import { Expert, TrainingContent } from "./response/training.response";
 import { AxiosInstance, AxiosResponse } from "axios";
 import { ExpertCertificateRequest, ExpertRequest } from "./request/training.request";
-const basePath = '/training/experts';
+const basePath = '/cult/experts';
 
 export const getExpertsService: (
   

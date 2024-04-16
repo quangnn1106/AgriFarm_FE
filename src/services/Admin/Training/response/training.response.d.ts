@@ -19,16 +19,11 @@ export interface TrainingContent {
 
 export interface TrainingDetail {
   id: string;
-  content: {
-    id: string;
-    title: string;
-  };
   expert: {
     id: string;
     fullName: string;
     img?: string;
   };
-  title?: string;
   description?: string;
   activity: {
     id: string;

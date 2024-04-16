@@ -1,5 +1,6 @@
+import { useRouter } from '@/navigation';
 import { Expert } from '@/services/Admin/Training/response/training.response';
-import { Flex, Typography, Col, Avatar, Row, Descriptions, Divider } from 'antd';
+import { Flex, Typography, Col, Avatar, Row, Descriptions, Divider, Button } from 'antd';
 import { useEffect } from 'react';
 
 interface IProps {
@@ -8,11 +9,13 @@ interface IProps {
 
 export default function ExpertInfo(props: IProps) {
   const { expert } = props;
+  const farmRouter = useRouter();
   const renderProfileSection = () => {
     return (
       <>
+      
         <Flex>
-          <Typography.Title level={3}>Preview</Typography.Title>
+          <Typography.Title level={3}>Chi tiết</Typography.Title>
         </Flex>
         {/* <div style={{}}> */}
         <Flex
@@ -25,19 +28,22 @@ export default function ExpertInfo(props: IProps) {
             borderRadius: 20,
 
             //marginTop: 20,
-            height: '60vh',
+            height: '80vh',
             overflowY: 'auto'
           }}
         >
           {!!expert ? (
             <>
               <Flex justify='space-between'>
-                <Col span={10}>
+                <Col
+                  offset={2}
+                  span={10}
+                >
                   <Avatar
                     shape='square'
                     alt='avatar'
-                    src='#'
-                    size={150}
+                    src='https://www.caseyprinting.com/hs-fs/hubfs/the-expert.png?width=600&name=the-expert.png'
+                    size={300}
                   />
                 </Col>
 
@@ -47,11 +53,11 @@ export default function ExpertInfo(props: IProps) {
                     style={{ height: '80%' }}
                   >
                     <Col>
-                      <Descriptions title='Name' />
+                      <Descriptions title='Tên' />
                       {expert.fullName}
                     </Col>
                     <Col>
-                      <Descriptions title='Expert' />
+                      <Descriptions title='Lĩnh vực chuyên môn' />
                       {expert.expertField}
                     </Col>
                   </Row>
@@ -60,13 +66,19 @@ export default function ExpertInfo(props: IProps) {
               <Row gutter={[16, 16]}>
                 <Divider></Divider>
 
-                <Col>
-                  <Descriptions title='Description' />
+                <Col
+                  offset={2}
+                  span={20}
+                >
+                  <Descriptions title='Mô tả' />
                   {expert.description ?? 'No thing to display'}
                 </Col>
 
-                <Col>
-                  <Descriptions title='Certificates'></Descriptions>
+                <Col
+                  offset={2}
+                  span={20}
+                >
+                  <Descriptions title='Chứng chỉ'></Descriptions>
                   {expert.certificates?.map((e, i) => (
                     <Row key={i}>
                       <Col span={12}>
@@ -78,6 +90,16 @@ export default function ExpertInfo(props: IProps) {
                     (expert.certificates.length === 0 && (
                       <span>No certificate to display</span>
                     ))}
+
+                  {Array.from({ length: 4 }, (_, i) => {
+                    return (
+                      <Row key={i}>
+                        <Col span={12}>
+                          - <a href={'#'}>Chứng chỉ GAP 0{i + 1}</a>
+                        </Col>
+                      </Row>
+                    );
+                  })}
                 </Col>
               </Row>
             </>
@@ -106,6 +128,17 @@ export default function ExpertInfo(props: IProps) {
         }}
       >
         {renderProfileSection()}
+        <Flex
+          style={{ marginTop: 20, paddingRight: 30 }}
+          justify='end'
+        >
+          <Button
+            type='primary'
+            onClick={() => farmRouter.back()}
+          >
+            Quay lại
+          </Button>
+        </Flex>
       </Flex>
     </>
   );
