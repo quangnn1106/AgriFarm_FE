@@ -17,8 +17,6 @@ import {
   Row,
   Select,
   Upload,
-  UploadFile,
-  UploadProps,
   message,
   notification
 } from 'antd';
@@ -45,7 +43,6 @@ import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import ControlPanel from '../../components/control-panel';
-import UploadImgAgri, { FileType } from '@/components/Upload/uploadAvatar';
 import { addPositionService } from '@/services/SuperAdmin/Site/addPositionService';
 import useGeolocation from '@/utils/getlocaiton';
 import { updateSiteService } from '@/services/SuperAdmin/Site/updateInforService';
@@ -55,16 +52,17 @@ import { useRouter } from 'next/navigation';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import { useSession } from 'next-auth/react';
 import { UploadOutlined } from '@ant-design/icons';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
 
 const cx = classNames.bind(styles);
 type Props = {};
-
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const path = usePathname();
   const { data: session } = useSession();
   const [form] = Form.useForm();
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
-  const [fileList, setFileList] = useState<any[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [loadingMap, setLoading] = useState<boolean>(true);
   const [displayMarker, setDisplayMarker] = useState<boolean>(true);
   const [stateBtnConfirm, setStateBtnConfirm] = useState<boolean>(true);
@@ -89,8 +87,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const fetchSitesDetails = async (
     http: AxiosInstance,
     siteId?: string,
-    form?: FormInstance,
-    fileList?: any
+    form?: FormInstance
+    // fileList?: UploadFile[] | undefined
   ) => {
     try {
       const responseData = await getSitesService(http, siteId);
@@ -100,8 +98,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
         // console.log('fetchSitesDetails: ', responseData?.data);
 
         form?.setFieldsValue({
-          ...responseData?.data,
-          avatarImg: fileList[0]?.name ? fileList[0]?.name : ''
+          ...responseData?.data
+          //avatarImg: (fileList?[0]?.name as string) ? fileList?[0]?.name : undefined
         });
       }
       setIsFetching(false);
@@ -110,8 +108,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     }
   };
   React.useEffect(() => {
-    fetchSitesDetails(http, params.id, form, fileList);
-  }, [fileList, form, http, params.id, router]);
+    fetchSitesDetails(http, params.id, form);
+  }, [form, http, params.id, router]);
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -162,7 +160,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
         method: 'POST',
         body: formData,
         headers: {
-          Authorization: bearer
+          Authorization: bearer,
+          'Content-Type': 'multipart/form-data'
         }
       }
     )
@@ -233,7 +232,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   //  console.log('fileList out return: ', fileList);
 
-  console.log('fileList all: ', fileList[0]?.status);
+  console.log('fileList all: ', fileList[0]?.name);
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
@@ -352,7 +351,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                   getValueFromEvent={getFile}
                 >
                   {/* action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188' */}
-                  <UploadImgAgri
+                  {/* <UploadImgAgri
                     // customRequest={(i: any) => {
                     //   setFileList([i.file]);
                     // }}
@@ -364,10 +363,10 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
 
                       return false;
                     }}
-                  />
-                  {/* <Upload {...props}>
+                  /> */}
+                  <Upload {...props}>
                     <Button icon={<UploadOutlined />}>Select File</Button>
-                  </Upload> */}
+                  </Upload>
                 </Form.Item>
                 <Form.Item
                   name='siteCode'

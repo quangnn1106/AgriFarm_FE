@@ -34,6 +34,9 @@ import { useTranslations } from 'next-intl';
 import { CERTIFICATE_PATH } from '@/constants/routes';
 import { deleteCerApi } from '@/services/Admin/Certificates/deleteCer';
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
+import { getStaffsService } from '@/services/Admin/Staffs/getStaffsService';
+import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
+import UpdateCertificate from './components/update/updateModal';
 const cx = classNames.bind(styles);
 type Props = {};
 
@@ -59,7 +62,7 @@ const UserCertificate = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [createState, setCreateState] = useState<boolean>(false);
   const [certificate, setCertificate] = useState<CertificationResponse[] | []>([]);
-
+  const [listStaff, setListStaff] = useState<Staffs[] | []>([]);
   const getListCertsApi = async (http: AxiosInstance, siteId: string | undefined) => {
     try {
       const responseData = await getCertsService(siteId, http);
@@ -69,6 +72,21 @@ const UserCertificate = (props: Props) => {
       console.error('Error calling API getListCerApi:', error);
     }
   };
+
+  const fetchStaff = async (http: AxiosInstance, siteId?: string) => {
+    try {
+      // const key = 'User';
+      const responseData = await getStaffsService(siteId, http);
+      //console.log(responseData);
+      setListStaff(responseData?.data as Staffs[]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error calling API Staffs:', error);
+    }
+  };
+  useEffect(() => {
+    fetchStaff(http, siteId);
+  }, [http, siteId]);
 
   useEffect(() => {
     getListCertsApi(http, siteId);
@@ -85,6 +103,14 @@ const UserCertificate = (props: Props) => {
     } catch (error) {
       console.error('Error calling API Delete Season:', error);
     }
+  };
+
+  //handle update
+  const [formModal, setFormModal] = useState<CertificationResponse>();
+  const [updateState, setUpdateState] = useState<boolean>(false);
+  const handleDetails = async (record: CertificationResponse) => {
+    setFormModal(record);
+    setUpdateState(true);
   };
   const checkRowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: CertificationResponse[]) => {
@@ -206,7 +232,18 @@ const UserCertificate = (props: Props) => {
         <AddCertificate
           params={{
             visible: createState,
-            onCancel: () => setCreateState(false)
+            onCancel: () => setCreateState(false),
+            listStaff: listStaff,
+            loading: loading || false
+          }}
+        />
+        <UpdateCertificate
+          params={{
+            visible: updateState,
+            onCancel: () => setUpdateState(false),
+            dataRow: formModal,
+            listStaff: listStaff,
+            loading: loading || false
           }}
         />
       </Flex>
@@ -239,6 +276,29 @@ const UserCertificate = (props: Props) => {
                 rowSelection={{
                   type: 'checkbox',
                   ...checkRowSelection
+                }}
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: event => {
+                      //    console.log('record row onCLick: ', record);
+                      //console.log('event row onCLick: ', event);
+                      const target = event.target as HTMLElement;
+                      const isWithinLink = target.tagName === 'A' || target.closest('a');
+
+                      const isWithinAction =
+                        target.closest('td')?.classList.contains('ant-table-cell') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-selection-column') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-cell-fix-right');
+
+                      if (isWithinAction && !isWithinLink) {
+                        handleDetails(record);
+                      }
+                    } // click row
+                  };
                 }}
                 columns={CerTableColumns()}
                 dataSource={certificate?.map(cer => ({
