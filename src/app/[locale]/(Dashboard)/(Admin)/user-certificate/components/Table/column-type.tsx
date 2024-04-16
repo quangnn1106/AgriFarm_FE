@@ -1,5 +1,5 @@
 'use client';
-import { TableColumnsType, Dropdown, MenuProps, Modal, Space, Button } from 'antd';
+import { TableColumnsType, Dropdown, MenuProps, Modal, Space, Button, Tag } from 'antd';
 import {
   DeleteOutlined,
   EllipsisOutlined,
@@ -33,6 +33,26 @@ export function CerTableColumns() {
       dataIndex: 'url',
       width: 'max-content',
       render: (link: string) => <a>{link}</a>
+    },
+    {
+      title: 'Is Approve',
+      dataIndex: 'decison',
+      sorter: true,
+      // filterMode: 'tree',
+      // onFilter: (value: boolean, record)=> record.is_active.,
+      render: (_, { decison }) => {
+        let color = decison === 1 ? 'blue' : 'grey';
+        let key = decison === 1 ? 'Approved' : 'Waiting';
+        return (
+          <Tag
+            color={color}
+            key={key}
+          >
+            {key}
+          </Tag>
+        );
+      },
+      width: 'max-content'
     },
     {
       width: 'max-content',

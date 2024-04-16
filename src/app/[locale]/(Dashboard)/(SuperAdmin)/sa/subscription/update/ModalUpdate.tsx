@@ -10,7 +10,7 @@ import ModalCustom from '@/components/ModalCustom/ModalCustom';
 import classNames from 'classnames/bind';
 import FormRegisterValues from '@/types/register';
 
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppDispatch } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { UserModel } from '../models/user-model';
