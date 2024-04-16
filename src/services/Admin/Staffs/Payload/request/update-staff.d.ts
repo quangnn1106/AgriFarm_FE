@@ -11,5 +11,5 @@ export type updateStaffPayLoad = {
   isLockout?: boolean;
   role?: string | null;
   dob?: string | null;
-  certificates?: any[];
+  //certificates?: any[];
 };

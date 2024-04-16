@@ -18,21 +18,31 @@ export default function LayoutRoleMember({ children }: Props) {
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
   const router = useRouter();
-  if (
-    userRole !== ROLES.ADMIN &&
-    userRole !== ROLES.MANAGER &&
-    userRole !== ROLES.MEMBER
-  ) {
+
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning
+      />
+    );
+  } else {
+    if (
+      userRole !== ROLES.ADMIN &&
+      userRole !== ROLES.MANAGER &&
+      userRole !== ROLES.MEMBER
+    ) {
+      return (
+        <>
+          <DeniedPage />
+        </>
+      );
+    }
+
     return (
       <>
-        <DeniedPage />
+        <DashBoardLayout>{children}</DashBoardLayout>
       </>
     );
   }
-
-  return (
-    <>
-      <DashBoardLayout>{children}</DashBoardLayout>
-    </>
-  );
 }
