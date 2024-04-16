@@ -1,15 +1,13 @@
 'use client';
 import { Col, ConfigProvider, Form, Input, Modal, Row, Select, notification } from 'antd';
 const { Option } = Select;
-import styles from './add.module.scss';
+import styles from './update.module.scss';
 
 import { NotificationPlacement } from 'antd/es/notification/interface';
 
 import ModalCustom from '@/components/ModalCustom/ModalCustom';
 
 import classNames from 'classnames/bind';
-
-
 
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useTranslations } from 'next-intl';
@@ -19,16 +17,19 @@ import { addNewCertApi } from '@/services/Admin/Certificates/postCertificates';
 import { STATUS_CREATED } from '@/constants/https';
 import { ICerPayLoadRequest } from '@/services/Admin/Certificates/payload/request/addCert';
 import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
+import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
-const AddCertificate = ({
+const UpdateCertificate = ({
   params
 }: {
   params: {
     visible: boolean;
     onCancel: () => void;
-    listStaff?: Staffs[] | [];
+    dataRow?: CertificationResponse;
     loading?: boolean | false;
+    listStaff?: Staffs[] | [];
   };
 }) => {
   const [form] = Form.useForm();
@@ -67,7 +68,7 @@ const AddCertificate = ({
     }
   };
 
-  const onChange = (value: string) => {
+  const onChange = (value: { value: string; label: React.ReactNode }) => {
     console.log(`selected ${value}`);
   };
 
@@ -78,7 +79,9 @@ const AddCertificate = ({
   // Filter `option.label` match the user type `input`
   const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
-
+  useEffect(() => {
+    form.setFieldsValue(params?.dataRow);
+  }, [form, params?.dataRow]);
   return (
     <>
       {contextHolder}
@@ -141,6 +144,12 @@ const AddCertificate = ({
                 onSearch={onSearch}
                 loading={params.loading}
                 filterOption={filterOption}
+                // labelInValue
+                // defaultValue={{
+                //   value: params.dataRow?.member?.id as string,
+                //   label: params.dataRow?.member.name as string
+                // }}
+
                 options={params.listStaff?.map(listStaff => {
                   return {
                     value: listStaff.id,
@@ -182,4 +191,4 @@ const AddCertificate = ({
     </>
   );
 };
-export default AddCertificate;
+export default UpdateCertificate;

@@ -159,51 +159,51 @@ const ManagerSider = ({ path, visible }: Props) => {
     ]),
     { type: 'divider' },
 
-    getItem(`${t('GBG')}`, 'GBG', <FaClipboardCheck />, [
-      getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
-      getItem(
-        <Link href={`/rice_cultivation`}>{t('rice_culti')}</Link>,
-        `/rice_cultivation`,
-        <Image
-          src={iconRice}
-          alt='icon_rice'
-          width={18}
-          height={20}
-        />
-      ),
-      getItem(
-        <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
-        `/globalcheck`,
-        <FaClipboardCheck />
-      ),
-      { type: 'divider' },
-      getItem(
-        <Button
-          className=''
-          type='link'
-          onClick={handleSignOut}
-          danger
-          style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+    // getItem(`${t('GBG')}`, 'GBG', <FaClipboardCheck />, [
+    //   getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
+    //   getItem(
+    //     <Link href={`/rice_cultivation`}>{t('rice_culti')}</Link>,
+    //     `/rice_cultivation`,
+    //     <Image
+    //       src={iconRice}
+    //       alt='icon_rice'
+    //       width={18}
+    //       height={20}
+    //     />
+    //   ),
+    //   getItem(
+    //     <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
+    //     `/globalcheck`,
+    //     <FaClipboardCheck />
+    //   ),
+    //   { type: 'divider' }
+    // ]),
+    getItem(
+      <Button
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        danger
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <Flex
+          gap='small'
+          align='center'
+          style={{ color: 'red' }}
         >
-          <Flex
-            gap='small'
-            align='center'
-            style={{ color: 'red' }}
-          >
-            {t('logout')}
-          </Flex>
-        </Button>,
-        'logout',
-        <Button
-          className=''
-          type='link'
-          onClick={handleSignOut}
-          style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
-        >
-          <FaRightFromBracket color='red' />
-        </Button>
-      )
-    ])
+          {t('logout')}
+        </Flex>
+      </Button>,
+      'logout',
+      <Button
+        className=''
+        type='link'
+        onClick={handleSignOut}
+        style={{ margin: 0, padding: '0', color: '#5F5F5F', fontWeight: '600' }}
+      >
+        <FaRightFromBracket color='red' />
+      </Button>
+    )
   ];
   return (
     <>

@@ -50,7 +50,10 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import { STATUS_OK } from '@/constants/https';
 import Image from 'next/image';
-import { updateStaffService } from '@/services/Admin/Staffs/updateStaffService';
+import {
+  updateMemProfileService,
+  updateStaffService
+} from '@/services/Admin/Staffs/updateStaffService';
 
 import { formItemLayout } from '@/components/FormItemLayout/formItemLayout';
 import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
@@ -60,6 +63,7 @@ import { updateStaffPayLoad } from '@/services/Admin/Staffs/Payload/request/upda
 
 import Link from 'next/link';
 import MemCertificate from '../mem-certificate/mem-certiTable';
+import { MEM_PROFILE_PATH } from '@/constants/routes';
 // import { CertificationModel } from '../staff/models/certificationModel';
 // import { certificationTableColumn } from '../staff/update/certificationColumnType';
 
@@ -116,7 +120,7 @@ const UpdateUser = ({
     type: 'success' | 'error'
   ) => {
     api[type]({
-      message: `Admin ${status}`,
+      message: `Profile ${status}`,
       placement,
       duration: 2
     });
@@ -127,7 +131,7 @@ const UpdateUser = ({
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/fertilizer`}>Fertilizer</Link>
+      title: <Link href={MEM_PROFILE_PATH}>Profile</Link>
     }
   ];
 
@@ -194,7 +198,7 @@ const UpdateUser = ({
       form?: FormInstance
     ) => {
       try {
-        const responseData = await getMemProfileService(siteId, http, userId);
+        const responseData = await getMemProfileService(null, http, null);
         if (responseData.status === STATUS_OK) {
           //  console.log('status ok: ', responseData?.data);
           setStaffDetail(responseData?.data as StaffsDetails);
@@ -230,7 +234,7 @@ const UpdateUser = ({
     // };
     //console.log('value update: ', updatePayload);
     setIsFetching(true);
-    const res = await updateStaffService(http, params.id, value);
+    const res = await updateMemProfileService(http, null, value);
     if (res.data) {
       setIsFetching(false);
       openNotification('top', `${tM('update_susses')}`, 'success');
@@ -239,7 +243,7 @@ const UpdateUser = ({
     } else {
       openNotification('top', `${tM('update_error')}`, 'error');
 
-      console.log('update staff fail', res.status);
+      //console.log('update staff fail', res.status);
     }
     // setUserId(id);
     // setUpdateState(true);
