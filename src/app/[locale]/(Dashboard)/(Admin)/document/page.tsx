@@ -40,6 +40,7 @@ import { DocumentTableColumns } from './Table/colume-types';
 import UpdateDocumentDrawer from './UpdateDocumentDrawer/update-document-drawer';
 import AddDocumentDrawer from './CreateDocumentDrawer/create-document-drawer';
 import getDocumentsApi from '@/services/Admin/Document/getDocumentsApi';
+import { deleteDocumentApi } from '@/services/Admin/Document/deleteDocumentApi';
 
 interface SearchForm {
   keyword: string
@@ -95,60 +96,6 @@ const DocumentManagement = (props: Props) => {
     } catch (error) {
       console.error('Error calling API getListDocumentsApi:', error);
     }
-  //   setDocuments([
-  //     {
-  //         "id": "A0",
-  //         "title": "Document 1",
-  //         "url": "http://www.example.com/1.png",
-  //         "createdDate": "15/7/2023",
-  //         "description" : ""
-  //     },
-  //     {
-  //         "id": "A1",
-  //         "title": "Document 2",
-  //         "url": "http://www.example.com/2.png",
-  //         "createdDate": "8/4/2022",
-  //         "description" : ""
-  //     },
-  //     {
-  //         "id": "A2",
-  //         "title": "Document 3",
-  //         "url": "http://www.example.com/3.png",
-  //         "createdDate": "25/12/2024",
-  //         "description" : ""
-  //     },
-  //     {
-  //         "id": "A3",
-  //         "title": "Document 4",
-  //         "url": "http://www.example.com/4.png",
-  //         "createdDate": "10/9/2023",
-  //         "description" : ""
-  //     },
-  //     {
-  //         "id": "A4",
-  //         "title": "Document 5",
-  //         "url": "http://www.example.com/5.png",
-  //         "createdDate": "3/11/2022",
-  //         "description" : ""
-  //     },
-  //     {
-  //         "id": "A5",
-  //         "title": "Document 6",
-  //         "url": "http://www.example.com/6.png",
-  //         "createdDate": "18/6/2024",
-  //         "description" : ""
-  //     }
-  // ]
-  // );
-    // for (let i = 0; i< 10; i++) {
-    //     documents?.push({
-    //         id: 'A'+i,
-    //         name: 'Tài Liệu',
-    //         fileLink: 'http://www.baidu.com/yyy.png',
-    //         createdDate: '20-10-2024',
-    //         type: 'Tài liệu'
-    //     })
-    // }
   };
 
 
@@ -182,13 +129,13 @@ const DocumentManagement = (props: Props) => {
   const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
   const [deletedDocuments, setDeleteDocuments] = useState<React.Key[]>([]);
 
-  const deleteDocument = async (http: AxiosInstance, seasonId?: string) => {
-    // try {
-    //   const res = await deleteDocumentApi(http, seasonId);
-    //   getListDocumentsApi (http);
-    // } catch (error) {
-    //   console.error('Error calling API Delete Season:', error);
-    // }
+  const deleteDocument = async (http: AxiosInstance, documentId?: string) => {
+    try {
+      const res = await deleteDocumentApi(http, documentId);
+      getListDocumentsApi(siteId, http);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
   }
 
   const checkRowSelection = {

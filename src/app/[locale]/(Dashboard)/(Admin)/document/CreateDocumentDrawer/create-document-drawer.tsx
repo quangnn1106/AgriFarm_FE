@@ -52,58 +52,13 @@ import {
 import { RcFile } from 'antd/es/upload';
 import { FileType } from '@/components/Upload/uploadAvatar';
 
-// const http = UseAxiosAuth();
 
-interface FileDto {
-  file: RcFile;
-}
 interface FileResponse {
   data: string;
   status: number;
   message: string | null;
 }
 
-const props: UploadProps = {
-  action: 'ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/upload',
-  async onChange({ file, fileList }) {
-    if (file.status !== 'uploading') {
-      console.log(file, fileList);
-      let url: string = '';
-      const http = UseAxiosAuth();
-      // try {
-      //   const response = await UploadFileApi(http, file.originFileObj);
-      //   let data = response.data as FileResponse;
-      //   url = data.data;
-      //   console.log('url:', url);
-      // } catch (error){
-
-      //   console.error('Error calling API getListDocumentsApi:', error);
-      // }
-    }
-  },
-  defaultFileList: [
-    {
-      uid: '1',
-      name: 'xxx.png',
-      status: 'uploading',
-      url: 'http://www.baidu.com/xxx.png',
-      percent: 33
-    },
-    {
-      uid: '2',
-      name: 'yyy.png',
-      status: 'done',
-      url: 'http://www.baidu.com/yyy.png'
-    },
-    {
-      uid: '3',
-      name: 'zzz.png',
-      status: 'error',
-      response: 'Server Error 500', // custom error message to show
-      url: 'http://www.baidu.com/zzz.png'
-    }
-  ]
-};
 
 const AddDocumentDrawer: React.FC = () => {
   const t = useTranslations('Common');
@@ -114,7 +69,6 @@ const AddDocumentDrawer: React.FC = () => {
   const http = UseAxiosAuth();
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
-  const token = session?.user.accessToken;
 
   //notification
   const [api, contextHolder] = notification.useNotification();
@@ -215,7 +169,7 @@ const AddDocumentDrawer: React.FC = () => {
           form.resetFields();
         });
       });
-      uploadFileApi(http)
+      // uploadFileApi(http)
     } catch (error) {
       openNotification('top', t('Create_fail'), 'error');
       console.error('Error occurred while updating season:', error);
@@ -267,7 +221,7 @@ const AddDocumentDrawer: React.FC = () => {
             }}
             label={
               <>
-                <LinkOutlined style={{ marginRight: '0.5rem' }} /> File link
+                <LinkOutlined style={{ marginRight: '0.5rem' }} /> Url
               </>
             }
           >

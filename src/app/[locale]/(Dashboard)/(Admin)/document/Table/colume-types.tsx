@@ -23,6 +23,19 @@ import dayjs from 'dayjs';
  export function DocumentTableColumns() {
   const t = useTranslations('Common');
   const dateFormat = 'DD/MM/YYYY';
+  const downloadFile = (url: string) => {
+    fetch(url).then(response=>response.blob()).then(blod=> {
+      const boldUrl = window.URL.createObjectURL(new Blob([blod]));
+      const fileName = url.split("/").pop();
+      const aTag = document.createElement("a");
+      aTag.href = boldUrl;
+      aTag.setAttribute("download", fileName as string);
+      document.body.appendChild(aTag);
+      aTag.click();
+      aTag.remove(); 
+    })
+   
+    }
 
 
   const documentTableColumn: TableColumnsType<DocumentResponse> = [
@@ -43,6 +56,8 @@ import dayjs from 'dayjs';
       width: 'max-content',
       render: (_, item) => {
         return <Link download href={'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+item.url}>{item.url}</Link>;
+        //return <button onClick={() => downloadFile('http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+item.url)}>{item.url}</button>;
+
       }
     },
     {
@@ -61,8 +76,8 @@ import dayjs from 'dayjs';
         const renderItems = (
           id: string,
           onDetailsDocument: () => void,
-          onRemoveDocument: () => void,
           onDownloadDocument: () => void,
+          onRemoveDocument: () => void,
         ): MenuProps['items'] => {
           return [
             {
@@ -83,7 +98,7 @@ import dayjs from 'dayjs';
               label: (
                 <a
                   onClick={() => {
-                    onDownloadDocument();
+                    downloadFile('http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+ documentItem.url);
                   } }
                 >
                   <Space>

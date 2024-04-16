@@ -136,7 +136,7 @@ const SeasonDetails = ({
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = 'DD/MM/YYYY';
   const [form] = Form.useForm();
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
@@ -197,9 +197,9 @@ const SeasonDetails = ({
         form?.setFieldsValue({
           ...responseData?.data,
           startIn: seasonDetail?.startIn
-            ? dayjs(`${seasonDetail?.startIn}`, dateFormat)
+            ? dayjs(`${seasonDetail?.startIn}`).format(dateFormat)
             : '',
-          endIn: seasonDetail?.endIn ? dayjs(`${seasonDetail?.endIn}`, dateFormat) : ''
+          endIn: seasonDetail?.endIn ? dayjs(`${seasonDetail?.endIn}`).format(dateFormat) : ''
         });
 
         //console.log(responseData?.data)
