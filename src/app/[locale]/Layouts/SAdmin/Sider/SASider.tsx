@@ -64,7 +64,7 @@ const SAdminSider = ({ path, visible }: Props) => {
       null,
       [
         getItem(
-          <Link href={`/statistic`}>{t('dashboard')}</Link>,
+          <Link href={`/sa/statistic`}>{t('dashboard')}</Link>,
           `/dashboard`,
           <HomeFilled />
         )

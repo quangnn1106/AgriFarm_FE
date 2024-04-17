@@ -21,14 +21,14 @@ export const getCertsService: (
 };
 
 export const getMemCertsService: (
-  siteId?: string | undefined,
+  userId?: string | undefined,
   http?: AxiosInstance | null,
   id?: string | null
-) => Promise<HttpResponseCommon<CertificationResponse[]>> = async (siteId, http) => {
+) => Promise<HttpResponseCommon<CertificationResponse[]>> = async (userId, http) => {
   const res = await http?.get(`user/user-cert/get`, {
-    // params: {
-    //   siteId: siteId
-    // }
+    params: {
+      userId: userId
+    }
     // headers: {
     //   pageSize: 4,
     //   pageNumber: 1

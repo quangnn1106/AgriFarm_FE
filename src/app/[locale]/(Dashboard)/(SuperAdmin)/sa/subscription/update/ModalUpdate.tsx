@@ -100,7 +100,7 @@ const UpdateFormRegis = ({
       {contextHolder}
       <ModalCustom
         open={params.visible}
-        title='Update Form'
+        title='Chi tiết'
         width='50%'
         style={{ top: 40, maxWidth: 1000 }}
         keyboard

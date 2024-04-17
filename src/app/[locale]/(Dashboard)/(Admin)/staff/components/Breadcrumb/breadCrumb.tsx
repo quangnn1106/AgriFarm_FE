@@ -5,11 +5,14 @@ import styles from '../../../../(SuperAdmin)/sa/management-page.module.scss';
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
+import { useSession } from 'next-auth/react';
 
 const cx = classNames.bind(styles);
 type Props = {};
 
 const BreadcrumbComponent = (props: Props) => {
+  const { data: session } = useSession();
+  const siteName = session?.user.userInfo.siteName;
   return (
     <>
       <ConfigProvider
@@ -38,7 +41,7 @@ const BreadcrumbComponent = (props: Props) => {
           size={'large'}
         >
           <HomeOutlined />
-          Farm Name
+          {siteName}
         </Button>
       </ConfigProvider>
 

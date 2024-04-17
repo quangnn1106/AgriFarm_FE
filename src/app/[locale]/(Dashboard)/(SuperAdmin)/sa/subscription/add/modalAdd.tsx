@@ -115,7 +115,7 @@ const AddUser = ({ params }: { params: { visible: boolean; onCancel: () => void 
       {contextHolder}
       <ModalCustom
         open={params.visible}
-        title='Add new Farm Admin'
+        title='Thêm chủ nông trại mới'
         width='50%'
         style={{ top: 40, maxWidth: 1000 }}
         keyboard

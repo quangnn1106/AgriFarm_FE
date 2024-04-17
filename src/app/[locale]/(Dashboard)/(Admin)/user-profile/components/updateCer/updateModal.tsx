@@ -1,7 +1,7 @@
 'use client';
 import { Col, ConfigProvider, Form, Input, Modal, Row, Select, notification } from 'antd';
 const { Option } = Select;
-import styles from './add.module.scss';
+import styles from './update.module.scss';
 
 import { NotificationPlacement } from 'antd/es/notification/interface';
 
@@ -17,16 +17,19 @@ import { addNewCertApi } from '@/services/Admin/Certificates/postCertificates';
 import { STATUS_CREATED } from '@/constants/https';
 import { ICerPayLoadRequest } from '@/services/Admin/Certificates/payload/request/addCert';
 import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
+import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
-const AddCertificate = ({
+const UpdateCertificate = ({
   params
 }: {
   params: {
     visible: boolean;
     onCancel: () => void;
-    listStaff?: Staffs[] | [];
+    dataRow?: CertificationResponse;
     loading?: boolean | false;
+    listStaff?: Staffs[] | [];
   };
 }) => {
   const [form] = Form.useForm();
@@ -49,13 +52,9 @@ const AddCertificate = ({
   };
 
   const handleAddCer = async (data: ICerPayLoadRequest) => {
-    // const allValues: ICerPayLoadRequest = {
-    //   ...data,
-    //   userId: listStaff.id as string
-    // };
     //console.log('data register: ', data);
 
-    const res = await addNewCertApi(data?.userId as string, http, data);
+    const res = await addNewCertApi(undefined, http, data);
     if (res?.data || res?.status === STATUS_CREATED) {
       openNotification('top', `${msg('add_susses')}`, 'success');
       params.onCancel();
@@ -69,7 +68,7 @@ const AddCertificate = ({
     }
   };
 
-  const onChange = (value: string) => {
+  const onChange = (value: { value: string; label: React.ReactNode }) => {
     console.log(`selected ${value}`);
   };
 
@@ -80,7 +79,9 @@ const AddCertificate = ({
   // Filter `option.label` match the user type `input`
   const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
-
+  useEffect(() => {
+    form.setFieldsValue(params?.dataRow);
+  }, [form, params?.dataRow]);
   return (
     <>
       {contextHolder}
@@ -143,6 +144,12 @@ const AddCertificate = ({
                 onSearch={onSearch}
                 loading={params.loading}
                 filterOption={filterOption}
+                // labelInValue
+                // defaultValue={{
+                //   value: params.dataRow?.member?.id as string,
+                //   label: params.dataRow?.member.name as string
+                // }}
+
                 options={params.listStaff?.map(listStaff => {
                   return {
                     value: listStaff.id,
@@ -184,4 +191,4 @@ const AddCertificate = ({
     </>
   );
 };
-export default AddCertificate;
+export default UpdateCertificate;

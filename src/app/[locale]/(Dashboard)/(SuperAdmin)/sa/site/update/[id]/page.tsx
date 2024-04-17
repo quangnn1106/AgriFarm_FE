@@ -53,6 +53,7 @@ import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import { useSession } from 'next-auth/react';
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
+import UploadImgAgri from '@/components/Upload/uploadAvatar';
 
 const cx = classNames.bind(styles);
 type Props = {};
@@ -62,7 +63,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const { data: session } = useSession();
   const [form] = Form.useForm();
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
   const [loadingMap, setLoading] = useState<boolean>(true);
   const [displayMarker, setDisplayMarker] = useState<boolean>(true);
   const [stateBtnConfirm, setStateBtnConfirm] = useState<boolean>(true);
@@ -87,8 +88,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const fetchSitesDetails = async (
     http: AxiosInstance,
     siteId?: string,
-    form?: FormInstance
-    // fileList?: UploadFile[] | undefined
+    form?: FormInstance,
+    fileList?: any
   ) => {
     try {
       const responseData = await getSitesService(http, siteId);
@@ -98,8 +99,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
         // console.log('fetchSitesDetails: ', responseData?.data);
 
         form?.setFieldsValue({
-          ...responseData?.data
-          //avatarImg: (fileList?[0]?.name as string) ? fileList?[0]?.name : undefined
+          ...responseData?.data,
+          avatarImg: fileList[0]?.name ? fileList[0]?.name : undefined
         });
       }
       setIsFetching(false);
@@ -108,8 +109,8 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     }
   };
   React.useEffect(() => {
-    fetchSitesDetails(http, params.id, form);
-  }, [form, http, params.id, router]);
+    fetchSitesDetails(http, params.id, form, fileList);
+  }, [form, http, params.id, router, fileList]);
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -154,17 +155,14 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     });
 
     // You can use any AJAX library you like
-    fetch(
-      'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/upload',
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: bearer,
-          'Content-Type': 'multipart/form-data'
-        }
+    fetch('https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: bearer
+        //'Content-Type': 'multipart/form-data'
       }
-    )
+    })
       .then(res => {
         console.log('res.json(): ', res);
 
@@ -351,7 +349,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                   getValueFromEvent={getFile}
                 >
                   {/* action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188' */}
-                  {/* <UploadImgAgri
+                  <UploadImgAgri
                     // customRequest={(i: any) => {
                     //   setFileList([i.file]);
                     // }}
@@ -363,10 +361,10 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
 
                       return false;
                     }}
-                  /> */}
-                  <Upload {...props}>
+                  />
+                  {/* <Upload {...props}>
                     <Button icon={<UploadOutlined />}>Select File</Button>
-                  </Upload>
+                  </Upload> */}
                 </Form.Item>
                 <Form.Item
                   name='siteCode'

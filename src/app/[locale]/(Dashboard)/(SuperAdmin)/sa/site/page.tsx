@@ -36,6 +36,13 @@ import Loader from '@/components/Loader/Loader';
 import useGeolocation from '@/utils/getlocaiton';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import BreadcrumbComponent from '../subscription/components/Breadcrumb/breadCrumb';
+import ControlPanel from './components/control-panel';
+import { getDiseaseApi } from '@/services/SuperAdmin/Site/diseaseListMap';
+import {
+  MarkerDisease,
+  MarkerDiseaseParseNum
+} from '@/services/SuperAdmin/Site/payload/response/markerDisease';
+import PinDisease from '@/components/MapBox/pinDisease';
 //import BreadcrumbComponent from '../../subscription/components/Breadcrumb/breadCrumb';
 
 type Props = {};
@@ -50,6 +57,7 @@ const SitePage = (props: Props) => {
   const handleMapLoading = () => setLoading(false);
   const { latitude, longitude, error } = useGeolocation();
   const [sites, setSites] = React.useState<Sites[] | []>([]);
+  const [markerDisease, setMarkerDisease] = React.useState<MarkerDisease[] | []>([]);
   const t = useTranslations('Disease');
   const t2 = useTranslations('Button');
   const path = usePathname();
@@ -68,8 +76,20 @@ const SitePage = (props: Props) => {
     }
   };
 
+  const fetchListDisease = async (http: AxiosInstance) => {
+    try {
+      const responseData = await getDiseaseApi(http);
+      //   console.log(responseData?.data as Sites[]);
+      setMarkerDisease(responseData?.data as MarkerDisease[]);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API fetchSites:', error);
+    }
+  };
+
   React.useEffect(() => {
     fetchSites(http);
+    fetchListDisease(http);
   }, [http]);
 
   const pinsPositions = useMemo(() => {
@@ -99,6 +119,40 @@ const SitePage = (props: Props) => {
       )
     );
   }, [sites]);
+
+  // Chuyển đổi danh sách chuỗi vị trí thành danh sách số
+  const convertedData: MarkerDiseaseParseNum[] = markerDisease?.map(item => ({
+    ...item,
+    location: {
+      lat: parseFloat(item.location.lat),
+      lon: parseFloat(item.location.lon)
+    }
+  }));
+  // console.log('convertedData: ', convertedData);
+
+  const pinsDiseasePosition = useMemo(() => {
+    return convertedData?.map((city, index) => (
+      <Marker
+        key={index}
+        longitude={city?.location?.lon || 0}
+        latitude={city?.location?.lat || 0}
+        color='red'
+        anchor='bottom'
+        // onClick={e => {
+        //   // If we let the click event propagates to the map, it will immediately close the popup
+        //   // with `closeOnClick: true`
+        //   e.originalEvent.stopPropagation();
+        //   setPopupInfo(city);
+        // }}
+      >
+        <>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <PinDisease /> <span className='red'></span>
+          </div>
+        </>
+      </Marker>
+    ));
+  }, [convertedData]);
   // const handleAddSite = () => {
   //   router.push(SITE_MAP_ADD_PATH);
   // };
@@ -128,8 +182,46 @@ const SitePage = (props: Props) => {
           <NavigationControl position='top-left' />
           <ScaleControl />
           {pinsPositions}
-        </MapBoxReact>
+          {pinsDiseasePosition}
+          {/* <Marker
+            longitude={105.82303450111112 || 0}
+            latitude={9.245856390804775 || 0}
+            color='red'
+            anchor='bottom'
+            // onClick={e => {
+            //   // If we let the click event propagates to the map, it will immediately close the popup
+            //   // with `closeOnClick: true`
+            //   e.originalEvent.stopPropagation();
+            //   setPopupInfo(city);
+            // }}
+          >
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <PinDisease /> <span className='red'></span>
+              </div>
+            </>
+          </Marker>
 
+          <Marker
+            longitude={105.86374 || 0}
+            latitude={9.90249 || 0}
+            color='red'
+            anchor='bottom'
+            // onClick={e => {
+            //   // If we let the click event propagates to the map, it will immediately close the popup
+            //   // with `closeOnClick: true`
+            //   e.originalEvent.stopPropagation();
+            //   setPopupInfo(city);
+            // }}
+          >
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <PinDisease /> <span className='red'></span>
+              </div>
+            </>
+          </Marker> */}
+          <ControlPanel />
+        </MapBoxReact>
         <ColoredLine text={t('search_condition')} />
         <div>
           <SearchConditionForm

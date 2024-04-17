@@ -9,6 +9,7 @@ import {
   Table,
   TableProps,
   Tooltip,
+  notification,
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
@@ -37,6 +38,8 @@ import ModalCustom from '@/components/ModalCustom/ModalCustom';
 import { getStaffsService } from '@/services/Admin/Staffs/getStaffsService';
 import Staffs from '@/services/Admin/Staffs/Payload/response/staffs';
 import UpdateCertificate from './components/update/updateModal';
+import { approvedCer } from '@/services/Admin/Certificates/approvedCer';
+import { STATUS_NOT_FOUND } from '@/constants/https';
 const cx = classNames.bind(styles);
 type Props = {};
 
@@ -44,6 +47,7 @@ const UserCertificate = (props: Props) => {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken();
+  const [api, contextHolder] = notification.useNotification();
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const siteName = session?.user.userInfo.siteName;
@@ -82,6 +86,31 @@ const UserCertificate = (props: Props) => {
       setLoading(false);
     } catch (error) {
       console.error('Error calling API Staffs:', error);
+    }
+  };
+
+  const handleApproved = async (id: string) => {
+    // setUserId(id);
+    // setUpdateState(true);
+
+    setLoading(true);
+    const responseData = await approvedCer(http, id);
+
+    if (responseData?.status !== STATUS_NOT_FOUND) {
+      api.success({
+        message: 'Chứng chỉ đã duyệt thành công',
+        placement: 'top',
+        duration: 2
+      });
+      getListCertsApi(http, siteId);
+    } else {
+      api.error({
+        message: 'Duyệt không thành công, có lỗi',
+        placement: 'top',
+        duration: 2
+      });
+      setLoading(false);
+      console.log('invalid data', responseData?.message);
     }
   };
   useEffect(() => {
@@ -141,187 +170,191 @@ const UserCertificate = (props: Props) => {
     console.log('params', pagination, filters, sorter, extra);
   };
   return (
-    <Content style={{ padding: '20px 0px' }}>
-      <ConfigProvider
-        theme={{
-          components: {
-            Button: {
-              contentFontSizeLG: 24,
-              fontWeight: 700,
-              groupBorderColor: 'transparent',
-              onlyIconSizeLG: 24,
-              paddingBlockLG: 0,
-              defaultBorderColor: 'transparent',
-              defaultBg: 'transparent',
-              defaultShadow: 'none',
-              primaryShadow: 'none',
-              linkHoverBg: 'transparent',
-              paddingInlineLG: 24,
-              defaultGhostBorderColor: 'transparent'
+    <>
+      {contextHolder}
+      <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
             }
-          }
-        }}
-      >
-        <Button
-          className='home-btn'
-          href='/'
-          size={'large'}
+          }}
         >
-          <HomeOutlined />
-          {siteName}
-        </Button>
-      </ConfigProvider>
-      <Breadcrumb
-        style={{ margin: '0px 24px' }}
-        items={breadCrumb}
-      ></Breadcrumb>
-      {/* <ActionBox>
-        <Button
-          onClick={() => setCreateState(true)}
-          className='bg-btn'
-          icon={<PlusOutlined />}
-        />
-        <AddCertificate
-          params={{
-            visible: createState,
-            onCancel: () => setCreateState(false)
-          }}
-        />
-      </ActionBox> */}
-      <Flex
-        justify={'flex-end'}
-        align={'center'}
-        className={cx('flex-space')}
-        style={{ paddingRight: '24px' }}
-      >
-        <Tooltip title={t('Delete')}>
           <Button
-            type='primary'
-            danger
-            icon={<MinusOutlined />}
-            disabled={deleteBtnState}
-            onClick={() => {
-              setDeleteState(true);
-            }}
-          />
-          <ModalCustom
-            title={
-              <div>
-                <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                <span>{c('deleteConfirm')}?</span>
-              </div>
-            }
-            open={deleteState}
-            onOk={deleteMultiple}
-            onCancel={() => {
-              setDeleteState(false);
-            }}
-            centered={true}
-            cancelText={t('Cancel')}
-            okText={t('Yes')}
-            okButtonProps={{ type: 'primary', danger: true }}
-          ></ModalCustom>
-        </Tooltip>
-        <Tooltip title={t('Add_new')}>
-          <Button
-            className={cx('bg-btn')}
-            icon={<PlusOutlined />}
-            onClick={() => setCreateState(true)}
-          />
-        </Tooltip>
-        <AddCertificate
-          params={{
-            visible: createState,
-            onCancel: () => setCreateState(false),
-            listStaff: listStaff,
-            loading: loading || false
-          }}
-        />
-        <UpdateCertificate
-          params={{
-            visible: updateState,
-            onCancel: () => setUpdateState(false),
-            dataRow: formModal,
-            listStaff: listStaff,
-            loading: loading || false
-          }}
-        />
-      </Flex>
-      <ConfigProvider
-        theme={{
-          components: {
-            Table: {
-              cellPaddingBlock: 8,
-              headerSortHoverBg: '#F2F3F5',
-              borderColor: '#F2F3F5',
-              headerBg: '#F2F3F5',
-              rowHoverBg: '#F2F3F5'
-            }
-          }
-        }}
-      >
-        <Content style={{ padding: '0px' }}>
-          <Layout
-            style={{
-              padding: '0px 0',
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG
-            }}
+            className='home-btn'
+            href='/'
+            size={'large'}
           >
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <Table
-                loading={loading}
-                rowKey={'id'}
-                bordered
-                rowSelection={{
-                  type: 'checkbox',
-                  ...checkRowSelection
-                }}
-                onRow={(record, rowIndex) => {
-                  return {
-                    onClick: event => {
-                      //    console.log('record row onCLick: ', record);
-                      //console.log('event row onCLick: ', event);
-                      const target = event.target as HTMLElement;
-                      const isWithinLink = target.tagName === 'A' || target.closest('a');
+            <HomeOutlined />
+            {siteName}
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb
+          style={{ margin: '0px 24px' }}
+          items={breadCrumb}
+        ></Breadcrumb>
+        {/* <ActionBox>
+  <Button
+    onClick={() => setCreateState(true)}
+    className='bg-btn'
+    icon={<PlusOutlined />}
+  />
+  <AddCertificate
+    params={{
+      visible: createState,
+      onCancel: () => setCreateState(false)
+    }}
+  />
+</ActionBox> */}
+        <Flex
+          justify={'flex-end'}
+          align={'center'}
+          className={cx('flex-space')}
+          style={{ paddingRight: '24px' }}
+        >
+          <Tooltip title={t('Delete')}>
+            <Button
+              type='primary'
+              danger
+              icon={<MinusOutlined />}
+              disabled={deleteBtnState}
+              onClick={() => {
+                setDeleteState(true);
+              }}
+            />
+            <ModalCustom
+              title={
+                <div>
+                  <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
+                  <span>{c('confirmDelete')}</span>
+                </div>
+              }
+              open={deleteState}
+              onOk={deleteMultiple}
+              onCancel={() => {
+                setDeleteState(false);
+              }}
+              centered={true}
+              cancelText={t('Cancel')}
+              okText={t('Yes')}
+              okButtonProps={{ type: 'primary', danger: true }}
+            ></ModalCustom>
+          </Tooltip>
+          <Tooltip title={t('Add_new')}>
+            <Button
+              className={cx('bg-btn')}
+              icon={<PlusOutlined />}
+              onClick={() => setCreateState(true)}
+            />
+          </Tooltip>
+          <AddCertificate
+            params={{
+              visible: createState,
+              onCancel: () => setCreateState(false),
+              listStaff: listStaff,
+              loading: loading || false
+            }}
+          />
+          <UpdateCertificate
+            params={{
+              visible: updateState,
+              onCancel: () => setUpdateState(false),
+              dataRow: formModal,
+              listStaff: listStaff,
+              loading: loading || false
+            }}
+          />
+        </Flex>
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                cellPaddingBlock: 8,
+                headerSortHoverBg: '#F2F3F5',
+                borderColor: '#F2F3F5',
+                headerBg: '#F2F3F5',
+                rowHoverBg: '#F2F3F5'
+              }
+            }
+          }}
+        >
+          <Content style={{ padding: '0px' }}>
+            <Layout
+              style={{
+                padding: '0px 0',
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG
+              }}
+            >
+              <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                <Table
+                  loading={loading}
+                  rowKey={'id'}
+                  bordered
+                  rowSelection={{
+                    type: 'checkbox',
+                    ...checkRowSelection
+                  }}
+                  onRow={(record, rowIndex) => {
+                    return {
+                      onClick: event => {
+                        //    console.log('record row onCLick: ', record);
+                        //console.log('event row onCLick: ', event);
+                        const target = event.target as HTMLElement;
+                        const isWithinLink =
+                          target.tagName === 'A' || target.closest('a');
 
-                      const isWithinAction =
-                        target.closest('td')?.classList.contains('ant-table-cell') &&
-                        !target
-                          .closest('td')
-                          ?.classList.contains('ant-table-selection-column') &&
-                        !target
-                          .closest('td')
-                          ?.classList.contains('ant-table-cell-fix-right');
+                        const isWithinAction =
+                          target.closest('td')?.classList.contains('ant-table-cell') &&
+                          !target
+                            .closest('td')
+                            ?.classList.contains('ant-table-selection-column') &&
+                          !target
+                            .closest('td')
+                            ?.classList.contains('ant-table-cell-fix-right');
 
-                      if (isWithinAction && !isWithinLink) {
-                        handleDetails(record);
-                      }
-                    } // click row
-                  };
-                }}
-                columns={CerTableColumns()}
-                dataSource={certificate?.map(cer => ({
-                  ...cer,
-                  // onDetails: () => handleDetails(cer.id!),
-                  onDelete: () => handleDelete(cer.id!)
-                  // onViewHistory: () => onViewHistory(cer.id!)
-                }))}
-                onChange={onChange}
-                pagination={{
-                  showTotal: total => `Total ${total} Items`,
-                  showSizeChanger: true,
-                  pageSizeOptions: ['10', '20', '30'],
-                  total: certificate?.length
-                }}
-                scroll={{ x: 'max-content' }}
-                className='table-style'
-              />
-            </Content>
-          </Layout>
-        </Content>
-      </ConfigProvider>
-    </Content>
+                        if (isWithinAction && !isWithinLink) {
+                          handleDetails(record);
+                        }
+                      } // click row
+                    };
+                  }}
+                  columns={CerTableColumns()}
+                  dataSource={certificate?.map(cer => ({
+                    ...cer,
+                    onUpdate: () => handleApproved(cer.id!),
+                    onDelete: () => handleDelete(cer.id!)
+                    // onViewHistory: () => onViewHistory(cer.id!)
+                  }))}
+                  onChange={onChange}
+                  pagination={{
+                    showTotal: total => `Total ${total} Items`,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['10', '20', '30'],
+                    total: certificate?.length
+                  }}
+                  scroll={{ x: 'max-content' }}
+                  className='table-style'
+                />
+              </Content>
+            </Layout>
+          </Content>
+        </ConfigProvider>
+      </Content>
+    </>
   );
 };
 

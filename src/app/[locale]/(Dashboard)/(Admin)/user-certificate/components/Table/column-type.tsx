@@ -1,13 +1,6 @@
 'use client';
 import { TableColumnsType, Dropdown, MenuProps, Modal, Space, Button, Tag } from 'antd';
-import {
-  DeleteOutlined,
-  EllipsisOutlined,
-  ExclamationCircleOutlined,
-  WarningOutlined,
-  ClockCircleOutlined,
-  EditOutlined
-} from '@ant-design/icons';
+import { DeleteOutlined, EllipsisOutlined, CheckOutlined } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
 import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
@@ -35,9 +28,9 @@ export function CerTableColumns() {
       render: (link: string) => <a>{link}</a>
     },
     {
-      title: 'Is Approve',
+      title: 'Trạng thái',
       dataIndex: 'decison',
-      sorter: true,
+
       // filterMode: 'tree',
       // onFilter: (value: boolean, record)=> record.is_active.,
       render: (_, { decison }) => {
@@ -63,25 +56,25 @@ export function CerTableColumns() {
       render: (_, cerItem) => {
         const renderItems = (
           id: string,
-          onDetailsCer: () => void,
+
           onRemoveCer: () => void,
           onUpdateCer: () => void
         ): MenuProps['items'] => {
           return [
-            {
-              label: (
-                <a
-                  onClick={() => {
-                    onDetailsCer();
-                  }}
-                >
-                  <Space>
-                    <ExclamationCircleOutlined /> Details
-                  </Space>
-                </a>
-              ),
-              key: '0'
-            },
+            // {
+            //   label: (
+            //     <a
+            //       onClick={() => {
+            //         onDetailsCer();
+            //       }}
+            //     >
+            //       <Space>
+            //         <ExclamationCircleOutlined /> Details
+            //       </Space>
+            //     </a>
+            //   ),
+            //   key: '0'
+            // },
             {
               type: 'divider'
             },
@@ -93,7 +86,7 @@ export function CerTableColumns() {
                   }}
                 >
                   <Space>
-                    <EditOutlined /> Update
+                    <CheckOutlined /> Duyệt
                   </Space>
                 </a>
               ),
@@ -136,7 +129,7 @@ export function CerTableColumns() {
             menu={{
               items: renderItems(
                 cerItem.id,
-                cerItem.onDetails!,
+
                 cerItem.onDelete!,
                 cerItem.onUpdate!
               )
