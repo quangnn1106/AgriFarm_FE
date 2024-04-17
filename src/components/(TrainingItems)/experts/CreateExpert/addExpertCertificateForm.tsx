@@ -34,7 +34,7 @@ export default function AddExpertCertificateForm(props: IProps) {
               //paddingInline: 20
             }}
           >
-            <Descriptions title='Certificate' />
+            <Descriptions title='Chứng nhận' />
 
             <Form.List name='certificates'>
               {(fields, { add, remove }) => (
@@ -51,11 +51,11 @@ export default function AddExpertCertificateForm(props: IProps) {
                     }}
                   >
                     <Row style={{ paddingLeft: 90 }}>
-                      <Col span={8}>
-                        <Descriptions title='Name' />
+                      <Col offset={2} span={8}>
+                        <Descriptions title='Tên' />
                       </Col>
-                      <Col span={12}>
-                        <Descriptions title='Reference Link' />
+                      <Col offset={4} span={8}>
+                        <Descriptions title='Liên kết' />
                       </Col>
                     </Row>
                     {fields.length === 0 && (
@@ -67,7 +67,7 @@ export default function AddExpertCertificateForm(props: IProps) {
                           type='secondary'
                           italic
                         >
-                          There no certificate to show.
+                          Chưa có chứng nhận để hiển thị
                         </Typography.Text>
                       </Flex>
                     )}
@@ -94,18 +94,18 @@ export default function AddExpertCertificateForm(props: IProps) {
                             <Form.Item
                               {...restField}
                               name={[name, 'name']}
-                              rules={[{ required: true, message: 'Missing first name' }]}
+                              rules={[{ required: true, message: 'Hãy nhập tên' }]}
                             >
-                              <Input placeholder='Certificate name' />
+                              <Input placeholder='Tên chứng nhận' />
                             </Form.Item>
                           </Col>
                           <Col span={12}>
                             <Form.Item
                               {...restField}
                               name={[name, 'reference']}
-                              rules={[{ required: true, message: 'Missing last name' }]}
+                              rules={[{ required: true, message: 'Hãy nhập liên kết' }]}
                             >
-                              <Input placeholder='Link' />
+                              <Input placeholder='Liên kết' />
                             </Form.Item>
                           </Col>
                           <Col span={2}>
@@ -123,7 +123,7 @@ export default function AddExpertCertificateForm(props: IProps) {
                         block
                         icon={<PlusOutlined />}
                       >
-                        Add field
+                        Thêm
                       </Button>
                     </Form.Item>
                   </Flex>

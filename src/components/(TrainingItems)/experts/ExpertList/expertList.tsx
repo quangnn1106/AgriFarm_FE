@@ -8,9 +8,11 @@ import {
   EditOutlined,
   EditTwoTone,
   EllipsisOutlined,
+  ExclamationCircleOutlined,
   HomeOutlined,
   PlusOutlined,
-  SettingOutlined
+  SettingOutlined,
+  UnorderedListOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -25,7 +27,9 @@ import {
   Image,
   Input,
   List,
+  Modal,
   Popconfirm,
+  Popover,
   Row,
   Skeleton,
   Space,
@@ -40,16 +44,22 @@ import UpdateExpert from '../UpdateExpert/updateExpert';
 import AgriImage from '@/components/(ImageItem)/AgriImage/agriImage';
 import { AxiosInstance } from 'axios';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { getExpertsService } from '@/services/Admin/Training/expertService';
+import {
+  deleteExpertsService,
+  getExpertsService
+} from '@/services/Admin/Training/expertService';
 import Meta from 'antd/es/card/Meta';
 import { PaginationResponse } from '@/types/pagination';
 import { useRouter } from '@/navigation';
 import { Span } from 'next/dist/trace';
 import Search from 'antd/es/transfer/search';
 import { Content } from 'antd/es/layout/layout';
+import { useSession } from 'next-auth/react';
+import { getPaginationResponse } from '@/utils/paginationHelper';
+import { useDebounceSearch } from '@/utils/debounceSearch';
 
 interface IProps {
-  list?: Expert[] | [];
+  list?: Expert[];
   isFetching?: boolean;
   setIsFetching?: (val: boolean) => void;
   setHasChanged?: (value: boolean) => void;
@@ -61,12 +71,15 @@ export default function ExpertList(props: IProps) {
   const [hasChanged, setHasChanged] = useState(true);
   const [page, setPage] = useState<PaginationResponse>({
     CurrentPage: 1,
-    PageSize: 0,
+    PageSize: 5,
     TotalCount: 0,
     TotalPages: 1
   });
 
   const farmRouter = useRouter();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   const http = UseAxiosAuth();
 
   const fetchExperts = async (http: AxiosInstance) => {
@@ -74,6 +87,7 @@ export default function ExpertList(props: IProps) {
       console.log('Fetching data..');
       const responseData = await getExpertsService(http);
       console.log('Data here: ', responseData);
+      setPage(getPaginationResponse(responseData));
       setExperts(responseData?.data.data as Expert[]);
       setIsFetching(false);
     } catch (error) {
@@ -81,97 +95,75 @@ export default function ExpertList(props: IProps) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchExperts(http);
-  // }, [http, hasChanged]);
+  useEffect(() => {
+    fetchExperts(http);
+  }, [http, hasChanged]);
 
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
-  const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const exps: Expert[] = [];
-    for (let index = 0; index < 10; index++) {
-      exps.push({
-        id: 'sdasdads-q243-asd412-dasd' + index,
-        fullName: `Expert ${index}`,
-        description: 'very good technical',
-        expertField: 'Math'
-      });
-    }
-    setExperts(exps);
-    setPage({
-      CurrentPage: 1,
-      PageSize: 10,
-      TotalCount: 12,
-      TotalPages: 2
-    });
-  }, [hasChanged]);
-
-  const renderHeader = () => {
-    return (
-      <>
-        <Flex
-          vertical
-          gap={20}
-          justify='space-between'
-          style={{
-            // margin: '1rem',
-            width: '100%'
-          }}
-        >
-          <Flex
-            style={{
-              //marginLeft: '5%',
-              width: '100%'
-            }}
-            justify='center'
-            align='center'
-          >
-            <Col span={22}>
-              <Input type='text' />
-            </Col>
-            <Col span={2}>
-              <Button type='primary'>Search</Button>
-            </Col>
-          </Flex>
-
-          <Flex
-            style={{ paddingRight: '5vw', marginBottom: 30 }}
-            justify='end'
-            align='right'
-          >
-            <Button
-              icon={<PlusOutlined />}
-              type='primary'
-              onClick={() => farmRouter.push('experts/add')}
-            >
-              Add Expert
-            </Button>
-          </Flex>
-        </Flex>
-      </>
-    );
-  };
+  // useEffect(() => {
+  //   const exps: Expert[] = [];
+  //   for (let index = 0; index < 10; index++) {
+  //     exps.push({
+  //       id: 'sdasdads-q243-asd412-dasd' + index,
+  //       fullName: `Expert ${index}`,
+  //       description: 'very good technical',
+  //       expertField: 'Math'
+  //     });
+  //   }
+  //   setExperts(exps);
+  //   setPage({
+  //     CurrentPage: 1,
+  //     PageSize: 10,
+  //     TotalCount: 12,
+  //     TotalPages: 2
+  //   });
+  // }, [hasChanged]);
 
   const handleDelete = async (content: Expert) => {
     //await handleDeleteActivityAction({ id: user.id })
+    try {
+      const rs = await deleteExpertsService(http, content.id);
+
+      if (experts && rs) {
+        setExperts(experts.filter(e => e.id !== content.id));
+      }
+    } catch {}
+
+    setDeleteOpen(false);
+    setSelectedExpert(null);
   };
+
+  const handleSearch = async (val: string) => {
+    console.log('key: ', val);
+
+    if (val && val.trim().length > 0) {
+      setIsFetching(true);
+      const res = await getExpertsService(http, 1, 100, val);
+      if (res.status === 200) {
+        const body = res.data.data as Expert[];
+        if (body.length > 0) {
+          setPage(getPaginationResponse(res));
+
+          console.log('List ', body);
+          setExperts(body);
+        }
+      }
+      // setList(fakeData);
+      setIsFetching(false);
+      if (val.length === 0) {
+        setHasChanged(prev => !prev);
+      }
+    }
+  };
+  const [onSearch] = useDebounceSearch(handleSearch, 1000);
 
   const handleDetailClick = (content: Expert) => {
     setSelectedExpert(content);
     //setDetailOpen(true);
     farmRouter.push('experts/sdas-dads-q243-asd412-das1');
-  };
-
-  const renderDetail = () => {
-    console.log('appear popup');
-    return (
-      <ExpertDetail
-        detail={selectedExpert ?? ({} as Expert)}
-        onClose={() => setDetailOpen(false)}
-      />
-    );
   };
 
   const loadMoreData = () => {
@@ -185,7 +177,7 @@ export default function ExpertList(props: IProps) {
       .then(res => res.data)
       .then(body => {
         console.log('body ', body);
-        setExperts([...(experts as Expert[]), ...(body.data as Expert[])]);
+        setExperts([...(body.data as Expert[]), ...(experts as Expert[])]);
         setIsFetching(false);
       })
       .catch(() => {
@@ -193,153 +185,127 @@ export default function ExpertList(props: IProps) {
       });
   };
 
-  const renderListSection = () => {
-    return (
-      <div
-        id='scrollableDiv'
-        style={{
-          height: '80vh',
-          width: '100%',
-          overflow: 'auto',
-          padding: '0 16px',
-          border: '1px solid rgba(140, 140, 140, 0.35)'
-        }}
-      >
-        <InfiniteScroll
-          dataLength={page.PageSize}
-          next={loadMoreData}
-          hasMore={!!experts && experts?.length < page.TotalCount}
-          loader={
-            <Skeleton
-              avatar
-              paragraph={{ rows: 1 }}
-              active
-            />
-          }
-          endMessage={
-            page.TotalCount > 0 ? (
-              <Divider plain>It is all, nothing more</Divider>
-            ) : (
-              <Divider>No thing to display! Please add more.</Divider>
-            )
-          }
-          scrollableTarget='scrollableDiv'
-        >
-          <List
-            itemLayout='horizontal'
-            dataSource={experts}
-            renderItem={(item, index) => (
-              <List.Item
-                key={index}
-                style={{ minHeight: 100 }}
-              >
-                <Card
-                  style={{
-                    width: '100%',
-                    //width: 500,
-                    //height: 200,
-                    marginTop: 16
-                  }}
-                  loading={isFetching}
-                  bordered={true}
-                >
-                  <Flex justify='space-between'>
-                    <Flex
-                      justify='start'
-                      gap={30}
-                    >
-                      <Avatar
-                        alt='avatar'
-                        src='#'
-                        style={{ width: 100, height: 100, display: 'block' }}
-                      />
-                      <Flex
-                        vertical
-                        align='space-between'
-                        justify='center'
-                        //style={{ padding: 10 }}
-                      >
-                        <Typography.Title level={5}>
-                          <a onClick={() => handleDetailClick(item)}>{item.fullName}</a>
-                        </Typography.Title>
-                        <Typography.Paragraph>
-                          <div
-                            style={{
-                              height: 50
-                            }}
-                          >
-                            {item?.description?.length ?? 0 > 30
-                              ? `${item.description?.substring(0, 30)}...`
-                              : item.description ?? 'No thing to display'}
-                          </div>
-                        </Typography.Paragraph>
-                      </Flex>
-                    </Flex>
-
-                    <Flex
-                      vertical
-                      style={{ width: '5%' }}
-                      align='center'
-                      justify='space-between'
-                    >
-                      <SettingOutlined key='setting' />
-                      <EditOutlined key='edit' />
-                      <EllipsisOutlined key='ellipsis' />
-                    </Flex>
-                  </Flex>
-                </Card>
-              </List.Item>
-            )}
-          />
-        </InfiniteScroll>
-      </div>
-    );
-  };
-
   const columns: TableProps<Expert>['columns'] = [
     {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
-      // width:'40vw',
+      width: '30%',
       render: (_, e) => (
-        <Space onClick={() => handleDetailClick(e)}>
-          <Avatar
-            shape='square'
-            size={100}
-          />
-          {e.fullName}
-        </Space>
+        <Col>
+          <Flex
+            justify='flex-start'
+            align='center'
+            gap={30}
+            onClick={() => handleDetailClick(e)}
+          >
+            <Avatar
+              //shape='square'
+              size={100}
+              src={
+                'https://cdn.vectorstock.com/i/preview-1x/77/22/farmer-avatar-icon-vector-32077722.jpg'
+              }
+            />
+            {e.fullName}
+          </Flex>
+        </Col>
       )
     },
     {
       title: 'Lĩnh vực',
       dataIndex: 'age',
       key: 'age',
-      render: (_, e) => (
-        <Space onClick={() => handleDetailClick(e)}>{e.expertField}</Space>
-      )
+      render: (_, e) => <Space>{e.expertField}</Space>
     },
     {
       title: 'Mô tả',
       dataIndex: 'address',
       key: 'address',
-      render: (_, e) => <Space>{e.description?.substring(0, 20)}</Space>
+      width: '30%',
+      render: (_, e) => <Space>{e.description?.substring(0, 20) + '...'}</Space>
     },
     {
       title: '',
       dataIndex: 'action',
       key: 'action',
+      width: '10%',
       render: (_, e) => (
-        <Button
-          type='link'
-          onClick={() => handleDetailClick(e)}
+        <Popover
+          content={() => (
+            <>
+              <Flex
+                gap={5}
+                align='start'
+                justify='start'
+                vertical
+              >
+                <Button
+                  type='text'
+                  // block
+                  icon={<ExclamationCircleOutlined />}
+                  onClick={() => {
+                    // handleDetailClick(e);
+                    farmRouter.push('/training/experts/' + e.id);
+                  }}
+                >
+                  Chi tiết
+                </Button>
+                <Button
+                  type='text'
+                  // block
+                  icon={<EditOutlined />}
+                  onClick={() => {
+                    setSelectedExpert(e);
+                    setUpdateOpen(true);
+                  }}
+                >
+                  Sửa
+                </Button>
+                <Button
+                  type='text'
+                  // block
+                  icon={<DeleteTwoTone twoToneColor={'#df544a'} />}
+                  onClick={() => {
+                    setSelectedExpert(e);
+                    setDeleteOpen(true);
+                  }}
+                >
+                  Xóa
+                </Button>
+              </Flex>
+            </>
+          )}
+          // title='Title'
+          placement='bottom'
+          // trigger='click'
         >
-          Chi tiết
-        </Button>
+          <Button
+            type='link'
+            // onClick={() => handleDetailClick(e)}
+          >
+            <UnorderedListOutlined style={{ fontSize: '150%' }} />
+          </Button>
+        </Popover>
       )
     }
   ];
+
+  const delelteModal = (
+    <>
+      <Modal
+        centered
+        open
+        onCancel={() => setDeleteOpen(false)}
+        onOk={() => {
+          if (selectedExpert) handleDelete(selectedExpert);
+        }}
+        title={'Bạn có muốn xóa hồ sơ này không?'}
+        okType='danger'
+        okText={'Xác nhận'}
+        cancelText={'Hủy bỏ'}
+      ></Modal>
+    </>
+  );
 
   return (
     <>
@@ -371,7 +337,7 @@ export default function ExpertList(props: IProps) {
             size={'large'}
           >
             <HomeOutlined style={{ color: 'green' }} />
-            Hoa Mai
+            {siteName}
           </Button>
         </ConfigProvider>
         <Breadcrumb style={{ margin: '0px 24px' }}>
@@ -381,34 +347,67 @@ export default function ExpertList(props: IProps) {
         <Divider orientation='left'>
           <Typography.Title level={3}>Thông tin chuyên gia</Typography.Title>
         </Divider>
+
         <div style={{ marginLeft: 50, width: '70vw' }}>
+          <Row style={{ width: '100%', marginBlock: 20 }}>
+            <Col
+              offset={22}
+              span={1}
+            >
+              <Button
+                onClick={() => farmRouter.push('/training/experts/add')}
+                type='primary'
+                block
+              >
+                <PlusOutlined />
+              </Button>
+            </Col>
+          </Row>
           <Flex style={{ marginBottom: 50 }}>
-            <Search />
+            <Input
+              type='text'
+              onChange={e => onSearch(e.target.value)}
+              allowClear
+            />
           </Flex>
           <Table
+            style={{
+              minHeight: 500,
+              overflow: 'auto'
+            }}
             dataSource={experts}
             columns={columns}
+            pagination={{
+              //showTotal: total => `${total} hồ sơ`,
+              showSizeChanger: false,
+              pageSize: 5, //page.PageSize,
+              current: page.CurrentPage,
+
+              //pageSizeOptions: ['10', '20', '30'],
+              total: page.TotalCount
+            }}
+            scroll={{ y: 500 }}
           ></Table>
         </div>
 
-        {/* {detailOpen && selectedExpert && (
-        <ExpertDetail
-          detail={selectedExpert ?? ({} as Expert)}
-          onClose={() => {
-            setDetailOpen(false);
-            setHasChanged(false);
-          }}
-        />
-      )} */}
-
-        {updateOpen && (
+        {updateOpen && selectedExpert && (
           <UpdateExpert
+            onSubmit={data => {
+              const newList = experts?.map(e => {
+                if (e.id === data.id) {
+                  return data;
+                } else return e;
+              });
+              setExperts(newList);
+              setHasChanged(prev => !prev);
+            }}
             onClose={() => {
               setUpdateOpen(false);
             }}
-            detail={selectedExpert ?? ({} as Expert)}
+            detail={selectedExpert}
           />
         )}
+        {deleteOpen && delelteModal}
       </Content>
     </>
   );
@@ -424,3 +423,106 @@ export default function ExpertList(props: IProps) {
         />
       </div> */
 }
+
+// const renderListSection = () => {
+//   return (
+//     <div
+//       id='scrollableDiv'
+//       style={{
+//         height: '80vh',
+//         width: '100%',
+//         overflow: 'auto',
+//         padding: '0 16px',
+//         border: '1px solid rgba(140, 140, 140, 0.35)'
+//       }}
+//     >
+//       <InfiniteScroll
+//         dataLength={page.PageSize}
+//         next={loadMoreData}
+//         hasMore={!!experts && experts?.length < page.TotalCount}
+//         loader={
+//           <Skeleton
+//             avatar
+//             paragraph={{ rows: 1 }}
+//             active
+//           />
+//         }
+//         endMessage={
+//           page.TotalCount > 0 ? (
+//             <Divider plain>It is all, nothing more</Divider>
+//           ) : (
+//             <Divider>No thing to display! Please add more.</Divider>
+//           )
+//         }
+//         scrollableTarget='scrollableDiv'
+//       >
+//         <List
+//           itemLayout='horizontal'
+//           dataSource={experts}
+//           renderItem={(item, index) => (
+//             <List.Item
+//               key={index}
+//               style={{ minHeight: 100 }}
+//             >
+//               <Card
+//                 style={{
+//                   width: '100%',
+//                   //width: 500,
+//                   //height: 200,
+//                   marginTop: 16
+//                 }}
+//                 loading={isFetching}
+//                 bordered={true}
+//               >
+//                 <Flex justify='space-between'>
+//                   <Flex
+//                     justify='start'
+//                     gap={30}
+//                   >
+//                     <Avatar
+//                       alt='avatar'
+//                       src='#'
+//                       style={{ width: 100, height: 100, display: 'block' }}
+//                     />
+//                     <Flex
+//                       vertical
+//                       align='space-between'
+//                       justify='center'
+//                       //style={{ padding: 10 }}
+//                     >
+//                       <Typography.Title level={5}>
+//                         <a onClick={() => handleDetailClick(item)}>{item.fullName}</a>
+//                       </Typography.Title>
+//                       <Typography.Paragraph>
+//                         <div
+//                           style={{
+//                             height: 50
+//                           }}
+//                         >
+//                           {item?.description?.length ?? 0 > 30
+//                             ? `${item.description?.substring(0, 30)}...`
+//                             : item.description ?? 'No thing to display'}
+//                         </div>
+//                       </Typography.Paragraph>
+//                     </Flex>
+//                   </Flex>
+
+//                   <Flex
+//                     vertical
+//                     style={{ width: '5%' }}
+//                     align='center'
+//                     justify='space-between'
+//                   >
+//                     <SettingOutlined key='setting' />
+//                     <EditOutlined key='edit' />
+//                     <EllipsisOutlined key='ellipsis' />
+//                   </Flex>
+//                 </Flex>
+//               </Card>
+//             </List.Item>
+//           )}
+//         />
+//       </InfiniteScroll>
+//     </div>
+//   );
+// };

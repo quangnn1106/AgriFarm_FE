@@ -20,72 +20,89 @@ import { CalendarTwoTone, CloudTwoTone, HomeOutlined } from '@ant-design/icons';
 import { Content } from 'antd/es/layout/layout';
 import classNames from 'classnames';
 import CultTimeline from '../TimeLine/timeLine';
+import { useSession } from 'next-auth/react';
+import { PDFDownloadLink, renderToFile } from '@react-pdf/renderer';
+import { MyDocument } from '@/components/(FileExport)/PDF/pdfDraftDoc';
+import { useState } from 'react';
+import PdfTemplate from '@/components/(FileExport)/PDF/pdfCommonTemplate';
+import { FakePro } from '../fakeProductions';
 const { RangePicker } = DatePicker;
 // import styles from '../adminStyle.module.scss';
 
-const fakeList: ProductionResponse[] = [
-  {
-    output: 10,
-    location: {
-      id: 'adsd-dasda-sdiads',
-      name: 'Mẫu A2'
-    },
-    product: {
-      name: 'Tài Nguyên',
-      id: 'fskksdkj-i4i1929i4-asdnasjdna'
-    },
-    season: {
-      name: 'Đông xuân',
-      id: 'sadadasd.343432',
-      startIn: dayjs('2018-11-25', 'YYYY-MM-DD').toDate(),
-      endIn: dayjs('2019-25-01', 'YYYY-MM-DD').toDate()
-    },
-    unit: 'tấn',
-    harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
-  },
+// const fakeList: ProductionResponse[] = [
+//   {
+//     output: 10,
+//     location: {
+//       id: 'adsd-dasda-sdiads',
+//       name: 'Mẫu A2'
+//     },
+//     product: {
+//       name: 'Tài Nguyên',
+//       id: 'fskksdkj-i4i1929i4-asdnasjdna'
+//     },
+//     season: {
+//       name: 'Đông xuân',
+//       id: 'sadadasd.343432',
+//       startIn: dayjs('2018-11-25', 'YYYY-MM-DD').toDate(),
+//       endIn: dayjs('2019-25-01', 'YYYY-MM-DD').toDate()
+//     },
+//     unit: 'tấn',
+//     harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
+//   },
 
-  {
-    output: 10,
-    location: {
-      id: 'adsd-dasda-sdiads',
-      name: 'Mẫu A2'
-    },
-    product: {
-      name: 'Tài Nguyên',
-      id: 'fskksdkj-i4i1929i4-asdnasjdna'
-    },
-    season: {
-      name: 'Đông xuân',
-      id: 'sadadasd.343432',
-      startIn: dayjs('2019-11-25', 'YYYY-MM-DD').toDate(),
-      endIn: dayjs('2020-25-01', 'YYYY-MM-DD').toDate()
-    },
-    unit: 'tạ',
-    harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
-  },
-  {
-    output: 10,
-    location: {
-      id: 'adsd-dasda-sdiads',
-      name: 'Mẫu A2'
-    },
-    product: {
-      name: 'Tài Nguyên',
-      id: 'fskksdkj-i4i1929i4-asdnasjdna'
-    },
-    season: {
-      name: 'Đông xuân',
-      id: 'sadadasd.343432',
-      startIn: dayjs('2020-11-25', 'YYYY-MM-DD').toDate(),
-      endIn: dayjs('2021-25-01', 'YYYY-MM-DD').toDate()
-    },
-    unit: 'tạ',
-    harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
-  }
-];
+//   {
+//     output: 10,
+//     location: {
+//       id: 'adsd-dasda-sdiads',
+//       name: 'Mẫu A2'
+//     },
+//     product: {
+//       name: 'Tài Nguyên',
+//       id: 'fskksdkj-i4i1929i4-asdnasjdna'
+//     },
+//     season: {
+//       name: 'Đông xuân',
+//       id: 'sadadasd.343432',
+//       startIn: dayjs('2019-11-25', 'YYYY-MM-DD').toDate(),
+//       endIn: dayjs('2020-25-01', 'YYYY-MM-DD').toDate()
+//     },
+//     unit: 'tạ',
+//     harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
+//   },
+//   {
+//     output: 10,
+//     location: {
+//       id: 'adsd-dasda-sdiads',
+//       name: 'Mẫu A2'
+//     },
+//     product: {
+//       name: 'Tài Nguyên',
+//       id: 'fskksdkj-i4i1929i4-asdnasjdna'
+//     },
+//     season: {
+//       name: 'Đông xuân',
+//       id: 'sadadasd.343432',
+//       startIn: dayjs('2020-11-25', 'YYYY-MM-DD').toDate(),
+//       endIn: dayjs('2021-25-01', 'YYYY-MM-DD').toDate()
+//     },
+//     unit: 'tạ',
+//     harvestDate: dayjs('2020-01-01', 'YYYY-MM-DD').toDate()
+//   }
+// ];
+
+ const FakL = FakePro.sort(
+  (a, b) => b.season.startIn.getFullYear() - a.season.startIn.getFullYear()
+)
 
 export default function CultivationInfo() {
   // const cx = classNames.bind(styles);
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
+  const [filter, setFilter] = useState(false);
+  const [list, setList] = useState<ProductionResponse[]>(
+    FakL
+  );
 
   return (
     <>
@@ -122,7 +139,7 @@ export default function CultivationInfo() {
               size={'large'}
             >
               <HomeOutlined style={{ color: 'green' }} />
-              Hoa Mai
+              {siteName}
             </Button>
           </ConfigProvider>
           <Breadcrumb style={{ margin: '0px 24px' }}>
@@ -130,7 +147,7 @@ export default function CultivationInfo() {
             <Breadcrumb.Item>Ghi chép canh tác</Breadcrumb.Item>
           </Breadcrumb>
           <Divider orientation='left'>
-            <Typography.Title level={3}>Ghi chép canh tác trồng trọt</Typography.Title>
+            <Typography.Title level={3}>Ghi chép nhật ký canh tác</Typography.Title>
           </Divider>
 
           <Flex
@@ -158,7 +175,7 @@ export default function CultivationInfo() {
               >
                 <Flex
                   style={{
-                    width: '60%',
+                    width: '70%',
                     height: 200,
                     backgroundColor: '#e9f0e6',
                     borderRadius: 20,
@@ -171,9 +188,9 @@ export default function CultivationInfo() {
                 >
                   <Typography.Title level={3}>
                     <CalendarTwoTone twoToneColor={'#cfa524'} />
-                    {'    '}Đông xuân {`(${2023})`}
+                    {'    '}Đông xuân {`(${2024})`}
                   </Typography.Title>
-                  <Typography.Text strong>25/11 - 25/01</Typography.Text>
+                  <Typography.Text strong>15/11 - 25/01</Typography.Text>
                   <Row
                     gutter={16}
                     style={{
@@ -197,7 +214,7 @@ export default function CultivationInfo() {
                         align='center'
                         justify='center'
                       >
-                        <Typography.Title level={4}>Đã thu hoạch: 0</Typography.Title>
+                        <Typography.Title level={4}>Đã thu hoạch: 0 (kg)</Typography.Title>
                       </Flex>
                     </Col>
                     <Col
@@ -229,7 +246,15 @@ export default function CultivationInfo() {
               style={{ width: '100%' }}
             >
               <Col span={20}>
-                <Button type='primary'>Xuất PDF</Button>
+                {/* <Button type='primary' onClick={()=>exportPDF()}>Xuất PDF</Button> */}
+                <PDFDownloadLink
+                  document={<PdfTemplate />}
+                  fileName='Record-2023.pdf'
+                >
+                  {({ blob, url, loading, error }) => (
+                    <Button type='primary'>{loading ? 'Đang tải...' : 'Xuất PDF'}</Button>
+                  )}
+                </PDFDownloadLink>
               </Col>
             </Flex>
             <Col>
@@ -238,19 +263,44 @@ export default function CultivationInfo() {
                 gap={30}
                 justify='center'
                 align='center'
-                style={{ height: 40, padding: 20, marginBottom:30 }}
+                style={{ height: 40, padding: 20, marginBottom: 30 }}
               >
                 <Typography.Text>Xem theo khoảng thời gian</Typography.Text>
                 {'  '}
-                <RangePicker disabled />
-                <Switch defaultChecked={false} />
+
+                <RangePicker
+                  picker='year'
+                  id={{
+                    start: 'startInput',
+                    end: 'endInput'
+                  }}
+                  placeholder={[
+                    "Từ",
+                    "Đến"
+                  ]}
+                  onFocus={(_, info) => {
+                    console.log('Focus:', info.range);
+                  }}
+                  onBlur={(_, info) => {
+                    console.log('Blur:', info.range);
+                  }}
+                  disabled={!filter}
+                  onChange={(e, x) => {
+                    const fl = FakL.filter(d =>
+                      dayjs(d.season.startIn).year()<2021
+                    );
+                    console.log(fl)
+                    setList(fl)
+                  }}
+                />
+                <Switch
+                  defaultChecked={filter}
+                  onChange={setFilter}
+                />
               </Flex>
               <ProductionDetailList
                 productId='sadsada'
-                productions={fakeList.sort(
-                  (a, b) =>
-                    b.season.startIn.getFullYear() - a.season.startIn.getFullYear()
-                )}
+                productions={list}
               />
             </Col>
             <Flex
@@ -258,13 +308,14 @@ export default function CultivationInfo() {
               align='center'
               justify='center'
               style={{
-                width: 600,
-                height: 400
+                marginTop:40,
+                width: '100%',
+                minHeight: 400
               }}
             >
               <p></p>
               {/* <Bar/> */}
-              <CultTimeline/>
+              <CultTimeline />
             </Flex>
           </Flex>
         </Content>

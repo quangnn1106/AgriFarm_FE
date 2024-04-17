@@ -3,8 +3,12 @@ import ProductList from '@/components/(ProductionItems)/ProductList/productList'
 import { HomeOutlined } from '@ant-design/icons';
 import { ConfigProvider, Button, Breadcrumb } from 'antd';
 import { Content } from 'antd/es/layout/layout';
+import { useSession } from 'next-auth/react';
 
 export default function ProductPage() {
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   return (
     <>
       <Content style={{ padding: '20px 0px' }}>
@@ -35,7 +39,7 @@ export default function ProductPage() {
             size={'large'}
           >
             <HomeOutlined style={{ color: 'green' }} />
-            Hoa Mai
+            {siteName}
           </Button>
         </ConfigProvider>
         <Breadcrumb style={{ margin: '0px 24px' }}>
