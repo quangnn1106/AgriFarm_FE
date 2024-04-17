@@ -8,7 +8,7 @@ export type CertificationResponse = {
   member: MemberResponse;
   onDelete?: () => void;
   onUpdate?: () => void;
-  onDetails?: () => void;
+  //onDetails?: () => void;
 };
 
 export interface MemberResponse {

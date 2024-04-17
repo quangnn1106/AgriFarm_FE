@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import classNames from 'classnames/bind';
 import sampleAva from '@/assets/Images/avatar.jpg';
+//import sampleAva from '~/meo.jpg';
 import logoutIcon from '@/assets/Images/logout.png';
 
 import styles from '../menuSider.module.scss';
@@ -13,7 +14,14 @@ import { signOut, useSession } from 'next-auth/react';
 
 import { FaBell } from 'react-icons/fa6';
 
-import { LOGIN_PATH, MEM_PROFILE_PATH, SALOGIN_PATH } from '@/constants/routes';
+import {
+  AD_MA_PROFILE_PATH,
+  DENIED_PATH,
+  LOGIN_PATH,
+  MEM_PROFILE_PATH,
+  SALOGIN_PATH,
+  SA_PROFILE_PATH
+} from '@/constants/routes';
 import { ROLES } from '@/constants/roles';
 import Link from 'next/link';
 
@@ -39,10 +47,25 @@ export function getItem(
   } as MenuItem;
 }
 
+export const renderMemPro: (role: string) => string = (role: string): string => {
+  if (role === ROLES.SUPER_ADMIN) {
+    return SA_PROFILE_PATH;
+  }
+  if (role === ROLES.ADMIN || ROLES.MANAGER) {
+    return AD_MA_PROFILE_PATH;
+  }
+  if (role === ROLES.MEMBER) {
+    return MEM_PROFILE_PATH;
+  }
+  console.log(' return DENIED_PATH');
+
+  // Add a default return value in case the role doesn't match any condition
+  return DENIED_PATH; // You need to define DEFAULT_PATH according to your application logic
+};
 // Function to generate user information group
 export function GetUserInfoGroup(visible: boolean): MenuItem {
   const { data: session } = useSession();
-  const userRole = session?.user?.userInfo?.role;
+  const userRole = session?.user?.userInfo?.role as string;
   const userId = session?.user.userInfo.id;
 
   const t = useTranslations('Nav');
@@ -52,7 +75,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
       {!visible ? (
         <div>
           {/* if admin */}
-          <Link href={MEM_PROFILE_PATH}>
+          <Link href={renderMemPro(userRole)}>
             <div
               className='d-flex'
               style={{ padding: '1rem' }}

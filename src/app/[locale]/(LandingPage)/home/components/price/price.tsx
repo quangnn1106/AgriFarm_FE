@@ -3,12 +3,15 @@ import * as React from 'react';
 import './price.scss';
 import classes from './title.module.scss';
 import { Col, Row } from 'antd';
+import { useRouter } from '@/navigation';
+import { REGISTER_PATH } from '@/constants/routes';
 interface PricingCardProps {
   duration: string;
   price: number;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({ duration, price }) => {
+  const router = useRouter();
   return (
     <div className='pricing-card'>
       <div className='pricing-card-content'>
@@ -19,7 +22,14 @@ const PricingCard: React.FC<PricingCardProps> = ({ duration, price }) => {
           <span className='pricing-card-amount'>{price}</span>
           <span className='pricing-card-frequency'>/month</span>
         </div>
-        <button className='pricing-card-button'>Try it now</button>
+        <button
+          onClick={() => {
+            router.push(REGISTER_PATH);
+          }}
+          className='pricing-card-button'
+        >
+          Try it now
+        </button>
         <p className='pricing-card-info'>Click for more infomation -&gt;</p>
       </div>
     </div>

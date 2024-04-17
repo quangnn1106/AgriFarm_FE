@@ -43,25 +43,25 @@ export function CerTableColumns() {
       render: (_, cerItem) => {
         const renderItems = (
           id: string,
-          onDetailsCer: () => void,
+
           onRemoveCer: () => void,
           onUpdateCer: () => void
         ): MenuProps['items'] => {
           return [
-            {
-              label: (
-                <a
-                  onClick={() => {
-                    onDetailsCer();
-                  }}
-                >
-                  <Space>
-                    <ExclamationCircleOutlined /> Details
-                  </Space>
-                </a>
-              ),
-              key: '0'
-            },
+            // {
+            //   label: (
+            //     <a
+            //       onClick={() => {
+            //         onDetailsCer();
+            //       }}
+            //     >
+            //       <Space>
+            //         <ExclamationCircleOutlined /> Details
+            //       </Space>
+            //     </a>
+            //   ),
+            //   key: '0'
+            // },
             {
               type: 'divider'
             },
@@ -116,7 +116,7 @@ export function CerTableColumns() {
             menu={{
               items: renderItems(
                 cerItem.id,
-                cerItem.onDetails!,
+
                 cerItem.onDelete!,
                 cerItem.onUpdate!
               )

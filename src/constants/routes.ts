@@ -12,10 +12,12 @@ export const LOGIN_PATH = '/login',
 //----- private paths---------//
 //admin
 export const DASH_BOARD_PATH = '/sa/statistic',
+  SA_PROFILE_PATH = '/sa/user-profile',
   SITE_MAP_PATH = '/sa/site';
 
 // admin path + manager
 export const DASHBOARD_ADMIN = '/statistic_admin',
+  AD_MA_PROFILE_PATH = '/user-profile',
   CHECKLIST = '/checklist-global-gap',
   CHECKLIST_IMPLEMENT = '/checklist-global-gap/implement',
   CERTIFICATE_PATH = '/user-certificate';
