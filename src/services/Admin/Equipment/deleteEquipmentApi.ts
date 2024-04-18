@@ -1,10 +1,10 @@
 import { AxiosInstance } from "axios";
 
-export const deletePesticideApi = async ( http: AxiosInstance | null, pesticideId?: string | undefined ) => {
+export const deleteEquipmentApi = async ( http: AxiosInstance | null, equipmentId?: string | undefined ) => {
     try {
-        const res = await http?.delete(`ppp/farm-pesticides/delete`, {
+        const res = await http?.delete(`equip/farm-equipments/delete`, {
           params: {
-            id: pesticideId
+            id: equipmentId
           }
         });
         console.log(res?.status);

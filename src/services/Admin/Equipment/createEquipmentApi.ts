@@ -1,22 +1,16 @@
-import { CreatePesticideDto, Pesticide } from "@/app/[locale]/(Dashboard)/(Admin)/pesticide/models/pesticide-models";
+import { CreateEquipmentDto, Equipment } from "@/app/[locale]/(Dashboard)/(Admin)/equipment/models/equipment-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
-export const createPesticideApi: (
-    siteId: string | undefined,
+export const createEquipmentApi: (
     http: AxiosInstance | null,
-    createPesticideDto?: CreatePesticideDto
-) => Promise<HttpResponseCommon<Pesticide | undefined>> = async (
-    siteId,
+    createEquipmentDto?: CreateEquipmentDto
+) => Promise<HttpResponseCommon<Equipment | undefined>> = async (
     http,
-    createPesticideDto
+    createEquipmentDto
 ) => {
     try {
-        const res = await http?.post(`ppp/farm-pesticides/post`, createPesticideDto, {
-            params: {
-                siteId: siteId
-            }
-        });
+        const res = await http?.post(`equip/farm-equipments/post`, createEquipmentDto);
         return res?.data;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error

@@ -1,4 +1,4 @@
-import { Pesticide } from "@/app/[locale]/(Dashboard)/(Admin)/pesticide/models/pesticide-models";
+import { Equipment } from "@/app/[locale]/(Dashboard)/(Admin)/equipment/models/equipment-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
@@ -9,14 +9,14 @@ export interface Pagination {
     TotalPages: number;
   }
 
-const getPesticideDetailApi: (
-    pesticideId?: string | null,
+const getEquipmentDetailApi: (
+    equipmentId?: string | null,
     http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<Pesticide>> = async (pesticideId, http) => {
+    ) => Promise<HttpResponseCommon<Equipment>> = async (equipmentId, http) => {
     try {
-        const res = await http?.get(`/ppp/farm-pesticides/get`, {
+        const res = await http?.get(`/equip/farm-equipments/get`, {
             params: {
-              id: pesticideId
+              id: equipmentId
             }
         });
         return res?.data;
@@ -30,4 +30,4 @@ const getPesticideDetailApi: (
         }
     }
 }
-export default getPesticideDetailApi;
+export default getEquipmentDetailApi;

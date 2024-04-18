@@ -137,7 +137,7 @@ const AdminSider = ({ path, visible }: Props) => {
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
       getItem(<Link href={`/seed`}>{t('rice_va')}</Link>, `/seed`),
-      getItem(<Link href={`/equipments`}>{t('equip')}</Link>, `/equipments`),
+      getItem(<Link href={`/equipment`}>{t('equip')}</Link>, `/equipments`),
       getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
     ]),
 
