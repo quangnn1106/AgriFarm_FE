@@ -26,7 +26,7 @@ export const renderPath: (role: string) => string = (role: string): string => {
   if (role === ROLES.SUPER_ADMIN) {
     return DASH_BOARD_PATH;
   }
-  if (role === ROLES.ADMIN) {
+  if (role === ROLES.ADMIN || ROLES.MANAGER) {
     return DASHBOARD_ADMIN;
   }
   if (role === ROLES.MEMBER) {
@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
         }
         router.push(callbackUrl as string);
       } else {
-        setError('Invalid User or password');
+        setError('Sai mật khẩu hoặc email');
         console.log(error);
       }
     } catch (error: any) {
@@ -110,13 +110,13 @@ const LoginForm: React.FC = () => {
             autoComplete='off'
           >
             <Form.Item>
-              <h1 className={cx('auth__title')}>Login {session?.user?.email} </h1>
-              <p className={cx('auth_subtitle')}>Access to your farm</p>
+              <h1 className={cx('auth__title')}>Đăng nhập {session?.user?.email} </h1>
+              <p className={cx('auth_subtitle')}>Truy cập vào nông trại của bạn</p>
             </Form.Item>
 
             <Form.Item
               name='siteId'
-              label='Farm Code'
+              label='Mã số nông trại'
               rules={[{ required: false }]}
             >
               <Input size='large' />
@@ -137,8 +137,8 @@ const LoginForm: React.FC = () => {
 
             <Form.Item
               name='password'
-              label='Password'
-              rules={[{ required: true, message: 'Password is required' }]}
+              label='Mật khẩu'
+              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
             >
               <Input.Password size='large' />
             </Form.Item>
@@ -155,7 +155,7 @@ const LoginForm: React.FC = () => {
                     className={cx('auth__btn')}
                     disabled={loading ? true : false}
                   >
-                    {loading ? <Loading userState={status} /> : 'Login'}
+                    {loading ? <Loading userState={status} /> : 'Đăng nhập'}
                   </Button>
                 </Col>
                 <Col span={12}>
@@ -163,7 +163,7 @@ const LoginForm: React.FC = () => {
                     className={cx('login_form_forgot')}
                     href=''
                   >
-                    Forgot password
+                    Quên mật khẩu
                   </a>
                 </Col>
               </Row>
@@ -171,7 +171,7 @@ const LoginForm: React.FC = () => {
 
             <Form.Item>
               <p>
-                Have an account yet? <Link href={REGISTER_PATH}>Click here</Link>{' '}
+                Chưa có tài khoản? <Link href={REGISTER_PATH}>Ấn vào đây</Link>{' '}
               </p>
             </Form.Item>
           </Form>

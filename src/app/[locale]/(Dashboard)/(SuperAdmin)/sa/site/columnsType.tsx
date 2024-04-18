@@ -16,7 +16,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
   //   fixed: 'left'
   // },
   {
-    title: 'Site Code',
+    title: 'Mã số',
     dataIndex: 'siteCode',
 
     width: 'max-content',
@@ -24,23 +24,23 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
   },
 
   {
-    title: 'Site Name',
+    title: 'Tên nông trại',
     dataIndex: 'name',
     width: 'max-content'
   },
   {
-    title: 'Avatar',
+    title: 'Ảnh',
     dataIndex: 'avatar',
 
     width: 'max-content'
   },
   {
-    title: 'Description',
+    title: 'Mô tả',
     dataIndex: 'description',
     width: 'max-content'
   },
   {
-    title: 'Status',
+    title: 'Trạng thái',
     dataIndex: 'isLockout',
 
     // filterMode: 'tree',
@@ -66,12 +66,8 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
     fixed: 'right',
     align: 'right' as const,
     render: (_, sitesItem) => {
-      const renderItems = (
-        id: string,
-        onDetailsUser: () => void,
-      ): MenuProps['items'] => {
+      const renderItems = (id: string, onDetailsUser: () => void): MenuProps['items'] => {
         return [
-
           {
             label: (
               <a
@@ -106,10 +102,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
       return (
         <Dropdown
           menu={{
-            items: renderItems(
-              sitesItem.id!,
-              sitesItem.onDetails!
-            )
+            items: renderItems(sitesItem.id!, sitesItem.onDetails!)
           }}
         >
           <a onClick={e => e.preventDefault()}>

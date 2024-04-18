@@ -67,10 +67,10 @@ export default function DashBoardLayout({ children }: Props) {
   }
   return (
     <>
-      <NotificationContextProvider>
-        {/* <NotificationBell /> */}
-        {getLayout()}
-      </NotificationContextProvider>
+      {/* <NotificationContextProvider>
+        <NotificationBell />
+      </NotificationContextProvider> */}
+      {getLayout()}
     </>
   );
 }

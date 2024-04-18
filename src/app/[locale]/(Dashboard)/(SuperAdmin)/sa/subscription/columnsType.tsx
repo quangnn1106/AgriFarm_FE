@@ -27,7 +27,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   //   fixed: 'left'
   // },
   {
-    title: 'Full Name',
+    title: 'Họ Tên',
     dataIndex: 'firstName',
     render: (_, userItem) => `${userItem.firstName} ${userItem.lastName}`,
     width: 'max-content',
@@ -46,16 +46,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   {
     title: 'Address',
     dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London'
-      },
-      {
-        text: 'New York',
-        value: 'New York'
-      }
-    ],
+
     // filterMode: 'tree',
     // filterSearch: true,
     // onFilter: (value: string, record)=> record.address.startsWith(value),
@@ -92,7 +83,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   //   width: 'max-content'
   // },
   {
-    title: 'Is Approve',
+    title: 'Trạng thái',
     dataIndex: 'isApprove',
     sorter: true,
     // filterMode: 'tree',

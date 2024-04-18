@@ -73,7 +73,7 @@ const UpdateLandModal = ({
   const tM = useTranslations('Message');
   const handleMapLoading = () => setLoading(false);
   const [marker, setMarker] = React.useState<any>();
-  const t = useTranslations('FormRegister');
+  const t = useTranslations('Common');
   const msg = useTranslations('Message');
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
