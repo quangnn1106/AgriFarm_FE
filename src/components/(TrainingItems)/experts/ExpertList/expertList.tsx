@@ -52,11 +52,11 @@ import Meta from 'antd/es/card/Meta';
 import { PaginationResponse } from '@/types/pagination';
 import { useRouter } from '@/navigation';
 import { Span } from 'next/dist/trace';
-import Search from 'antd/es/transfer/search';
 import { Content } from 'antd/es/layout/layout';
 import { useSession } from 'next-auth/react';
 import { getPaginationResponse } from '@/utils/paginationHelper';
 import { useDebounceSearch } from '@/utils/debounceSearch';
+import Search from 'antd/es/input/Search';
 
 interface IProps {
   list?: Expert[];
@@ -69,6 +69,7 @@ export default function ExpertList(props: IProps) {
   const [experts, setExperts] = useState<Expert[] | []>();
   const [isFetching, setIsFetching] = useState(false);
   const [hasChanged, setHasChanged] = useState(true);
+  const [term, setTerm] = useState<string>('');
   const [page, setPage] = useState<PaginationResponse>({
     CurrentPage: 1,
     PageSize: 5,
@@ -82,10 +83,15 @@ export default function ExpertList(props: IProps) {
   const siteName = session?.user.userInfo.siteName;
   const http = UseAxiosAuth();
 
-  const fetchExperts = async (http: AxiosInstance) => {
+  const fetchExperts = async () => {
     try {
       console.log('Fetching data..');
-      const responseData = await getExpertsService(http);
+      const responseData = await getExpertsService(
+        http,
+        page.CurrentPage,
+        page.PageSize,
+        term.length === 0 ? undefined : term
+      );
       console.log('Data here: ', responseData);
       setPage(getPaginationResponse(responseData));
       setExperts(responseData?.data.data as Expert[]);
@@ -95,35 +101,25 @@ export default function ExpertList(props: IProps) {
     }
   };
 
+  // useEffect(() => {
+  //   fetchExperts();
+  // }, [http, hasChanged]);
+
   useEffect(() => {
-    fetchExperts(http);
-  }, [http, hasChanged]);
+    console.log('On fetching..');
+    fetchExperts();
+  }, [term, page.CurrentPage]);
+
+  // useEffect(() => {
+  //   console.log('On paging..');
+  //   fetchExperts();
+  // }, [page]);
 
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   const exps: Expert[] = [];
-  //   for (let index = 0; index < 10; index++) {
-  //     exps.push({
-  //       id: 'sdasdads-q243-asd412-dasd' + index,
-  //       fullName: `Expert ${index}`,
-  //       description: 'very good technical',
-  //       expertField: 'Math'
-  //     });
-  //   }
-  //   setExperts(exps);
-  //   setPage({
-  //     CurrentPage: 1,
-  //     PageSize: 10,
-  //     TotalCount: 12,
-  //     TotalPages: 2
-  //   });
-  // }, [hasChanged]);
-
   const handleDelete = async (content: Expert) => {
-    //await handleDeleteActivityAction({ id: user.id })
     try {
       const rs = await deleteExpertsService(http, content.id);
 
@@ -138,27 +134,12 @@ export default function ExpertList(props: IProps) {
 
   const handleSearch = async (val: string) => {
     console.log('key: ', val);
+    setPage(prev=>({...prev, CurrentPage:1}))
+    setTerm(val.trim().toLowerCase());
 
-    if (val && val.trim().length > 0) {
-      setIsFetching(true);
-      const res = await getExpertsService(http, 1, 100, val);
-      if (res.status === 200) {
-        const body = res.data.data as Expert[];
-        if (body.length > 0) {
-          setPage(getPaginationResponse(res));
-
-          console.log('List ', body);
-          setExperts(body);
-        }
-      }
-      // setList(fakeData);
-      setIsFetching(false);
-      if (val.length === 0) {
-        setHasChanged(prev => !prev);
-      }
-    }
+    
   };
-  const [onSearch] = useDebounceSearch(handleSearch, 1000);
+  const [onSearch] = useDebounceSearch(handleSearch, 500);
 
   const handleDetailClick = (content: Expert) => {
     setSelectedExpert(content);
@@ -364,30 +345,37 @@ export default function ExpertList(props: IProps) {
             </Col>
           </Row>
           <Flex style={{ marginBottom: 50 }}>
-            <Input
-              type='text'
-              onChange={e => onSearch(e.target.value)}
+            <Search
               allowClear
+              // onClear={()=>setTerm('')}
+              onChange={e => onSearch(e.target.value)}
+              onSearch={handleSearch}
             />
           </Flex>
+          <div style={{ minHeight: 500 }}>
           <Table
             style={{
-              minHeight: 500,
-              overflow: 'auto'
+              height: 500,
+              // overflow: 'auto'
             }}
+            bordered
+            // size='large'
+            rowKey={e => e.id}
             dataSource={experts}
             columns={columns}
+            // pagination={false}
             pagination={{
               //showTotal: total => `${total} hồ sơ`,
               showSizeChanger: false,
               pageSize: 5, //page.PageSize,
               current: page.CurrentPage,
-
+              onChange:(number)=>setPage({...page, CurrentPage:number}),
               //pageSizeOptions: ['10', '20', '30'],
               total: page.TotalCount
             }}
             scroll={{ y: 500 }}
           ></Table>
+          </div>
         </div>
 
         {updateOpen && selectedExpert && (
