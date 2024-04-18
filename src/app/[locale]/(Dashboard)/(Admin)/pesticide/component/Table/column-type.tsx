@@ -35,9 +35,9 @@ import { Pesticide } from '../../models/pesticide-models';
           <>
           <Flex align='center' gap='10px'>
           <Image
-              style={{borderRadius: '50%'}}
+              style={{borderRadius: '10%'}}
               height={40}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              src={pesticideItem?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+pesticideItem?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
             />
             <p style={{color:'#009A29', fontWeight:'600'}} >{pesticideItem.name}</p>
             </Flex>  
@@ -57,7 +57,7 @@ import { Pesticide } from '../../models/pesticide-models';
         dataIndex: 'unitPrice',
         width: 'max-content',
         align: 'end',
-        render: (_,pesticideItem) => `${pesticideItem.unitPrice} VND`
+        render: (_,pesticideItem) => `${pesticideItem.unitPrice.toLocaleString()} VND`
       },
     {
       width: 'max-content',

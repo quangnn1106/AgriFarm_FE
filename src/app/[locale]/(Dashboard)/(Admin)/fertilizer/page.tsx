@@ -74,7 +74,7 @@ const FertilizerManagement = (props: Props) => {
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/fertilizer`}>Fertilizer</Link>
+      title: <Link href={`/fertilizer`}>Phân bón</Link>
     }
   ];
 
@@ -188,7 +188,7 @@ const FertilizerManagement = (props: Props) => {
   return (
     <>
       
-      <Content style={{ padding: '20px 0px' }}>
+      <Content style={{ padding: '20px 20px' }}>
         <ConfigProvider
           theme={{
             components: {
@@ -303,7 +303,7 @@ const FertilizerManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this fertilizers?</span>
+                  <span>Bạn có muốn xóa những loại phân bón này?</span>
                 </div>
               }
               open={deleteState}
@@ -379,7 +379,7 @@ const FertilizerManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Fertilizer"
+        title="Chi tiết phân bón"
         placement="right"
         onClose={closeFertilizerDetailDrawer}
         open={openFertilizerDetailDrawer}
@@ -390,7 +390,7 @@ const FertilizerManagement = (props: Props) => {
           }}></UpdateFertilizerFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm phân bón mới"
         placement="right"
         onClose={closeAddFertilizerDrawer}
         open={openAddFertilizer}

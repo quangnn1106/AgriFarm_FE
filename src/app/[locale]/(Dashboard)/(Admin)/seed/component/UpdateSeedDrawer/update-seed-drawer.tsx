@@ -138,7 +138,7 @@ const UpdateSeedFormDrawer = ({
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
-        <Tooltip title='Add More Supply'>
+        <Tooltip title='Nhập thêm giống'>
           <Button
             size='middle'
             className={cx('bg-btn')}

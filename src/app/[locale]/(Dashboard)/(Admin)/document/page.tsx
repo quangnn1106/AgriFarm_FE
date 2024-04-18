@@ -6,6 +6,8 @@ import {
   Divider,
   Drawer,
   Flex,
+  Form,
+  Input,
   Layout,
   Modal,
   Space,
@@ -19,10 +21,11 @@ import {
   HomeOutlined,
   PlusOutlined,
   MinusOutlined,
-  WarningOutlined
+  WarningOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
-import stylesSupplierManagement from '../(supply)/supplierStyle.module.scss';
+import stylesDocumentManagement from './documentStyle.module.scss';
 import classNames from 'classnames/bind';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
@@ -34,9 +37,14 @@ import { AxiosInstance } from 'axios';
 import { DocumentResponse } from './models/document-models';
 import FilterSection from './FilterSection/filterSection';
 import { DocumentTableColumns } from './Table/colume-types';
-import UpdateDocumentDrawer from './UpdateSupplierDrawer/update-document-drawer';
+import UpdateDocumentDrawer from './UpdateDocumentDrawer/update-document-drawer';
 import AddDocumentDrawer from './CreateDocumentDrawer/create-document-drawer';
+import getDocumentsApi from '@/services/Admin/Document/getDocumentsApi';
+import { deleteDocumentApi } from '@/services/Admin/Document/deleteDocumentApi';
 
+interface SearchForm {
+  keyword: string
+}
 
 type Props = {};
 const DocumentManagement = (props: Props) => {
@@ -48,12 +56,14 @@ const DocumentManagement = (props: Props) => {
 
   //style
   const cx = classNames.bind(styles);
-  const styleSupplierManagement = classNames.bind(stylesSupplierManagement);
+  const styleDocumentManagement = classNames.bind(stylesDocumentManagement);
 
   const { data: session } = useSession();
   const siteId = session?.user.userInfo.siteId;
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
+
+  const [form] = Form.useForm<SearchForm>();
 
   // Navigation
   const router = useRouter();
@@ -71,70 +81,21 @@ const DocumentManagement = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [documents, setDocuments] = useState<DocumentResponse[] | undefined>([]);
 
-  const getListDocumentsApi = async (http: AxiosInstance) => {
+  const getListDocumentsApi = async (siteId: string | undefined, http: AxiosInstance, keySearch?: string) => {
     // setDocuments([]);
-    // try {
-    //   const responseData = await getDocumentsApi(http);
-    //   setDocuments(responseData.data as DocumentResponse[]);
-    //   setLoading(false);
-    // } catch (error) {
-    //   console.error('Error calling API getListDocumentsApi:', error);
-    // }
-    setDocuments([
-      {
-          "id": "A0",
-          "name": "Document 1",
-          "fileLink": "http://www.example.com/1.png",
-          "createdDate": "15/7/2023",
-          "type": "Tài liệu A"
-      },
-      {
-          "id": "A1",
-          "name": "Document 2",
-          "fileLink": "http://www.example.com/2.png",
-          "createdDate": "8/4/2022",
-          "type": "Tài liệu B"
-      },
-      {
-          "id": "A2",
-          "name": "Document 3",
-          "fileLink": "http://www.example.com/3.png",
-          "createdDate": "25/12/2024",
-          "type": "Tài liệu C"
-      },
-      {
-          "id": "A3",
-          "name": "Document 4",
-          "fileLink": "http://www.example.com/4.png",
-          "createdDate": "10/9/2023",
-          "type": "Tài liệu A"
-      },
-      {
-          "id": "A4",
-          "name": "Document 5",
-          "fileLink": "http://www.example.com/5.png",
-          "createdDate": "3/11/2022",
-          "type": "Tài liệu B"
-      },
-      {
-          "id": "A5",
-          "name": "Document 6",
-          "fileLink": "http://www.example.com/6.png",
-          "createdDate": "18/6/2024",
-          "type": "Tài liệu C"
+    try {
+      let responseData:any;
+      if(keySearch=="" || keySearch?.trim()=="" || keySearch==undefined || keySearch==null) { 
+        responseData = await getDocumentsApi(siteId, http);
+      } else {
+        responseData = await getDocumentsApi(siteId, http, keySearch);
       }
-  ]
-  );
-    // for (let i = 0; i< 10; i++) {
-    //     documents?.push({
-    //         id: 'A'+i,
-    //         name: 'Tài Liệu',
-    //         fileLink: 'http://www.baidu.com/yyy.png',
-    //         createdDate: '20-10-2024',
-    //         type: 'Tài liệu'
-    //     })
-    // }
-    setLoading(false);
+      setDocuments(responseData.data as DocumentResponse[]);
+      setLoading(false);
+      onResetSearchSubmit();
+    } catch (error) {
+      console.error('Error calling API getListDocumentsApi:', error);
+    }
   };
 
 
@@ -168,13 +129,13 @@ const DocumentManagement = (props: Props) => {
   const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
   const [deletedDocuments, setDeleteDocuments] = useState<React.Key[]>([]);
 
-  const deleteDocument = async (http: AxiosInstance, seasonId?: string) => {
-    // try {
-    //   const res = await deleteDocumentApi(http, seasonId);
-    //   getListDocumentsApi (http);
-    // } catch (error) {
-    //   console.error('Error calling API Delete Season:', error);
-    // }
+  const deleteDocument = async (http: AxiosInstance, documentId?: string) => {
+    try {
+      const res = await deleteDocumentApi(http, documentId);
+      getListDocumentsApi(siteId, http);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
   }
 
   const checkRowSelection = {
@@ -212,14 +173,23 @@ const DocumentManagement = (props: Props) => {
     setOpenAddDocument(false);
   };
 
+      //handle search
+      const [searchSubmit, setSearchSubmit] = useState(false);
+      const onSearchSubmit = () => {
+        setSearchSubmit(true)
+      }
+      const onResetSearchSubmit = () => {
+        setSearchSubmit(false)
+      }
+
   useEffect(() => {
-    getListDocumentsApi(http);
-  }, [http, siteId, openAddDocument, openDocumentDetailDrawer, openDocumentUpdateDrawer]);
+    getListDocumentsApi(siteId, http, form.getFieldValue('keyword'));
+  }, [http, siteId, openAddDocument, openDocumentDetailDrawer, openDocumentUpdateDrawer, searchSubmit]);
 
   return (
     <>
       
-      <Content style={{ padding: '20px 0px' }}>
+      <Content style={{ padding: '20px 20px' }}>
         <ConfigProvider
           theme={{
             components: {
@@ -261,7 +231,50 @@ const DocumentManagement = (props: Props) => {
           {t('search_condition')}
         </Divider>
 
-        <FilterSection></FilterSection>
+        <ConfigProvider
+        theme={{
+          components: {
+            Form: {
+              itemMarginBottom: 8
+            }
+          }
+        }}
+      >
+        <Form
+          form={form}
+          name='basic'
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          autoComplete='off'
+          className={styleDocumentManagement('margin-form-item')}
+          style={{padding: '0px 24px'}}
+        >
+          <Form.Item
+            label={t('keyword')}
+            name='keyword'
+          >
+            <Input
+              placeholder={t('Input_search_text')}
+              style={{ width: '50%' }}
+            ></Input>
+          </Form.Item>
+          <Form.Item label=''>
+            <Flex
+              align='center'
+              justify='center'
+            >
+              <Button
+                htmlType='submit'
+                className={cx('bg-btn')}
+                icon={<SearchOutlined />}
+                onClick={onSearchSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
         <Divider
           orientation='left'
           plain
@@ -288,7 +301,7 @@ const DocumentManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this documents?</span>
+                  <span>Bạn có muốn xóa những tệp thông tin này?</span>
                 </div>
               }
               open={deleteState}
@@ -363,22 +376,22 @@ const DocumentManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Document"
+        title="Thông tin chi tiết"
         placement="right"
         onClose={closeDocumentDetailDrawer}
         open={openDocumentDetailDrawer}
-        className={styleSupplierManagement('drawer-width')}
+        className={styleDocumentManagement('drawer-width')}
       >
        <UpdateDocumentDrawer params={{
             documentId: documentId
           }}></UpdateDocumentDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm tài liệu mới"
         placement="right"
         onClose={closeAddDocumentDrawer}
         open={openAddDocument}
-        className={styleSupplierManagement('drawer-width')}
+        className={styleDocumentManagement('drawer-width')}
       >
         <AddDocumentDrawer></AddDocumentDrawer>
       </Drawer>

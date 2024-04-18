@@ -517,7 +517,7 @@ const AddSeedFormDrawer: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -526,7 +526,7 @@ const AddSeedFormDrawer: React.FC = () => {
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
           <Flex
             style={{ width: '100%' }}
             justify='end'

@@ -116,7 +116,7 @@ const Statistic = () => {
           </Button>
         </ConfigProvider>
         <TitleHeader title='Thống kê'></TitleHeader>
-        <Flex
+        {/* <Flex
           gap={10}
           style={{ width: '100%', marginTop: '20px' }}
           wrap='wrap'
@@ -165,7 +165,7 @@ const Statistic = () => {
               value='rain'
             ></IconText>
           </div>
-        </Flex>
+        </Flex> */}
         <Flex
           className={ss('total-section')}
           vertical={true}
@@ -185,6 +185,7 @@ const Statistic = () => {
               style={{ width: 120 }}
               onChange={handleChangeSeason}
               options={optionSeasons}
+              defaultActiveFirstOption={true}
               placeholder='Chọn mùa'
             />
             <DatePicker
@@ -193,69 +194,71 @@ const Statistic = () => {
               placeholder='Chọn năm'
             />
           </Flex>
+          <Flex style={{ width: '100%' }} justify='center' align='center'>
           <Flex
-            gap={10}
-            style={{ width: '100%' }}
+            gap={30}
+            style={{ width: '75%' }}
             wrap='wrap'
             justify='center'
           >
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={1468.88}
               title={'Tổng doanh thu'}
               color={'#FFE2E5'}
-              rate={-8}
+              rate={4.1}
               float={2}
               unit='Tr VND'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={100}
+              totalNumbers={98}
               title={'Tổng sản lượng'}
               color={'#DCFCE7'}
-              rate={-8}
+              rate={4.6}
               float={0}
               unit='tấn'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={100}
+              totalNumbers={98}
               title={'Năng suất'}
               color={'#fff4de'}
-              rate={8}
+              rate={5}
               float={0}
               unit='tạ/ha'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={10}
+              totalNumbers={18}
               title={'Tổng số nhân công'}
               color={'#F3E8FF'}
               rate={0}
-              float={2}
+              float={0}
               unit='Người'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={11}
               title={'Tổng diện tích'}
               color={'#E5F9FF'}
               rate={0}
-              float={2}
-              unit='m^2'
+              float={0}
+              unit='ha'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={1000}
-              title={'Tổng doanh thu'}
+              totalNumbers={854}
+              title={'Tổng chi phí'}
               color={'#F8FFE5'}
-              rate={-8}
+              rate={-1.2}
               float={2}
               unit='Tr VND'
               timeCompare='mùa trước'
             ></NumberBlock>
           </Flex>
         </Flex>
-        <ConfigProvider
+        </Flex>
+        {/* <ConfigProvider
           theme={{
             components: {
               Table: {
@@ -279,7 +282,7 @@ const Statistic = () => {
               ...product
             }))}
           />
-        </ConfigProvider>
+        </ConfigProvider> */}
         {/* <Typography>
                 <pre>{JSON.stringify(weather, null, 2)}</pre>
               </Typography> */}

@@ -146,7 +146,7 @@ const SeasonDetails = ({
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/season`}>{t('season')}</Link>
+      title: <Link href={`/season`}>Mùa vụ</Link>
     },
     {
       title: t('Details')

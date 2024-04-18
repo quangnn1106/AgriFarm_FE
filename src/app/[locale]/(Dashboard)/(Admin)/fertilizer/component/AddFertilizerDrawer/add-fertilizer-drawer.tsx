@@ -16,7 +16,11 @@ import {
   Select,
   SelectProps,
   Flex,
-  Image
+  Image,
+  GetProp,
+  UploadProps,
+  UploadFile,
+  Upload
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
@@ -28,7 +32,8 @@ import {
   DownCircleOutlined,
   FormOutlined,
   FileOutlined,
-  BarsOutlined
+  BarsOutlined,
+  PlusOutlined
 } from '@ant-design/icons';
 
 import { useSession } from 'next-auth/react';
@@ -43,6 +48,18 @@ import {
 import { createFertilizerApi } from '@/services/Admin/Fertilizer/createFertilizerApi';
 import { createSupplyInfoApi } from '@/services/Admin/Fertilizer/createSuppyInfoApi';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
+
+import { UploadFileApi } from '@/services/Admin/Media/uploadFileApi';
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
 
 const AddFertilizerFormDrawer: React.FC = () => {
   const t = useTranslations('Common');
@@ -131,34 +148,75 @@ const AddFertilizerFormDrawer: React.FC = () => {
     setIsFetching(false);
   };
 
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [file, setFile] = useState<UploadFile>();
+  const [url, setUrl] = useState<string>();
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
+  const handleChange: UploadProps['onChange'] = ({ file: newFile }) => setFile(newFile);
+
+  const uploadButton = (
+    <button
+      style={{ border: 0, background: 'none' }}
+      type='button'
+    >
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+    </button>
+  );
+
   const [createdFertilizer, setCreatedFertilizer] = useState<Fertilizer>();
 
   const onSubmit = async (value: CreateAllInfoOfFertilizerMapperDto) => {
     try {
-      await createFertilizerApi(siteId, http, {
-        name: value.name,
-        description: value.description,
-        notes: value.notes,
-        defaultUnit: value.defaultUnit,
-        properties: value.properties
-      }).then(async res => {
-        const fertilizerNew = res?.data as Fertilizer;
-        if (
-          form.getFieldValue('quantity') > 0 &&
-          form.getFieldValue('quantity') < 10000
-        ) {
-          await createSupplyInfoApi(fertilizerNew.id, http, {
-            quantity: value.quantity,
-            unitPrice: value.unitPrice,
-            measureUnit: value.measureUnit,
-            content: value.content,
-            supplier: {
-              id: value.supplierId,
-              name: value.supplierName,
-              address: value.address
-            }
-          }).then(resSupplier => {
-            if (res.data && resSupplier.data) {
+      const formData = new FormData();
+      formData?.append('file', file?.originFileObj as FileType);
+      await UploadFileApi(http, formData).then(async res => {
+        let data = res.data;
+        setUrl(data);
+        await createFertilizerApi(siteId, http, {
+          name: value.name,
+          description: value.description,
+          notes: data,
+          defaultUnit: value.defaultUnit,
+          properties: value.properties
+        }).then(async res => {
+          const fertilizerNew = res?.data as Fertilizer;
+          if (
+            form.getFieldValue('quantity') > 0 &&
+            form.getFieldValue('quantity') < 10000
+          ) {
+            await createSupplyInfoApi(fertilizerNew.id, http, {
+              quantity: value.quantity,
+              unitPrice: value.unitPrice,
+              measureUnit: value.measureUnit,
+              content: value.content,
+              supplier: {
+                id: value.supplierId,
+                name: value.supplierName,
+                address: value.address
+              }
+            }).then(resSupplier => {
+              if (res.data && resSupplier.data) {
+                openNotification('top', t('Create_successfully'), 'success');
+                console.log('create success', res.status);
+              } else {
+                openNotification('top', t('Create_fail') + res?.message, 'error');
+                console.log('create fail', res.status);
+              }
+              form.resetFields();
+            });
+          } else {
+            if (res.data) {
               openNotification('top', t('Create_successfully'), 'success');
               console.log('create success', res.status);
             } else {
@@ -166,17 +224,8 @@ const AddFertilizerFormDrawer: React.FC = () => {
               console.log('create fail', res.status);
             }
             form.resetFields();
-          });
-        } else {
-          if (res.data) {
-            openNotification('top', t('Create_successfully'), 'success');
-            console.log('create success', res.status);
-          } else {
-            openNotification('top', t('Create_fail') + res?.message, 'error');
-            console.log('create fail', res.status);
           }
-          form.resetFields();
-        }
+        });
       });
     } catch (error) {
       openNotification('top', t('Create_fail'), 'error');
@@ -238,6 +287,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
                 <Input placeholder={t('Type_data')} />
               </Form.Item>
               <Form.Item
+                hidden
                 name='defaultUnit'
                 style={{
                   maxWidth: '100%',
@@ -262,65 +312,83 @@ const AddFertilizerFormDrawer: React.FC = () => {
                 ></Select>
               </Form.Item>
               <Form.Item
-            name='quantity'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Quantity')}
-              </>
-            }
-          >
-            <InputNumber placeholder={t('Quantity')} />
-          </Form.Item>
-          <Form.Item
-            name='unitPrice'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} /> {t('Unit_Price')}
-              </>
-            }
-          >
-            <InputNumber placeholder={t('Unit_Price')} />
-          </Form.Item>
-          <Form.Item
-            name='measureUnit'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <DownCircleOutlined style={{ marginRight: '0.5rem' }} /> {t('Measure_Unit')}
-              </>
-            }
-          >
-            <Select
-              size='middle'
-              placeholder= {t('Select_value')}
-              options={[
-                {
-                  value: 'kg',
-                  label: 'kg'
+                name='quantity'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Quantity')}
+                  </>
                 }
-              ]}
-            ></Select>
-          </Form.Item>
+              >
+                <InputNumber placeholder={t('Quantity')} />
+              </Form.Item>
+              <Form.Item
+                name='unitPrice'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <BorderlessTableOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Unit_Price')}
+                  </>
+                }
+              >
+                <InputNumber placeholder={t('Unit_Price')} />
+              </Form.Item>
+              <Form.Item
+                name='measureUnit'
+                style={{
+                  maxWidth: '100%',
+                  margin: '0px 0px 8px 0px',
+                  padding: '0px 0px'
+                }}
+                label={
+                  <>
+                    <DownCircleOutlined style={{ marginRight: '0.5rem' }} />{' '}
+                    {t('Measure_Unit')}
+                  </>
+                }
+              >
+                <Select
+                  size='middle'
+                  placeholder={t('Select_value')}
+                  options={[
+                    {
+                      value: 'kg',
+                      label: 'kg'
+                    }
+                  ]}
+                ></Select>
+              </Form.Item>
             </Flex>
             <Flex style={{ width: '30%' }}>
-            <Image
-              style={{ borderRadius: '10px' }}
-              src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-            />
+              <Upload
+                listType='picture-card'
+                onPreview={handlePreview}
+                onChange={handleChange}
+                style={{ width: '100%' }}
+              >
+                + Tải ảnh lên
+              </Upload>
+              {previewImage && (
+                <Image
+                  wrapperStyle={{ display: 'none' }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: visible => setPreviewOpen(visible),
+                    afterOpenChange: visible => !visible && setPreviewImage('')
+                  }}
+                  src={previewImage}
+                />
+              )}
             </Flex>
           </Flex>
 
@@ -345,6 +413,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
             />
           </Form.Item>
           <Form.Item
+            hidden
             name='notes'
             style={{
               maxWidth: '100%',
@@ -411,7 +480,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
               )}
             </Form.List>
           </Flex>
-          
+
           <Form.Item
             name='content'
             style={{
@@ -463,7 +532,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
                     (optionB?.label?.toString().toLowerCase() ?? '').toLowerCase()
                   )
               }
-              placeholder= {t('Select_value')}
+              placeholder={t('Select_value')}
               optionLabelProp='label'
               options={options}
               value={selectedSupplierId}
@@ -506,7 +575,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
             <Input placeholder={t('Type_data')} />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -515,7 +584,7 @@ const AddFertilizerFormDrawer: React.FC = () => {
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
           <Flex
             style={{ width: '100%' }}
             justify='end'

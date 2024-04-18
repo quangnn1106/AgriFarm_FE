@@ -75,7 +75,7 @@ const SupplierManagement = (props: Props) => {
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/Supplier`}>{sup('Supplier')}</Link>
+      title: <Link href={`/Supplier`}>Nhà cung cấp</Link>
     }
   ];
 
@@ -379,7 +379,7 @@ const SupplierManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Supplier"
+        title="Chi tiết nhà cung cấp"
         placement="right"
         onClose={closeSupplierDetailDrawer}
         open={openSupplierDetailDrawer}
@@ -390,7 +390,7 @@ const SupplierManagement = (props: Props) => {
           }}></UpdateSupplierDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm nhà cung cấp mới"
         placement="right"
         onClose={closeAddSupplierDrawer}
         open={openAddSupplier}

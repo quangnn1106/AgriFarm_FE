@@ -171,7 +171,7 @@ const AddFertilizerSupplyModal = ({
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
           centered={true}
-          width={'fit-content'}
+          width={'50%'}
           footer={null}
           className= {styleFertilizerManagement('add-supply-modal')}
         >
@@ -335,7 +335,7 @@ const AddFertilizerSupplyModal = ({
               {t('Save')}
             </Button>
           </Flex>
-            <Form.Item
+            {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -344,7 +344,7 @@ const AddFertilizerSupplyModal = ({
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
           </Form>
         </Modal>
       </ConfigProvider>

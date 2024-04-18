@@ -139,14 +139,14 @@ const UpdateFertilizerFormDrawer = ({
     <>
       {contextHolder}
       <Spin spinning={isFetching}>
-        <Tooltip title={f('Add_more_fertilizer')}>
+        <Tooltip title='Nhập thêm phân bón'>
           <Button
             size='middle'
             className={cx('bg-btn')}
             icon={<PlusOutlined />}
             onClick={showAddSupplyModal}
           >
-            {f('Add_more_fertilizer')}
+            Nhập thêm phân bón
           </Button>
         </Tooltip>
         <AddFertilizerSupplyModal
@@ -255,7 +255,7 @@ const UpdateFertilizerFormDrawer = ({
             <Flex style={{ width: '30%' }}>
             <Image
               style={{ borderRadius: '10px' }}
-              src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+              src={fertilizerDetail?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+ fertilizerDetail?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
             />
             </Flex>
             
@@ -282,6 +282,7 @@ const UpdateFertilizerFormDrawer = ({
             />
           </Form.Item>
           <Form.Item
+            hidden
             name='notes'
             style={{
               maxWidth: '100%',
@@ -364,7 +365,7 @@ const UpdateFertilizerFormDrawer = ({
               {t('Save')}
             </Button>
           </Flex>
-          <Form.Item
+          {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -373,7 +374,7 @@ const UpdateFertilizerFormDrawer = ({
                 <pre>{JSON.stringify(formInfoCommon.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Spin>
     </>
