@@ -117,7 +117,7 @@ import dayjs from 'dayjs';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this Documents',
+                      title:'Bạn có muốn xóa những tệp thông tin này?',
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

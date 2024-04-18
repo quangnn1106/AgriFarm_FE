@@ -8,6 +8,7 @@ export interface Equipment {
     url: string,
     expiredIn: string,
     inUse: number,
+    notes: string,
     onDelete?: () => void;
     onViewHistory?: () => void;
     onDetails?: () => void;
@@ -62,4 +63,7 @@ export interface Equipment {
     supplierId: string
     supplierName: string
     address: string
+    validFrom: string
+    validTo: string
   }
+

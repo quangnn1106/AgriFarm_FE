@@ -178,15 +178,15 @@ const Statistic = () => {
             justify='center'
           >
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={8.9}
               title={'Tổng doanh thu'}
               color={'#FFE2E5'}
-              rate={-8}
+              rate={100}
               float={2}
               unit='tr VND'
-              timeCompare='mùa trước'
+              timeCompare='tháng trước'
             ></NumberBlock>
-            <NumberBlock
+            {/* <NumberBlock
               totalNumbers={100}
               title={'Tổng số đơn hàng'}
               color={'#DCFCE7'}
@@ -194,8 +194,8 @@ const Statistic = () => {
               float={0}
               unit='đơn'
               timeCompare='mùa trước'
-            ></NumberBlock>
-            <NumberBlock
+            ></NumberBlock> */}
+            {/* <NumberBlock
               totalNumbers={100}
               title={'Tổng số gói dịch vụ đã bán'}
               color={'#fff4de'}
@@ -203,8 +203,8 @@ const Statistic = () => {
               float={0}
               unit='gói'
               timeCompare='mùa trước'
-            ></NumberBlock>
-            <NumberBlock
+            ></NumberBlock> */}
+            {/* <NumberBlock
               totalNumbers={10}
               title={'Tổng số nhân công'}
               color={'#F3E8FF'}
@@ -212,24 +212,24 @@ const Statistic = () => {
               float={2}
               unit='người'
               timeCompare='mùa trước'
-            ></NumberBlock>
+            ></NumberBlock> */}
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={372}
               title={'Tổng số lượt sử dụng chức năng dự đoán bệnh'}
               color={'#E5F9FF'}
-              rate={0}
-              float={2}
+              rate={30}
+              float={0}
               unit='lượt'
-              timeCompare='mùa trước'
+              timeCompare='tháng trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={18}
               title={'Tổng số phản hồi đang chờ'}
               color={'#F8FFE5'}
-              rate={-8}
-              float={2}
+              rate={8}
+              float={0}
               unit='phản hồi'
-              timeCompare='mùa trước'
+              timeCompare='tháng trước'
             ></NumberBlock>
           </Flex>
         </Flex>

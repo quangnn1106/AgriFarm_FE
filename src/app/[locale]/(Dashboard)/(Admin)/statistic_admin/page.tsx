@@ -194,14 +194,15 @@ const Statistic = () => {
               placeholder='Chọn năm'
             />
           </Flex>
+          <Flex style={{ width: '100%' }} justify='center' align='center'>
           <Flex
             gap={30}
-            style={{ width: '100%' }}
+            style={{ width: '75%' }}
             wrap='wrap'
             justify='center'
           >
             <NumberBlock
-              totalNumbers={1468}
+              totalNumbers={1468.88}
               title={'Tổng doanh thu'}
               color={'#FFE2E5'}
               rate={4.1}
@@ -210,16 +211,16 @@ const Statistic = () => {
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={96}
+              totalNumbers={98}
               title={'Tổng sản lượng'}
               color={'#DCFCE7'}
-              rate={4}
+              rate={4.6}
               float={0}
               unit='tấn'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={96}
+              totalNumbers={98}
               title={'Năng suất'}
               color={'#fff4de'}
               rate={5}
@@ -228,33 +229,34 @@ const Statistic = () => {
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={10}
+              totalNumbers={18}
               title={'Tổng số nhân công'}
               color={'#F3E8FF'}
               rate={0}
-              float={2}
+              float={0}
               unit='Người'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={10}
+              totalNumbers={11}
               title={'Tổng diện tích'}
               color={'#E5F9FF'}
               rate={0}
-              float={2}
-              unit='m^2'
+              float={0}
+              unit='ha'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={1000}
-              title={'Tổng doanh thu'}
+              totalNumbers={854}
+              title={'Tổng chi phí'}
               color={'#F8FFE5'}
-              rate={-8}
+              rate={-1.2}
               float={2}
               unit='Tr VND'
               timeCompare='mùa trước'
             ></NumberBlock>
           </Flex>
+        </Flex>
         </Flex>
         {/* <ConfigProvider
           theme={{
