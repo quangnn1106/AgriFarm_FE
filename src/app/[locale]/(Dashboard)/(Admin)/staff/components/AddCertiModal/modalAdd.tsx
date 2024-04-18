@@ -25,7 +25,8 @@ const AddCertificate = ({
   params: {
     visible: boolean;
     onCancel: () => void;
-    listStaff?: Staffs[] | [];
+    userId: string;
+    //  listStaff?: Staffs[] | [];
     loading?: boolean | false;
   };
 }) => {
@@ -49,13 +50,9 @@ const AddCertificate = ({
   };
 
   const handleAddCer = async (data: ICerPayLoadRequest) => {
-    // const allValues: ICerPayLoadRequest = {
-    //   ...data,
-    //   userId: listStaff.id as string
-    // };
     //console.log('data register: ', data);
 
-    const res = await addNewCertApi(data?.userId as string, http, data);
+    const res = await addNewCertApi(params.userId, http, data);
     if (res?.data || res?.status === STATUS_CREATED) {
       openNotification('top', `${msg('add_susses')}`, 'success');
       params.onCancel();
@@ -130,7 +127,7 @@ const AddCertificate = ({
               <Input size='middle' />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name='userId'
               label='Thêm chứng chỉ cho nhân viên'
               rules={[{ required: true }]}
@@ -150,7 +147,7 @@ const AddCertificate = ({
                   };
                 })}
               ></Select>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               name='provider'

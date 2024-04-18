@@ -66,7 +66,7 @@ const AddUser = ({
       {contextHolder}
       <ModalCustom
         open={params.visible}
-        title={t('title_add')}
+        title='Thêm mới nhân viên'
         width='50%'
         style={{ top: 40, maxWidth: 1000 }}
         keyboard

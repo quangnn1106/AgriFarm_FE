@@ -54,11 +54,14 @@ import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import StaffsDetails from '@/services/Admin/Staffs/Payload/response/staffs-detail';
 import { updateStaffPayLoad } from '@/services/Admin/Staffs/Payload/request/update-staff';
-
 import Link from 'next/link';
-import { CertificationModel } from '../staff/models/certificationModel';
-import { certificationTableColumn } from '../staff/update/certificationColumnType';
-
+import AddCertificate from './components/AddCertiModal/modalAdd';
+import { CerTableColumns } from '../user-certificate/components/Table/column-type';
+import { deleteCerApi } from '@/services/Admin/Certificates/deleteCer';
+import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
+import { getMemCertsService } from '@/services/Admin/Certificates/getAllCertificates';
+import { CerTableColumnsProfile } from './components/Table/column-type';
+import { changePassService } from '@/services/Admin/Staffs/changepass';
 
 const { TextArea } = Input;
 
@@ -124,7 +127,7 @@ const UpdateUser = ({
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/fertilizer`}>Fertilizer</Link>
+      title: <Link href={`/user-profile`}>Profile</Link>
     }
   ];
 
@@ -193,7 +196,7 @@ const UpdateUser = ({
       try {
         const responseData = await getStaffsServiceDetails(siteId, http, userId);
         if (responseData.status === STATUS_OK) {
-        //  console.log('status ok: ', responseData?.data);
+          //  console.log('status ok: ', responseData?.data);
           setStaffDetail(responseData?.data as StaffsDetails);
           //  console.log('stafff detail: ', responseData?.data?.id) ;
 
@@ -227,7 +230,8 @@ const UpdateUser = ({
     // };
     //console.log('value update: ', updatePayload);
     setIsFetching(true);
-    const res = await updateStaffService(http, params.id, value);
+    const res = await updateStaffService(http, userId, value);
+    const resPass = await changePassService(http, value.changePassObject);
     if (res.data) {
       setIsFetching(false);
       openNotification('top', `${tM('update_susses')}`, 'success');
@@ -242,13 +246,50 @@ const UpdateUser = ({
     // setUpdateState(true);
   };
 
-  const onChange: TableProps<CertificationModel>['onChange'] = (
-    pagination,
-    filters,
-    sorter,
-    extra
-  ) => {
-    console.log('params', pagination, filters, sorter, extra);
+  const [certificate, setCertificate] = useState<CertificationResponse[] | []>([]);
+  const [createState, setCreateState] = useState<boolean>(false);
+  const getListCertsApi = async (http: AxiosInstance, userId: string | undefined) => {
+    try {
+      const responseData = await getMemCertsService(undefined, http);
+      setCertificate(responseData.data as CertificationResponse[]);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API getListCerApi:', error);
+    }
+  };
+
+  //handle delete
+  const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
+  const [deletedCertificates, setDeletedCertificates] = useState<React.Key[]>([]);
+  const deletedCert = async (http: AxiosInstance, seasonId?: string) => {
+    try {
+      const res = await deleteCerApi(http, seasonId);
+      getListCertsApi(http, params.id);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
+  };
+  const checkRowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: CertificationResponse[]) => {
+      if (selectedRowKeys.length > 0) {
+        setDeleteBtnState(false);
+        setDeletedCertificates(selectedRowKeys);
+      } else {
+        setDeleteBtnState(true);
+      }
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    deletedCert(http, id);
+  };
+  const deleteMultiple = () => {
+    deletedCertificates.map(function (item) {
+      deletedCert(http, item.toString());
+    });
+    setDeleteState(false);
+    setDeleteBtnState(true);
   };
 
   const handleCancel = () => setPreviewOpen(false);
@@ -266,15 +307,9 @@ const UpdateUser = ({
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
 
-  const data: CertificationModel[] = [];
-  for (let i = 0; i < 10; i++) {
-    data.push({
-      id: 'example_id' + i,
-      certification_name: 'Test certification',
-      expired_time: '20/10/2024',
-      link_certification: 'Example Link'
-    });
-  }
+  useEffect(() => {
+    getListCertsApi(http, params.id);
+  }, [http, params.id, createState]);
 
   return (
     <>
@@ -312,9 +347,9 @@ const UpdateUser = ({
       </ConfigProvider>
 
       <Breadcrumb
-          style={{ margin: '0px 24px' }}
-          items={breadCrumb}
-        ></Breadcrumb>
+        style={{ margin: '0px 24px' }}
+        items={breadCrumb}
+      ></Breadcrumb>
 
       <Content style={{ padding: '0 24px' }}>
         <Flex
@@ -425,10 +460,12 @@ const UpdateUser = ({
 
                 <Form.Item
                   name='onboarding'
-                  label={<TitleLabelFormItem name={tU('ONBOARDING')}></TitleLabelFormItem>}
+                  label={
+                    <TitleLabelFormItem name={tU('ONBOARDING')}></TitleLabelFormItem>
+                  }
                   style={{
                     maxWidth: '90%',
-                    margin: '0px 0px 8px 0px',
+                    margin: '0px 0px 40px 0px',
                     padding: '0px 20px'
                   }}
                 >
@@ -436,6 +473,66 @@ const UpdateUser = ({
                     disabled
                     format={dateFormat}
                   />
+                </Form.Item>
+
+                <Form.Item
+                  // name='onboarding'
+                  label={<TitleLabelFormItem name='Đổi mật khẩu'></TitleLabelFormItem>}
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                ></Form.Item>
+
+                <Form.Item
+                  name='oldPassWord'
+                  label='Mật khẩu cũ'
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item
+                  name='newPassWord'
+                  label='Mật khẩu mới'
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  className={cx('color-input-disable')}
+                  hasFeedback
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item
+                  name='confirmPassWord'
+                  label='Xác nhận mật khẩu'
+                  dependencies={['newPassWord']}
+                  style={{
+                    maxWidth: '90%',
+                    margin: '0px 0px 8px 0px',
+                    padding: '0px 20px'
+                  }}
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('newPassWord') === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Mật khẩu mới không khớp'));
+                      }
+                    })
+                  ]}
+                  hasFeedback
+                  className={cx('color-input-disable')}
+                >
+                  <Input.Password />
                 </Form.Item>
                 <Form.Item
                   style={{
@@ -462,7 +559,7 @@ const UpdateUser = ({
 
                 <Form.Item
                   name='firstName'
-                  label='First Name'
+                  label='Họ'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -474,7 +571,7 @@ const UpdateUser = ({
                 </Form.Item>
                 <Form.Item
                   name='lastName'
-                  label='Last Name'
+                  label='Tên'
                   style={{
                     maxWidth: '90%',
                     margin: '0px 0px 8px 0px',
@@ -593,13 +690,14 @@ const UpdateUser = ({
         </Spin>
 
         <Tooltip
-          title='Add new certification'
+          title='Thêm chứng chỉ mới'
           className={cx('btn-right')}
         >
           <Button
             style={{ marginBottom: 12 }}
             className={cx('bg-btn')}
             icon={<PlusOutlined />}
+            onClick={() => setCreateState(true)}
           />
         </Tooltip>
         <ConfigProvider
@@ -615,23 +713,59 @@ const UpdateUser = ({
             }
           }}
         >
+          <AddCertificate
+            params={{
+              visible: createState,
+              onCancel: () => setCreateState(false),
+              // userId: params.id,
+              loading: isFetching || false
+            }}
+          />
           <Table
-            columns={certificationTableColumn}
-            dataSource={data.map(certification => ({
-              ...certification
-              // onDetails: () => handleDetails(certification.id),
-              // onDelete: () => handleDelete(certification.id)
-              // onUpdate: () => handleUpdate(certification.id)
+            loading={isFetching}
+            rowKey={'id'}
+            bordered
+            rowSelection={{
+              type: 'checkbox',
+              ...checkRowSelection
+            }}
+            // onRow={(record, rowIndex) => {
+            //   return {
+            //     onClick: event => {
+            //       //    console.log('record row onCLick: ', record);
+            //       //console.log('event row onCLick: ', event);
+            //       const target = event.target as HTMLElement;
+            //       const isWithinLink = target.tagName === 'A' || target.closest('a');
+
+            //       const isWithinAction =
+            //         target.closest('td')?.classList.contains('ant-table-cell') &&
+            //         !target
+            //           .closest('td')
+            //           ?.classList.contains('ant-table-selection-column') &&
+            //         !target.closest('td')?.classList.contains('ant-table-cell-fix-right');
+
+            //       if (isWithinAction && !isWithinLink) {
+            //         handleDetails(record);
+            //       }
+            //     } // click row
+            //   };
+            // }}
+            columns={CerTableColumnsProfile()}
+            dataSource={certificate?.map(cer => ({
+              ...cer,
+              // onDetails: () => handleDetails(cer.id!),
+              onDelete: () => handleDelete(cer.id!)
+              // onViewHistory: () => onViewHistory(cer.id!)
             }))}
-            onChange={onChange}
+            // onChange={onChange}
             pagination={{
               showTotal: total => `Total ${total} Items`,
               showSizeChanger: true,
               pageSizeOptions: ['10', '20', '30'],
-              total: data.length
+              total: certificate?.length
             }}
             scroll={{ x: 'max-content' }}
-            className={cx('table_style')}
+            className='table-style'
           />
         </ConfigProvider>
       </Content>

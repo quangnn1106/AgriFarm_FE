@@ -38,6 +38,8 @@ import WeatherComponent from '@/components/Statistic/weather';
 import { Water } from '../water/models/water-model';
 import fetchListWaterData from '@/services/Admin/Water/getWaterService';
 import PinWaterSource from '@/components/MapBox/pinWaterSource';
+import PinDisease from '@/components/MapBox/pinDisease';
+import ControlPanel from '../../(SuperAdmin)/sa/site/components/control-panel';
 
 type Props = {};
 interface CenterState {
@@ -229,6 +231,44 @@ const SitePage = (props: Props) => {
           <ScaleControl />
           {pinsPositions}
           {pinsWater}
+          <Marker
+            longitude={105.82303450111112 || 0}
+            latitude={9.245856390804775 || 0}
+            color='red'
+            anchor='bottom'
+            // onClick={e => {
+            //   // If we let the click event propagates to the map, it will immediately close the popup
+            //   // with `closeOnClick: true`
+            //   e.originalEvent.stopPropagation();
+            //   setPopupInfo(city);
+            // }}
+          >
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <PinDisease /> <span className='red'></span>
+              </div>
+            </>
+          </Marker>
+
+          <Marker
+            longitude={105.86374 || 0}
+            latitude={9.90249 || 0}
+            color='red'
+            anchor='bottom'
+            // onClick={e => {
+            //   // If we let the click event propagates to the map, it will immediately close the popup
+            //   // with `closeOnClick: true`
+            //   e.originalEvent.stopPropagation();
+            //   setPopupInfo(city);
+            // }}
+          >
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <PinDisease /> <span className='red'></span>
+              </div>
+            </>
+          </Marker>
+          <ControlPanel />
         </MapBoxAgriFarm>
 
         {/* <ColoredLine text={t('search_condition')} />

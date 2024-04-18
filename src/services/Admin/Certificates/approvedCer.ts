@@ -4,7 +4,7 @@ import { AxiosInstance } from 'axios';
 import { CertificationResponse } from './payload/response/certificate';
 import { IApprovedRequest } from './payload/request/approved';
 
-export const approvedRegisterForm: (
+export const approvedCer: (
   http: AxiosInstance | null,
   id?: string
 ) => Promise<HttpResponseCommon<CertificationResponse[]>> = async (http, id) => {

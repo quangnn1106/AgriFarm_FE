@@ -3,4 +3,5 @@ export interface ICerPayLoadRequest {
   description: string;
   provider: string;
   url: string;
+  userId: string;
 }
