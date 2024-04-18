@@ -108,7 +108,7 @@ import { Fertilizer } from '../../models/fertilizer-models';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this Fertilizers',
+                      title:'Bạn có muốn xóa những loại phân bón này?',
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

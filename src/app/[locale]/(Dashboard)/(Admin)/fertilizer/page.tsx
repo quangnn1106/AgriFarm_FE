@@ -303,7 +303,7 @@ const FertilizerManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this fertilizers?</span>
+                  <span>Bạn có muốn xóa những loại phân bón này?</span>
                 </div>
               }
               open={deleteState}

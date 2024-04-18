@@ -201,28 +201,28 @@ const Statistic = () => {
             justify='center'
           >
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={1468}
               title={'Tổng doanh thu'}
               color={'#FFE2E5'}
-              rate={-8}
+              rate={4.1}
               float={2}
               unit='Tr VND'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={100}
+              totalNumbers={96}
               title={'Tổng sản lượng'}
               color={'#DCFCE7'}
-              rate={-8}
+              rate={4}
               float={0}
               unit='tấn'
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={100}
+              totalNumbers={96}
               title={'Năng suất'}
               color={'#fff4de'}
-              rate={8}
+              rate={5}
               float={0}
               unit='tạ/ha'
               timeCompare='mùa trước'
@@ -237,7 +237,7 @@ const Statistic = () => {
               timeCompare='mùa trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={1000}
+              totalNumbers={10}
               title={'Tổng diện tích'}
               color={'#E5F9FF'}
               rate={0}
