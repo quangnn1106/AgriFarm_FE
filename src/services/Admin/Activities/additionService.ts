@@ -3,61 +3,37 @@ import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 import {
   AssessmentDetail,
+  HarvestDetail,
   TreatmentDetail,
   UsingDetail
 } from './Payload/response/activityAdditionResponse';
 import { TrainingDetail } from '../Training/response/training.response';
 
-const basePath ="/additions"
+const basePath ="cult/additions"
 
-export const getUsingDetailService: (
-  activityId: string,
-  http?: AxiosInstance | null
-) => Promise<HttpResponseCommon<UsingDetail>> = async (activityId, http) => {
-  const res = await http?.get(`${'/schedule/use'}/get`, {
-    params: {
-      activityId: activityId
-    }
-    // headers: {
-    //   pageSize: 4,
-    //   pageNumber: 1
-    // }
-  });
-  //console.log('response staffsService: ', res);
-  return res?.data;
-};
+
 
 export const getTrainingDetailService: (
   activityId: string,
   http?: AxiosInstance | null
 ) => Promise<HttpResponseCommon<TrainingDetail>> = async (activityId, http) => {
-  const res = await http?.get(`${'/training/details'}/get-by-activity`, {
+  const res = await http?.get(`${basePath}/training-detail`, {
     params: {
       activityId: activityId
     }
-    // headers: {
-    //   pageSize: 4,
-    //   pageNumber: 1
-    // }
   });
-  //console.log('response staffsService: ', res);
-  return res?.data;
+  return res?.data as HttpResponseCommon<TrainingDetail>
 };
 
 export const getTreatmentDetailService: (
   activityId: string,
   http?: AxiosInstance | null
 ) => Promise<HttpResponseCommon<TreatmentDetail>> = async (activityId, http) => {
-  const res = await http?.get(`${'/schedule/treatment'}/get`, {
+  const res = await http?.get(`${basePath}/treatment-detail`, {
     params: {
       activityId: activityId
     }
-    // headers: {
-    //   pageSize: 4,
-    //   pageNumber: 1
-    // }
   });
-  //console.log('response staffsService: ', res);
   return res?.data;
 };
 
@@ -81,8 +57,8 @@ export const getAssessmentDetailService: (
 export const getHarvestDetailService: (
   activityId: string,
   http?: AxiosInstance | null
-) => Promise<HttpResponseCommon<AssessmentDetail>> = async (activityId, http) => {
-  const res = await http?.get(`${'/schedule/assessment'}/get`, {
+) => Promise<HttpResponseCommon<HarvestDetail>> = async (activityId, http) => {
+  const res = await http?.get(`${basePath}/harvest-detail`, {
     params: {
       activityId: activityId
     }
@@ -97,7 +73,7 @@ export const createHarvestActionService: (
   activityId: string,
   payload: HarvestCreateRequest
 ) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
-  const res = await http?.post(`${basePath}/"create-harvest`, 
+  const res = await http?.post(`${basePath}/create-harvest`, 
   payload,
   {
     params: {
@@ -113,7 +89,7 @@ export const createTrainingActionService: (
   activityId: string,
   payload: TrainingCreateRequest
 ) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
-  const res = await http?.post(`${'basePath'}/create-training`,
+  const res = await http?.post(`${basePath}/create-training`,
   payload,
   {
     params: {
@@ -129,7 +105,7 @@ export const createTreatmentActionService:(
   activityId: string,
   payload: TreatmentCreateRequest
 ) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
-  const res = await http?.post(`${'basePath'}/create-treatment`, 
+  const res = await http?.post(`${basePath}/create-treatment`, 
   payload,
   {
     params: {
@@ -145,7 +121,7 @@ export const createAssessmentActionService: (
   activityId: string,
   payload: AssessmentCreateRequest
 ) => Promise<HttpResponseCommon<string>> = async (http,activityId, payload) => {
-  const res = await http.post(`${'basePath'}/create-assessment`, 
+  const res = await http.post(`${basePath}/create-assessment`, 
   payload,
   {
     params: {
@@ -154,4 +130,18 @@ export const createAssessmentActionService: (
     
   });
   return res?.data;
+};
+
+export const removeActionService: (
+  http: AxiosInstance,
+  activityId: string,
+) => Promise<boolean> = async (http,activityId) => {
+  const res = await http.delete(`${basePath}/remove`,
+  {
+    params: {
+      activityId: activityId
+    }
+    
+  });
+  return res?.status === 204;
 };

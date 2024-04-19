@@ -31,7 +31,7 @@ const NotificationContextProvider = ({ children }: PropsWithChildren<{}>) => {
     const connection = new signalR.HubConnectionBuilder()
 
       .withUrl(
-        `${'https://localhost:7012'}/${'noti'}`
+        `${'http://localhost:5024'}/${'noti'}`
         // ,
         // {
         //     accessTokenFactory:()=>session?.user.accessToken??""

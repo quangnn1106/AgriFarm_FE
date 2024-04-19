@@ -12,6 +12,7 @@ export default function AgriImage(props: IProps) {
   const { path, width, height, className, alt } = props;
 
   return (
+    
     <Image
       height={height}
       width={width}

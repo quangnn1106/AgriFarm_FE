@@ -1,28 +1,50 @@
 import { CloseCircleTwoTone } from '@ant-design/icons';
 import { Button, Flex, Modal, Space, Typography } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdditionAttachModal from './additionAttachModal';
-import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
+import {
+  ActivityResponse,
+  Addition
+} from '@/services/Admin/Activities/Payload/response/activityResponse';
+import ActionByTypeSection from './actionByTypeSection';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { removeActionService } from '@/services/Admin/Activities/additionService';
 
 interface IProps {
   activity: ActivityResponse;
-
+  curLocationId: string|null;
   editable: boolean;
 }
 
 export default function ActivityTaskAdditionSection(props: IProps) {
-  const { activity, editable } = props;
-  const fakeItem = {
-    value: 1,
-    title: 'wqwqwq'
-  };
-  const [item, setItem] = useState<typeof fakeItem | null>(fakeItem);
+  const { activity, editable, curLocationId } = props;
+  const http = UseAxiosAuth();
+  
+  const [item, setItem] = useState<Addition | null>(activity.addition ?? null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
+  const [change, setChange] = useState(false);
+
+  useEffect(()=>{
+    setItem(item)
+  },[change])
 
   const handleDeleteDetail = () => {
-    setItem(null);
-    setDeleteOpen(false);
+    setIsLoading(true);
+    removeActionService(http, activity.id)
+      .then(res => {
+        if (res) {
+          setItem(null);
+        }
+      })
+      .catch(err => {
+        console.log('Error when delete.');
+      })
+      .finally(() => {
+        setDeleteOpen(false);
+        setIsLoading(false);
+      });
   };
 
   const handleAddDetail = (data: any) => {
@@ -32,33 +54,53 @@ export default function ActivityTaskAdditionSection(props: IProps) {
   const itemDetail = (
     <>
       <Flex
-        style={{ width: '100%', paddingInline: 10, paddingBlockStart: 10 }}
-        justify='end'
-        align='center'
-      >
-        {editable && (
-        <Button
-          onClick={() => setDeleteOpen(true)}
-          type='text'
-          shape='circle'
-        >
-          <CloseCircleTwoTone
-            twoToneColor={'#e74040'}
-            style={{ fontSize: '150%' }}
-          />
-        </Button>
-        )}
-      </Flex>
-      <Flex
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
         vertical
-        style={{ width: '100%', height: '100%' }}
-        justify='center'
-        align='center'
       >
-        <Typography.Title level={4}>
+        <Flex
+          style={{
+            width: '100%',
+            paddingInline: 10,
+            paddingBlockStart: 10,
+            height: '8%'
+          }}
+          justify='end'
+          align='center'
+        >
+          {editable && (
+            <Button
+              onClick={() => setDeleteOpen(true)}
+              type='text'
+              shape='circle'
+            >
+              <CloseCircleTwoTone
+                twoToneColor={'#e74040'}
+                style={{ fontSize: '150%' }}
+              />
+            </Button>
+          )}
+        </Flex>
+        <Flex
+          vertical
+          style={{ width: '100%', height: '90%' }}
+          justify='center'
+          align='center'
+        >
+          {/* <Typography.Title level={4}>
           Thu hoạch lô đất: <Typography.Text mark>{activity.location?.name}</Typography.Text>
         </Typography.Title>
-        <Typography.Text strong>được chọn cho hoạt động này</Typography.Text>
+        <Typography.Text strong>được chọn cho hoạt động này</Typography.Text> */}
+          {item && (
+            <ActionByTypeSection
+              change={change}
+              activityId={activity.id}
+              addition={item.type}
+            />
+          )}
+        </Flex>
       </Flex>
     </>
   );
@@ -99,12 +141,12 @@ export default function ActivityTaskAdditionSection(props: IProps) {
                 Chưa có hoạt động nâng cao nào được đính kèm
               </Typography.Text>
               {editable && (
-              <Button
-                type='dashed'
-                onClick={() => setFinderOpen(true)}
-              >
-                Nhấn để thêm
-              </Button>
+                <Button
+                  type='dashed'
+                  onClick={() => setFinderOpen(true)}
+                >
+                  Nhấn để thêm
+                </Button>
               )}
             </Space>
           )}
@@ -134,8 +176,16 @@ export default function ActivityTaskAdditionSection(props: IProps) {
       )}
       {finderOpen && (
         <AdditionAttachModal
+          curLocationId={curLocationId}
           curActivity={activity}
-          onSelected={() => {}}
+          onSelected={(data) => {
+            setFinderOpen(false);
+            setChange(prev => !prev);
+            if(item){
+
+              setItem({...item, type:data})
+            }
+          }}
           onClose={() => setFinderOpen(false)}
         />
       )}

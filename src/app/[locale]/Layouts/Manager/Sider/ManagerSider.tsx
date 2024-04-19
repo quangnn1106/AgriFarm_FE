@@ -116,11 +116,11 @@ const ManagerSider = ({ path, visible }: Props) => {
         <FaClipboardList />
       ),
       getItem(`${t('training')}`, 'training', <FaClipboardList />, [
-        getItem(
-          <Link href={`/training/contents`}>{t('t_content')}</Link>,
-          `/training/contents`,
-          <FaClipboardList />
-        ),
+        // getItem(
+        //   <Link href={`/training/contents`}>{t('t_content')}</Link>,
+        //   `/training/contents`,
+        //   <FaClipboardList />
+        // ),
         getItem(
           <Link href={`/training/experts`}>{t('expert')}</Link>,
           `/training/experts`,
@@ -133,12 +133,12 @@ const ManagerSider = ({ path, visible }: Props) => {
         // ),
       ]),
       getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
-      getItem(
-        <Link href={`/production`}>{t('pro')}</Link>,
-        `/production`,
-        <GiPlantRoots />
-      ),
-      getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
+      // getItem(
+      //   <Link href={`/production`}>{t('pro')}</Link>,
+      //   `/production`,
+      //   <GiPlantRoots />
+      // ),
+      // getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),

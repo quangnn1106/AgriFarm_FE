@@ -41,7 +41,8 @@
     "logout": "Đăng xuất   ",
     "t_content": "Chủ đề tập huấn",
     "training": "Tập huấn",
-    "notification": "Thông báo"
+    "notification": "Thông báo",
+    "cult_rec": "Ghi chép canh tác"
   },
   "LocaleSwitcher": {
     "switchLocale": "Convert {locale, select, vi {vi} "

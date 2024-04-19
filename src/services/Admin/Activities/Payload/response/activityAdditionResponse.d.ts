@@ -8,16 +8,22 @@ export interface UsingDetail {
 }
 
 export interface TreatmentDetail {
-  item: {
-    id: string;
-    name: string;
-    type: string;
-  };
+  // item: {
+  //   id: string;
+  //   name: string;
+  //   type: string;
+  // };
+  target: string;
   method: string;
 }
 
+export interface ActivityRiskResponse{
+  id: string;
+  riskName: string;
+}
+
 export interface AssessmentDetail {
-  id: string
+  id: string;
   checklist: {
     id: string;
     name: string;
@@ -25,6 +31,7 @@ export interface AssessmentDetail {
 }
 
 export interface HarvestDetail {
+  id: string
   product: {
     id: string;
     name: string;
@@ -34,9 +41,7 @@ export interface HarvestDetail {
     name: string;
   };
 
-  quantity: number;
+  total: number;
   unit: string;
+  harvestDate?: Date
 }
-
-
-

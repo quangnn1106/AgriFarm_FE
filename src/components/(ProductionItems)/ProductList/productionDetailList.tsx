@@ -1,7 +1,9 @@
 import { ProductionResponse } from '@/services/Admin/Productions/Payload/response/production.response';
 import {
   Badge,
+  Breadcrumb,
   Button,
+  ConfigProvider,
   Dropdown,
   Space,
   Table,
@@ -10,9 +12,10 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, HomeOutlined } from '@ant-design/icons';
 import ProductionDetailModal from './productionDetailModal';
 import { truncate } from 'lodash';
+import { Content } from 'antd/es/layout/layout';
 
 interface IProps {
   productId: string;
@@ -99,7 +102,7 @@ export function ProductionDetailList(props: IProps) {
       title: 'Sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      render: (_, item) => <Space>{productName??item.product.name}</Space>
+      render: (_, item) => <Space>{productName ?? item.product.name}</Space>
     },
 
     {
@@ -178,23 +181,24 @@ export function ProductionDetailList(props: IProps) {
 
   return (
     <>
-      <Table
-        //rowKey={(item)=>item.id}
-        style={{
-          width: '100%',
-          minWidth: 600
-        }}
-        scroll={{ y: 200 }}
-        columns={columns}
-        dataSource={list}
-        pagination={false}
-      />
-      {open && item && (
-        <ProductionDetailModal
-          detail={item}
-          onClose={() => setOpen(false)}
+      
+        <Table
+          //rowKey={(item)=>item.id}
+          style={{
+            width: '100%',
+            minWidth: 600
+          }}
+          scroll={{ y: 200 }}
+          columns={columns}
+          dataSource={list}
+          pagination={false}
         />
-      )}
+        {open && item && (
+          <ProductionDetailModal
+            detail={item}
+            onClose={() => setOpen(false)}
+          />
+        )}
     </>
   );
 }

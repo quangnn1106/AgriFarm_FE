@@ -30,26 +30,26 @@ interface IProps {
   init: ActivityParticipant[];
 }
 
-const fakeData:ActivityParticipant[] = [
+const fakeData: ActivityParticipant[] = [
   {
     id: 'x',
-    name: "Nguyễn Văn An",
-    role :"x",
-    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+    name: 'Nguyễn Văn An',
+    role: 'x',
+    img: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ'
   },
   {
     id: 'y',
-    name: "Nguyễn Ngọc Bích",
-    role :"x",
-    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+    name: 'Nguyễn Ngọc Bích',
+    role: 'x',
+    img: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ'
   },
   {
     id: 'z',
-    name: "Nguyễn Văn Xoài",
-    role :"x",
-    img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ"
+    name: 'Nguyễn Văn Xoài',
+    role: 'x',
+    img: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AUser-avatar.svg&psig=AOvVaw3jZFdoSRbxsC9OnQjYttmN&ust=1712934101910000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDKzve2uoUDFQAAAAAdAAAAABAJ'
   }
-]
+];
 
 export default function ActivityParticipantFinderModal(props: IProps) {
   const { onClose, onSelected, type, init } = props;
@@ -71,7 +71,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
 
   const handleSearch = async (val: string) => {
     console.log('key: ', val);
-    
+
     if (val && val.trim().length > 0) {
       setIsLoading(true);
       const res = await getActivityParticipantService(http, val);
@@ -79,11 +79,11 @@ export default function ActivityParticipantFinderModal(props: IProps) {
       if (res.status === 200) {
         const body = res.data.data as ActivityParticipant[];
         // console.log('page ', getPaginationResponse(res));
-        
+
         if (body.length > 0) {
           console.log('init ', init);
           setPage(getPaginationResponse(res));
-          const newList = body.filter(e => !init.find(x=>x.id===e.id));
+          const newList = body.filter(e => !init.find(x => x.id === e.id));
           console.log('List ', newList);
           setList([...list, ...newList]);
         }
@@ -111,7 +111,12 @@ export default function ActivityParticipantFinderModal(props: IProps) {
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
-            <Button type='primary' onClick={() => handleConfirm()}>Xác nhận</Button>
+            <Button
+              type='primary'
+              onClick={() => handleConfirm()}
+            >
+              Xác nhận
+            </Button>
           </>
         )}
       >
@@ -143,7 +148,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
             </Col>
             <Col span={19}>
               <Input
-                placeholder={false?'Find user name':'Nhập tên người dùng'}
+                placeholder={false ? 'Find user name' : 'Nhập tên người dùng'}
                 type='text'
                 //onClick={e => onSearch(e.currentTarget.value)}
                 onChange={e => onSearch(e.target.value)}
@@ -175,7 +180,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                 <Typography.Text type='secondary'>
                   {/* No land available! */}
                   Hãy nhập để tìm người dùng
-                  </Typography.Text>
+                </Typography.Text>
               )}
               {!isLoading && list.length > 0 && (
                 <Flex
@@ -210,9 +215,12 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                         >
                           <Avatar
                             alt=''
-                            shape='square'
+                            //shape='square'
                             size={80}
-                            src={selectedItem?.img??""}
+                            src={
+                              selectedItem?.img ??
+                              'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
+                            }
                           />
                           <Typography.Text strong>{e.name}</Typography.Text>
                           <Button onClick={() => handleSelect(e)}>Chọn</Button>
@@ -252,6 +260,9 @@ export default function ActivityParticipantFinderModal(props: IProps) {
                   <Avatar
                     shape='square'
                     size={100}
+                    src={
+                      'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
+                    }
                   />
                 </div>
                 <div>
@@ -262,7 +273,7 @@ export default function ActivityParticipantFinderModal(props: IProps) {
               <Typography typeof='secondary'>
                 {/* You did not select any land. */}
                 Bạn hãy chọn người dùng để xem trước
-                </Typography>
+              </Typography>
             )}
           </Flex>
         </Flex>

@@ -57,7 +57,7 @@ export default function NotificationBell() {
                       type='link'
                       onClick={() => farmRouter.push(e.ref ?? '')}
                     >
-                      Detail
+                      Chi tiết
                     </Button>
                   )}
                 </Col>
@@ -88,7 +88,7 @@ export default function NotificationBell() {
         <FloatButton
           onClick={() => resetBellCount()}
           style={{ right: '5vw', top: '10vh' }}
-          tooltip={<div>Notify</div>}
+          tooltip={<div>Thông báo</div>}
           badge={{ count: bellCount }}
           icon={<BellOutlined />}
         />
