@@ -21,6 +21,15 @@ const Checklist = () => {
     const [loading, setLoading] = useState(false);
     const http = UseAxiosAuth();
     const [messageApi, contextHolder] = message.useMessage();
+    const [componentStates, setComponentStates] = useState<{ [key: string]: boolean }>({});
+
+    const handleCheckboxChange = (fieldName: any, e: any) => {
+        const { checked } = e.target;
+        setComponentStates(prevState => ({
+            ...prevState,
+            [fieldName]: checked
+        }));
+    };
 
     const onFinish = async (values: ChecklistDef) => {
         console.log('Received values of form:', values);
@@ -34,36 +43,14 @@ const Checklist = () => {
                 form.resetFields();
             }
             setLoading(false);
+            messageApi.success(tMsg('msg_add_success'));
         } catch (error) {
             console.error(error);
             messageApi.error(tMsg('msg_add_fail'));
             setLoading(false);
         }
     };
-    
-    // const saveAction = async() => {
-    //     if (riskItems.length <= 0) {
-    //       messageApi.error(tMsg('msg_required').replace('%ITEM%', tLbl('item_list')));
-    //       return;
-    //     }
-    //     try {
-    //         console.log("Save action ...");
-    //         setLoadingBtn(true);
-    //         const riskMaster: RiskMasterInputDef = {
-    //           riskName: riskName,
-    //           riskDescription: riskDescription,
-    //           isDraft: riskIsDraft,
-    //           createBy: session?.user?.userInfo.id as string
-    //         }
-    //         const res = await riskAssessmentAddApi(http, riskItems, riskMaster);
-    //         messageApi.success(tMsg('msg_add_success'));
-    //         resetForm();
-    //     } catch (error) {
-    //         console.log(error);
-    //     } finally {
-    //       setLoadingBtn(false);
-    //     }
-    //   }
+
     const breadCrumb = [
         {
             title: <Link href={`/`}>{tCom('home')}</Link>
@@ -152,6 +139,7 @@ const Checklist = () => {
                                             name={[field.name, 'orderNo']}
                                             initialValue={field.name + 1}
                                             rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('order_no'))}]}
+                                            hidden
                                         >
                                             <Input style={{border:'none', background: 'none', color: '#000'}} disabled={true}/>
                                         </Form.Item>
@@ -165,27 +153,15 @@ const Checklist = () => {
                                         <Form.Item
                                             label={tLbl('item_title')}
                                             name={[field.name, 'title']}
-                                            rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_title'))}]}
                                         >
                                             <Input placeholder={tLbl('palaceholder').replace('%%ITEM%%',tLbl('item_title'))}/>
-                                        </Form.Item>
-                                        <Form.Item
-                                            label={tLbl('item_level')}
-                                            name={[field.name, 'level']}
-                                            rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_level'))}]}
-                                            initialValue="1"
-                                        >
-                                            <Radio.Group>
-                                                <Radio value="1">{tLbl('major_must')}</Radio>
-                                                <Radio value="2">{tLbl('minor_must')} </Radio>
-                                                <Radio value="3">{tLbl('recommandation')}</Radio>
-                                            </Radio.Group>
                                         </Form.Item>
                                         <Form.Item
                                             label={tLbl('item_type')}
                                             name={[field.name, 'type']}
                                             rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_type'))}]}
                                             initialValue="1"
+                                            hidden
                                         >
                                             <Radio.Group>
                                                 <Radio value="1">{tLbl('type_yes_no')}</Radio>
@@ -195,7 +171,6 @@ const Checklist = () => {
                                         <Form.Item
                                             label={tLbl('item_content')}
                                             name={[field.name, 'content']}
-                                            rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_content'))}]}
                                         >
                                             <TextArea 
                                                 rows={4} style={{resize:'none'}}
@@ -209,7 +184,22 @@ const Checklist = () => {
                                             rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_is_response'))}]}
                                             initialValue={false}
                                         >
-                                            <Checkbox />
+                                            <Checkbox 
+                                                onChange={(e) => handleCheckboxChange(field.name, e)}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label={tLbl('item_level')}
+                                            name={[field.name, 'level']}
+                                            rules={[{ required: true, message: tMsg('msg_required').replace('%%ITEM%%', tLbl('item_level'))}]}
+                                            initialValue="1"
+                                            
+                                        >
+                                            <Radio.Group disabled={!componentStates[field.name]}>
+                                                <Radio value="1">{tLbl('major_must')}</Radio>
+                                                <Radio value="2">{tLbl('minor_must')} </Radio>
+                                                <Radio value="3">{tLbl('recommandation')}</Radio>
+                                            </Radio.Group>
                                         </Form.Item>
                                     </Card>
                                 ))}

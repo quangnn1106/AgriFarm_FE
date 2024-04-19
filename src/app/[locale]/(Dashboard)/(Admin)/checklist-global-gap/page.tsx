@@ -34,6 +34,9 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "@/navigation";
 import { useSession } from 'next-auth/react';
 import { ROLES } from '@/constants/roles';
+import getLatestVersionApi from '@/services/Checklist/getLatestVersionApi';
+import addNewChecklistApi from '@/services/Checklist/addNewChecklistApi';
+import { CHECKLIST_IMPLEMENT } from '@/constants/routes';
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -59,6 +62,7 @@ const CheckListInspection = () => {
   const [searchCodition, setSearchCondition] = useState<SearchConditionDef>();
   const { data: session, status } = useSession();
   const roles = session?.user?.userInfo.role;
+  const [latestVersion, setLatestVersion] = useState();
 
   useEffect(() => {
     const getData = async (http: AxiosInstance | null) => {
@@ -68,12 +72,6 @@ const CheckListInspection = () => {
               perPage: 10,
               pageId: 1
             };
-            if (roles != ROLES.SUPER_ADMIN) {
-              const userId = session?.user?.userInfo.id;
-              searchCondition = {
-                userId: userId
-              }
-            }
             const responseData = await checklistApi(http, searchCondition);
             const normalizedData: ChecklistMappingDef[] = responseData['data'].map(
                 (item: ChecklistMappingDef, index: number) => ({
@@ -109,8 +107,17 @@ const CheckListInspection = () => {
             setLoading(false);
         }
     };
+    const getLatestVersion = async (http: AxiosInstance | null) => {
+      try {
+        const latestVersion = await getLatestVersionApi(http);
+        setLatestVersion(latestVersion.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLatestVersion(http);
     getData(http);
-  }, [http, roles, session?.user?.userInfo.id]);
+  }, [http, session?.user?.userInfo.id]);
   const searchAction = async (saerchCondition: SearchConditionDef | undefined, pagination: TablePaginationConfig) => {
     const searchCondition: SearchConditionDef = {
         keyword: saerchCondition?.keyword,
@@ -166,7 +173,14 @@ const CheckListInspection = () => {
         title: tLbl('screen_name_checklist')
     }
   ];
-
+  const addNew = async () => {
+    try {
+      const id = latestVersion &&  await addNewChecklistApi(http, session?.user?.userInfo.id as string, latestVersion);
+      router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const handleDetails = async (id: string) => {
   };
   const handleDelete = (id: string) => {};
@@ -223,6 +237,16 @@ const CheckListInspection = () => {
             }
           }}
         >
+          <Button
+              type="primary"
+              style={{marginTop: '20px', marginBottom: '10px'}}
+              // onClick={() => console.log(form.getFieldsValue())}
+              icon={<PlusOutlined />}
+              disabled= {latestVersion ? false : true}
+              onClick={addNew}
+          >
+              {tCom('btn_add')}
+          </Button>
           <Table
               rowKey={(record) => record.key}
               dataSource={checkListData}
