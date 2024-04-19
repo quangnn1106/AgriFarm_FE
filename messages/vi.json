@@ -36,7 +36,8 @@
     "doc": "Tài liệu",
     "rice_culti": "Nhật ký canh tác lúa",
     "GBG_checklist": "Tiêu chuẩn Global G.A.P",
-    "subscription": "Quản lý gói đăng ký",
+    "subscription": "Quản lý dịch vụ",
+    "bill_subscript": "Quản lí đơn đăng ký",
     "logout": "Đăng xuất   ",
     "t_content": "Chủ đề tập huấn",
     "training": "Tập huấn",
@@ -356,18 +357,18 @@
         "msg_confirm_delete": "Bạn có muốn xóa 「%ITEM%」 không?"
       }
     },
-    "SystemSetting" : {
-      "label" : {
-          "system_setting": "Cài đặt hệ thống",
-          "setting_disease": "Chức năng chẩn đoán bệnh",
-          "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
-          "distance_input": "Khoảng cách",
-          "distance_input_placeholder": "Nhập số km"
+    "SystemSetting": {
+      "label": {
+        "system_setting": "Cài đặt hệ thống",
+        "setting_disease": "Chức năng chẩn đoán bệnh",
+        "distance_receive_warnings": "Khoảng cách nhận cảnh báo bệnh lúa",
+        "distance_input": "Khoảng cách",
+        "distance_input_placeholder": "Nhập số km"
       },
       "message": {
-          "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
-          "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
-          "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là"
+        "msg_update_success": "Thông tin cài đặt đã được thay đổi thành công",
+        "msg_distance_input": "Khoảng cách lớn hơn 1km và nhỏ hơn 10km",
+        "msg_distance_des": "Khoảng cách nhận được cảnh báo từ đất A đến đất B là"
       }
     }
   },
@@ -392,5 +393,9 @@
   },
   "Supplier": {
     "Do_you_want_to_delete_this_suppliers": "Bạn có muốn xóa những nhà cung cấp này?"
+  },
+  "Certificate": {
+    "Cer": "Chứng chỉ",
+    "confirmDelete": "Bạn có muốn xóa những chứng chỉ này?"
   }
 }

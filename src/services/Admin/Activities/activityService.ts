@@ -82,3 +82,48 @@ export const postActivitiesService: (
   );
   return res?.data as HttpResponseCommon<ActivityResponse>;
 };
+
+export const deleteActivitiesService: (
+  http: AxiosInstance,
+  id: string
+) => Promise<boolean> = async (http, id) => {
+  const res = await http.delete(
+    `${basePath}/delete`,
+    {
+      params:{
+        id: id
+      }
+    }
+    
+  );
+  return res?.status === 204;
+};
+
+export const putActivitiesService: (
+  http: AxiosInstance,
+  payLoad: CreateActivityRequest
+) => Promise<HttpResponseCommon<ActivityResponse>> = async (http, payLoad) => {
+  const res = await http.put(
+    `${basePath}/put`,
+    payLoad,
+    
+  );
+  return res?.data as HttpResponseCommon<ActivityResponse>;
+};
+
+export const checkInviteActivitiesService: (
+  http: AxiosInstance,
+  id: string,
+  accept: boolean
+) => Promise<boolean> = async (http, id, accept) => {
+  const res = await http.put(
+    `${basePath}/invitation`,{},{
+      params:{
+         accept: accept,
+         id: id
+      }
+    }
+    
+  );
+  return res?.status === 202;
+};

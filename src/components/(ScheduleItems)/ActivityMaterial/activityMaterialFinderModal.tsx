@@ -234,7 +234,7 @@ export default function ActivityMaterialFinderModal(props: IProps) {
                       setSelectedItem(e);
                     }}
                   >
-                    Select
+                    Chọn
                   </Button>
                 </Flex>
               </>
@@ -328,13 +328,14 @@ export default function ActivityMaterialFinderModal(props: IProps) {
       <Modal
         width={'60vw'}
         style={{ padding: 20, minWidth: 600 }}
+        cancelText={"Hủy bỏ"}
         centered
         open={true}
         onCancel={() => onClose()}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
-            <Button type='primary' onClick={()=>handleConfirm()}>{'Confirm'}</Button>
+            <Button type='primary' onClick={()=>handleConfirm()}>{'Xác nhận'}</Button>
           </>
         )}
       >

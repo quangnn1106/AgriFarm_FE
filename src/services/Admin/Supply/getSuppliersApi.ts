@@ -11,10 +11,14 @@ export interface Pagination {
   }
 
 const getSuppliersApi: (
-    http?: AxiosInstance | null
-    ) => Promise<HttpResponseCommon<SupplierResponse[]>> = async (http) => {
+    http?: AxiosInstance | null,
+    keySearch?: string
+    ) => Promise<HttpResponseCommon<SupplierResponse[]>> = async (http, keySearch) => {
     try {
         const res = await http?.get(`/sup/suppliers/get`, {
+            params: {
+                key: keySearch
+            },
             headers: {
                 pageSize: 400
             }

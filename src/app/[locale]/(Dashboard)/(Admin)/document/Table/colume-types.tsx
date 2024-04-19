@@ -11,16 +11,32 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
-  WarningOutlined
+  WarningOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 
 import { useTranslations } from 'next-intl';
 import { DocumentResponse } from '../models/document-models';
 import Link from 'next/link';
+import dayjs from 'dayjs';
 
 
  export function DocumentTableColumns() {
   const t = useTranslations('Common');
+  const dateFormat = 'DD/MM/YYYY';
+  const downloadFile = (url: string) => {
+    fetch(url).then(response=>response.blob()).then(blod=> {
+      const boldUrl = window.URL.createObjectURL(new Blob([blod]));
+      const fileName = url.split("/").pop();
+      const aTag = document.createElement("a");
+      aTag.href = boldUrl;
+      aTag.setAttribute("download", fileName as string);
+      document.body.appendChild(aTag);
+      aTag.click();
+      aTag.remove(); 
+    })
+   
+    }
 
 
   const documentTableColumn: TableColumnsType<DocumentResponse> = [
@@ -28,25 +44,28 @@ import Link from 'next/link';
       title: '#',
       dataIndex: 'index',
       width: 'max-content',
-      render: (_, item, idx) => `${idx}`
+      render: (_, item, idx) => `${idx + 1}`
     },
     {
       title: t('Name'),
-      dataIndex: 'name',
+      dataIndex: 'title',
       width: 'max-content',
     },
     {
-      title: 'Link File',
+      title: 'Đường dẫn (url)',
       dataIndex: 'fileLink',
       width: 'max-content',
       render: (_, item) => {
-        return <Link href={item.fileLink}>{item.fileLink}</Link>;
+        return <Link download href={'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+item.url}>{item.url}</Link>;
+        //return <button onClick={() => downloadFile('http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+item.url)}>{item.url}</button>;
+
       }
     },
     {
         title: 'Ngày tạo',
         dataIndex: 'createdDate',
         width: 'max-content',
+        render: (_, documentItem) => `${dayjs(documentItem.createdDate).format(dateFormat)}`
       },
     {
       width: 'max-content',
@@ -58,8 +77,8 @@ import Link from 'next/link';
         const renderItems = (
           id: string,
           onDetailsDocument: () => void,
-          onRemoveDocument: () => void,
           onDownloadDocument: () => void,
+          onRemoveDocument: () => void,
         ): MenuProps['items'] => {
           return [
             {
@@ -80,11 +99,11 @@ import Link from 'next/link';
               label: (
                 <a
                   onClick={() => {
-                    onDownloadDocument();
+                    downloadFile('http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+ documentItem.url);
                   } }
                 >
                   <Space>
-                    <ExclamationCircleOutlined /> Tải xuống
+                  <DownloadOutlined /> Tải xuống
                   </Space>
                 </a>
               ),
@@ -98,7 +117,7 @@ import Link from 'next/link';
                 <a
                   onClick={() => {
                     Modal.confirm({
-                      title:'Do you want to delete this Documents',
+                      title:'Bạn có muốn xóa những tệp thông tin này?',
                       centered: true,
                       width: '40%',
                       icon: <WarningOutlined style={{ color: 'red' }} />,

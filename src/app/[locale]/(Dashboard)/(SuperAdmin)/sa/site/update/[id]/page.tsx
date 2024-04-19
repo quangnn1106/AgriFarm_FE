@@ -17,8 +17,6 @@ import {
   Row,
   Select,
   Upload,
-  UploadFile,
-  UploadProps,
   message,
   notification
 } from 'antd';
@@ -45,7 +43,6 @@ import { getSitesService } from '@/services/SuperAdmin/Site/getSiteService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import MapBoxAgriFarm from '@/components/MapBox/mapBoxReact';
 import ControlPanel from '../../components/control-panel';
-import UploadImgAgri, { FileType } from '@/components/Upload/uploadAvatar';
 import { addPositionService } from '@/services/SuperAdmin/Site/addPositionService';
 import useGeolocation from '@/utils/getlocaiton';
 import { updateSiteService } from '@/services/SuperAdmin/Site/updateInforService';
@@ -55,10 +52,12 @@ import { useRouter } from 'next/navigation';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
 import { useSession } from 'next-auth/react';
 import { UploadOutlined } from '@ant-design/icons';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+import UploadImgAgri from '@/components/Upload/uploadAvatar';
 
 const cx = classNames.bind(styles);
 type Props = {};
-
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const path = usePathname();
   const { data: session } = useSession();
@@ -101,7 +100,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
 
         form?.setFieldsValue({
           ...responseData?.data,
-          avatarImg: fileList[0]?.name ? fileList[0]?.name : ''
+          avatarImg: fileList[0]?.name ? fileList[0]?.name : undefined
         });
       }
       setIsFetching(false);
@@ -111,7 +110,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   React.useEffect(() => {
     fetchSitesDetails(http, params.id, form, fileList);
-  }, [fileList, form, http, params.id, router]);
+  }, [form, http, params.id, router, fileList]);
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -156,16 +155,14 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     });
 
     // You can use any AJAX library you like
-    fetch(
-      'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/upload',
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: bearer
-        }
+    fetch('https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: bearer
+        //'Content-Type': 'multipart/form-data'
       }
-    )
+    })
       .then(res => {
         console.log('res.json(): ', res);
 
@@ -233,7 +230,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   //  console.log('fileList out return: ', fileList);
 
-  console.log('fileList all: ', fileList[0]?.status);
+  console.log('fileList all: ', fileList[0]?.name);
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };

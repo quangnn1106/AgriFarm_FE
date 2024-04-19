@@ -46,12 +46,13 @@ import { getUnitList } from '../converter/materialUnitList';
 interface IProps {
   activityId: string;
   details: ActivityMaterial[] | [];
+  editable: boolean;
 }
 
 export default function ActivityMaterialSection(props: IProps) {
-  const { activityId, details } = props;
+  const { activityId, details, editable } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [units, setUnits] = useState<string[]>([])
+  const [units, setUnits] = useState<string[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [materials, setMaterials] = useState<ActivityMaterial[]>(details ?? []);
   const searchParams = useSearchParams();
@@ -65,7 +66,7 @@ export default function ActivityMaterialSection(props: IProps) {
   }));
 
   const [addOpen, setAddOpen] = useState(false);
-  const [material, setMaterial] = useState(fakeList);
+  // const [material, setMaterial] = useState(fakeList);
 
   const handleDelete = async (data: ActivityMaterial) => {
     setIsLoading(true);
@@ -73,9 +74,9 @@ export default function ActivityMaterialSection(props: IProps) {
       try {
         const res = await removeMaterialService(http, activityId, selectedMaterial.id);
         if (res) {
-        const list = materials.filter((e, index) => e.id !== selectedMaterial.id);
-        console.log('handle delete: ', list);
-        setMaterials(list);
+          const list = materials.filter((e, index) => e.id !== selectedMaterial.id);
+          console.log('handle delete: ', list);
+          setMaterials(list);
         } else throw new Error();
       } catch {
         message.error('Something went wrong. Try again!');
@@ -97,8 +98,8 @@ export default function ActivityMaterialSection(props: IProps) {
         unit: data.unit as string
       });
       if (res) {
-        materials.push(data);
-        materials.sort((a, b) => {
+        const newList = [...materials, data];
+        newList.sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
@@ -107,7 +108,7 @@ export default function ActivityMaterialSection(props: IProps) {
           }
           return 0;
         });
-        setMaterials(materials);
+        setMaterials(newList);
       } else throw new Error();
     } catch {
       message.error('Something went wrong. Try again!');
@@ -141,32 +142,35 @@ export default function ActivityMaterialSection(props: IProps) {
           offset={2}
           span={10}
         >
-          <Descriptions title={'Material to use'} />
+          <Descriptions title={'Vật phẩm sử dụng'} />
         </Col>
         <Col span={8}></Col>
         <Col span={2}>
-          <Popover
-            placement='top'
-            content={
-              <div
-                style={{
-                  height: 10,
-                  maxWidth: 120,
-                  fontSize: 10
-                }}
-              >
-                Click to find and add more
-              </div>
-            }
-            arrow={false}
-          >
-            <Button
-              type='primary'
-              onClick={() => handleSearch()}
+          {editable && (
+            <Popover
+              placement='top'
+              content={
+                <div
+                  style={{
+                    height: 10,
+                    maxWidth: 120,
+                    fontSize: 10
+                  }}
+                >
+                  {/* Click to find and add more */}
+                  Nhấn để tìm
+                </div>
+              }
+              arrow={false}
             >
-              <FileSearchOutlined />
-            </Button>
-          </Popover>
+              <Button
+                type='primary'
+                onClick={() => handleSearch()}
+              >
+                <FileSearchOutlined />
+              </Button>
+            </Popover>
+          )}
         </Col>
         <Col span={2}>
           {/* <Popover
@@ -200,19 +204,22 @@ export default function ActivityMaterialSection(props: IProps) {
     <Modal
       centered
       okType={'danger'}
+      okText={'Xác nhận'}
+      okButtonProps={{ type: 'primary' }}
+      cancelText={'Hủy bỏ'}
       open={true}
       onCancel={() => {
         setConfirmOpen(false);
         setSelectedMaterial(null);
       }}
       onOk={() => handleDelete(data)}
-      title={`Do you want remove ` + data.name}
+      title={`Bạn có muốn gỡ vật phẩm ` + data.name}
     ></Modal>
   );
 
   const columns: TableProps<ActivityMaterial>['columns'] = [
     {
-      title: 'Item',
+      title: 'Vật phẩm',
       dataIndex: 'Item',
       key: 'name',
       width: '45%',
@@ -235,16 +242,19 @@ export default function ActivityMaterialSection(props: IProps) {
     },
 
     {
-      title: 'Use Value',
+      title: 'Số lượng sử dụng',
       key: 'duration',
       dataIndex: 'duration',
       render: (_, record) => (
         <>
           <Flex>
-          <Col offset={2} span={9}>
+            <Col
+              offset={2}
+              span={9}
+            >
               <Input
                 type='number'
-                value={record.useVal??0}
+                value={record.useVal ?? 0}
                 // onChange={e => {
                 //   setUseVal(Number(e.target.value));
                 // }}
@@ -253,26 +263,25 @@ export default function ActivityMaterialSection(props: IProps) {
                 defaultValue={0}
               />
             </Col>
-              <Col
-                offset={1}
-                span={7}
-              >
-                <Select
-                  options={getUnitList(record.type).map(e => ({
-                    value: e,
-                    label: e
-                  }))}
-                  disabled
-                  value={record.unit}
-                  // onSelect={e => {
-                  //   setUseUnit(e);
-                  // }}
-                  style={{ width: '100%' }}
-                  //defaultValue={getUnitList(selectedItem.type)[0]}
-                  placeholder={'unit'}
-                />
-              </Col>
-
+            <Col
+              offset={1}
+              span={7}
+            >
+              <Select
+                options={getUnitList(record.type).map(e => ({
+                  value: e,
+                  label: e
+                }))}
+                disabled
+                value={record.unit}
+                // onSelect={e => {
+                //   setUseUnit(e);
+                // }}
+                style={{ width: '100%' }}
+                //defaultValue={getUnitList(selectedItem.type)[0]}
+                placeholder={'unit'}
+              />
+            </Col>
           </Flex>
         </>
       )
@@ -283,18 +292,20 @@ export default function ActivityMaterialSection(props: IProps) {
       width: '10%',
       render: (_, record) => (
         <Flex justify='center'>
-          <Button
-            danger
-            shape='circle'
-            style={{ cursor: 'pointer' }}
-            type='primary'
-            onClick={() => {
-              setSelectedMaterial(record);
-              setConfirmOpen(true);
-            }}
-          >
-            <CloseOutlined />
-          </Button>
+          {editable && (
+            <Button
+              danger
+              shape='circle'
+              style={{ cursor: 'pointer' }}
+              type='primary'
+              onClick={() => {
+                setSelectedMaterial(record);
+                setConfirmOpen(true);
+              }}
+            >
+              <CloseOutlined />
+            </Button>
+          )}
         </Flex>
       )
     }

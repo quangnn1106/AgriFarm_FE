@@ -2,7 +2,7 @@ import { ActivityResponse } from '@/services/Admin/Activities/Payload/response/a
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance } from 'axios';
 
-const basePath = '/schedule/time-table';
+const basePath = '/cult/time-table';
 
 export const getScheduleService: (
   http?: AxiosInstance | null,

@@ -12,6 +12,8 @@ import {
   Table,
   TableProps,
   Tooltip,
+  Input,
+  Form,
   theme
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
@@ -19,7 +21,8 @@ import {
   HomeOutlined,
   PlusOutlined,
   MinusOutlined,
-  WarningOutlined
+  WarningOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
 import stylesFertilizerManagement from './fertilizerStyle.module.scss';
@@ -40,7 +43,9 @@ import UpdateFertilizerFormDrawer from './component/UpdateFertilizerDrawer/updat
 import AddFertilizerFormDrawer from './component/AddFertilizerDrawer/add-fertilizer-drawer';
 import { redirect } from 'next/navigation';
 
-
+interface SearchForm {
+  keyword: string
+}
 
 type Props = {};
 const FertilizerManagement = (props: Props) => {
@@ -59,6 +64,8 @@ const FertilizerManagement = (props: Props) => {
   const http = UseAxiosAuth();
   const siteName = session?.user.userInfo.siteName;
 
+  const [form] = Form.useForm<SearchForm>();
+
   // Navigation
   const router = useRouter();
   const pathName = usePathname();
@@ -67,7 +74,7 @@ const FertilizerManagement = (props: Props) => {
       title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-      title: <Link href={`/fertilizer`}>Fertilizer</Link>
+      title: <Link href={`/fertilizer`}>Phân bón</Link>
     }
   ];
 
@@ -75,15 +82,31 @@ const FertilizerManagement = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [fertilizers, setFertilizers] = useState<Fertilizer[] | undefined>([]);
 
-  const getListFertilizersApi = async (http: AxiosInstance, siteId: string | undefined) => {
+  const getListFertilizersApi = async (http: AxiosInstance, siteId: string | undefined, keySearch?: string) => {
     try {
-      const responseData = await getFertilizersApi(siteId, http);
+      let responseData:any;
+      if(keySearch=="" || keySearch?.trim()=="" || keySearch==undefined || keySearch==null) {
+        responseData = await getFertilizersApi(siteId, http);
+      } else {
+        responseData = await getFertilizersApi(siteId, http, keySearch);
+      }
+      
       setFertilizers(responseData.data as Fertilizer[]);
       setLoading(false);
+      onResetSearchSubmit();
     } catch (error) {
       console.error('Error calling API getListFertilizersApi:', error);
     }
   };
+
+    //handle search
+    const [searchSubmit, setSearchSubmit] = useState(false);
+    const onSearchSubmit = () => {
+      setSearchSubmit(true)
+    }
+    const onResetSearchSubmit = () => {
+      setSearchSubmit(false)
+    }
 
 
   //handle load details
@@ -159,13 +182,13 @@ const FertilizerManagement = (props: Props) => {
   };
 
   useEffect(() => {
-    getListFertilizersApi(http, siteId);
-  }, [http, siteId, openAddFertilizer, openFertilizerDetailDrawer]);
+    getListFertilizersApi(http, siteId, form.getFieldValue('keyword'));
+  }, [http, siteId, openAddFertilizer, openFertilizerDetailDrawer, searchSubmit]);
 
   return (
     <>
       
-      <Content style={{ padding: '20px 0px' }}>
+      <Content style={{ padding: '20px 20px' }}>
         <ConfigProvider
           theme={{
             components: {
@@ -207,7 +230,53 @@ const FertilizerManagement = (props: Props) => {
           {t('search_condition')}
         </Divider>
 
-        <FilterSection></FilterSection>
+        <ConfigProvider
+        theme={{
+          components: {
+            Form: {
+              itemMarginBottom: 8
+            }
+          }
+        }}
+      >
+        <Form
+          form={form}
+          name='basic'
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          autoComplete='off'
+          className={styleFertilizerManagement('margin-form-item')}
+          style={{padding: '0px 24px'}}
+          
+        >
+          <Form.Item
+            label={t('keyword')}
+            name='keyword'
+          >
+            <Input
+              placeholder={t('Input_search_text')}
+              style={{ width: '50%' }}
+            ></Input>
+          </Form.Item>
+          <Form.Item label=''>
+            <Flex
+              align='center'
+              justify='center'
+            >
+              <Button
+                htmlType='submit'
+                className={cx('bg-btn')}
+                icon={<SearchOutlined />}
+                onClick={onSearchSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
+
+        {/* <FilterSection></FilterSection> */}
         <Divider
           orientation='left'
           plain
@@ -234,7 +303,7 @@ const FertilizerManagement = (props: Props) => {
               title={
                 <div>
                   <WarningOutlined style={{ color: 'red', paddingRight: '4px' }} />
-                  <span>Do you want to delete this fertilizers?</span>
+                  <span>Bạn có muốn xóa những loại phân bón này?</span>
                 </div>
               }
               open={deleteState}
@@ -310,7 +379,7 @@ const FertilizerManagement = (props: Props) => {
           </Content>
         </ConfigProvider>
         <Drawer
-        title="Details Fertilizer"
+        title="Chi tiết phân bón"
         placement="right"
         onClose={closeFertilizerDetailDrawer}
         open={openFertilizerDetailDrawer}
@@ -321,7 +390,7 @@ const FertilizerManagement = (props: Props) => {
           }}></UpdateFertilizerFormDrawer>
       </Drawer>
       <Drawer
-        title="Thêm giống mới"
+        title="Thêm phân bón mới"
         placement="right"
         onClose={closeAddFertilizerDrawer}
         open={openAddFertilizer}

@@ -57,20 +57,20 @@ const MemberSider = ({ path, visible }: Props) => {
 
     { type: 'divider' },
 
-    getItem(
-      `${t('gr_dash')}`,
-      'dashboard',
-      null,
-      [
-        getItem(
-          <Link href={`/statistic`}>{t('dashboard')}</Link>,
-          `/dashboard`,
-          <HomeFilled />
-        )
-      ],
-      'group'
-    ),
-    { type: 'divider' },
+    // getItem(
+    //   `${t('gr_dash')}`,
+    //   'dashboard',
+    //   null,
+    //   [
+    //     getItem(
+    //       <Link href={`/statistic`}>{t('dashboard')}</Link>,
+    //       `/dashboard`,
+    //       <HomeFilled />
+    //     )
+    //   ],
+    //   'group'
+    // ),
+    // { type: 'divider' },
 
     getItem(
       `${t('management')}`,

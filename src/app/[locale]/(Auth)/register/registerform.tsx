@@ -107,9 +107,9 @@ const RegisterForm: React.FC = () => {
             marginBottom: '5px'
           }}
         >
-          <h1 className={cx('auth__title')}>Register Farm</h1>
+          <h1 className={cx('auth__title')}>Đăng ký</h1>
           <p className={cx('auth_subtitle')}>
-            Register information to receive a farm management account
+            Đăng ký thông tin để quan lí nông trại của bạn
           </p>
         </Form.Item>
 
@@ -150,7 +150,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='address'
-              label='Address'
+              label='Địa chỉ'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -170,7 +170,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='siteName'
-              label='Farm Name'
+              label='Tên nông trại'
               rules={[{ required: true, message: 'Password is required' }]}
             >
               <Input
@@ -182,7 +182,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='firstName'
-              label='First Name'
+              label='Họ'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -190,7 +190,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='lastName'
-              label='Last name'
+              label='Tên'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -198,7 +198,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='phone'
-              label='Phone'
+              label='SĐT'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -223,19 +223,19 @@ const RegisterForm: React.FC = () => {
                     ]}
                   >
                     <Checkbox>
-                      Agree to our{' '}
+                      Đồng ý với các{' '}
                       <a
                         href=''
                         target=''
                       >
-                        Terms
+                        điều khoản
                       </a>{' '}
-                      of use and{' '}
+                      sử dụng và{' '}
                       <a
                         href=''
                         target=''
                       >
-                        Privacy Policy
+                        pháp lí của chúng tôi
                       </a>{' '}
                     </Checkbox>
                   </Form.Item>
@@ -261,7 +261,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item>
               <p style={{ marginTop: '0', marginBottom: '5px' }}>
-                Have an account yet? <a href={LOGIN_PATH}>Click here</a>
+                Đã có tài khoản? <a href={LOGIN_PATH}>ấn vào đây</a>
               </p>
             </Form.Item>
           </Form>

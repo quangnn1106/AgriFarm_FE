@@ -36,6 +36,7 @@ type Props = {};
 
 const UserManagement = (props: Props) => {
   const { data: session } = useSession();
+  const siteName = session?.user.userInfo.siteName;
   const [createState, setCreateState] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
@@ -48,11 +49,13 @@ const UserManagement = (props: Props) => {
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
   const siteId = session?.user.userInfo.siteId;
+ 
   const router = useRouter();
   const pathName = usePathname();
 
   const fetchStaff = async (http: AxiosInstance, siteId?: string) => {
     try {
+      // const key = 'User';
       const responseData = await getStaffsService(siteId, http);
       //console.log(responseData);
       setUsers(responseData?.data as Staffs[]);

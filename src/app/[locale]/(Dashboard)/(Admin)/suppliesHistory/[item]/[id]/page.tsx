@@ -106,13 +106,16 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
   const setLabelBreadcrumb = () => {
     switch (params.item) {
       case 'seed':
-        setItemLabel(<div>Seed</div>);
+        setItemLabel(<div>Hạt giống</div>);
         break;
       case 'pesticide':
-        setItemLabel(<div>Pesticide</div>);
+        setItemLabel(<div>Thuốc bảo vệ thực vật</div>);
         break;
       case 'fertilizer':
-        setItemLabel(<div>Fertilizer</div>);
+        setItemLabel(<div>Phân bón</div>);
+        break;
+      case 'equipment':
+        setItemLabel(<div>Thiết bị</div>);
         break;
       default:
         setItemLabel(<div>Chưa có</div>);
@@ -191,7 +194,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
       title: <Link href={`/${params.item}`}>{itemLabel}</Link>
     },
     {
-      title: 'History'
+      title: 'Lịch sử'
     }
   ];
 
@@ -264,15 +267,15 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                 gap={16}
                 align='center'
               >
-                <Flex style={{ width: '20%' }}>
+                <Flex style={{ width: '15%' }}>
                   <Image
                     width={'110px'}
                     style={{ borderRadius: '1.5rem' }}
-                    src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                    src={itemDetails?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+itemDetails?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
                   />
                 </Flex>
                 <Flex
-                  style={{ width: '80%' }}
+                  style={{ width: '85%' }}
                   vertical={true}
                   align='center'
                 >
@@ -281,15 +284,16 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     justify='space-between'
                     align='center'
                     style={{ width: '100%' }}
+                    gap={20}
                   >
                     <IconText
                       icon={<FileTextOutlined></FileTextOutlined>}
-                      label='Name: '
+                      label='Tên vật phẩm: '
                       value={itemDetails?.name as string}
                     />
                     <IconText
                       icon={<HomeOutlined></HomeOutlined>}
-                      label='Stock: '
+                      label='Số lượng còn lại trong kho: '
                       value={
                         <p>
                           {itemDetails?.stock.toString() as string}{' '}
@@ -300,7 +304,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                     <IconText
                       icon={<DollarOutlined></DollarOutlined>}
                       label= {t('Unit_Price:') }
-                      value={<p>{itemDetails?.unitPrice.toString() as string} VND</p>}
+                      value={<p>{itemDetails?.unitPrice.toLocaleString().toString() as string} VND</p>}
                     />
                   </Flex>
                   <Flex>

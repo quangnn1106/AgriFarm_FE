@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Col, Drawer, Modal, Space, Tag } from 'antd';
+import {
+  Badge,
+  Button,
+  Col,
+  Descriptions,
+  Divider,
+  Drawer,
+  Flex,
+  Modal,
+  Row,
+  Space,
+  Tag,
+  Typography
+} from 'antd';
 import {
   ActivityResponse,
   Addition
@@ -10,6 +23,7 @@ import { Link } from '@/navigation';
 import AdditionSection from '../activityAdditions/AdditionSection/additionSection';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { doneScheduleService } from '@/services/Admin/Activities/scheduleService';
+import { RightSquareTwoTone, HourglassTwoTone, FireTwoTone } from '@ant-design/icons';
 
 interface EventModalProps {
   activity: ActivityResponse; // Assuming you have CustomEvent type defined
@@ -23,6 +37,7 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [additionDetail, setAdditionDetail] = useState<Addition | null>(null);
   const http = UseAxiosAuth();
+  const [complete, setComplete] = useState(activity.isCompleted)
 
   const showModal = () => {
     console.log('ok');
@@ -40,89 +55,147 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
   const handleDone = async (activityId: string) => {
     console.log('id: ', activityId);
     const rs = await doneScheduleService(http, activityId);
-
+    if(rs){
+      setComplete(true);
+    }
     console.log('done, ', rs);
   };
 
-  return <></>;
+  return (
+    <>
+      <Drawer
+        open={open}
+        title={'Activity Detail'}
+        onClose={handleCancel}
+        width={'40vw'}
+      >
+        <div style={{ height: '80vh' }}>
+          <div>
+            <h2>Activity: {activity.title}</h2>
+          </div>
+          <Row
+            gutter={[16, 32]}
+            style={{
+              width: '100%',
+              minHeight: 200,
+              paddingInline: 20,
+              overflow: 'auto'
+            }}
+          >
+            
+            <Col span={4}>
+              <Descriptions title='Status' />
+            </Col>
+            <Col span={8}>
+              <Badge
+                status={complete ? 'success' : 'warning'}
+                text={complete ? 'Completed' : 'Not yet'}
+              />
+            </Col>
+            <Col span={24}>
+              <Descriptions title='Description' />
+              <Flex
+                vertical
+                style={{
+                  maxHeight: '30vh',
+                  overflow: 'auto',
+                  paddingLeft: 10
+                }}
+              >
+                {activity.descriptions && activity.descriptions.length > 0 ? (
+                  activity.descriptions.map(e => {
+                    return (
+                      <div key={e.name}>
+                        <Typography.Text strong>{e.name}:</Typography.Text>
+                        <p>{e.value}</p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div>
+                    <Typography.Text type='secondary'>Not set</Typography.Text>
+                  </div>
+                )}
+              </Flex>
+            </Col>
+
+            {/* <Col span={24}>
+            <Descriptions title='Tag' />
+            <Space>
+              <Tag color='green-inverse'>abc</Tag>
+              <Tag color='green-inverse'>ax1</Tag>
+              <Tag color='green-inverse'>sda2</Tag>
+              <Tag color='green-inverse'>342wz</Tag>
+            </Space>
+          </Col> */}
+            <Col span={8}>
+              <Descriptions title='Start time' />
+              <RightSquareTwoTone twoToneColor={'#00ce07'} />{' '}
+              {dayjs(activity.start).format('HH:mm DD/MM/YYYY')}
+            </Col>
+            <Col span={10}>
+              <Descriptions title='Estimated end' />
+              <HourglassTwoTone twoToneColor={'#edbf33'} />{' '}
+              {dayjs(activity.end).format('HH:mm DD/MM/YYYY')}
+            </Col>
+            <Col span={6}>
+              <Descriptions title='Worked' />
+              <FireTwoTone twoToneColor={'#ea4f44'} /> {0}
+            </Col>
+            <Col>
+              <Flex
+                style={{ width: '100%' }}
+                justify='center'
+              >
+                <Row>
+                  <Descriptions title='Season'></Descriptions>
+
+                  {activity.season?.title}
+                </Row>
+                <Row>
+                  <Descriptions title='Location'></Descriptions>
+                  {activity.location ? activity.location.name : 'none'}
+                </Row>
+              </Flex>
+            </Col>
+          </Row>
+
+          
+          <Divider>Advance Action</Divider>
+          <Col
+            offset={1}
+            span={12}
+          >
+            <Descriptions title='Detail' />
+            {!activity.addition && <p>Not set</p>}
+          </Col>
+          {activity.addition && (
+            <AdditionSection
+              activityId={activity.id}
+              addition={activity.addition}
+            />
+          )}
+          <Flex
+            justify='end'
+            style={{ marginTop: 20 }}
+          >
+            <Button onClick={handleCancel}>Back</Button>
+            <Button
+            disabled={activity.isCompleted}
+              style={{ marginLeft: 10 }}
+              type='primary'
+              onClick={() => handleDone(activity.id)}
+            >
+              Mark as Done
+            </Button>
+          </Flex>
+        </div>
+      </Drawer>
+    </>
+  );
 };
 
 export default ActivityDetail;
 /*
-<Drawer
-  open={open}
-  title={'Activity Detail'}
-  onClose={handleCancel}
-  width={'40vw'}
->
-  <div style={{ height: '80vh' }}>
-    <div>
-      <h2>Title: {activity.title}</h2>
-    </div>
-    <p>Start: {dayjs(activity.start).format('HH:mm DD/MM/YYYY')}</p>
-    <p>End: {dayjs(activity.end).format('HH:mm DD/MM/YYYY')}</p>
-    <br />
-    <h3>--Detail Information--</h3>
-    <div>
-      Land: <a href={`/${activity.location?.id}`}>{activity.location?.name}</a>
-    </div>
-    <div>
-      Season: <a href={`/${activity.season?.id}`}>{activity.season?.title}</a>
-    </div>
-    <div>
-      Inspectors:{' '}
-      {activity.inspectors.map((ins, index) => (
-        <Tag
-          color='blue'
-          key={index}
-        >
-          <a href={`/${ins.id}`}>@{ins.name}</a>
-        </Tag>
-      ))}
-    </div>
-    <div>
-      Participants:{' '}
-      {activity.workers.map((wok, index) => (
-        <Tag
-          color='cyan'
-          key={index}
-        >
-          @{wok.name}
-        </Tag>
-      ))}
-    </div>
-    <p>Status: {activity.isCompleted ? 'Completed' : 'Not yet'}</p>
-    <div>
-      More Information:{' '}
-      {activity.descriptions.map((des, index) => {
-        return (
-          <div key={index}>
-            {' '}
-            {'-'} {des.name}: {des.value}
-          </div>
-        );
-      })}
-    </div>
-    <br />
-    <h3>--Advance Detail--</h3>
-    Detail:{' '}
-    {activity.addition && (
-      <AdditionSection
-        activityId={activity.id}
-        addition={activity.addition}
-      />
-    )}
-    
-    <Col style={{ marginTop: 20 }}>
-      <Button onClick={handleCancel}>Cancel</Button>
-      <Button
-        style={{ marginLeft: 10 }}
-        type='primary'
-        onClick={() => handleDone(activity.id)}
-      >
-        Mark as Done
-      </Button>
-    </Col>
-  </div>
-</Drawer>;
+
 */

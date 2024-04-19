@@ -1,6 +1,6 @@
 "use client"
 import { Link } from '@/navigation';
-import { UsingDetail } from '@/services/Admin/Activities/Payload/request/activityAdditionRequest';
+import { UsingDetail } from '@/services/Admin/Activities/Payload/response/activityAdditionResponse';
 import { getUsingDetailService } from '@/services/Admin/Activities/additionService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { Button, Col, Form, Input, Row } from 'antd';

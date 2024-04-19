@@ -81,7 +81,7 @@ const SeasonCreate = (props: Props) => {
         title: <Link href={`/`}>{t('home')}</Link>
     },
     {
-        title: <Link href={`/season`}>{t('season')}</Link>
+        title: <Link href={`/season`}>Mùa vụ</Link>
     },
     {
         title: t('Add_new')

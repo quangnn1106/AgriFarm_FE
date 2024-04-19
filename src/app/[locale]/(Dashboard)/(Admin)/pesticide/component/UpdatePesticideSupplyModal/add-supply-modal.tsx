@@ -135,7 +135,7 @@ const AddPesticideSupplyModal = ({
         }
       }).then(resSupplier => {
         if (resSupplier.data) {
-          openNotification('top', t('Create_successfully'), 'success');
+          openNotification('top', 'Nhập kho thành công', 'success');
           console.log('create staff success', resSupplier.status);
           form.resetFields();
         } else {
@@ -171,7 +171,7 @@ const AddPesticideSupplyModal = ({
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
           centered={true}
-          width={'fit-content'}
+          width={'50%'}
           footer={null}
           className= {stylePesticideManagement('add-supply-modal')}
         >
@@ -335,7 +335,7 @@ const AddPesticideSupplyModal = ({
               {t('Save')}
             </Button>
           </Flex>
-            <Form.Item
+            {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -344,7 +344,7 @@ const AddPesticideSupplyModal = ({
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
           </Form>
         </Modal>
       </ConfigProvider>

@@ -13,24 +13,15 @@ import {
   Modal,
   Radio,
   Row,
-  Select,
   Spin,
   Table,
-  Tag,
   Tooltip,
   Upload,
   notification
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import type {
-  DatePickerProps,
-  FormInstance,
-  RadioChangeEvent,
-  TableProps,
-  UploadFile,
-  UploadProps
-} from 'antd';
+import type { FormInstance, TableProps, UploadFile, UploadProps } from 'antd';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { PlusOutlined, CameraOutlined, HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
@@ -55,6 +46,14 @@ import TitleLabelFormItem from '@/components/TitleLabel/TitleLabelFormItem';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import StaffsDetails from '@/services/Admin/Staffs/Payload/response/staffs-detail';
 import { updateStaffPayLoad } from '@/services/Admin/Staffs/Payload/request/update-staff';
+import { CertificationResponse } from '@/services/Admin/Certificates/payload/response/certificate';
+import { deleteCerApi } from '@/services/Admin/Certificates/deleteCer';
+import {
+  getCertsService,
+  getMemCertsService
+} from '@/services/Admin/Certificates/getAllCertificates';
+import { CerTableColumns } from '../../../user-certificate/components/Table/column-type';
+import AddCertificate from '../../components/AddCertiModal/modalAdd';
 
 const { TextArea } = Input;
 
@@ -158,15 +157,59 @@ const UpdateUser = ({
   ]);
 
   const [staffsDetail, setStaffDetail] = useState<StaffsDetails | undefined>();
-  // const [gender, setGender] = useState<number>(staffsDetail?.gender as number);
-  // console.log('staffsDetail?.gender as number: ', staffsDetail?.gender as number);
+  const [certificate, setCertificate] = useState<CertificationResponse[] | []>([]);
+  const [createState, setCreateState] = useState<boolean>(false);
+  const getListCertsApi = async (http: AxiosInstance, userId: string | undefined) => {
+    try {
+      const responseData = await getMemCertsService(userId, http);
+      setCertificate(responseData.data as CertificationResponse[]);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API getListCerApi:', error);
+    }
+  };
 
-  // const handleChangeGender = (e: RadioChangeEvent) => {
-  //   console.log('radio checked', e.target.value);
+  //handle delete
+  const [deleteState, setDeleteState] = useState<boolean>(false);
+  const [deleteBtnState, setDeleteBtnState] = useState<boolean>(true);
+  const [deletedCertificates, setDeletedCertificates] = useState<React.Key[]>([]);
+  const deletedCert = async (http: AxiosInstance, seasonId?: string) => {
+    try {
+      const res = await deleteCerApi(http, seasonId);
+      getListCertsApi(http, params.id);
+    } catch (error) {
+      console.error('Error calling API Delete Season:', error);
+    }
+  };
+  const checkRowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: CertificationResponse[]) => {
+      if (selectedRowKeys.length > 0) {
+        setDeleteBtnState(false);
+        setDeletedCertificates(selectedRowKeys);
+      } else {
+        setDeleteBtnState(true);
+      }
+    }
+  };
 
-  //   setGender(e.target.value);
-  // };
-
+  const handleDelete = (id: string) => {
+    deletedCert(http, id);
+  };
+  const deleteMultiple = () => {
+    deletedCertificates.map(function (item) {
+      deletedCert(http, item.toString());
+    });
+    setDeleteState(false);
+    setDeleteBtnState(true);
+  };
+  const onChange: TableProps<CertificationResponse>['onChange'] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
   useEffect(() => {
     const fetchStaffsDetails = async (
       http: AxiosInstance,
@@ -177,7 +220,7 @@ const UpdateUser = ({
       try {
         const responseData = await getStaffsServiceDetails(siteId, http, userId);
         if (responseData.status === STATUS_OK) {
-        //  console.log('status ok: ', responseData?.data);
+          //  console.log('status ok: ', responseData?.data);
           setStaffDetail(responseData?.data as StaffsDetails);
           //  console.log('stafff detail: ', responseData?.data?.id) ;
 
@@ -205,6 +248,10 @@ const UpdateUser = ({
     staffsDetail?.onboarding
   ]);
 
+  useEffect(() => {
+    getListCertsApi(http, params.id);
+  }, [http, params.id, createState]);
+
   const handleUpdateStaffs = async (value: updateStaffPayLoad) => {
     // const updatePayload: updateStaffPayLoad = {
     //   ...value
@@ -226,15 +273,6 @@ const UpdateUser = ({
     // setUpdateState(true);
   };
 
-  const onChange: TableProps<CertificationModel>['onChange'] = (
-    pagination,
-    filters,
-    sorter,
-    extra
-  ) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file: UploadFile) => {
@@ -249,16 +287,6 @@ const UpdateUser = ({
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
-
-  const data: CertificationModel[] = [];
-  for (let i = 0; i < 10; i++) {
-    data.push({
-      id: 'example_id' + i,
-      certification_name: 'Test certification',
-      expired_time: '20/10/2024',
-      link_certification: 'Example Link'
-    });
-  }
 
   return (
     <>
@@ -577,13 +605,14 @@ const UpdateUser = ({
         </Spin>
 
         <Tooltip
-          title='Add new certification'
+          title='Thêm chứng chỉ mới'
           className={cx('btn-right')}
         >
           <Button
             style={{ marginBottom: 12 }}
             className={cx('bg-btn')}
             icon={<PlusOutlined />}
+            onClick={() => setCreateState(true)}
           />
         </Tooltip>
         <ConfigProvider
@@ -599,23 +628,59 @@ const UpdateUser = ({
             }
           }}
         >
+          <AddCertificate
+            params={{
+              visible: createState,
+              onCancel: () => setCreateState(false),
+              userId: params.id,
+              loading: isFetching || false
+            }}
+          />
           <Table
-            columns={certificationTableColumn}
-            dataSource={data.map(certification => ({
-              ...certification
-              // onDetails: () => handleDetails(certification.id),
-              // onDelete: () => handleDelete(certification.id)
-              // onUpdate: () => handleUpdate(certification.id)
+            loading={isFetching}
+            rowKey={'id'}
+            bordered
+            rowSelection={{
+              type: 'checkbox',
+              ...checkRowSelection
+            }}
+            // onRow={(record, rowIndex) => {
+            //   return {
+            //     onClick: event => {
+            //       //    console.log('record row onCLick: ', record);
+            //       //console.log('event row onCLick: ', event);
+            //       const target = event.target as HTMLElement;
+            //       const isWithinLink = target.tagName === 'A' || target.closest('a');
+
+            //       const isWithinAction =
+            //         target.closest('td')?.classList.contains('ant-table-cell') &&
+            //         !target
+            //           .closest('td')
+            //           ?.classList.contains('ant-table-selection-column') &&
+            //         !target.closest('td')?.classList.contains('ant-table-cell-fix-right');
+
+            //       if (isWithinAction && !isWithinLink) {
+            //         handleDetails(record);
+            //       }
+            //     } // click row
+            //   };
+            // }}
+            columns={CerTableColumns()}
+            dataSource={certificate?.map(cer => ({
+              ...cer,
+              // onDetails: () => handleDetails(cer.id!),
+              onDelete: () => handleDelete(cer.id!)
+              // onViewHistory: () => onViewHistory(cer.id!)
             }))}
-            onChange={onChange}
+            // onChange={onChange}
             pagination={{
               showTotal: total => `Total ${total} Items`,
               showSizeChanger: true,
               pageSizeOptions: ['10', '20', '30'],
-              total: data.length
+              total: certificate?.length
             }}
             scroll={{ x: 'max-content' }}
-            className={cx('table_style')}
+            className='table-style'
           />
         </ConfigProvider>
       </Content>

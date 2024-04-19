@@ -2,7 +2,7 @@ import IconText from '@/components/IconText/IconText';
 import { SupplierResponse, Supply } from '../../../supply/models/supplier-models';
 import { HomeOutlined, DollarOutlined, FileTextOutlined, PhoneOutlined, NumberOutlined, MailOutlined, ShopOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { Divider } from 'antd';
+import { Divider, Flex } from 'antd';
 import { AxiosInstance } from 'axios';
 import { useState, useEffect } from 'react';
 import getSupplierDetailApi from '@/services/Admin/Supply/getSupplierDetails';
@@ -34,7 +34,7 @@ const SupplyDetailsDrawer = ({
 
   return (
     <>
-    
+    <Flex gap={12} vertical>
       <IconText
         icon={<FileTextOutlined />}
         label='Ngày nhập/Ngày xuất: '
@@ -88,7 +88,7 @@ const SupplyDetailsDrawer = ({
         label='Địa chỉ '
         value={
             <p>
-                <p>{supplier?.address as string}</p>
+                <p style={{textWrap: 'wrap'}}>{supplier?.address as string}</p>
             </p>
         }
       />
@@ -110,6 +110,7 @@ const SupplyDetailsDrawer = ({
             </p>
         }
       />
+      </Flex>
     </>
   );
 };

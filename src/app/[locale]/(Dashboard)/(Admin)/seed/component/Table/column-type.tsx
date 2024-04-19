@@ -42,7 +42,7 @@ import { Seed } from '../../models/seed-models';
         align: 'end',
         dataIndex: 'unitPrice',
         width: 'max-content',
-        render: (_,seedItem) => `${seedItem.unitPrice} VND`
+        render: (_,seedItem) => `${seedItem.unitPrice.toLocaleString()} VND`
       },
     {
       width: 'max-content',
