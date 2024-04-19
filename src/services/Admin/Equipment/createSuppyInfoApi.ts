@@ -1,21 +1,20 @@
-
-import { Pesticide, CreateSupplyDto } from "@/app/[locale]/(Dashboard)/(Admin)/pesticide/models/pesticide-models";
+import { CreateSupplyDto, Equipment } from "@/app/[locale]/(Dashboard)/(Admin)/equipment/models/equipment-models";
 import HttpResponseCommon from "@/types/response";
 import { AxiosInstance } from "axios";
 
 export const createSupplyInfoApi: (
-    pesticideID: string | undefined,
+    equipmentID: string | undefined,
     http: AxiosInstance | null,
-    CreateSupplyDto?: CreateSupplyDto
-) => Promise<HttpResponseCommon<Pesticide | undefined>> = async (
-    pesticideID,
+    createSupplyDto?: CreateSupplyDto
+) => Promise<HttpResponseCommon<Equipment | undefined>> = async (
+    equipmentID,
     http,
-    CreateSupplyDto
+    createSupplyDto
 ) => {
     try {
-        const res = await http?.post(`ppp/farm-pesticides/supply`, CreateSupplyDto, {
+        const res = await http?.post(`equip/farm-equipments/supply`, createSupplyDto, {
             params: {
-                id: pesticideID
+                id: equipmentID
             }
         });
         return res?.data;

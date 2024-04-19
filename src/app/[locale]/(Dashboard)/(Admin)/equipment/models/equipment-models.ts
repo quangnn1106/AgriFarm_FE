@@ -42,23 +42,20 @@ export interface Equipment {
   }
   
   export interface CreateSupplierMapper {
-    quantity: number
-    unitPrice: number
-    measureUnit: string
+    price: number
     content: string
     supplierId: string
     supplierName: string
     address: string
+    validFrom: string
+    validTo: string
   }
 
   export interface CreateAllInfoOfEquipmentMapperDto {
     name: string
     description: string
     notes: string
-    defaultUnit: string
-    quantity: number
-    unitPrice: number
-    measureUnit: string
+    price: number
     content: string
     supplierId: string
     supplierName: string
