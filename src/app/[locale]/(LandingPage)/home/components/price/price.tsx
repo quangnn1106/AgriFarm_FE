@@ -16,10 +16,10 @@ const PricingCard: React.FC<PricingCardProps> = ({ duration, price }) => {
     <div className='pricing-card'>
       <div className='pricing-card-content'>
         <h3 className='pricing-card-duration'>{duration}</h3>
-        <p className='pricing-card-description'>use AgriFarm solution</p>
+        <p className='pricing-card-description'>Sử dụng giải pháp AgriFarm</p>
         <div className='pricing-card-price'>
-          <span className='pricing-card-currency'>$</span>
-          <span className='pricing-card-amount'>{price}</span>
+          <span className='pricing-card-currency'>VNĐ</span>
+          <span className='pricing-card-amount'>{price.toLocaleString()}</span>
           <span className='pricing-card-frequency'>/month</span>
         </div>
         <button
@@ -28,18 +28,18 @@ const PricingCard: React.FC<PricingCardProps> = ({ duration, price }) => {
           }}
           className='pricing-card-button'
         >
-          Try it now
+          Mua ngay
         </button>
-        <p className='pricing-card-info'>Click for more infomation -&gt;</p>
+        <p className='pricing-card-info'>Xem thông tin chi tiết-&gt;</p>
       </div>
     </div>
   );
 };
 
 const pricingData = [
-  { duration: '1-year', price: 99 },
-  { duration: '2-year', price: 95 },
-  { duration: '3-year', price: 87 }
+  { duration: '1 năm', price: 990000 },
+  { duration: '2 năm', price: 950000 },
+  { duration: '3 năm', price: 870000 }
 ];
 
 const PricingSection: React.FC = () => {
@@ -48,8 +48,8 @@ const PricingSection: React.FC = () => {
       <div className='pricing-section'>
         <Col>
           <div className={classes.sectionHeading}>
-            <div className={classes.sectionTitle}>Pricing</div>
-            <div className={classes.description}>Solution that are right for you</div>
+            <div className={classes.sectionTitle}>Gói giải pháp</div>
+            <div className={classes.description}>Giải pháp phù hợp cho bạn</div>
           </div>
         </Col>
         <Row

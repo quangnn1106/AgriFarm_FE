@@ -72,7 +72,7 @@ const ForgotForm: React.FC = () => {
     //   setError(error?.message);
     // }
     console.log('click confirm email to reset pass');
-    router.push(RESET_PASS_PATH)
+    router.push('/verify');
   };
 
   return (

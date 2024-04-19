@@ -14,7 +14,8 @@ import {
   DASH_BOARD_PATH,
   DASHBOARD_ADMIN,
   FORGOT_PATH,
-  RESET_PASS_PATH
+  RESET_PASS_PATH,
+  VERIFY_PATH
 } from './constants/routes';
 import { ROLES } from './constants/roles';
 const publicPages = [
@@ -25,7 +26,8 @@ const publicPages = [
   ERROR_PATH,
   HOME_PATH,
   FORGOT_PATH,
-  RESET_PASS_PATH
+  RESET_PASS_PATH,
+  VERIFY_PATH
   // (/secret requires auth)
 ];
 
