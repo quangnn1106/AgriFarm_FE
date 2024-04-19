@@ -180,7 +180,12 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                         <Col span={2} className={cxPage('col-left')}>
                                                             {item.afNum ?? "AF"}
                                                         </Col>
-                                                        <Col span={22} className={cxPage('col-right')}>{item.content}</Col>
+                                                        <Col span={22} className={cxPage('col-right')}>
+                                                            <Row style={{marginBottom: '5px'}}>{item.title}</Row>
+                                                            <Row>
+                                                                <p style={{fontWeight: 'normal'}}>{item.content}</p>
+                                                            </Row>
+                                                        </Col>
                                                     </Row>
                                                 )
                                             } else {
@@ -191,6 +196,9 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                                 <Col span={16}>
                                                                     <Row style={{marginBottom: '5px'}}>
                                                                         {item.afNum ?? "AF"}
+                                                                    </Row>
+                                                                    <Row style={{marginBottom: '5px'}}>
+                                                                        {item.title}
                                                                     </Row>
                                                                     <Row>
                                                                         <p style={{fontWeight: 'normal'}}>{item.content}</p>
