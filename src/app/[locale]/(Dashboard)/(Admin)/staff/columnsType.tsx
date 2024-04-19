@@ -16,7 +16,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   //   fixed: 'left'
   // },
   {
-    title: 'Full Name',
+    title: 'Họ tên',
     dataIndex: 'firstName',
     render: (_, userItem) => `${userItem.firstName} ${userItem.lastName}`,
     width: 'max-content',
@@ -27,7 +27,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   //   dataIndex: 'siteCode'
   // },
   {
-    title: 'Phone Number',
+    title: 'Số điện thoại',
     dataIndex: 'phoneNumber',
     width: 'max-content'
   },
@@ -38,13 +38,13 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   },
 
   {
-    title: 'Role',
+    title: 'Chức vụ',
     dataIndex: 'role',
 
     width: 'max-content'
   },
   {
-    title: 'Status',
+    title: 'Trạng thái',
     dataIndex: 'isLockout',
     sorter: true,
     // filterMode: 'tree',
@@ -99,7 +99,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
               <a
                 onClick={() => {
                   Modal.confirm({
-                    title: 'Are you want to approve this user ?',
+                    title: 'Bạn muốn cấp quyền quản lý cho người này?',
                     centered: true,
                     width: '400px',
                     onOk: () => {
