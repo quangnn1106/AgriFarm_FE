@@ -40,6 +40,11 @@ import fetchListWaterData from '@/services/Admin/Water/getWaterService';
 import PinWaterSource from '@/components/MapBox/pinWaterSource';
 import PinDisease from '@/components/MapBox/pinDisease';
 import ControlPanel from '../../(SuperAdmin)/sa/site/components/control-panel';
+import {
+  MarkerDisease,
+  MarkerDiseaseParseNum
+} from '@/services/SuperAdmin/Site/payload/response/markerDisease';
+import { getDiseaseApi } from '@/services/SuperAdmin/Site/diseaseListMap';
 
 type Props = {};
 interface CenterState {
@@ -55,7 +60,7 @@ const SitePage = (props: Props) => {
   const { latitude, longitude, error } = useGeolocation();
   const [lands, setLands] = React.useState<Land[] | []>([]);
   const [water, setWater] = React.useState<Water[] | []>([]);
-
+  const [markerDisease, setMarkerDisease] = React.useState<MarkerDisease[] | []>([]);
   const t = useTranslations('Common');
 
   const http = UseAxiosAuth();
@@ -90,9 +95,21 @@ const SitePage = (props: Props) => {
     }
   };
 
+  const fetchListDisease = async (http: AxiosInstance) => {
+    try {
+      const responseData = await getDiseaseApi(http);
+      //   console.log(responseData?.data as Sites[]);
+      setMarkerDisease(responseData?.data as MarkerDisease[]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error calling API fetchSites:', error);
+    }
+  };
+
   React.useEffect(() => {
     fetchLandExist(siteId, http);
     fetchWaterExist(siteId, http);
+    fetchListDisease(http);
   }, [http, siteId]);
 
   const pinsPositions = useMemo(() => {
@@ -150,6 +167,41 @@ const SitePage = (props: Props) => {
       )
     );
   }, [water]);
+
+  // Chuyển đổi danh sách chuỗi vị trí thành danh sách số
+  const convertedData: MarkerDiseaseParseNum[] = markerDisease?.map(item => ({
+    ...item,
+    location: {
+      lat: parseFloat(item.location.lat),
+      lon: parseFloat(item.location.lon)
+    }
+  }));
+  console.log('convertedData: ', convertedData);
+
+  const pinsDiseasePosition = useMemo(() => {
+    return convertedData?.map((city, index) => (
+      <Marker
+        key={index}
+        longitude={city?.location?.lon || 0}
+        latitude={city?.location?.lat || 0}
+        color='red'
+        anchor='bottom'
+        // onClick={e => {
+        //   // If we let the click event propagates to the map, it will immediately close the popup
+        //   // with `closeOnClick: true`
+        //   e.originalEvent.stopPropagation();
+        //   setPopupInfo(city);
+        // }}
+      >
+        <>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <PinDisease type={city?.diseaseName} />
+            <span className='red'></span>
+          </div>
+        </>
+      </Marker>
+    ));
+  }, [convertedData]);
 
   return (
     <>
@@ -231,43 +283,7 @@ const SitePage = (props: Props) => {
           <ScaleControl />
           {pinsPositions}
           {pinsWater}
-          <Marker
-            longitude={105.82303450111112 || 0}
-            latitude={9.245856390804775 || 0}
-            color='red'
-            anchor='bottom'
-            // onClick={e => {
-            //   // If we let the click event propagates to the map, it will immediately close the popup
-            //   // with `closeOnClick: true`
-            //   e.originalEvent.stopPropagation();
-            //   setPopupInfo(city);
-            // }}
-          >
-            <>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <PinDisease /> <span className='red'></span>
-              </div>
-            </>
-          </Marker>
-
-          <Marker
-            longitude={105.86374 || 0}
-            latitude={9.90249 || 0}
-            color='red'
-            anchor='bottom'
-            // onClick={e => {
-            //   // If we let the click event propagates to the map, it will immediately close the popup
-            //   // with `closeOnClick: true`
-            //   e.originalEvent.stopPropagation();
-            //   setPopupInfo(city);
-            // }}
-          >
-            <>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <PinDisease /> <span className='red'></span>
-              </div>
-            </>
-          </Marker>
+          {pinsDiseasePosition}
           <ControlPanel />
         </MapBoxAgriFarm>
 
@@ -284,20 +300,5 @@ const SitePage = (props: Props) => {
     </>
   );
 };
-// interface ColoredLineProps {
-//   text: string;
-// }
-// const ColoredLine: React.FC<ColoredLineProps> = ({ text }) => (
-//   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 25 }}>
-//     <div
-//       className={cx('disease__line')}
-//       style={{ flex: 1 }}
-//     />
-//     <span style={{ marginLeft: 5, marginRight: 5 }}>{text}</span>
-//     <div
-//       className={cx('disease__line')}
-//       style={{ flex: 12 }}
-//     />
-//   </div>
-// );
+
 export default SitePage;

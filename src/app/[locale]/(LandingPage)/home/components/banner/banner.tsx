@@ -210,13 +210,11 @@ export default function Banner() {
             <div className='column'>
               <div className='div-4'>
                 <div className='div-5'>
-                  AgriFarm <span style={{ color: 'rgba(76,175,79,1)' }}>GlobalG.A.P</span>{' '}
+                  Hệ thống <span style={{ color: 'rgba(76,175,79,1)' }}>quản lý</span>{' '}
                   <br />
-                  Management System{' '}
+                  canh tác lúa theo tiêu chuẩn Global G.A.P{' '}
                 </div>
-                <div className='div-6'>
-                  Manage rice cultivation process according to GlobalG.A.P standards
-                </div>
+                {/* <div className='div-6'>Canh tác lúa theo tiêu chuẩn Global G.A.P</div> */}
                 <button className='div-7'>
                   <div
                     onClick={() => {
@@ -224,7 +222,7 @@ export default function Banner() {
                     }}
                     className='div-8'
                   >
-                    Get a Demo
+                    Thử ngay
                   </div>
                   <img
                     loading='lazy'

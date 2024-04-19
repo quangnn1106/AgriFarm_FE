@@ -61,19 +61,19 @@ function MyHeader() {
                 href='#'
                 className='div-5'
               >
-                Home
+                Trang đầu
               </a>
               <a
                 href='#clapy_solution'
                 className='div-6'
               >
-                Solution
+                Giải pháp
               </a>
               <a
                 href='#pricing'
                 className='div-7'
               >
-                Pricing
+                Gói giải pháp
               </a>
             </div>
             <div className='div-8'>
@@ -115,15 +115,15 @@ function MyHeader() {
                     router.push(LOGIN_PATH);
                   }}
                 >
-                  Login{' '}
-                  <Image
+                  Đăng nhập{' '}
+                  {/* <Image
                     loading='lazy'
                     src='https://cdn.builder.io/api/v1/image/assets/TEMP/6dba9be5567d18b88e65863726b4c31310d3eca1206f601a79ec8106b38253ab?apiKey=a3c86750458a463dbdaef0731e8c4142&'
                     className='img-2'
                     width={11}
                     height={11}
                     alt=''
-                  />
+                  /> */}
                 </Button>
               )}
             </div>

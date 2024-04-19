@@ -178,7 +178,7 @@ const AddSupplierDrawer: React.FC = () => {
             }}
             label={
               <>
-                <PhoneOutlined style={{ marginRight: '0.5rem' }} /> Phone
+                <PhoneOutlined style={{ marginRight: '0.5rem' }} /> Số điện thoại
               </>
             }
           >

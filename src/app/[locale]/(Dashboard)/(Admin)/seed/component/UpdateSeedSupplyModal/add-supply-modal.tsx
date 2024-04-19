@@ -171,7 +171,7 @@ const AddSeedSupplyModal = ({
           onCancel={params.onCancel}
           cancelText={t('Cancel')}
           centered={true}
-          width={'fit-content'}
+          width={'50%'}
           footer={null}
           className= {styleSeedManagement('add-supply-modal')}
         >
@@ -359,7 +359,7 @@ const AddSeedSupplyModal = ({
               {t('Save')}
             </Button>
           </Flex>
-            <Form.Item
+            {/* <Form.Item
             noStyle
             shouldUpdate
           >
@@ -368,7 +368,7 @@ const AddSeedSupplyModal = ({
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item>
+          </Form.Item> */}
           </Form>
         </Modal>
       </ConfigProvider>

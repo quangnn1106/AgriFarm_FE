@@ -16,7 +16,8 @@ import {
   SelectProps,
   Flex,
   UploadProps,
-  Upload
+  Upload,
+  UploadFile
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { constants } from 'buffer';
@@ -43,37 +44,21 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 
 import { AxiosInstance } from 'axios';
 import { CreateDocumentDto, DocumentResponse } from '../models/document-models';
+import getDocumentsApi from '@/services/Admin/Document/getDocumentsApi';
+import {
+  createDocumentApi
+} from '@/services/Admin/Document/createDocumentApi';
+import { RcFile } from 'antd/es/upload';
+import { FileType } from '@/components/Upload/uploadAvatar';
+import { UploadFileApi } from '@/services/Admin/Media/uploadFileApi';
 
-const props: UploadProps = {
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-  onChange({ file, fileList }) {
-    if (file.status !== 'uploading') {
-      console.log(file, fileList);
-    }
-  },
-  defaultFileList: [
-    {
-      uid: '1',
-      name: 'xxx.png',
-      status: 'uploading',
-      url: 'http://www.baidu.com/xxx.png',
-      percent: 33,
-    },
-    {
-      uid: '2',
-      name: 'yyy.png',
-      status: 'done',
-      url: 'http://www.baidu.com/yyy.png',
-    },
-    {
-      uid: '3',
-      name: 'zzz.png',
-      status: 'error',
-      response: 'Server Error 500', // custom error message to show
-      url: 'http://www.baidu.com/zzz.png',
-    },
-  ],
-};
+
+interface FileResponse {
+  data: string;
+  status: number;
+  message: string | null;
+}
+
 
 const AddDocumentDrawer: React.FC = () => {
   const t = useTranslations('Common');
@@ -100,29 +85,28 @@ const AddDocumentDrawer: React.FC = () => {
   };
 
   const initialFormValues = {
-    name: '',
-    fileLink: '',
-    createdDate: '',
-    type: '',
+    title: '',
+    url: '',
+    description: ''
   };
 
   //Set selection document
   const [options, setOptions] = useState<SelectProps['options']>([]);
 
   useEffect(() => {
-    getListDocument(http);
+    getListDocument(siteId, http);
   }, [http, isFetching]);
 
   //get list documents
-  const getListDocument = async (http: AxiosInstance) => {
-    // try {
-    //   await getDocumentsApi(http).then(res => {
-    //     console.log('document: ', res?.data);
-    //     setDocumentOptions(res?.data as DocumentResponse[]);
-    //   });
-    // } catch (error) {
-    //   console.error('Error occurred while get list document:', error);
-    // }
+  const getListDocument = async (siteId: string | undefined, http: AxiosInstance) => {
+    try {
+      await getDocumentsApi(siteId, http).then(res => {
+        console.log('document: ', res?.data);
+        setDocumentOptions(res?.data as DocumentResponse[]);
+      });
+    } catch (error) {
+      console.error('Error occurred while get list document:', error);
+    }
   };
 
   const setDocumentOptions = (documents: DocumentResponse[] | undefined) => {
@@ -130,7 +114,7 @@ const AddDocumentDrawer: React.FC = () => {
     documents?.map((item, idx) => {
       updatedOptions?.push({
         value: item.id,
-        label: item.name
+        label: item.title
       });
     });
     setOptions(updatedOptions);
@@ -138,24 +122,63 @@ const AddDocumentDrawer: React.FC = () => {
     setIsFetching(false);
   };
 
+  // const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<UploadFile>();
 
-  const onSubmit = async (value: CreateDocumentDto) => {
-    // try {
-    //   await createDocumentApi(http, value).then(res => {
-    //         if (res.data) {
-    //           openNotification('top', t('Create_successfully'), 'success');
-    //           console.log('create success', res.status);
-    //         } else {
-    //           openNotification('top', t('Create_fail')+ res?.message , 'error');
-    //           console.log('create fail', res.status);
-    //         }
-    //         form.resetFields();
-    //       });
-    // } catch (error) {
-    //   openNotification('top', t('Create_fail') , 'error');
-    //   console.error('Error occurred while updating season:', error);
-    // }
+  const [url, setUrl] = useState<string>();
+
+  const handleChange: UploadProps['onChange'] = ({ file: newFile }) => {
+    setFile(newFile);
   };
+
+  const uploadFileApi = async (http: AxiosInstance) => {
+    try {
+      const formData = new FormData();
+      formData?.append('file', file?.originFileObj as FileType);
+      console.log(file);
+      const response = await UploadFileApi(http, formData);
+      let data = response.data as FileResponse;
+      setUrl(data.data);
+      console.log('url:', data);
+      return data.data;
+    } catch (error) {
+      console.error('Error calling API getListDocumentsApi:', error);
+    }
+  };
+  const onSubmit = async (value: CreateDocumentDto) => {
+    try {
+      const formData = new FormData();
+      formData?.append('file', file?.originFileObj as FileType);
+      console.log(file);
+      await UploadFileApi(http, formData).then(async res => {
+        let data = res.data;
+        setUrl(data);
+        await createDocumentApi(http, {
+          title: value.title,
+          description: value.description,
+          url: data
+        }).then(res => {
+          if (res.data) {
+            openNotification('top', t('Create_successfully'), 'success');
+            console.log('create success', res.status);
+            
+          } else {
+            openNotification('top', t('Create_fail') + res?.message, 'error');
+            console.log('create fail', res.status);
+          }
+          form.resetFields();
+        });
+      });
+      // uploadFileApi(http)
+    } catch (error) {
+      openNotification('top', t('Create_fail'), 'error');
+      console.error('Error occurred while updating season:', error);
+    }
+  };
+
+  // useEffect (() => {
+  //   uploadFileApi(http)
+  // }, [file])
 
   return (
     <>
@@ -164,6 +187,7 @@ const AddDocumentDrawer: React.FC = () => {
         <Form
           disabled={!componentDisabled}
           form={form}
+          initialValues={initialFormValues}
           colon={false}
           layout={'horizontal'}
           labelCol={{ span: 10 }}
@@ -174,7 +198,7 @@ const AddDocumentDrawer: React.FC = () => {
           size='middle'
         >
           <Form.Item
-            name='name'
+            name='title'
             style={{
               maxWidth: '100%',
               margin: '0px 0px 8px 0px',
@@ -189,7 +213,7 @@ const AddDocumentDrawer: React.FC = () => {
             <Input placeholder={t('Type_data')} />
           </Form.Item>
           <Form.Item
-            name='fileLink'
+            name='url'
             style={{
               maxWidth: '100%',
               margin: '0px 0px 8px 0px',
@@ -197,14 +221,17 @@ const AddDocumentDrawer: React.FC = () => {
             }}
             label={
               <>
-                <LinkOutlined style={{ marginRight: '0.5rem' }} /> File link
+                <LinkOutlined style={{ marginRight: '0.5rem' }} /> Đường dẫn (url)
               </>
             }
           >
-            <Input placeholder={t('Type_data')} />
+            <Input
+              placeholder={t('Type_data')}
+              value={url}
+            />
           </Form.Item>
           <Form.Item
-            name='createdDate'
+            name='description'
             style={{
               maxWidth: '100%',
               margin: '0px 0px 8px 0px',
@@ -212,29 +239,17 @@ const AddDocumentDrawer: React.FC = () => {
             }}
             label={
               <>
-                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Create date
+                <CalendarOutlined style={{ marginRight: '0.5rem' }} /> Mô tả
               </>
             }
           >
             <Input placeholder={t('Type_data')} />
           </Form.Item>
-          <Form.Item
-            name='type'
-            style={{
-              maxWidth: '100%',
-              margin: '0px 0px 8px 0px',
-              padding: '0px 0px'
-            }}
-            label={
-              <>
-                <MenuOutlined style={{ marginRight: '0.5rem' }} /> Type
-              </>
-            }
-          >
-            <Input placeholder={t('Type_data')} />
-          </Form.Item>
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Upload</Button>
+          {/* <input type="file" onChange={(e)=>{
+              setFile(e.target.files?.[0]);
+          }}></input> */}
+          <Upload onChange={handleChange}>
+            <Button icon={<UploadOutlined />}>Tải tệp lên</Button>
           </Upload>
           <Flex
             style={{ width: '100%' }}
@@ -246,6 +261,7 @@ const AddDocumentDrawer: React.FC = () => {
               loading={isFetching}
               icon={<FileOutlined />}
               className='bg-btn'
+              style={{marginTop: '1rem'}}
             >
               {t('Save')}
             </Button>

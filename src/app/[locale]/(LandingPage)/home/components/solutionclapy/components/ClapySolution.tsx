@@ -28,10 +28,13 @@ interface Props {
 /* @figmaId 5:20778 */
 export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) {
   return (
-    <div id='clapy_solution' className={`${resets.clapyResets} ${classes.root}`}>
+    <div
+      id='clapy_solution'
+      className={`${resets.clapyResets} ${classes.root}`}
+    >
       <div className={classes.sectionHeading}>
-        <div className={classes.sectionTitle}>Our solution</div>
-        <div className={classes.description}>GlobalG.A.P standard’s control points</div>
+        <div className={classes.sectionTitle}>Giải pháp của chúng tôi</div>
+        <div className={classes.description}>Những điểm của tiêu chuẩn GlobalG.A.P</div>
       </div>
 
       <div className={classes.row1}>
@@ -41,8 +44,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details}>
             <div className={classes.number}>
-              <div className={classes.textBlock}>Site history &amp; </div>
-              <div className={classes.textBlock2}>site management</div>
+              <div className={classes.textBlock}>Lịch sử trang trại &amp; </div>
+              <div className={classes.textBlock2}>Quản lý trang trại</div>
             </div>
           </div>
         </div>
@@ -52,8 +55,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details2}>
             <div className={classes.number2}>
-              <div className={classes.textBlock3}>Workers’ health, </div>
-              <div className={classes.textBlock4}>safety &amp; welfare record</div>
+              <div className={classes.textBlock3}>Sức khỏe người lao động, </div>
+              <div className={classes.textBlock4}>hồ sơ an toàn &amp; phúc lợi</div>
             </div>
           </div>
         </div>
@@ -63,8 +66,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details3}>
             <div className={classes.number3}>
-              <div className={classes.textBlock5}>Food safety </div>
-              <div className={classes.textBlock6}>policy declaration</div>
+              <div className={classes.textBlock5}>An toàn thực phẩm</div>
+              <div className={classes.textBlock6}>khai báo chính sách</div>
             </div>
           </div>
         </div>
@@ -73,7 +76,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
         </div>
         <div className={classes._4}>
           <div className={classes.details4}>
-            <div className={classes.number4}>GlobalG.A.P status</div>
+            <div className={classes.number4}>Trạng thái GlobalG.A.P</div>
           </div>
         </div>
       </div>
@@ -84,8 +87,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details5}>
             <div className={classes.number5}>
-              <div className={classes.textBlock7}>Record keeping &amp; </div>
-              <div className={classes.textBlock8}>internal self-assessment</div>
+              <div className={classes.textBlock7}>Lưu trữ hồ sơ &amp; </div>
+              <div className={classes.textBlock8}>Đánh giá nội bộ</div>
             </div>
           </div>
         </div>
@@ -94,7 +97,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <UilMoneyWithdrawIcon className={classes.icon6} />
           </div>
           <div className={classes.details6}>
-            <div className={classes.number6}>Recall/Withdrawal procedure</div>
+            <div className={classes.number6}>Thu hồi/Quy trình thu hồi</div>
           </div>
         </div>
         <div className={classes.materialSymbolsNoFoodOutline}>
@@ -103,8 +106,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
         <div className={classes._32}>
           <div className={classes.details7}>
             <div className={classes.number7}>
-              <div className={classes.textBlock9}>Food fraud </div>
-              <div className={classes.textBlock10}>mitigation</div>
+              <div className={classes.textBlock9}>Sự giảm thiểu </div>
+              <div className={classes.textBlock10}>Thực phẩm bẩn</div>
             </div>
           </div>
         </div>
@@ -113,7 +116,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
         </div>
         <div className={classes._42}>
           <div className={classes.details8}>
-            <div className={classes.number8}>Food defense</div>
+            <div className={classes.number8}>Bảo vệ thực phẩm</div>
           </div>
         </div>
       </div>
@@ -124,7 +127,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details9}>
             <div className={classes.number9}>
-              Waste &amp; pollution, recycling &amp; re-use
+              Chất thải và ô nhiễm &amp; tái chế &amp; tái sử dụng
             </div>
           </div>
         </div>
@@ -133,7 +136,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <MdiWorkflowOutlineIcon className={classes.icon10} />
           </div>
           <div className={classes.details10}>
-            <div className={classes.number10}>Traceability &amp; Segregation</div>
+            <div className={classes.number10}>Truy xuất nguồn gốc &amp; phân biệt</div>
           </div>
         </div>
         <div className={classes._33}>
@@ -142,8 +145,8 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
           </div>
           <div className={classes.details11}>
             <div className={classes.number11}>
-              <div className={classes.textBlock11}>Non-conforming</div>
-              <div className={classes.textBlock12}>products</div>
+              <div className={classes.textBlock11}>Các sản phẩm</div>
+              <div className={classes.textBlock12}>không phù hợp</div>
             </div>
           </div>
         </div>
@@ -152,7 +155,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
         </div>
         <div className={classes._43}>
           <div className={classes.details12}>
-            <div className={classes.number12}>Mass balance</div>
+            <div className={classes.number12}>Cân bằng khối lượng</div>
           </div>
         </div>
       </div>
@@ -162,7 +165,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <CovidPersonalHygieneHandSaniti className={classes.icon13} />
           </div>
           <div className={classes.details13}>
-            <div className={classes.number13}>Hygiene</div>
+            <div className={classes.number13}>Vệ sinh</div>
           </div>
         </div>
         <div className={classes._5}>
@@ -170,7 +173,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <Fi5Icon className={classes.icon15} />
           </div>
           <div className={classes.details14}>
-            <div className={classes.number14}>Subcontractors</div>
+            <div className={classes.number14}>Nhà cung cấp</div>
           </div>
         </div>
         <div className={classes._6}>
@@ -178,7 +181,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <TdesignUserTalkIcon className={classes.icon16} />
           </div>
           <div className={classes.details15}>
-            <div className={classes.number15}>Conservation</div>
+            <div className={classes.number15}>Bảo tồn</div>
           </div>
         </div>
         <div className={classes._7}>
@@ -186,7 +189,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <GravityUiFaceSadIcon className={classes.icon17} />
           </div>
           <div className={classes.details16}>
-            <div className={classes.number16}>Complaints</div>
+            <div className={classes.number16}>Khiếu nại</div>
           </div>
         </div>
         <div className={classes._8}>
@@ -194,7 +197,7 @@ export const ClapySolution: FC<Props> = memo(function ClapySolution(props = {}) 
             <GroupIcon className={classes.icon18} />
           </div>
           <div className={classes.details17}>
-            <div className={classes.number17}>Logo use</div>
+            <div className={classes.number17}>Logo sử dụng</div>
           </div>
         </div>
       </div>

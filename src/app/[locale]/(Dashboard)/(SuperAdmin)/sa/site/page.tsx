@@ -128,7 +128,7 @@ const SitePage = (props: Props) => {
       lon: parseFloat(item.location.lon)
     }
   }));
-  // console.log('convertedData: ', convertedData);
+  console.log('convertedData: ', convertedData);
 
   const pinsDiseasePosition = useMemo(() => {
     return convertedData?.map((city, index) => (
@@ -147,7 +147,8 @@ const SitePage = (props: Props) => {
       >
         <>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <PinDisease /> <span className='red'></span>
+            <PinDisease type={city?.diseaseName} />
+            <span className='red'></span>
           </div>
         </>
       </Marker>

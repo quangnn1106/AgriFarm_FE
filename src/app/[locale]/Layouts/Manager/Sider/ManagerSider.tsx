@@ -151,8 +151,8 @@ const ManagerSider = ({ path, visible }: Props) => {
 
     getItem(`${t('external')}`, 'external', <FaHandshakeAngle />, [
       getItem(
-        <Link href={`/subcontractor`}>{t('subcontract')}</Link>,
-        `/subcontractor`,
+        <Link href={`/supplier`}>{t('subcontract')}</Link>,
+        `/supplier`,
         <FaHandshakeAngle />
       ),
       getItem(<Link href={`/expert`}>{t('expert')}</Link>, `/expert`, <FaUserTie />)
