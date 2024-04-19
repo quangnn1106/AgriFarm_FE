@@ -270,20 +270,20 @@ export default function CultivationInfo() {
 
                 <RangePicker
                   picker='year'
-                  id={{
-                    start: 'startInput',
-                    end: 'endInput'
-                  }}
+                  // id={{
+                  //   start: 'startInput',
+                  //   end: 'endInput'
+                  // }}
                   placeholder={[
                     "Từ",
                     "Đến"
                   ]}
-                  onFocus={(_, info) => {
-                    console.log('Focus:', info.range);
-                  }}
-                  onBlur={(_, info) => {
-                    console.log('Blur:', info.range);
-                  }}
+                  // onFocus={(_, info) => {
+                  //   console.log('Focus:', info.range);
+                  // }}
+                  // onBlur={(_, info) => {
+                  //   console.log('Blur:', info.range);
+                  // }}
                   disabled={!filter}
                   onChange={(e, x) => {
                     const fl = FakL.filter(d =>
