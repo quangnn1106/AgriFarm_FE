@@ -72,7 +72,7 @@ const ResetForm: React.FC = () => {
     //   setError(error?.message);
     // }
     console.log('click confirm email to reset pass');
-    router.push('');
+    router.push('/login');
   };
 
   return (
@@ -111,7 +111,7 @@ const ResetForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='large' />
+              <Input.Password size='large' />
             </Form.Item>
 
             <Form.Item
@@ -125,7 +125,7 @@ const ResetForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='large' />
+              <Input.Password size='large' />
             </Form.Item>
             <Form.Item>
               {/* <Row className={cx('form_btn')}>

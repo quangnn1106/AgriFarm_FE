@@ -28,7 +28,8 @@ import {
   BookOutlined
 } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
@@ -125,20 +126,20 @@ const AdminSider = ({ path, visible }: Props) => {
         //   <FaClipboardList />
         // ),
       ]),
-      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
-      getItem(
-        <Link href={`/production`}>{t('pro')}</Link>,
-        `/production`,
-        <GiPlantRoots />
-      ),
-      getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
+      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />)
+      // getItem(
+      //   <Link href={`/production`}>{t('pro')}</Link>,
+      //   `/production`,
+      //   <GiPlantRoots />
+      // ),
+      // getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
       getItem(<Link href={`/seed`}>{t('rice_va')}</Link>, `/seed`),
       getItem(<Link href={`/equipment`}>{t('equip')}</Link>, `/equipments`),
-      getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
+      getItem(<Link href={`/products`}>{t('prod')}</Link>, `/product`)
     ]),
 
     getItem(`${t('external')}`, 'external', <FaHandshakeAngle />, [
@@ -153,8 +154,8 @@ const AdminSider = ({ path, visible }: Props) => {
     getItem(`${t('GBG')}`, 'GBG', <FaClipboardCheck />, [
       getItem(<Link href={`/document`}>{t('doc')}</Link>, `/document`, <FaFileLines />),
       getItem(
-        <Link href={`/rice_cultivation`}>{t('rice_culti')}</Link>,
-        `/rice_cultivation`,
+        <Link href={`/cultivation-record`}>{t('rice_culti')}</Link>,
+        `/cultivation-record`,
         <Image
           src={iconRice}
           alt='icon_rice'

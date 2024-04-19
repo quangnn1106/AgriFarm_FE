@@ -7,9 +7,9 @@ export const useDebounceSearch = (
 ) => {
   const debouncedSearch = useRef(
     debounce(async (value: string) => {
-      if (value.trim().length > 0) {
+      // if (value.trim().length > 0) {
         await fetchFunc(value);
-      }
+      // }
     }, time || 500)
   ).current;
 

@@ -1,4 +1,5 @@
 import { Button, Flex, Timeline } from 'antd';
+import { useState } from 'react';
 
 interface IProps {
   data: {
@@ -8,12 +9,57 @@ interface IProps {
 }
 
 export default function CultTimeline() {
+
+  const [hasMore, setHasMore] = useState(true)
+  const [list, setList] = useState([
+    {
+      label: '20/01/2019',
+      children: 'Dọn vệ sinh'
+    },
+    {
+      label: '10/12/2018',
+      children: 'Thu hoạch'
+    },
+    {
+      label: '25/06/2018',
+      children: 'Bón phân'
+    },
+    {
+      label: '20/05/2018',
+      children: 'Xới đất'
+    }
+  ])
+
+  const handleViewMore=()=>{
+    const add = [
+      {
+        label: '11/04/2018',
+        children: 'Thâm canh'
+      },
+      {
+        label: '10/4/2018',
+        children: 'Xử lý hóa chất'
+      },
+      {
+        label: '07/03/2018',
+        children: 'Thâm canh'
+      },
+      {
+        label: '06/02/2018',
+        children: 'Xử lý hóa chất'
+      }
+    ]
+    setList(prev=> [...prev,...add])
+
+  }
+
   return (
     <>
       <Flex
       vertical
       style={{
-        width: '80%'
+        width: '80%',
+        minHeight:400
       }}
       >
         <Timeline
@@ -21,26 +67,9 @@ export default function CultTimeline() {
             width: '100%'
           }}
           mode={'left'}
-          items={[
-            {
-              label: '20/01/2019',
-              children: 'Dọn vệ sinh'
-            },
-            {
-              label: '10/12/2018',
-              children: 'Thu hoạch'
-            },
-            {
-              label: '25/06/2018',
-              children: 'Bón phân'
-            },
-            {
-              label: '20/01/2017',
-              children: 'Xới đất'
-            }
-          ]}
+          items={list}
         />
-        <Button block>Xem thêm</Button>
+        {hasMore && <Button onClick={()=>handleViewMore()} block>Xem thêm</Button>}
       </Flex>
     </>
   );

@@ -28,12 +28,15 @@ import { AxiosInstance } from 'axios';
 import UpdateFormRegis from './update/ModalUpdate';
 import { approvedRegisterForm } from '@/services/SuperAdmin/RegisterForm/approvedFormRegis';
 import { STATUS_NOT_FOUND } from '@/constants/https';
+import { useSession } from 'next-auth/react';
 
 const cx = classNames.bind(styles);
 
 type Props = {};
 
 const UserManagement = (props: Props) => {
+  const { data: session } = useSession();
+  const siteName = session?.user.userInfo.siteName || '';
   const [createState, setCreateState] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
 
@@ -97,29 +100,6 @@ const UserManagement = (props: Props) => {
       setIsFetching(false);
       console.log('invalid data', responseData?.message);
     }
-    // await http
-    //   .put(`/register/registry/put`, updateRaw, {
-    //     params: {
-    //       id: id
-    //     }
-    //   })
-    //   .then(data => {
-    //     api.success({
-    //       message: 'Register Form has been approved successfully!',
-    //       placement: 'top',
-    //       duration: 2
-    //     });
-    //     fetchSubscription(http);
-    //   })
-    //   .catch(err => {
-    //     api.error({
-    //       message: 'Approved not successfully! checked',
-    //       placement: 'top',
-    //       duration: 2
-    //     });
-    //     setIsFetching(false);
-    //     console.log('invalid data', err);
-    //   });
   };
   const handleDetails = async (record: UserModel) => {
     setFormModal(record);
@@ -149,7 +129,7 @@ const UserManagement = (props: Props) => {
   return (
     <>
       {contextHolder}
-      <BreadcrumbComponent />
+      <BreadcrumbComponent siteName={siteName} />
       <FilterBox />
 
       <ActionBox>

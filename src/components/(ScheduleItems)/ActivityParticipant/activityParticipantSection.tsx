@@ -124,7 +124,7 @@ export default function ActivityParticipantSection(props: IProps) {
           <Col span={6}>
             <Flex
               style={{
-                // borderInlineEnd: '2px solid ' + token.colorBgTextHover,
+                borderInlineEnd: '2px solid ' + token.colorBgTextHover,
                 height: '100%',
                 paddingInline: 20
               }}
@@ -149,7 +149,7 @@ export default function ActivityParticipantSection(props: IProps) {
               </Flex>
               <Flex
                 style={{
-                  //borderInlineEnd: '1px solid ' + token.colorBgMask
+                  // borderInlineEnd: '1px solid ' + token.colorBgMask,
                   // marginTop:1,
                   maxHeight: 230,
                   overflow: 'auto',
@@ -241,7 +241,7 @@ export default function ActivityParticipantSection(props: IProps) {
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
                   height: 230,
-                  border: '1px solid',
+                  // border: '1px solid',
                   overflow: 'auto',
                   padding: 10,
                   width: '100%'
@@ -342,9 +342,10 @@ export default function ActivityParticipantSection(props: IProps) {
                 style={{
                   //borderInlineEnd: '1px solid ' + token.colorBgMask
                   height: 230,
-                  border: '1px solid',
+                  // border: '1px solid',
                   overflow: 'auto',
                   padding: 10,
+                  paddingLeft:40,
                   width: '30vw'
                 }}
                 wrap='wrap'

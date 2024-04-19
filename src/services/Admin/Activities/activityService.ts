@@ -127,3 +127,19 @@ export const checkInviteActivitiesService: (
   );
   return res?.status === 202;
 };
+
+export const completeActivitiesService: (
+  http: AxiosInstance,
+  activityId: string
+) => Promise<boolean> = async (http, activityId) => {
+  const res = await http.post(
+    `${basePath}/done`,{},
+    {
+      params:{
+        activityId: activityId
+      }
+    }
+    
+  );
+  return res?.status === 204;
+};

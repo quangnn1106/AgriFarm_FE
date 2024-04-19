@@ -9,7 +9,6 @@ import { Link } from '@/navigation';
 import { Addition } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { useEffect, useRef, useState } from 'react';
-import UsingAddition from '../viewer/UsingDetail/usingAddition';
 import { Button } from 'antd';
 import { AxiosInstance } from 'axios';
 import TrainingAddition from '../viewer/TrainingDetail/trainingAddition';
@@ -29,20 +28,12 @@ export default function AdditionSection(props: IProps) {
 
   const renderAddition = (type: string) => {
     switch (type) {
-      case USING_ADDITION:
-        return (
-          <>
-            {/* <Button onClick={()=>setOpen(true)}>Show more detail</Button> */}
-            <UsingAddition
-              activityId={activityId}
-              setIsFetching={setIsFetching}
-            />
-          </>
-        );
+      
       case TRAINING_ADDITION:
         return (
           <>
             <TrainingAddition
+              change={true}
               activityId={activityId}
               setIsFetching={setIsFetching}
             />

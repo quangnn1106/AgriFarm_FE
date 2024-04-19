@@ -3,11 +3,13 @@
 import FileUploadDragger from '@/components/(ImageItem)/fileUploadDragger';
 import { useRouter } from '@/navigation';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Avatar,
+  Breadcrumb,
   Button,
   Col,
+  ConfigProvider,
   Descriptions,
   Divider,
   Flex,
@@ -27,7 +29,9 @@ import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import AddExpertInformationForm from './addExpertForm';
 import AddExpertCertificateForm from './addExpertCertificateForm';
-import { postExpertService } from '@/services/Admin/Training/expertService';
+import { addExpertCertificateBatchService, addExpertCertificateService, postExpertService } from '@/services/Admin/Training/expertService';
+import { useSession } from 'next-auth/react';
+import { Content } from 'antd/es/layout/layout';
 
 interface IProps {
   //onClose?: () => void;
@@ -35,22 +39,25 @@ interface IProps {
 
 const steps = [
   {
-    title: 'Information',
-    content: 'First add new expert profile'
+    title: 'Thông tin',
+    content: 'Đầu tiên hãy điền thông tin hồ sơ mới'
   },
+  // {
+  //   title: 'Chứng nhận',
+  //   content: 'Thêm chứng nhận cho chuyên gia này'
+  // },
   {
-    title: 'Certificate',
-    content: 'Add certificates for this expert'
-  },
-  {
-    title: 'Complete',
-    content: 'Congratulation! You have added new expert profile'
+    title: 'Hoàn thành',
+    content: 'Chúc mừng! Bạn đã thêm mới một hồ sơ chuyên gia'
   }
 ];
 
 export default function AddExpert(props: IProps) {
   //const { onClose } = props;
 
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   const http = UseAxiosAuth();
   const farmRouter = useRouter();
   const [current, setCurrent] = useState(0);
@@ -72,16 +79,16 @@ export default function AddExpert(props: IProps) {
     console.log('Send data: ', data);
     postExpertService(http, data)
       .then(rs => {
-        console.log("Cur id: ", (rs.data as any).data.id)
+        console.log('Cur id: ', (rs.data as any).data.id);
         if (rs.status === 201) {
-          message.success('Create success!');
+          message.success('Thêm thành công!');
           setCurrentId((rs.data as any).data.id);
           next();
         } else throw new Error('invalid data');
       })
       .catch(e => {
         console.log('Error: ', e);
-        message.error('Invalid! Please check your form information again.');
+        message.error('Có lỗi xảy ra, vui lòng thử lại!');
       });
   };
 
@@ -89,85 +96,133 @@ export default function AddExpert(props: IProps) {
     const data = certForm.getFieldsValue();
     console.log('Send data: ', data);
 
-    next();
+    addExpertCertificateBatchService(http, currentId, {certificates: data})
+    .then(rs => {
+      console.log('Cur id: ', (rs.data as any).data.id);
+      if (rs.status === 201) {
+        message.success('Thêm thành công!');
+        setCurrentId((rs.data as any).data.id);
+        next();
+      } else throw new Error('invalid data');
+    })
+    .catch(e => {
+      console.log('Error: ', e);
+      message.error('Có lỗi xảy ra, vui lòng thử lại!');
+    });
+
   };
 
   const renderFormSection = () => {
     return (
       <>
         {current === 0 && <AddExpertInformationForm form={createForm} />}
-        {current === 1 && <AddExpertCertificateForm form={certForm} />}
+        {/* {current === 1 && <AddExpertCertificateForm form={certForm} />} */}
       </>
     );
   };
 
   return (
     <>
-      <Divider orientation='left'>
-        <Typography.Title level={3}>Add New Expert Profile</Typography.Title>
-      </Divider>
-      <Flex
-        vertical
-        justify='center'
-        align='center'
-      >
-        <Row>
-          <Steps
-            style={{ margin: 40, maxWidth: '40vw' }}
-            current={current}
-            items={items}
-          />
-        </Row>
-
-        <Divider>
-          <Typography.Text style={{ height: 50 }}>
-            {steps[current].content}
-          </Typography.Text>
+      <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
+            }
+          }}
+        >
+          {' '}
+          <Button
+            //className={cx('home-btn')}
+            href='#'
+            size={'large'}
+          >
+            <HomeOutlined style={{ color: 'green' }} />
+            {siteName}
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb style={{ margin: '0px 24px' }}>
+          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item>Thông tin chuyên gia</Breadcrumb.Item>
+          <Breadcrumb.Item>Thêm mới</Breadcrumb.Item>
+        </Breadcrumb>
+        <Divider orientation='left'>
+          <Typography.Title level={3}>Thêm hồ sơ chuyên gia</Typography.Title>
         </Divider>
-        {current !== 2 ? (
-          renderFormSection()
-        ) : (
-          <Flex
-            vertical
-            justify='center'
-            align='center'
-            style={{
-              margin: 50,
-
-              padding: 20,
-              width: '80%',
-              minHeight: 400
-            }}
-            //justify='center'
-          >
-            <Result
-              status='success'
-              title='Successfully!'
-              subTitle='Click "Back to list" to return list page.'
-              
+        <Flex
+          vertical
+          justify='center'
+          align='center'
+        >
+          <Row>
+            <Steps
+              style={{ margin: 40, maxWidth: '40vw' }}
+              current={current}
+              items={items}
             />
-          </Flex>
-        )}
-        <Divider orientation='right'>
-          <Flex
-            vertical
-            align='center'
-            style={{
-              width: '100%'
-              //marginTop: 24
-              //paddingInline:'10vw'
-            }}
-          >
-            <div>
-              <Button
-                style={{ margin: '0 8px' }}
-                onClick={() => farmRouter.back()}
-                //disabled={!(current > 0)}
-              >
-                Back to list
-              </Button>
+          </Row>
 
-              {/* {current === 2 && (
+          <Divider>
+            <Typography.Text style={{ height: 50 }}>
+              {steps[current].content}
+            </Typography.Text>
+          </Divider>
+          {current !== 1 ? (
+            renderFormSection()
+          ) : (
+            <Flex
+              vertical
+              justify='center'
+              align='center'
+              style={{
+                margin: 50,
+
+                padding: 20,
+                width: '80%',
+                minHeight: 400
+              }}
+              //justify='center'
+            >
+              <Result
+                status='success'
+                title='Thành công!'
+                subTitle='Nhấn "Quay lại" để trở lại'
+              />
+            </Flex>
+          )}
+          <Divider orientation='right'>
+            <Flex
+              vertical
+              align='center'
+              style={{
+                width: '100%'
+                //marginTop: 24
+                //paddingInline:'10vw'
+              }}
+            >
+              <div>
+                <Button
+                  style={{ margin: '0 8px' }}
+                  onClick={() => farmRouter.back()}
+                  //disabled={!(current > 0)}
+                >
+                  Quay lại
+                </Button>
+
+                {/* {current === 2 && (
                 <Button
                   type='primary'
                   onClick={() => message.success('Processing complete!')}
@@ -175,39 +230,40 @@ export default function AddExpert(props: IProps) {
                   Done
                 </Button>
               )} */}
-              {current === 1 && (
-                <>
-                  <Button
-                    type='default'
-                    style={{ marginInline: 10 }}
-                    onClick={() => next()}
-                    disabled={!(current < steps.length - 1)}
-                  >
-                    Skip
-                  </Button>
+                {current === 2 && (
+                  <>
+                    <Button
+                      type='default'
+                      style={{ marginInline: 10 }}
+                      onClick={() => next()}
+                      disabled={!(current < steps.length - 1)}
+                    >
+                      Bỏ qua
+                    </Button>
+                    <Button
+                      type='primary'
+                      style={{ marginInline: 10 }}
+                      onClick={() => handleCertificateSubmit()}
+                      disabled={!(current < steps.length - 1)}
+                    >
+                      Tiếp
+                    </Button>
+                  </>
+                )}
+                {current === 0 && (
                   <Button
                     type='primary'
-                    style={{ marginInline: 10 }}
-                    onClick={() => handleCertificateSubmit()}
+                    onClick={() => handleInforSubmit()}
                     disabled={!(current < steps.length - 1)}
                   >
-                    Add
+                    Tiếp
                   </Button>
-                </>
-              )}
-              {current === 0 && (
-                <Button
-                  type='primary'
-                  onClick={() => handleInforSubmit()}
-                  disabled={!(current < steps.length - 1)}
-                >
-                  Add
-                </Button>
-              )}
-            </div>
-          </Flex>
-        </Divider>
-      </Flex>
+                )}
+              </div>
+            </Flex>
+          </Divider>
+        </Flex>
+      </Content>
     </>
   );
 }

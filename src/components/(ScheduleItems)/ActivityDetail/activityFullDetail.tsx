@@ -294,6 +294,7 @@ export default function ActivityFullDetail(props: IProps) {
               )}
               {value === 3 && (
                 <ActivityTaskAdditionSection
+                  curLocationId={item.location?.id??null}
                   editable={item.editAble ?? false}
                   activity={item}
                 />
