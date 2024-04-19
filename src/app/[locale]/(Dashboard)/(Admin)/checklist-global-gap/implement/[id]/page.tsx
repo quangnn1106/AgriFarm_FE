@@ -90,8 +90,6 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
 
             if (res.statusCode != STATUS_OK) {
                 messageApi.error(tMsg('msg_add_fail'));
-            } else {
-                form.resetFields();
             }
             setLoading(false);
             messageApi.success(tMsg('msg_add_success'));
@@ -152,10 +150,7 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                     {checklistData ? (
                         <>
                             <Space>
-                                <span className={cx('h2-info')}>IFA V4.2</span>
-                                {siteName && (
-                                    <Tag color='#4CAF4F'>{siteName}</Tag>
-                                )}
+                                <span className={cx('h2-info')}>{checklistData.name}</span>
                                 <Button
                                     type='primary'
                                     htmlType='button'
