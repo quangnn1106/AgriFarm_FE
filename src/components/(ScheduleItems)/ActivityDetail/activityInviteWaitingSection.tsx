@@ -1,3 +1,4 @@
+import { useRouter } from '@/navigation';
 import { checkInviteActivitiesService } from '@/services/Admin/Activities/activityService';
 import UseAxiosAuth from '@/utils/axiosClient';
 import {
@@ -19,6 +20,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
   const [modalOn, setModalOn] = useState(false);
   const [isAccept, setIsAccept] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
+  const farmRouter = useRouter();
 
   const http = UseAxiosAuth();
 
@@ -32,6 +34,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
             onAccept();
           } else {
             onReject();
+            farmRouter.push("/home")
           }
         }else throw new Error()
       })
@@ -116,6 +119,8 @@ export default function ActivityInviteWaitingSection(props: IProps) {
       {modalOn && (
         <Modal
           centered
+          okText={'Xác nhận'}
+          cancelText={'Hủy bỏ'}
           open={true}
           title={
             isAccept === 1 ? (
@@ -133,7 +138,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 Bạn xác nhận từ chối nhiệm vụ?
               </Typography.Text>
             ) : (
-              'Confirm'
+              'Xác nhận'
             )
           }
           onCancel={() => {
@@ -153,7 +158,7 @@ export default function ActivityInviteWaitingSection(props: IProps) {
                 }}
                 type='primary'
               >
-                Confirm
+                Xác nhận
               </Button>
             </>
           )}

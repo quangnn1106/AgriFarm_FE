@@ -133,11 +133,11 @@ const ManagerSider = ({ path, visible }: Props) => {
         // ),
       ]),
       getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
-      getItem(
-        <Link href={`/production`}>{t('pro')}</Link>,
-        `/production`,
-        <GiPlantRoots />
-      ),
+      // getItem(
+      //   <Link href={`/production`}>{t('pro')}</Link>,
+      //   `/production`,
+      //   <GiPlantRoots />
+      // ),
       // getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [

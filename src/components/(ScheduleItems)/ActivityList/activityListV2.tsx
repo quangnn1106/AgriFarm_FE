@@ -7,11 +7,13 @@ import dayjs, { Dayjs } from 'dayjs';
 import {
   Avatar,
   Badge,
+  Breadcrumb,
   Button,
   Calendar,
   CalendarProps,
   Card,
   Col,
+  ConfigProvider,
   Descriptions,
   Divider,
   Flex,
@@ -29,6 +31,7 @@ import {
   CalendarTwoTone,
   DeleteTwoTone,
   FireTwoTone,
+  HomeOutlined,
   HourglassTwoTone,
   PlusOutlined,
   PlusSquareTwoTone,
@@ -50,6 +53,8 @@ import {
 } from '@/services/Admin/Activities/activityService';
 import HttpResponseCommon from '@/types/response';
 import { useRouter } from '@/navigation';
+import { Content } from 'antd/es/layout/layout';
+import { useSession } from 'next-auth/react';
 
 interface IProp {}
 
@@ -58,7 +63,9 @@ export default function ActivityListV2(props: IProp) {
   const { token } = theme.useToken();
   const farmRouter = useRouter();
   const http = UseAxiosAuth();
-  const colors = useColorGenerator();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   const [activities, setActivities] = useState<ActivityResponse[]>([]);
   const [monthView, setMonthView] = useState<ActivityByMonthResponse[]>([]);
   const [curMonth, setCurMonth] = useState<{ month: number; year: number }>({
@@ -229,182 +236,219 @@ export default function ActivityListV2(props: IProp) {
 
   return (
     <>
-      <Divider orientation='left'>
-        <Typography.Title level={3}>Activities</Typography.Title>
-      </Divider>
-      <Flex
-        align='start'
-        gap={20}
-        vertical
-        style={{ width: '100%', paddingInline: '5vw' }}
-      >
-        <Row
-          style={{
-            height: '65vh',
-            width: '100%'
-            //maxHeight: 500
+      <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
+            }
           }}
         >
-          <Col
-            span={14}
+          {' '}
+          <Button
+            //className={cx('home-btn')}
+            href='#'
+            size={'large'}
+          >
+            <HomeOutlined style={{ color: 'green' }} />
+            {siteName}
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb style={{ margin: '0px 24px' }}>
+          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item>Quản lý hoạt động</Breadcrumb.Item>
+        </Breadcrumb>
+        <Divider orientation='left'>
+          <Typography.Title level={3}>Hoạt động</Typography.Title>
+        </Divider>
+        <Flex
+          align='start'
+          gap={20}
+          vertical
+          style={{ width: '100%', paddingInline: '5vw' }}
+        >
+          <Row
             style={{
-              //width: '50vw',
-              height: '100%',
-              border: `1px solid `,
-              borderRadius: token.borderRadiusLG
+              height: '65vh',
+              width: '100%'
+              //maxHeight: 500
             }}
           >
-            {ActivitiesCalendar()}
-          </Col>
-          <Col
-            offset={1}
-            span={6}
-          >
-            <Flex
-              vertical
-              align='center'
-              justify='center'
+            <Col
+              span={14}
               style={{
-                width: '100%',
-                height: '25%',
-                overflow: 'hidden',
-                marginBlockEnd: 20,
-                border: '1px solid',
-                borderRadius: 10
+                //width: '50vw',
+                height: '100%',
+                border: `1px solid `,
+
+                borderRadius: token.borderRadiusLG
               }}
             >
+              {ActivitiesCalendar()}
+            </Col>
+            <Col
+              offset={2}
+              span={7}
+            >
               <Flex
-                gap={10}
+                vertical
                 align='center'
-                justify='start'
+                justify='center'
                 style={{
-                  width: '90%',
-                  border: `1px solid ${token.colorBorderSecondary}`,
-                  borderRadius: 10,
-                  padding: 10,
-                  backgroundColor: `${token.colorBorderSecondary}`
+                  width: '100%',
+                  height: '32%',
+                  overflow: 'hidden',
+                  marginBlockEnd: 20,
+                  // border: '1px solid',
+                  borderRadius: 10
                 }}
               >
-                <Button
-                  type='primary'
-                  block
-                  onClick={() => farmRouter.push('/activities/add')}
+                <Flex
+                  gap={10}
+                  align='center'
+                  justify='start'
+                  style={{
+                    width: '90%',
+                    border: `1px solid ${token.colorBorderSecondary}`,
+                    borderRadius: 10,
+                    padding: 10,
+                    backgroundColor: `${token.colorBorderSecondary}`
+                  }}
                 >
-                  <Space align='center'>
-                    <PlusOutlined
-                      style={{ fontSize: '150%' }}
-                      twoToneColor={'#60c136'}
-                    />{' '}
-                    New Activity
-                  </Space>
-                </Button>
-                {/* <Button>
+                  <Button
+                    type='primary'
+                    block
+                    onClick={() => farmRouter.push('/activities/add')}
+                  >
+                    <Space align='center'>
+                      <PlusOutlined
+                        style={{ fontSize: '150%' }}
+                        twoToneColor={'#60c136'}
+                      />{' '}
+                      Thêm mới
+                    </Space>
+                  </Button>
+                  {/* <Button>
                   <DeleteTwoTone
                     style={{ fontSize: '150%' }}
                     twoToneColor={'#e74040'}
                   />
                 </Button> */}
-                {/* <Button>
+                  {/* <Button>
                   <AppstoreOutlined style={{ fontSize: '150%' }} />
                 </Button> */}
+                </Flex>
+                <Space align='baseline'>
+                  <CalendarTwoTone style={{ fontSize: '150%' }} />
+                  <Typography.Title
+                    level={4}
+                    underline
+                  >
+                    {dayjs(selectedDate).add(-1, 'day').format('DD/MM/YYYY')}
+                  </Typography.Title>
+                </Space>
               </Flex>
-              <Space align='baseline'>
-                <CalendarTwoTone style={{ fontSize: '150%' }} />
-                <Typography.Title
-                  level={4}
-                  underline
-                >
-                  {dayjs(selectedDate).add(-1, 'day').format('DD/MM/YYYY')}
-                </Typography.Title>
-              </Space>
-            </Flex>
-
-            <Flex
-              vertical
-              align='center'
-              justify='start'
-              style={{
-                height: '40vh',
-                overflow: 'auto',
-                border: '1px solid',
-                borderRadius: 10,
-                padding: 10
-              }}
-            >
-              <Divider></Divider>
 
               <Flex
                 vertical
                 align='center'
                 justify='start'
                 style={{
-                  height: '100%',
-                  width: '100%',
-                  overflow: 'auto'
+                  height: '40vh',
+                  overflow: 'auto',
+                  border: '1px solid',
+                  borderRadius: 10,
+                  padding: 10
                 }}
               >
-                <List
+                <Divider></Divider>
+
+                <Flex
+                  vertical
+                  align='center'
+                  justify='start'
                   style={{
-                    width: '100%'
+                    height: '100%',
+                    width: '100%',
+                    overflow: 'auto'
                   }}
-                  loading={isLoading}
-                  dataSource={activities}
-                  renderItem={item => {
-                    return (
-                      <Flex
-                        //vertical
-                        align='center'
-                        justify='space-between'
-                        key={item.id}
-                        //gap={10}
-                        style={{
-                          width: '100%',
-                          height: '10vh',
-                          marginBlock: 10,
-                          border: '1px solid',
-                          borderRadius: 20,
-                          padding: 10,
-                          minHeight: 80,
-                          overflow: 'auto'
-                          //backgroundColor: `${colors.get()}`
-                        }}
-                      >
-                        <Col
-                          offset={1}
-                          span={5}
+                >
+                  <List
+                    style={{
+                      width: '100%'
+                    }}
+                    loading={isLoading}
+                    dataSource={activities}
+                    renderItem={item => {
+                      return (
+                        <Flex
+                          //vertical
+                          align='center'
+                          justify='space-between'
+                          key={item.id}
+                          //gap={10}
+                          style={{
+                            width: '100%',
+                            height: '10vh',
+                            marginBlock: 10,
+                            border: '1px solid',
+                            borderRadius: 20,
+                            padding: 10,
+                            minHeight: 80,
+                            overflow: 'auto'
+                            //backgroundColor: `${colors.get()}`
+                          }}
                         >
-                          <Typography.Text strong>
-                            {dayjs(item.start).format('HH:mm')}
-                          </Typography.Text>
-                        </Col>
-                        <Col span={10}>
-                          <Typography.Text strong>{item.title}</Typography.Text>
-                        </Col>
-                        <Col span={6}>
-                          <Button
-                            onClick={() => {
-                              //setSelectedActivity(item);
-                              farmRouter.push(`/activities/${item.id}`);
-                            }}
+                          <Col
+                            offset={1}
+                            span={5}
                           >
-                            View
-                          </Button>
-                        </Col>
-                      </Flex>
-                    );
-                  }}
-                ></List>
-                {!isLoading && activities.length === 0 && (
-                  <Typography.Text type='secondary'>
-                    There no activity, add more.
-                  </Typography.Text>
-                )}
+                            <Typography.Text strong>
+                              {dayjs(item.start).format('HH:mm')}
+                            </Typography.Text>
+                          </Col>
+                          <Col span={10}>
+                            <Typography.Text strong>{item.title}</Typography.Text>
+                          </Col>
+                          <Col span={6}>
+                            <Button
+                              onClick={() => {
+                                //setSelectedActivity(item);
+                                farmRouter.push(`/activities/${item.id}`);
+                              }}
+                            >
+                              View
+                            </Button>
+                          </Col>
+                        </Flex>
+                      );
+                    }}
+                  ></List>
+                  {!isLoading && activities.length === 0 && (
+                    <Typography.Text type='secondary'>
+                      There no activity, add more.
+                    </Typography.Text>
+                  )}
+                </Flex>
+                <Divider></Divider>
               </Flex>
-              <Divider></Divider>
-            </Flex>
-          </Col>
-        </Row>
-      </Flex>
+            </Col>
+          </Row>
+        </Flex>
+      </Content>
     </>
   );
 }

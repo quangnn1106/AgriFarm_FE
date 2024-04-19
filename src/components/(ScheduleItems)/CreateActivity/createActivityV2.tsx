@@ -4,6 +4,7 @@ import {
   CloseCircleTwoTone,
   CloseOutlined,
   ExpandAltOutlined,
+  HomeOutlined,
   MinusCircleOutlined,
   MinusCircleTwoTone,
   PlusOutlined,
@@ -11,8 +12,10 @@ import {
 } from '@ant-design/icons';
 import {
   Avatar,
+  Breadcrumb,
   Button,
   Col,
+  ConfigProvider,
   DatePicker,
   Descriptions,
   Divider,
@@ -35,11 +38,16 @@ import {
 } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import { CreateActivityRequest } from '@/services/Admin/Activities/Payload/request/activityRequest';
 import { useRouter } from '@/navigation';
+import { useSession } from 'next-auth/react';
+import { Content } from 'antd/es/layout/layout';
 
 export default function CreateActivityV2() {
   const http = UseAxiosAuth();
   const [infoForm] = Form.useForm();
   const farmRouter = useRouter();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   const { RangePicker } = DatePicker;
   const [isLoading, setIsLoading] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
@@ -56,12 +64,12 @@ export default function CreateActivityV2() {
           console.log('data: ', rs.data);
           const body = rs.data as ActivityResponse;
           console.log(body);
-          message.success('Create success');
+          message.success('Tạo thành công');
           farmRouter.push('/activities/' + body.id);
         }
       })
       .catch(e => {
-        message.error('Invalid information. Try again!');
+        message.error('Có lỗi xảy ra!');
       })
       .finally(() => {
         setIsLoading(false);
@@ -75,8 +83,8 @@ export default function CreateActivityV2() {
         rules={[
           {
             validator: async (_, descriptions) => {
-              if (descriptions && (descriptions.length > 5 || descriptions.length < 0)) {
-                return Promise.reject(new Error('1 - 5 description items can add.'));
+              if (descriptions && (descriptions.length > 1 || descriptions.length < 0)) {
+                return Promise.reject(new Error('1 description items can add.'));
               }
             }
           }
@@ -89,7 +97,7 @@ export default function CreateActivityV2() {
               align='baseline'
             >
               <Col span={4}>
-                <Descriptions title={'Description'} />
+                <Descriptions title={'Thông tin thêm'} />
               </Col>
               <Col span={4}>
                 <Button
@@ -99,7 +107,7 @@ export default function CreateActivityV2() {
                   //style={{ width: '60%' }}
                   icon={<PlusOutlined />}
                 >
-                  Add
+                  Thêm
                 </Button>
               </Col>
             </Flex>
@@ -133,7 +141,7 @@ export default function CreateActivityV2() {
                     }}
                   >
                     <Typography.Text type='secondary'>
-                      Click {'"Add"'} to add more
+                      Hãy nhập thêm
                     </Typography.Text>
                   </Flex>
                 )}
@@ -187,12 +195,12 @@ export default function CreateActivityV2() {
                                   required: true,
                                   whitespace: true,
                                   message:
-                                    'Please input descriptions title or delete this field.'
+                                    'Hãy nhập thông tin!'
                                 }
                               ]}
                               noStyle
                             >
-                              <Input placeholder='Title' />
+                              <Input placeholder='Tiêu đề' />
                             </Form.Item>
                           </Col>
                         </Row>
@@ -209,13 +217,13 @@ export default function CreateActivityV2() {
                                   required: true,
                                   whitespace: true,
                                   message:
-                                    'Please input descriptions value or delete this field.'
+                                    'Hãy nhập nội dung!'
                                 }
                               ]}
                               noStyle
                             >
                               <TextArea
-                                placeholder={'Content here'}
+                                placeholder={'Nội dung'}
                                 rows={4}
                                 maxLength={500}
                                 showCount
@@ -241,23 +249,23 @@ export default function CreateActivityV2() {
 
   const infoSection = (
     <>
-      <Descriptions title={'Title'} />
+      <Descriptions title={'Tiêu đề'} />
       <Form form={infoForm}>
         <Form.Item
           name='title'
-          rules={[{ required: true, message: 'Please input name for title!' }]}
+          rules={[{ required: true, message: 'Hãy nhập tiêu đề!' }]}
         >
           <Col span={12}>
             <Input
               type='text'
-              placeholder={'Activity name'}
+              placeholder={'Tên hoạt động'}
             />
           </Col>
         </Form.Item>
-        <Descriptions title={'Start to End'} />
+        <Descriptions title={'Bắt đầu và kết thúc'} />
         <Form.Item
           name='duration'
-          rules={[{ required: true, message: 'Please input duration time!' }]}
+          rules={[{ required: true, message: 'Hãy nhập đúng thời gian!' }]}
         >
           <RangePicker
             format='DD-MM-YYYY HH:mm'
@@ -270,7 +278,7 @@ export default function CreateActivityV2() {
         </Form.Item>
         <Form.Item
           name='notes'
-          rules={[{ required: true, message: 'Please input duration time!' }]}
+          // rules={[{ required: true, message: 'Please input duration time!' }]}
         >
           {descriptionListInput}
         </Form.Item>
@@ -323,9 +331,9 @@ export default function CreateActivityV2() {
                   onClick={() => setLocationOpen(true)}
                   type='dashed'
                 >
-                  Click here
+                  Nhấn vào đây
                 </Button>
-                <Typography.Text type='secondary'>to add a location.</Typography.Text>
+                <Typography.Text type='secondary'>để thêm vị trí làm việc.</Typography.Text>
               </Flex>
             ) : (
               <Flex
@@ -357,29 +365,32 @@ export default function CreateActivityV2() {
             <Space direction='vertical'>
               <Button
                 block
+                loading={isLoading}
                 disabled={!selectedLocation}
                 onClick={() => setSelectedLocation(null)}
               >
                 <CloseOutlined style={{ color: 'red' }} />
-                Clear Location
+                Xóa
               </Button>
-              <Button
+              {/* <Button
                 block
+                loading={isLoading}
                 onClick={() => setLocationOpen(true)}
                 disabled={!selectedLocation}
               >
                 <SwapOutlined style={{ color: '#1480e0' }} />
                 Change Other
-              </Button>
+              </Button> */}
             </Space>
 
-            <Button
+            {/* <Button
+              loading={isLoading}
               disabled
               type='primary'
             >
               <ExpandAltOutlined />
               Preview Land
-            </Button>
+            </Button> */}
           </Flex>
         </Col>
       </Row>
@@ -388,8 +399,43 @@ export default function CreateActivityV2() {
 
   return (
     <>
+    <Content style={{ padding: '20px 0px' }}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                contentFontSizeLG: 24,
+                fontWeight: 700,
+                groupBorderColor: 'transparent',
+                onlyIconSizeLG: 24,
+                paddingBlockLG: 0,
+                defaultBorderColor: 'transparent',
+                defaultBg: 'transparent',
+                defaultShadow: 'none',
+                primaryShadow: 'none',
+                linkHoverBg: 'transparent',
+                paddingInlineLG: 24,
+                defaultGhostBorderColor: 'transparent'
+              }
+            }
+          }}
+        >
+          {' '}
+          <Button
+            //className={cx('home-btn')}
+            href='#'
+            size={'large'}
+          >
+            <HomeOutlined style={{ color: 'green' }} />
+            {siteName}
+          </Button>
+        </ConfigProvider>
+        <Breadcrumb style={{ margin: '0px 24px' }}>
+          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item>Quản lý hoạt động</Breadcrumb.Item>
+        </Breadcrumb>
       <Divider orientation='left'>
-        <Typography.Title level={3}>Create new farm activity</Typography.Title>
+        <Typography.Title level={3}>Thêm hoạt động mới</Typography.Title>
       </Divider>
       <Flex
         vertical
@@ -417,7 +463,7 @@ export default function CreateActivityV2() {
             padding: 20
           }}
         >
-          <Descriptions title={'Activity Information'} />
+          <Descriptions title={'Thông tin chính'} />
           <Col
             offset={1}
             span={22}
@@ -438,7 +484,7 @@ export default function CreateActivityV2() {
             padding: 20
           }}
         >
-          <Descriptions title={'Work Location'} />
+          <Descriptions title={'Vị trí thực hiện'} />
 
           {locationSection}
         </Flex>
@@ -452,15 +498,17 @@ export default function CreateActivityV2() {
           justify='end'
           gap={10}
         >
-          <Button onClick={() => farmRouter.back()}>Back to list</Button>
+          <Button loading={isLoading} onClick={() => farmRouter.back()}>Quay lại</Button>
           <Button
+            loading={isLoading}
             type='primary'
             onClick={() => handleInfoSubmit()}
           >
-            Create
+            Tạo
           </Button>
         </Flex>
       </Flex>
+      </Content>
       {locationOpen && (
         <ActivityLocationFinderModal
           onSelected={data => {

@@ -41,7 +41,8 @@
     "logout": "Logout Account",
     "t_content": "Content",
     "training": "Training",
-    "notification": "Notification"
+    "notification": "Notification",
+    "cult_rec": "Cultivation Record"
   },
   "LocaleSwitcher": {
     "switchLocale": "Switch to {locale, select, vi {vi} en {en} other {Unknown}}"

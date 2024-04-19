@@ -55,7 +55,7 @@ const TrainingAddition = (props: IProps) => {
           </Col>
           <Col span={14}>
             <Flex align='baseline'>
-              <Col span={6}>
+              <Col span={8}>
                 <Descriptions title={'Người hướng dẫn:'} />
               </Col>
               <Col span={12}>

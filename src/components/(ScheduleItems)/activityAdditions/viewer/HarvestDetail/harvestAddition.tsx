@@ -56,7 +56,7 @@ const HarvestAddition = (props: IProps) => {
           </Col>
           <Col offset={2} span={10}>
             <Flex align='baseline'>
-              <Col span={4}>
+              <Col span={5}>
                 <Descriptions title={'Sản phẩm:'} />
               </Col>
               <Col offset={1} span={8}>
@@ -108,7 +108,8 @@ const HarvestAddition = (props: IProps) => {
                     overflow: 'auto'
                   }}
                 >
-                  <Button type='primary' onClick={()=>setOpen(true)}> Thu hoạch</Button>
+                  <Button type='primary' disabled={!!detail.harvestDate} onClick={()=>setOpen(true)}> {!detail.harvestDate?'Thu hoạch':'Đã thu hoạch'}</Button>
+                  {/* <Button type='primary' disabled onClick={()=>setOpen(true)}> Đã hoàn thành</Button> */}
                 </Flex>
               </Col>
             </Row>

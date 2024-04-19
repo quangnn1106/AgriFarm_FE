@@ -66,13 +66,13 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
     <>
       <Drawer
         open={open}
-        title={'Activity Detail'}
+        title={'Chi tiết hoạt động'}
         onClose={handleCancel}
         width={'40vw'}
       >
         <div style={{ height: '80vh' }}>
           <div>
-            <h2>Activity: {activity.title}</h2>
+            <h2>Hoạt động: {activity.title}</h2>
           </div>
           <Row
             gutter={[16, 32]}
@@ -89,11 +89,11 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
             <Col span={8}>
               <Badge
                 status={complete ? 'success' : 'warning'}
-                text={complete ? 'Completed' : 'Not yet'}
+                text={complete ? 'Hoàn thành' : 'Chưa xong'}
               />
             </Col>
             <Col span={24}>
-              <Descriptions title='Description' />
+              <Descriptions title='Mô tả' />
               <Flex
                 vertical
                 style={{
@@ -185,6 +185,4 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
 };
 
 export default ActivityDetail;
-/*
 
-*/
