@@ -47,7 +47,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
     // onFilter: (value: boolean, record)=> record.is_active.,
     render: (_, { isActive }) => {
       let color = isActive == true ? 'green' : 'red';
-      let key = isActive == false ? 'Lockout' : 'Active';
+      let key = isActive == false ? 'Vô hiệu hóa' : 'Hoạt động';
       return (
         <Tag
           color={color}

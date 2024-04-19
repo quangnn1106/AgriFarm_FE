@@ -12,7 +12,8 @@ import { GiHighGrass } from 'react-icons/gi';
 import styles from './MemberSider.module.scss';
 import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+
 import { useTranslations } from 'next-intl';
 
 import classNames from 'classnames/bind';

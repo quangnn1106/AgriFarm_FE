@@ -28,7 +28,8 @@ import {
   BookOutlined
 } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
@@ -125,14 +126,13 @@ const AdminSider = ({ path, visible }: Props) => {
         //   <FaClipboardList />
         // ),
       ]),
-      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
+      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />)
       // getItem(
       //   <Link href={`/production`}>{t('pro')}</Link>,
       //   `/production`,
       //   <GiPlantRoots />
       // ),
       // getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
-      
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),

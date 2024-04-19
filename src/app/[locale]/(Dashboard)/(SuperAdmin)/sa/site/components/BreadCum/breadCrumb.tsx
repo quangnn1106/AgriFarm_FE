@@ -5,11 +5,18 @@ import styles from '../../../management-page.module.scss';
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
+import { DASH_BOARD_PATH, SITE_MAP_PATH, SUBSCRIPTION_PATH } from '@/constants/routes';
+import { usePathname } from '@/navigation';
+import { capitalizeFirstLetter } from '@/utils/upercaseFirstLetter';
 
 const cx = classNames.bind(styles);
-type Props = {};
+type Props = {
+  subPath?: string;
+  subPath2?: string;
+  siteName?: string;
+};
 
-const BreadcrumbComponent = (props: Props) => {
+const BreadcrumbComponent = ({ subPath, subPath2, siteName }: Props) => {
   return (
     <>
       <ConfigProvider
@@ -38,14 +45,32 @@ const BreadcrumbComponent = (props: Props) => {
           size={'large'}
         >
           <HomeOutlined />
-          Farm Name
+          {siteName}
         </Button>
       </ConfigProvider>
 
-      <Breadcrumb style={{ margin: '0px 24px' }}>
+      {/* <Breadcrumb style={{ margin: '0px 24px' }}>
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>User</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
+
+      <Breadcrumb
+        style={{ margin: '0px 24px' }}
+        items={[
+          {
+            href: DASH_BOARD_PATH,
+            title: 'Statistic'
+          },
+          {
+            href: SITE_MAP_PATH,
+            title: 'Manage Site'
+          },
+          {
+            href: subPath2,
+            title: capitalizeFirstLetter(subPath2 || '')
+          }
+        ]}
+      />
     </>
   );
 };

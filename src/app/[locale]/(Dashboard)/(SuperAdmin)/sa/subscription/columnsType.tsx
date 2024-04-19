@@ -44,7 +44,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     width: 'max-content'
   },
   {
-    title: 'Address',
+    title: 'Địa chỉ',
     dataIndex: 'address',
 
     // filterMode: 'tree',
@@ -85,12 +85,12 @@ export const userTableColumns: TableColumnsType<UserModel> = [
   {
     title: 'Trạng thái',
     dataIndex: 'isApprove',
-    sorter: true,
+    // sorter: true,
     // filterMode: 'tree',
     // onFilter: (value: boolean, record)=> record.is_active.,
     render: (_, { isApprove }) => {
       let color = isApprove === 1 ? 'blue' : 'grey';
-      let key = isApprove === 1 ? 'Approved' : 'Waiting';
+      let key = isApprove === 1 ? 'Đã duyệt' : 'Chờ';
       return (
         <Tag
           color={color}
@@ -111,34 +111,34 @@ export const userTableColumns: TableColumnsType<UserModel> = [
     render: (_, userItem) => {
       const renderItems = (
         id: string,
-        onDetailsUser: () => void,
+        // onDetailsUser: () => void,
         onRemoveUser: () => void,
         onApprovedUser: () => void
       ): MenuProps['items'] => {
         return [
-          {
-            label: (
-              <a
-                onClick={() => {
-                  onDetailsUser();
-                }}
-              >
-                <Space>
-                  <ExclamationCircleOutlined /> Details
-                </Space>
-              </a>
-            ),
-            key: '0'
-          },
-          {
-            type: 'divider'
-          },
+          // {
+          //   label: (
+          //     <a
+          //       onClick={() => {
+          //         onDetailsUser();
+          //       }}
+          //     >
+          //       <Space>
+          //         <ExclamationCircleOutlined /> Chi tiết
+          //       </Space>
+          //     </a>
+          //   ),
+          //   key: '0'
+          // },
+          // {
+          //   type: 'divider'
+          // },
           {
             label: (
               <a
                 onClick={() => {
                   Modal.confirm({
-                    title: 'Are you want to approve this user ?',
+                    title: 'Bạn muốn duyệt người dùng này vào hệ thống?',
                     centered: true,
                     width: '400px',
                     onOk: () => {
@@ -154,7 +154,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <CheckOutlined /> Approve
+                  <CheckOutlined /> Duyệt
                 </Space>
               </a>
             ),
@@ -168,7 +168,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
               <a
                 onClick={() => {
                   Modal.confirm({
-                    title: 'Do you really want to delete this user ?',
+                    title: 'Bạn muốn xóa người dùng này?',
                     centered: true,
                     width: '400px',
                     onOk: () => {
@@ -184,7 +184,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
                 }}
               >
                 <Space>
-                  <DeleteOutlined /> Delete
+                  <DeleteOutlined /> Xóa
                 </Space>
               </a>
             ),
@@ -197,7 +197,7 @@ export const userTableColumns: TableColumnsType<UserModel> = [
           menu={{
             items: renderItems(
               userItem.id!,
-              userItem.onDetails!,
+              // userItem.onDetails!,
               userItem.onDelete!,
               userItem.onUpdate!
             )
