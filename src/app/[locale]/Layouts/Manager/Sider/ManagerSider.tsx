@@ -26,7 +26,7 @@ import {
   SafetyCertificateFilled
 } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
@@ -132,7 +132,7 @@ const ManagerSider = ({ path, visible }: Props) => {
         //   <FaClipboardList />
         // ),
       ]),
-      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
+      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />)
       // getItem(
       //   <Link href={`/production`}>{t('pro')}</Link>,
       //   `/production`,

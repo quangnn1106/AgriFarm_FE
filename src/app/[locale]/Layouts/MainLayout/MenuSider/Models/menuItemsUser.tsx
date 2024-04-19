@@ -23,7 +23,7 @@ import {
   SA_PROFILE_PATH
 } from '@/constants/routes';
 import { ROLES } from '@/constants/roles';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -113,7 +113,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
           className='d-flex'
           style={{ padding: '24px 6px 12px 8px' }}
         >
-          <Badge 
+          <Badge
           // count={5}
           >
             <Image

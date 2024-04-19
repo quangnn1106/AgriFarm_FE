@@ -11,10 +11,11 @@ export const LOGIN_PATH = '/login',
   RESET_PASS_PATH = '/reset-password';
 
 //----- private paths---------//
-//admin
+//super admin
 export const DASH_BOARD_PATH = '/sa/statistic',
   SA_PROFILE_PATH = '/sa/user-profile',
-  SITE_MAP_PATH = '/sa/site';
+  SITE_MAP_PATH = '/sa/site',
+  SUBSCRIPTION_PATH = '/sa/subscription';
 
 // admin path + manager
 export const DASHBOARD_ADMIN = '/statistic_admin',

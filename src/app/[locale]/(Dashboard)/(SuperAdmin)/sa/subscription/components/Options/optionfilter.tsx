@@ -5,34 +5,17 @@ interface Option {
 }
 export const options: Option[] = [
   {
-    label: 'Light',
+    label: 'Địa chỉ',
     value: 'light',
-    children: new Array(20)
+    children: new Array(5)
       .fill(null)
-      .map((_, index) => ({ label: `Number ${index}`, value: index }))
+      .map((_, index) => ({ label: `Thành phố ${index + 1}`, value: index }))
   },
   {
-    label: 'Bamboo',
+    label: 'Email',
     value: 'bamboo',
-    children: [
-      {
-        label: 'Little',
-        value: 'little',
-        children: [
-          {
-            label: 'Toy Fish',
-            value: 'fish'
-          },
-          {
-            label: 'Toy Cards',
-            value: 'cards'
-          },
-          {
-            label: 'Toy Bird',
-            value: 'bird'
-          }
-        ]
-      }
-    ]
+    children: new Array(5)
+      .fill(null)
+      .map((_, index) => ({ label: `Email ${index + 1}`, value: index }))
   }
 ];

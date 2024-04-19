@@ -5,7 +5,7 @@ import styles from '../../../management-page.module.scss';
 import { Breadcrumb, Button, Cascader, ConfigProvider } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
-import { DASH_BOARD_PATH } from '@/constants/routes';
+import { DASH_BOARD_PATH, SUBSCRIPTION_PATH } from '@/constants/routes';
 import { usePathname } from '@/navigation';
 import { capitalizeFirstLetter } from '@/utils/upercaseFirstLetter';
 
@@ -13,9 +13,10 @@ const cx = classNames.bind(styles);
 type Props = {
   subPath?: string;
   subPath2?: string;
+  siteName?: string;
 };
 
-const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
+const BreadcrumbComponent = ({ subPath, subPath2, siteName }: Props) => {
   return (
     <>
       <ConfigProvider
@@ -44,7 +45,7 @@ const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
           size={'large'}
         >
           <HomeOutlined />
-          Farm Name
+          {siteName}
         </Button>
       </ConfigProvider>
 
@@ -61,8 +62,8 @@ const BreadcrumbComponent = ({ subPath, subPath2 }: Props) => {
             title: 'Statistic'
           },
           {
-            href: subPath,
-            title: capitalizeFirstLetter(subPath || '')
+            href: SUBSCRIPTION_PATH,
+            title: 'Subscription'
           },
           {
             href: subPath2,
