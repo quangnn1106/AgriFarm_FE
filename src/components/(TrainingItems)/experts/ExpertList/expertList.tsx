@@ -101,20 +101,14 @@ export default function ExpertList(props: IProps) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchExperts();
-  // }, [http, hasChanged]);
+  
 
   useEffect(() => {
     console.log('On fetching..');
     fetchExperts();
   }, [term, page.CurrentPage]);
 
-  // useEffect(() => {
-  //   console.log('On paging..');
-  //   fetchExperts();
-  // }, [page]);
-
+  
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -141,11 +135,11 @@ export default function ExpertList(props: IProps) {
   };
   const [onSearch] = useDebounceSearch(handleSearch, 500);
 
-  const handleDetailClick = (content: Expert) => {
-    setSelectedExpert(content);
-    //setDetailOpen(true);
-    farmRouter.push('experts/sdas-dads-q243-asd412-das1');
-  };
+  // const handleDetailClick = (content: Expert) => {
+  //   setSelectedExpert(content);
+  //   //setDetailOpen(true);
+  //   farmRouter.push('experts/sdas-dads-q243-asd412-das1');
+  // };
 
   const loadMoreData = () => {
     console.log('Page: ', page);
@@ -178,7 +172,7 @@ export default function ExpertList(props: IProps) {
             justify='flex-start'
             align='center'
             gap={30}
-            onClick={() => handleDetailClick(e)}
+            // onClick={() => handleDetailClick(e)}
           >
             <Avatar
               //shape='square'

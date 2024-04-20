@@ -1,5 +1,6 @@
 import { ProductionResponse } from '@/services/Admin/Productions/Payload/response/production.response';
 import { Col, Descriptions, Drawer, Flex, Modal, Row, Typography } from 'antd';
+import dayjs from 'dayjs'
 
 interface IProps {
   detail: ProductionResponse;
@@ -37,19 +38,19 @@ export default function ProductionDetailModal(props: IProps) {
         >
           <Flex gap={10}>
             <Typography.Text strong>Mùa vụ</Typography.Text> {detail.season.name}
-            {` (${detail.season.startIn.getFullYear()})`}
+            {` (${dayjs(detail.season.startIn).year()})`}
           </Flex>
           <Flex gap={10}>
-            <Typography.Text strong>Vị trí lô</Typography.Text> {detail.location.name}
+            <Typography.Text strong>Vị trí lô</Typography.Text> {detail.land.name}
           </Flex>
           <Flex gap={10}>
-            <Typography.Text strong>Diện tích</Typography.Text> {`100(${'m2'})`}
+            <Typography.Text strong>Diện tích</Typography.Text> {`100 (${'m2'})`}
           </Flex>
           <Flex gap={10}>
-            <Typography.Text strong>Năng suất</Typography.Text> {`10D(tạ/${'m2'})`}
+            <Typography.Text strong>Năng suất</Typography.Text> {`${detail.output/100} (kg/${'m2'})`}
           </Flex>
           <Flex gap={10}>
-            <Typography.Text strong>Sản lượng</Typography.Text> {`10 (${'tạ'})`}
+            <Typography.Text strong>Sản lượng</Typography.Text> {`${detail.output} (${'kg'})`}
           </Flex>
         </Flex>
       </Modal>

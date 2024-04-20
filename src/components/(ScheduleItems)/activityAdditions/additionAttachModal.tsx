@@ -330,6 +330,7 @@ export default function AdditionAttachModal(props: IProps) {
         //   minWidth: 500
         // }}
         centered
+        cancelText={'Hủy bỏ'}
         onCancel={() => onClose()}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
@@ -339,7 +340,7 @@ export default function AdditionAttachModal(props: IProps) {
               type='primary'
               onClick={() => handleConfirm()}
             >
-              Confirm
+              Xác nhận
             </Button>
           </>
         )}

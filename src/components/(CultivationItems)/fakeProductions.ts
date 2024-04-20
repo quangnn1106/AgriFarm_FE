@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 
 export const FakePro: ProductionResponse[] = [
   {
+    id:"1",
     product: {
       id: '1',
       name: 'Gạo ST25'
@@ -16,7 +17,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2022-12-27').toDate(),
       endIn: dayjs('2023-02-17').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ01'
     },
@@ -26,6 +27,7 @@ export const FakePro: ProductionResponse[] = [
     harvestDate: dayjs('2023-02-17').toDate()
   },
   {
+    id:"2",
     product: {
       id: '2',
       name: 'Gạo Đài Loan'
@@ -36,7 +38,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2023-06-17').toDate(),
       endIn: dayjs('2023-11-17').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ01'
     },
@@ -46,6 +48,7 @@ export const FakePro: ProductionResponse[] = [
     harvestDate: dayjs('2023-02-17').toDate()
   },
   {
+    id:"1",
     product: {
       id: '3',
       name: 'Gạo Tài Nguyên'
@@ -56,7 +59,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2022-06-11').toDate(),
       endIn: dayjs('2022-11-01').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ01'
     },
@@ -66,6 +69,7 @@ export const FakePro: ProductionResponse[] = [
     harvestDate: dayjs('2022-11-01').toDate()
   },
   {
+    id:"1",
     product: {
       id: '4',
       name: 'Gạo Tài Nguyên'
@@ -76,7 +80,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2020-12-17').toDate(),
       endIn: dayjs('2021-02-17').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ22'
     },
@@ -86,6 +90,7 @@ export const FakePro: ProductionResponse[] = [
     harvestDate: dayjs('2023-02-17').toDate()
   },
   {
+    id:"1",
     product: {
       id: '1',
       name: 'Gạo Tài Nguyên'
@@ -96,7 +101,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2018-12-27').toDate(),
       endIn: dayjs('2019-02-17').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ01'
     },
@@ -106,6 +111,7 @@ export const FakePro: ProductionResponse[] = [
     harvestDate: dayjs('2019-02-17').toDate()
   },
   {
+    id:"1",
     product: {
       id: '2',
       name: 'Gạo Đài Loan'
@@ -116,7 +122,7 @@ export const FakePro: ProductionResponse[] = [
       startIn: dayjs('2019-06-17').toDate(),
       endIn: dayjs('2019-11-17').toDate()
     },
-    location: {
+    land: {
       id: 'sasdda0-asds-11asd-asad2d',
       name: 'MKZ01'
     },

@@ -8,12 +8,16 @@ const PDFViewer = dynamic(
 );
 import dynamic from 'next/dynamic';
 import { MyDocument } from '../pdfDraftDoc';
+import { CultDocument } from '../cultivationPDFDocument';
 
 export default function PdfViewScreen() {
   return (
     <>
-      <PDFViewer>
-        <MyDocument />
+      <PDFViewer
+        width={1000}
+        height={1000}
+      >
+        <CultDocument data={[]} />
       </PDFViewer>
     </>
   );
