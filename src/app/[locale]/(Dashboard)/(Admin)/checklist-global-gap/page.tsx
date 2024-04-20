@@ -281,7 +281,7 @@ const CheckListInspection = () => {
                         label: (
                             <a
                             onClick={() => {
-                                router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+                                router.push(`/checklist-global-gap/summary/${id}`);
                             }}
                             >
                             <Space>

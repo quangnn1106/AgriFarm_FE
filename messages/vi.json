@@ -336,6 +336,7 @@
         "keyword_placeholder": "Nhập văn bản tìm kiếm",
         "screen_name_checklist": "Danh sách kiểm tra GlobalG.A.P",
         "screen_name_implement": "Thực hiện danh sách kiểm tra GlobalG.A.P",
+        "screen_name_summary": "GlobalG.A.P Checklist bản tóm tắt",
         "search_condition": "Điều kiện tìm kiếm",
         "search_result": "Kết quả tìm kiếm",
         "in_progress": "Đang tiến hành",
@@ -351,10 +352,34 @@
         "minor_must": "Phải làm phụ",
         "recommandation": "Đề xuất",
         "btn_export_pdf": "Xuất PDF",
-        "btn_add_new": "Thêm mới kiểm tra"
+        "btn_add_new": "Thêm mới kiểm tra",
+        "checklist_create": "Tạo danh mục kiểm tra GlobalG.A.P",
+        "name": "Tên danh mục kiểm tra",
+        "palaceholder": "Nhập %%ITEM%%",
+        "type_yes_no": "Có không",
+        "type_text": "Văn bản",
+        "order_no": "Thứ tự",
+        "af_num": "Số AF",
+        "item_title": "Tiêu đề",
+        "item_level": "Cấp độ",
+        "item_type": "Có/không hoặc văn bản",
+        "item_content": "Nội dung",
+        "item_is_response": "Câu trả lời",
+        "integrated": "ĐẢM BẢO TRANG TRẠI TÍCH HỢP",
+        "evaluate": "Đánh giá",
+        "requirements_achieved": "Yêu cầu đạt được",
+        "yes": "Co",
+        "no": "Không",
+        "type": "Loại",
+        "satisfy_condition": "% Thỏa điều kiện",
+        "encourage_implementation": "Khuyến khích thực hiện"
       },
       "message": {
-        "msg_confirm_delete": "Bạn có muốn xóa 「%ITEM%」 không?"
+        "msg_confirm_delete": "Bạn có muốn xóa 「%ITEM%」 không?",
+        "msg_required": "Vui lòng nhập %%ITEM%%!",
+        "msg_add_fail": "Thêm danh mục kiểm tra thất bại!",
+        "msg_add_success": "Thêm danh mục kiểm tra thành công!",
+        "msg_evaluate": "Nông trại đạt chuẩn GlobalG.A.P"
       }
     },
     "SystemSetting": {

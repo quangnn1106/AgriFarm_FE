@@ -163,8 +163,8 @@ const AdminSider = ({ path, visible }: Props) => {
         />
       ),
       getItem(
-        <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
-        `/globalcheck`,
+        <Link href={`/checklist-global-gap`}>{t('GBG_checklist')}</Link>,
+        `/checklist-global-gap`,
         <FaClipboardCheck />
       )
     ]),

@@ -223,7 +223,7 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                                 <>
                                                                     <Form.Item
                                                                         name={[index, 'result']}
-                                                                        initialValue={item.checklistItemResponses[0].result}
+                                                                        initialValue={item.checklistItemResponses.length == 0 ? 3 : item.checklistItemResponses[0].result}
                                                                     >
                                                                         <Radio.Group name="radiogroup">
                                                                             <Radio value={1}>Yes</Radio>
@@ -249,7 +249,7 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                                                             {/* ) : item.levelRoute.split(",")[1] == "2" ? ( */}
                                                                 <Form.Item
                                                                     name={[index, 'note']}
-                                                                    initialValue={item.checklistItemResponses[0].note}
+                                                                    initialValue={item.checklistItemResponses.length == 0 ? "" : item.checklistItemResponses[0].note}
                                                                 >
                                                                     <TextArea
                                                                         // value={value}
