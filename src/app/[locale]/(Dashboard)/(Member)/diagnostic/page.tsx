@@ -3,7 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import classNames from "classnames/bind";
 import styles from './disease.module.scss';
 import { useTranslations } from "next-intl";
-import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
+import { WarningDiseaseDef, diseaseDiagnosticDef, landDef, plantDiseaseDef, siteDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
 import { getListLandApi } from "@/services/Disease/getListLandApi";
 import { Breadcrumb, Button, Col, ConfigProvider, Empty, Row, Select, Spin, Tabs, TabsProps } from "antd";
@@ -19,6 +19,8 @@ import { useSession } from "next-auth/react";
 import axios from 'axios';
 import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
+import notiSiteApi from "@/services/Disease/notiSiteApi";
+import { getListSiteDistanceApi } from "@/services/Disease/getListSiteDistanceApi";
 
 interface positionDef {
     lat: string;
@@ -44,6 +46,7 @@ const DiseaseDiagnosticAdd = () => {
     const { data: session } = useSession();
     const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
     const [defaultActiveKey, setDefaultActiveKey] = useState<string>("");
+    const rhumbDistance = require('@turf/rhumb-distance').default;
 
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
@@ -58,6 +61,47 @@ const DiseaseDiagnosticAdd = () => {
         }
     }
 
+     //call api notification
+     const warningDisease = async (siteId : any, distance : any, diseaseName : any) => {
+        console.log("Thông báo bệnh")
+        const warningDisease: WarningDiseaseDef = {
+            siteId: siteId,
+            distance: distance,
+            diseaseName: diseaseName,
+        };
+        const responseData = await notiSiteApi(http, warningDisease);
+    };
+
+    //Hàm tính khoảng cách giữa 2 điểm
+    const calculateDistance = (point1 : any, point2 : any) => {
+        const distanceInMeters = rhumbDistance(point1, point2);
+        const distanceInKilometers = distanceInMeters / 1000; 
+        return distanceInKilometers;
+    };
+    
+
+    //Hàm xử lí thống báo, nhận vào vị trí land, tên bệnh
+    const notifyAction = async (location : any, diseaseName : any) => {
+        //Gọi APi lấy thông tin site , SiteId, Position, NotiDistance
+        // const getListSiteDistanceData: any = getListSiteDistance(http);
+        const responseData = await getListSiteDistanceApi(http);
+
+        const landLocation = [parseFloat(location.lat as string), parseFloat(location.long as string)];
+        console.log(responseData);
+        //Tính khoảng cách từ từng Site -> Land bệnh, Nếu khoảng cách < NotiDistance -> goi API noti
+        responseData.data.forEach((site: any) => {
+            if (site.positions.length != 0) {
+                const siteLocation = [parseFloat(site.positions[0].lat), parseFloat(site.positions[0].long)];
+                const distance = calculateDistance(siteLocation, landLocation);
+                console.log(`Khoảng cách đến ${site.id}: ${distance}`);
+    
+                if (distance < site.NotiDistance) {
+                    warningDisease(site.id, distance, diseaseName)
+                }
+            }
+        });
+    }
+   
     // Call api AI disease
     const submitAction = async () => {
         try {
@@ -114,6 +158,20 @@ const DiseaseDiagnosticAdd = () => {
                                             setPlantDisease(responseData.data);
                                         }
                                         listDisease?.push(items);
+                                        
+                                        // Gọi hàm xử lí thông báo
+                                        notifyAction(posiontionsLand, responseData.data.diseaseName);
+
+
+                                        //console.log(posiontionsLand);
+                                        //var locationTest = {lat: '9.283725056753724', long: '105.73845326030607'};
+                                        // var positionTest = {lat :'9.991505110856679',long:'105.66594148483802'};
+
+                                        // const landLocation = [parseFloat(posiontionsLand?.lat as string), parseFloat(posiontionsLand?.long as string)];
+                                        // const stationLocation = [parseFloat(positionTest.lat), parseFloat(positionTest.long)];
+                                        // const distance = calculateDistance(stationLocation, landLocation);
+                                        // console.log(`Khoảng cách: ${distance}`);
+
                                     }
                                 }
                                 setMsgAdd("");
