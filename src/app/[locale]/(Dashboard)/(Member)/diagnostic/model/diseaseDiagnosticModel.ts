@@ -21,3 +21,16 @@ export type plantDiseaseDef = {
     suggest: string;
     feedback: string;
 }
+
+export type siteWarningDef = {
+    siteId: string;
+    siteLocation: string;
+    notiDistance: number;
+}
+
+export type WarningDiseaseDef = {
+    siteId: string;
+    distance: string;
+    diseaseName: string;
+}
+

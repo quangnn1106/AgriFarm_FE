@@ -42,6 +42,7 @@ const DiseaseDiagnosticAdd = () => {
     const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
     const [defaultActiveKey, setDefaultActiveKey] = useState<string>("");
 
+
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
         getLocation();
@@ -55,6 +56,10 @@ const DiseaseDiagnosticAdd = () => {
             console.log(error)
         }
     }
+
+    
+
+
     
     // location
     const getLocation = () => {
@@ -150,6 +155,8 @@ const DiseaseDiagnosticAdd = () => {
                             }
                         }, 100); // Kiểm tra mỗi 100ms
                         setItemsDisease(listDisease);
+
+                        
                     }
                     
                 })

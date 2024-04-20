@@ -3,7 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import classNames from "classnames/bind";
 import styles from './disease.module.scss';
 import { useTranslations } from "next-intl";
-import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
+import { diseaseDiagnosticDef, landDef, plantDiseaseDef, siteWarningDef, WarningDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
 import getListLandApi from "@/services/Disease/getListLandApi";
 import { Breadcrumb, Button, Col, ConfigProvider, Row, Select, Spin, Tabs, TabsProps } from "antd";
@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import axios from 'axios';
 import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
+import notiSiteApi from "@/services/Disease/notiSiteApi";
 
 const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
@@ -41,6 +42,7 @@ const DiseaseDiagnosticAdd = () => {
     const { data: session, status } = useSession();
     const [itemsDisease, setItemsDisease] = useState<TabsProps["items"]>();
     const [defaultActiveKey, setDefaultActiveKey] = useState<string>("");
+    const rhumbDistance = require('@turf/rhumb-distance').default;
 
     useEffect(() => {
         getListLand(http, session?.user?.userInfo.siteId as string);
@@ -55,6 +57,31 @@ const DiseaseDiagnosticAdd = () => {
             console.log(error)
         }
     }
+
+    //Check distance
+    const calculateDistance = (point1 : any, point2: any) => {
+        const distance = rhumbDistance(point1, point2);
+        return distance;
+    };
+
+    const checkDistance = (currentLandId : any, siteLocation: any, siteId : any, notiDistance : any, diseaseName : any) => {
+        const distance = rhumbDistance(currentLandId, siteLocation);
+        if (distance < notiDistance) {
+            warningDisease(siteId, distance, diseaseName)
+        }
+        return distance;
+    };
+
+    //call api notification
+    const warningDisease = async (siteId : any, distance : any, diseaseName : any) => {
+        console.log("Thông báo bệnh")
+        const warningDisease: WarningDiseaseDef = {
+            siteId: siteId,
+            distance: distance,
+            diseaseName: diseaseName,
+        };
+        const responseData = await notiSiteApi(http, warningDisease);
+    };
     
     // location
     const getLocation = () => {
@@ -128,6 +155,29 @@ const DiseaseDiagnosticAdd = () => {
                                             setPlantDisease(responseData.data);
                                         }
                                         listDisease?.push(items);
+
+                                        const siteWarningDef = [
+                                            {
+                                                siteId: "e81dc1f2-4956-4630-b070-9e270713e0a1",
+                                                siteLocation: "[9.298890351045912,105.73338232555716]",
+                                                notiDistance: 5,
+                                            },
+                                            {
+                                                siteId: "e81dc1f2-4956-4630-b070-9e270713e0a1",
+                                                siteLocation: "[9.298890351045912,105.73338232555716]",
+                                                notiDistance: 5,
+                                            },
+                                            {
+                                                siteId: "e81dc1f2-4956-4630-b070-9e270713e0a1",
+                                                siteLocation: "[9.298890351045912,105.73338232555716]",
+                                                notiDistance: 5,
+                                            }
+                                        ];
+                
+                                        siteWarningDef.forEach((item) => {
+                                            const { siteId, siteLocation, notiDistance } = item;
+                                            checkDistance(selLand, siteLocation, siteId, notiDistance, responseData.data.diseaseName);
+                                        });
                                     }
                                 }
                                 setMsgAdd("");
@@ -137,6 +187,7 @@ const DiseaseDiagnosticAdd = () => {
                             if (index === diseaseId.length - 1) {
                                 isForEachComplete = true;
                             }
+                            
                         });
                         // Sau khi vòng lặp kết thúc, kiểm tra và thực hiện đoạn mã
                         const checkCompletionInterval = setInterval(() => {
@@ -150,6 +201,34 @@ const DiseaseDiagnosticAdd = () => {
                             }
                         }, 100); // Kiểm tra mỗi 100ms
                         setItemsDisease(listDisease);
+
+                        //Gọi API list site: SiteId, SiteLocation, NotiDistance
+
+                        
+
+
+
+                        // const siteId = "e81dc1f2-4956-4630-b070-9e270713e0a1";
+                        // const siteLocation = [9.298890351045912, 105.73338232555716];
+                        // const notiDistance = 5;
+                         //const diseaseName = "Tên bệnh";
+                        // const currentLandLocation = [9.0000, 105.73338232555716]
+
+                        
+
+                        //const responseData = await siteWarningApi(http, siteWarning);
+                        // const normalizedData: siteWarningDef[] = responseData['data'].map(
+                        //     (item: siteWarningDef, index: number) => ({
+                        //         siteId: "e81dc1f2-4956-4630-b070-9e270713e0a1", 
+                        //         siteLocation: "[9.298890351045912,105.73338232555716]",
+                        //         notiDistance: 5,
+                        //     })
+                        // );
+
+
+
+
+
                     }
                     
                 })
