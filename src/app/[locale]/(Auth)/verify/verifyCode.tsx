@@ -20,6 +20,9 @@ import {
 import { Link } from '@/navigation';
 
 import { ROLES } from '@/constants/roles';
+import { verifyTokenService } from '@/services/Common/ResetPassword/resetPassService';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { VerifyTokenRequest } from '@/services/Common/ResetPassword/request/reset.pass.request';
 
 const cx = classNames.bind(styles);
 export const renderPath: (role: string) => string = (role: string): string => {
@@ -37,7 +40,13 @@ export const renderPath: (role: string) => string = (role: string): string => {
   // Add a default return value in case the role doesn't match any condition
   return HOME_PATH; // You need to define DEFAULT_PATH according to your application logic
 };
-const VerifyForm: React.FC = () => {
+
+interface IProps{
+  email: string
+}
+
+const VerifyForm: React.FC<IProps> = ({email}) => {
+  const http = UseAxiosAuth()
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -47,32 +56,28 @@ const VerifyForm: React.FC = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
 
-  const handleLogin = async (data: loginModel) => {
-    // try {
-    //   console.log('data: ', data.siteCode);
-    //   setLoading(true);
-    //   const res = await signIn('credentials', {
-    //     // siteCode: data?.siteCode as string,
-    //     userName: data?.userName as string,
-    //     password: data?.password as string,
-    //     redirect: false,
-    //     callbackUrl
-    //   });
-    //   setLoading(false);
-
-    //   if (!res?.error) {
-    //     setError('');
-    //     router.push(callbackUrl as string);
-    //   } else {
-    //     setError('Invalid User or password');
-    //     console.log(error);
-    //   }
-    // } catch (error: any) {
-    //   setLoading(false);
-    //   setError(error?.message);
-    // }
-    console.log('click confirm email to reset pass');
-    router.push(RESET_PASS_PATH);
+  const handleLogin = async (data: VerifyTokenRequest) => {
+    try {
+      setLoading(true);
+      data.email = email
+      console.log("send data: ", data)
+      const res = await verifyTokenService(http, data)
+      
+      if (res.status ===202 && res.data && res.data.length>0) {
+        // setError('');
+        console.log('data: ',res.data);
+        router.push(RESET_PASS_PATH+"?id="+btoa(res.data as string));
+      } else throw new Error()
+    } catch (err) {
+      // setError(error?.message);
+      router.push("/forgot")
+      console.log('Error: ',err);
+    }finally{
+      
+      setLoading(false);
+    }
+    
+    
   };
 
   return (
@@ -103,8 +108,8 @@ const VerifyForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name='userName'
-              label='Code'
+              name='token'
+              label='Mã xác nhận'
               rules={[
                 { required: true },
                 {
@@ -156,7 +161,7 @@ const VerifyForm: React.FC = () => {
                   className={cx('auth__btn')}
                   disabled={loading ? true : false}
                 >
-                  {loading ? <Loading userState={status} /> : 'Confirm'}
+                  {loading ? <Loading userState={status} /> : 'Xác nhận'}
                 </Button>
               </Flex>
             </Form.Item>

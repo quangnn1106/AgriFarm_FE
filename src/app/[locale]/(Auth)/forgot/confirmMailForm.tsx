@@ -20,6 +20,9 @@ import {
 import { Link } from '@/navigation';
 
 import { ROLES } from '@/constants/roles';
+import { ResestPasswordRequest } from '@/services/Common/ResetPassword/request/reset.pass.request';
+import { sendResetEmailService } from '@/services/Common/ResetPassword/resetPassService';
+import UseAxiosAuth from '@/utils/axiosClient';
 
 const cx = classNames.bind(styles);
 export const renderPath: (role: string) => string = (role: string): string => {
@@ -44,35 +47,31 @@ const ForgotForm: React.FC = () => {
   const userRole = session?.user?.userInfo?.role as ROLES;
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const http = UseAxiosAuth()
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
 
-  const handleLogin = async (data: loginModel) => {
-    // try {
-    //   console.log('data: ', data.siteCode);
-    //   setLoading(true);
-    //   const res = await signIn('credentials', {
-    //     // siteCode: data?.siteCode as string,
-    //     userName: data?.userName as string,
-    //     password: data?.password as string,
-    //     redirect: false,
-    //     callbackUrl
-    //   });
-    //   setLoading(false);
+  const handleLogin = async (data: ResestPasswordRequest) => {
+    try {
+      setLoading(true);
+      console.log("send data: ", data)
+      const res = await sendResetEmailService(http, data)
+      
+      if (res) {
+        // setError('');
+        console.log('click confirm email to reset pass');
+        router.push('/verify?a='+btoa(data.email));
+      } else throw new Error()
+    } catch (err) {
+      // setError(error?.message);
+      console.log('Error: ',err);
+    }finally{
+      
+      setLoading(false);
+    }
 
-    //   if (!res?.error) {
-    //     setError('');
-    //     router.push(callbackUrl as string);
-    //   } else {
-    //     setError('Invalid User or password');
-    //     console.log(error);
-    //   }
-    // } catch (error: any) {
-    //   setLoading(false);
-    //   setError(error?.message);
-    // }
-    console.log('click confirm email to reset pass');
-    router.push('/verify');
+    
+    
   };
 
   return (
@@ -103,7 +102,7 @@ const ForgotForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name='userName'
+              name='email'
               label='Email'
               rules={[
                 { required: true },
@@ -156,7 +155,7 @@ const ForgotForm: React.FC = () => {
                   className={cx('auth__btn')}
                   disabled={loading ? true : false}
                 >
-                  {loading ? <Loading userState={status} /> : 'Confirm'}
+                  {loading ? <Loading userState={status} /> : 'Xác nhận'}
                 </Button>
               </Flex>
             </Form.Item>
