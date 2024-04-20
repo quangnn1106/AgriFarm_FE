@@ -187,3 +187,21 @@ export const removeParticipantService: (
   );
   return res?.status===202;
 };
+
+
+export const harvestProductService:(
+  http: AxiosInstance,
+  productionId: string,
+  payLoad: HarvestProductRequest
+) => Promise<boolean> = async (http, productionId, payLoad) => {
+  const res = await http.put(
+    `${'cult/products'}/harvest`,
+    payLoad,
+    {
+      params:{
+        id: productionId
+      }
+    }
+  );
+  return res?.status===202;
+};

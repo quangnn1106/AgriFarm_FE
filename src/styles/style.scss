@@ -186,6 +186,14 @@ p {
 .layout {
     height: fit-content;
 
+    .noti-number {
+        padding: 4px 6px;
+        background: #E92E50;
+        color: white;
+        line-height: 16px;
+        border-radius: 4px;
+    }
+
     header {
         display: flex;
         align-items: center;

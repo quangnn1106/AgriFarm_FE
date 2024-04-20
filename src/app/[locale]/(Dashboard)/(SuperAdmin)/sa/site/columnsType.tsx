@@ -1,4 +1,13 @@
-import { Dropdown, MenuProps, Modal, Space, Button, Tag, TableColumnsType } from 'antd';
+import {
+  Dropdown,
+  MenuProps,
+  Modal,
+  Image,
+  Space,
+  Button,
+  Tag,
+  TableColumnsType
+} from 'antd';
 import {
   CheckOutlined,
   DeleteOutlined,
@@ -7,6 +16,7 @@ import {
 } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 import { Sites } from '@/services/SuperAdmin/Site/payload/response/sites';
+import { AWS_PATH_GET } from '@/constants/routes';
 
 export const sitesTableColumns: TableColumnsType<Sites> = [
   // {
@@ -31,7 +41,23 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
   {
     title: 'Ảnh',
     dataIndex: 'avatar',
-
+    render: (_, item) => {
+      return (
+        <>
+          <Image
+            alt='avatar'
+            // style={{ borderRadius: '10%' }}
+            height={40}
+            src={
+              item?.avatar
+                ? `${AWS_PATH_GET}` + item?.avatar
+                : `${AWS_PATH_GET}drafts/d1f1b219-6aa1_638488953544034389.png`
+            }
+          />
+        </>
+      );
+    },
+    align: 'center',
     width: 'max-content'
   },
   {
@@ -47,7 +73,7 @@ export const sitesTableColumns: TableColumnsType<Sites> = [
     // onFilter: (value: boolean, record)=> record.is_active.,
     render: (_, { isActive }) => {
       let color = isActive == true ? 'green' : 'red';
-      let key = isActive == false ? 'Lockout' : 'Active';
+      let key = isActive == false ? 'Vô hiệu hóa' : 'Hoạt động';
       return (
         <Tag
           color={color}

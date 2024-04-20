@@ -39,6 +39,8 @@ import { SupplyTableColumns } from '../../component/Table/column-type';
 import getSuppliesItemApi from '@/services/Admin/Supply/getSupplysItem';
 import IconText from '@/components/IconText/IconText';
 import SupplyDetailsDrawer from '../../component/DetailSupplyItem/detail-supply-item';
+import getEquipmentDetailApi from '@/services/Admin/Equipment/getEquipmentDetailApi';
+import { Equipment } from '../../../equipment/models/equipment-models';
 
 // const IconText = ({
 //   icon,
@@ -123,7 +125,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
     }
   };
 
-  const [itemDetails, setItemDetails] = useState<Item>();
+  const [itemDetails, setItemDetails] = useState<Item | Equipment>();
 
   const getItemDetailData = async (http: AxiosInstance, itemId?: string) => {
     try {
@@ -154,6 +156,14 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
             setDataItemProps(dataProps.properties);
           }
           break;
+          case 'equipment':
+            const equipmentData = await getEquipmentDetailApi(itemId, http);
+            if (equipmentData?.status === STATUS_OK) {
+              setItemDetails(equipmentData.data as Equipment);
+              // const dataProps = equipmentData?.data as Item;
+              // setDataItemProps(dataProps.properties);
+            }
+            break;
         default:
           break;
       }
@@ -297,6 +307,7 @@ const SuppliesHistoryDetails = ({ params }: { params: { item: string; id: string
                       value={
                         <p>
                           {itemDetails?.stock.toString() as string}{' '}
+
                           {itemDetails?.measureUnit.toString() as string}
                         </p>
                       }

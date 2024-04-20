@@ -29,6 +29,8 @@ import { AxiosInstance } from 'axios';
 
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from '@/navigation';
+import { upgradeRoleMan } from '@/services/Admin/Staffs/assignRole';
+import { STATUS_NOT_FOUND } from '@/constants/https';
 
 const cx = classNames.bind(styles);
 
@@ -49,7 +51,7 @@ const UserManagement = (props: Props) => {
   const [filterMode, setFilterMode] = useState<string>('updated_at');
   const http = UseAxiosAuth();
   const siteId = session?.user.userInfo.siteId;
- 
+
   const router = useRouter();
   const pathName = usePathname();
 
@@ -75,7 +77,24 @@ const UserManagement = (props: Props) => {
     // setUserId(id);
     // setUpdateState(true);
     console.log('user id: ', id);
+    setIsFetching(false);
 
+    const res = await upgradeRoleMan(http, id);
+
+    if (res?.status !== STATUS_NOT_FOUND) {
+      api.success({
+        message: 'Nhân viên đã được cấp quyền lên quản lý',
+        placement: 'top',
+        duration: 2
+      });
+      fetchStaff(http, siteId);
+    } else {
+      api.error({
+        message: 'Không cấp quyền quản lí được, có lỗi xảy ra',
+        placement: 'top',
+        duration: 2
+      });
+    }
     setIsFetching(true);
   };
   const handleDetails = async (record: UserModel) => {
@@ -159,16 +178,32 @@ const UserManagement = (props: Props) => {
                     onClick: event => {
                       //   console.log('record row onCLick: ', record);
                       //  console.log('event row onCLick: ', event);
-                      router.push(`${pathName}/update/${record.id}`);
+                      const target = event.target as HTMLElement;
+                      const isWithinLink = target.tagName === 'A' || target.closest('a');
+
+                      const isWithinAction =
+                        target.closest('td')?.classList.contains('ant-table-cell') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-selection-column') &&
+                        !target
+                          .closest('td')
+                          ?.classList.contains('ant-table-cell-fix-right');
+
+                      if (isWithinAction && !isWithinLink) {
+                        console.log('record land: ', record);
+
+                        router.push(`${pathName}/update/${record.id}`);
+                      }
                     }
                   };
                 }}
                 columns={userTableColumns}
                 dataSource={users?.map(user => ({
-                  ...user
+                  ...user,
                   //onDetails: () => handleDetails(user.id!),
-                  // onDelete: () => handleDelete(user.id!),
-                  // onUpdate: () => handleApproved(user.id!)
+                  onDelete: () => handleDelete(user.id!),
+                  onUpdate: () => handleApproved(user.id!)
                 }))}
                 onChange={onChange}
                 pagination={{

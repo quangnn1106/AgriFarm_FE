@@ -26,7 +26,7 @@ import {
   SafetyCertificateFilled
 } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
@@ -38,6 +38,7 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import { ROLES } from '@/constants/roles';
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = { path: string; visible: boolean };
@@ -67,6 +68,8 @@ const ManagerSider = ({ path, visible }: Props) => {
 
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
+
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     getItem(`${t('gr_dash')}`, 'dashboard', <HomeFilled />, [
@@ -99,7 +102,7 @@ const ManagerSider = ({ path, visible }: Props) => {
 
     getItem(`${t('farm_resource')}`, 'farm resources', <FaClipboardUser />, [
       getItem(<Link href={`/staff`}>{t('user')}</Link>, `/staff`, <FaUser />),
-      getItem(<Link href={`/role`}>{t('user_role')}</Link>, `/role`, <FaClipboardUser />),
+      //getItem(<Link href={`/role`}>{t('user_role')}</Link>, `/role`, <FaClipboardUser />),
       getItem(
         <Link href={`/certificate`}>{t('user_cer')}</Link>,
         `/certificate`,
@@ -116,11 +119,11 @@ const ManagerSider = ({ path, visible }: Props) => {
         <FaClipboardList />
       ),
       getItem(`${t('training')}`, 'training', <FaClipboardList />, [
-        getItem(
-          <Link href={`/training/contents`}>{t('t_content')}</Link>,
-          `/training/contents`,
-          <FaClipboardList />
-        ),
+        // getItem(
+        //   <Link href={`/training/contents`}>{t('t_content')}</Link>,
+        //   `/training/contents`,
+        //   <FaClipboardList />
+        // ),
         getItem(
           <Link href={`/training/experts`}>{t('expert')}</Link>,
           `/training/experts`,
@@ -132,18 +135,19 @@ const ManagerSider = ({ path, visible }: Props) => {
         //   <FaClipboardList />
         // ),
       ]),
-      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />),
-      getItem(
-        <Link href={`/production`}>{t('pro')}</Link>,
-        `/production`,
-        <GiPlantRoots />
-      ),
-      getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
+      getItem(<Link href={`/season`}>{t('culti')}</Link>, `/season`, <GiHighGrass />)
+      // getItem(
+      //   <Link href={`/production`}>{t('pro')}</Link>,
+      //   `/production`,
+      //   <GiPlantRoots />
+      // ),
+      // getItem(<Link href={`/wastes`}>{t('wastes')}</Link>, `/wastes`, <DeleteFilled />)
     ]),
     getItem(`${t('inven')}`, 'inventory', <MdInventory />, [
       getItem(<Link href={`/pesticide`}>{t('pesti')}</Link>, `/pesticide`),
       getItem(<Link href={`/fertilizer`}>{t('fer')}</Link>, `/fertilizer`),
-      getItem(<Link href={`/rice_variety`}>{t('rice_va')}</Link>, `/rice_variety`),
+      getItem(<Link href={`/seed`}>{t('rice_va')}</Link>, `/seed`),
+      getItem(<Link href={`/equipment`}>{t('equip')}</Link>, `/equipment`),
       getItem(<Link href={`/product`}>{t('prod')}</Link>, `/product`)
     ]),
 

@@ -47,6 +47,7 @@ import { STATUS_OK } from '@/constants/https';
 // import { Weather } from '@/services/Weather/weather-models';
 import { Product } from '../../../(Admin)/season/models/season-model';
 import TitleHeader from '../../../(Admin)/season/component/TitleHeader/tiltle-header';
+import getStatisticsSuperAdmin, { StatisticData } from '@/services/SuperAdmin/Statistics/getStatistic';
 
 const Statistic = () => {
   const { data: session } = useSession();
@@ -65,12 +66,32 @@ const Statistic = () => {
   const handleChangeSeason = (value: string) => {
     console.log(`selected ${value}`);
   };
-  const handleChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+
+  //api/v1/disease/disease-diagnoses/get-statistics
+
+  const nowDay = new Date();
+
+  const [month, setMonth] = useState<number>(nowDay.getMonth() as number + 1);
+  const [year, setYear] = useState<number>(nowDay.getFullYear() as number);
+  const [statisticsData, setStatisticsData] = useState<StatisticData>();
   const handleChangeMonth: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log('month:');
     console.log(date, dateString);
+    setMonth(date?.month() as number + 1)
+    console.log(date?.month() as number);
   };
+  const handleChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
+   setYear(date?.year() as number)
+  };
+
+  const getDiseaseData = async (http: AxiosInstance, month?: number, year?: number) => {
+    try {
+      const res = await getStatisticsSuperAdmin(http, month, year);
+      setStatisticsData(res.data as StatisticData);
+    } catch (error) {
+      console.error('Error calling API Statistic Super:', error);
+    }
+  }
 
   //get product
   const [loading, setLoading] = useState<boolean>(false);
@@ -92,10 +113,12 @@ const Statistic = () => {
     }
   };
 
+
   useEffect(() => {
     getListProductData(http, '0bbafb0c-6c36-4996-b0c3-417443ad1f6e');
+    getDiseaseData(http, month, year);
     // getWeathers();
-  }, [http]);
+  }, [http,  month, year]);
 
   // get weather
   // const [weather, setWeathers] = useState<Weather | undefined>();
@@ -214,7 +237,7 @@ const Statistic = () => {
               timeCompare='mùa trước'
             ></NumberBlock> */}
             <NumberBlock
-              totalNumbers={372}
+              totalNumbers={statisticsData?.numOfDiagnostic as number}
               title={'Tổng số lượt sử dụng chức năng dự đoán bệnh'}
               color={'#E5F9FF'}
               rate={30}
@@ -223,7 +246,7 @@ const Statistic = () => {
               timeCompare='tháng trước'
             ></NumberBlock>
             <NumberBlock
-              totalNumbers={18}
+              totalNumbers={statisticsData?.numOfPendingFeedback as number}
               title={'Tổng số phản hồi đang chờ'}
               color={'#F8FFE5'}
               rate={8}

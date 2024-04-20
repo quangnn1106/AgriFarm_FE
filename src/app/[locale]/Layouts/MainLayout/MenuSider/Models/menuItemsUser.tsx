@@ -23,7 +23,7 @@ import {
   SA_PROFILE_PATH
 } from '@/constants/routes';
 import { ROLES } from '@/constants/roles';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -94,7 +94,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
               </div>
             </div>
           </Link>
-          <Flex
+          {/* <Flex
             style={{ padding: '10px 16px' }}
             justify='space-between'
           >
@@ -106,14 +106,16 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
               <span> {t('notification')}</span>
             </Flex>
             <div className={cx('noti-number')}>8</div>
-          </Flex>
+          </Flex> */}
         </div>
       ) : (
         <div
           className='d-flex'
           style={{ padding: '24px 6px 12px 8px' }}
         >
-          <Badge count={5}>
+          <Badge
+          // count={5}
+          >
             <Image
               src={sampleAva}
               width={40}

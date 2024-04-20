@@ -16,19 +16,19 @@ export default function CultivationProcess() {
             </div>
             <div className='column-2'>
               <div className='div-4'>
-                <div className='div-5'>The Digital Rice Cultivation Process</div>
+                <div className='div-5'>Quy trình trồng lúa kỹ thuật số</div>
                 <div className='div-6'>
-                  AgriFarm has emerged in rice cultivation process management, since the
-                  agriculture industry started seeing a sea change with adoption of
-                  technologies.{' '}
+                  AgriFarm nổi lên trong lĩnh vực quản lý quy trình trồng lúa kể từ khi
+                  ngành nông nghiệp bắt đầu chứng kiến sự thay đổi lớn nhờ việc áp dụng
+                  công nghệ.{' '}
                 </div>
                 <div className='div-7'>
-                  The increasing demand for safe and sustainable agricultural practices
-                  has prompted the need for a comprehensive solution in the form of a Rice
-                  Cultivation Process Management System. This system is designed to adhere
-                  to the Global Good Agricultural Practices (Global G.A.P) standards,
-                  ensuring the production of high-quality rice while prioritizing
-                  environmental sustainability and social responsibility.{' '}
+                  Nhu cầu ngày càng tăng về thực hành nông nghiệp an toàn và bền vững đã
+                  thúc đẩy nhu cầu về một giải pháp toàn diện dưới dạng Hệ thống quản lý
+                  quy trình trồng lúa. Hệ thống này được thiết kế để tuân thủ các tiêu
+                  chuẩn Thực hành Nông nghiệp Tốt Toàn cầu (Global G.A.P), đảm bảo sản
+                  xuất gạo chất lượng cao đồng thời ưu tiên tính bền vững môi trường và
+                  trách nhiệm xã hội.{' '}
                 </div>
               </div>
             </div>

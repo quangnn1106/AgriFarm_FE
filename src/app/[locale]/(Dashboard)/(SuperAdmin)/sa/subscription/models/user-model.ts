@@ -15,5 +15,5 @@ export type UserModel = {
   paymentDetail?: string | '';
   onDelete?: () => void;
   onUpdate?: () => void;
-  onDetails?: () => void;
+  //onDetails?: () => void;
 };

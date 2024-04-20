@@ -19,7 +19,7 @@ import {
 } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import dayjs from 'dayjs';
 // import { additionsData } from '../FakeData/fakeDatesData';
-import { Link } from '@/navigation';
+import { Link, useRouter } from '@/navigation';
 import AdditionSection from '../activityAdditions/AdditionSection/additionSection';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { doneScheduleService } from '@/services/Admin/Activities/scheduleService';
@@ -37,7 +37,8 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [additionDetail, setAdditionDetail] = useState<Addition | null>(null);
   const http = UseAxiosAuth();
-  const [complete, setComplete] = useState(activity.isCompleted)
+  const [complete, setComplete] = useState(activity.isCompleted);
+  const farmRouter = useRouter()
 
   const showModal = () => {
     console.log('ok');
@@ -55,7 +56,7 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
   const handleDone = async (activityId: string) => {
     console.log('id: ', activityId);
     const rs = await doneScheduleService(http, activityId);
-    if(rs){
+    if (rs) {
       setComplete(true);
     }
     console.log('done, ', rs);
@@ -65,13 +66,13 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
     <>
       <Drawer
         open={open}
-        title={'Activity Detail'}
+        title={'Chi tiết hoạt động'}
         onClose={handleCancel}
         width={'40vw'}
       >
         <div style={{ height: '80vh' }}>
           <div>
-            <h2>Activity: {activity.title}</h2>
+            <h2>Hoạt động: {activity.title}</h2>
           </div>
           <Row
             gutter={[16, 32]}
@@ -82,18 +83,17 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
               overflow: 'auto'
             }}
           >
-            
             <Col span={4}>
               <Descriptions title='Status' />
             </Col>
             <Col span={8}>
               <Badge
                 status={complete ? 'success' : 'warning'}
-                text={complete ? 'Completed' : 'Not yet'}
+                text={complete ? 'Hoàn thành' : 'Chưa xong'}
               />
             </Col>
             <Col span={24}>
-              <Descriptions title='Description' />
+              <Descriptions title='Mô tả' />
               <Flex
                 vertical
                 style={{
@@ -113,7 +113,7 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
                   })
                 ) : (
                   <div>
-                    <Typography.Text type='secondary'>Not set</Typography.Text>
+                    <Typography.Text type='secondary'>Chưa có nội dung</Typography.Text>
                   </div>
                 )}
               </Flex>
@@ -129,18 +129,21 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
             </Space>
           </Col> */}
             <Col span={8}>
-              <Descriptions title='Start time' />
+              <Descriptions title='Thời gian bắt đầu' />
               <RightSquareTwoTone twoToneColor={'#00ce07'} />{' '}
               {dayjs(activity.start).format('HH:mm DD/MM/YYYY')}
             </Col>
             <Col span={10}>
-              <Descriptions title='Estimated end' />
+              <Descriptions title='Dự kiến hoàn thành' />
               <HourglassTwoTone twoToneColor={'#edbf33'} />{' '}
               {dayjs(activity.end).format('HH:mm DD/MM/YYYY')}
             </Col>
             <Col span={6}>
-              <Descriptions title='Worked' />
-              <FireTwoTone twoToneColor={'#ea4f44'} /> {0}
+              <Descriptions title='Kết thúc vào' />
+              <FireTwoTone twoToneColor={'#ea4f44'} />{' '}
+              {activity.isCompleted
+                ? dayjs(activity.end).format('HH:mm DD/MM/YYYY')
+                : 'Chưa kết thúc'}
             </Col>
             <Col>
               <Flex
@@ -161,32 +164,18 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
           </Row>
 
           
-          <Divider>Advance Action</Divider>
-          <Col
-            offset={1}
-            span={12}
-          >
-            <Descriptions title='Detail' />
-            {!activity.addition && <p>Not set</p>}
-          </Col>
-          {activity.addition && (
-            <AdditionSection
-              activityId={activity.id}
-              addition={activity.addition}
-            />
-          )}
           <Flex
             justify='end'
             style={{ marginTop: 20 }}
           >
-            <Button onClick={handleCancel}>Back</Button>
+            {/* <Button onClick={handleCancel}>Back</Button> */}
             <Button
-            disabled={activity.isCompleted}
+              disabled={activity.isCompleted}
               style={{ marginLeft: 10 }}
               type='primary'
-              onClick={() => handleDone(activity.id)}
+              onClick={() => farmRouter.push("/activities/"+activity.id)}
             >
-              Mark as Done
+              Xem chi tiết
             </Button>
           </Flex>
         </div>
@@ -196,6 +185,4 @@ const ActivityDetail: React.FC<EventModalProps> = ({ activity, onClose }) => {
 };
 
 export default ActivityDetail;
-/*
 
-*/

@@ -3,7 +3,7 @@ import { getAssessmentDetailService } from '@/services/Admin/Activities/addition
 import { AssessmentDetail } from '@/services/Admin/Activities/Payload/response/activityAdditionResponse';
 import { RiskAdditionResponse } from '@/services/Admin/Activities/Payload/response/activityResponse';
 import UseAxiosAuth from '@/utils/axiosClient';
-import { Button } from 'antd';
+import { Avatar, Button, Col, Descriptions, Flex, Row, Typography } from 'antd';
 import { AxiosInstance } from 'axios';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -22,9 +22,9 @@ const AssessmentAddition = (props: IProps) => {
 
   const fetchAddition = async (http: AxiosInstance, activityId: string) => {
     try {
-      console.log('Fetching data..');
+      // console.log('Fetching data..');
       const responseData = await getAssessmentDetailService(activityId, http);
-      console.log('Data here: ', responseData);
+      // console.log('Data here: ', responseData);
       setDetail(responseData?.data as RiskAdditionResponse);
       setIsFetching(false);
     } catch (error) {
@@ -39,23 +39,64 @@ const AssessmentAddition = (props: IProps) => {
   return (
     <>
       {detail && detail.checkList && (
-        <div>
-          <p>
-            Checklist:{' '}
-            <Link href={`/training/experts/${detail.checkList.id}`}>
-              {detail.checkList.riskName}
-            </Link>
-          </p>
-          <p>
-            Description: <p>{detail.checkList.riskDescription}</p>
-          </p>
-        </div>
+        <Row>
+          <Col
+            offset={2}
+            span={6}
+          >
+            <Avatar
+              shape='square'
+              alt=''
+              size={200}
+              src='https://cdn-icons-png.flaticon.com/512/7870/7870760.png'
+            />
+          </Col>
+          <Col span={14}>
+            <Flex align='baseline'>
+              <Col span={5}>
+                <Descriptions title={'Bảng đánh giá:'} />
+              </Col>
+              <Col offset={1} span={8}>
+                <Typography.Text
+                  type='success'
+                  strong
+                >
+                  {detail.checkList.riskName}
+                </Typography.Text>
+
+              </Col>
+              <Col span={4}>
+                <Button
+                  type='primary'
+                  onClick={() =>
+                    router.push('/risk-assessment/implement?taskId=' + detail?.taskId)
+                  }
+                >
+                  Đi đến đánh giá
+                </Button>
+              </Col>
+            </Flex>
+            <Row>
+              <Col span={7}>
+                <Descriptions title={'Mô tả:'} />
+              </Col>
+              <Col span={24}>
+                <Flex
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    maxHeight: '30vh',
+                    overflow: 'auto'
+                  }}
+                >
+                  {/* {detail.description} */}
+                  {detail.checkList.riskDescription}
+                </Flex>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
       )}
-      <Button
-        onClick={() => router.push('/risk-assessment/implement?taskId=' + detail?.taskId)}
-      >
-        Go to assess
-      </Button>
     </>
   );
 };

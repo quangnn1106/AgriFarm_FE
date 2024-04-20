@@ -12,7 +12,8 @@ import { GiHighGrass } from 'react-icons/gi';
 import styles from './MemberSider.module.scss';
 import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+
 import { useTranslations } from 'next-intl';
 
 import classNames from 'classnames/bind';
@@ -24,6 +25,7 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import { ROLES } from '@/constants/roles';
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = {
@@ -54,7 +56,7 @@ const MemberSider = ({ path, visible }: Props) => {
   };
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
-
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     // getItem(

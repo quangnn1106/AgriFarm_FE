@@ -35,6 +35,7 @@ import ActivityTaskAdditionSection from '../activityAdditions/activityTaskAdditi
 import ActivityInviteWaitingSection from './activityInviteWaitingSection';
 import { useRouter } from '@/navigation';
 import {
+  completeActivitiesService,
   deleteActivitiesService,
   getActivityByIdService
 } from '@/services/Admin/Activities/activityService';
@@ -59,9 +60,11 @@ export default function ActivityFullDetail(props: IProps) {
   const viewDate = new Date();
   const farmRouter = useRouter();
   const [value, setValue] = useState(1);
-  const [delOpen, setDelOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [isWaiting, setIsWaiting] = useState(item.isWaiting)
+  const [delOpen, setDelOpen] = useState(false);
+  const [comOpen, setComOpen] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(item.isWaiting);
+  const [isComplete, setIsComplete] = useState(item.isCompleted);
   const [isLoading, setIsLoading] = useState(false);
   const path = usePathname();
   const { token } = theme.useToken();
@@ -80,6 +83,26 @@ export default function ActivityFullDetail(props: IProps) {
       message.error('Xóa thất bại');
     } finally {
       setIsLoading(false);
+      setDelOpen(false)
+    }
+  };
+
+  const handleComplete = async () => {
+    setIsLoading(true);
+    try {
+      var rs = await completeActivitiesService(http, item.id);
+      if (rs) {
+        console.log('ok');
+        message.success('Đã hoàn thành');
+        // farmRouter.push('/activities');
+        // farmRouter.push('/activities/'+item.id);
+        setIsComplete(true)
+      }
+    } catch {
+      message.error('Thất bại');
+    } finally {
+      setIsLoading(false);
+      setComOpen(false)
     }
   };
 
@@ -87,7 +110,7 @@ export default function ActivityFullDetail(props: IProps) {
     return (
       <>
         <Modal
-          title={'Bạn có chắc muốn xóa hoạt động này'}
+          title={'Bạn có chắc muốn xóa hoạt động này?'}
           centered
           open
           onCancel={() => setDelOpen(false)}
@@ -103,6 +126,32 @@ export default function ActivityFullDetail(props: IProps) {
           >
             Bằng cách xác nhận hành động này, mọi thông tin liên quan hoạt động này sẽ bị
             xóa đi vĩnh viễn
+          </Typography.Text>
+        </Modal>
+      </>
+    );
+  };
+
+  const completeConfirmModal = () => {
+    return (
+      <>
+        <Modal
+          title={'Bạn có chắc muốn hoàn thành hoạt động này?'}
+          centered
+          open
+          onCancel={() => setComOpen(false)}
+          onOk={() => handleComplete()}
+          okText={'Xác nhận'}
+          okType='primary'
+          
+          okButtonProps={{ type: 'primary' }}
+          cancelText='Quay lại'
+        >
+          <Typography.Text
+            type='secondary'
+            italic
+          >
+            
           </Typography.Text>
         </Modal>
       </>
@@ -145,14 +194,14 @@ export default function ActivityFullDetail(props: IProps) {
                 <Descriptions title='Thông tin chung' />
               </Col>
               <Col span={3}>
-              {item.editAble && (
-                <Button
-                  type='link'
-                  onClick={() => setEditOpen(true)}
-                >
-                  <EditTwoTone twoToneColor={'#3660C1'} />
-                </Button>
-              )}
+                {item.editAble && (
+                  <Button
+                    type='link'
+                    onClick={() => setEditOpen(true)}
+                  >
+                    <EditTwoTone twoToneColor={'#3660C1'} />
+                  </Button>
+                )}
               </Col>
             </Row>
             <Flex
@@ -188,20 +237,26 @@ export default function ActivityFullDetail(props: IProps) {
             {/* <Descriptions title='Start time' /> */}
             <Descriptions title='Thời gian bắt đầu' />
             <RightSquareTwoTone twoToneColor={'#00ce07'} />{' '}
-            {dayjs(item.start).add(-3, 'y').format('HH:mm DD/MM/YYYY')}
+            {dayjs(item.start)
+            //.add(-3, 'y')
+            .format('HH:mm DD/MM/YYYY')}
           </Col>
           <Col span={10}>
             {/* <Descriptions title='Estimated end' /> */}
             <Descriptions title='Thời gian kết thúc dự kiến' />
             <HourglassTwoTone twoToneColor={'#edbf33'} />{' '}
-            {dayjs(item.end).add(-3, 'y').format('HH:mm DD/MM/YYYY')}
+            {dayjs(item.end)
+            //.add(-3, 'y')
+            .format('HH:mm DD/MM/YYYY')}
           </Col>
           <Col span={6}>
             <Descriptions title='Thời gian kết thúc' />
             <FireTwoTone twoToneColor={'#ea4f44'} />{' '}
-            {!item.isCompleted
+            {/* {!item.isCompleted
               ? 'Chưa kết thúc'
-              : dayjs('2019-04-05 04:00', 'YYYY-MM-DD HH:mm').format('HH:mm DD/MM/YYYY')}
+              : dayjs('2019-04-05 04:00', 'YYYY-MM-DD HH:mm').format('HH:mm DD/MM/YYYY')} */}
+              {item.end<new Date()?"Đã hoàn thành":'Chưa hoàn thành'}
+              {/* {dayjs(item.end).add(-3, 'y').format('HH:mm DD/MM/YYYY')} */}
           </Col>
         </Row>
         <Divider></Divider>
@@ -294,6 +349,7 @@ export default function ActivityFullDetail(props: IProps) {
               )}
               {value === 3 && (
                 <ActivityTaskAdditionSection
+                  curLocationId={item.location?.id ?? null}
                   editable={item.editAble ?? false}
                   activity={item}
                 />
@@ -310,10 +366,10 @@ export default function ActivityFullDetail(props: IProps) {
         <Button
           //size='large'
           //type='primary'
-          onClick={() => farmRouter.push('/activities')}
+          onClick={() => farmRouter.back()}
         >
           {/* Back to list */}
-          Trở về trang quản lý
+          Quay lại
         </Button>
         {item.editAble && (
           <>
@@ -326,19 +382,21 @@ export default function ActivityFullDetail(props: IProps) {
               {/* Delete */}
               Xóa
             </Button>
-            <Button
-              //size='large'
-              disabled={item.isCompleted}
-              type='primary'
-              onClick={() => {}}
-            >
-              {/* Mark Complete */}
-              Hoàn thành
-            </Button>
           </>
         )}
+        <Button
+          //size='large'
+          // disabled={item.isCompleted  || !item.completable && isComplete}
+          disabled={true}
+          type='primary'
+          onClick={() => {setComOpen(true)}}
+        >
+          {/* Mark Complete */}
+          Hoàn thành
+        </Button>
       </Flex>
       {delOpen && deleteConfirmModal()}
+      {comOpen && completeConfirmModal()}
       {editOpen && (
         <EditActivityInfoModal
           detail={item}
@@ -350,11 +408,11 @@ export default function ActivityFullDetail(props: IProps) {
           activityId={item.id}
           onAccept={() => {
             console.log('Accept task');
-            setIsWaiting(false)
+            setIsWaiting(false);
           }}
           onReject={() => {
             console.log('Reject task');
-            farmRouter.push("/activities")
+            farmRouter.push('/activities');
           }}
         />
       )}

@@ -19,10 +19,13 @@ import {
 import { useEffect, useState } from 'react';
 import { ProductionDetailList } from '../ProductList/productionDetailList';
 import { PushpinTwoTone } from '@ant-design/icons';
+import { FakePro } from '@/components/(CultivationItems)/fakeProductions';
 
 interface IProps {
   detail: FarmProductResponse;
 }
+
+const prox = FakePro
 
 export default function FullProductDetail(props: IProps) {
   const { detail } = props;
@@ -33,11 +36,13 @@ export default function FullProductDetail(props: IProps) {
   const [seed, setSeed] = useState<ProductSeedResponse | null>(null);
 
   useEffect(() => {
-    setSeed({
-      id: '4994-asdasd043-32432-sadas',
-      name: 'Gạo Đài Loan',
-      description: 'asdasd jdjadjasjdajd kakjdkajdajsdj'
-    });
+    setSeed(detail.seedRef as any
+    //   {
+    //   id: '4994-asdasd043-32432-sadas',
+    //   name: 'Gạo Đài Loan',
+    //   description: 'asdasd jdjadjasjdajd kakjdkajdajsdj'
+    // }
+  );
   }, []);
 
   const SeedInfoSection = (item: ProductSeedResponse) => {
@@ -58,10 +63,12 @@ export default function FullProductDetail(props: IProps) {
             align='start'
             justify='flex-start'
             //gap={20}
-            style={{ height: 10, width: '100%', 
-            //border: '1px solid', 
-            //borderRadius: 10 
-          }}
+            style={{
+              height: 10,
+              width: '100%'
+              //border: '1px solid',
+              //borderRadius: 10
+            }}
           >
             {/* <Col
               offset={4}
@@ -77,7 +84,10 @@ export default function FullProductDetail(props: IProps) {
               //offset={3}
               span={10}
             >
-              <Typography.Text strong><PushpinTwoTone />{item.name}</Typography.Text>
+              <Typography.Text strong>
+                <PushpinTwoTone />
+                {item.name}
+              </Typography.Text>
             </Col>
           </Flex>
           {/* <Flex
@@ -89,7 +99,7 @@ export default function FullProductDetail(props: IProps) {
               onClick={() => farmRouter.push('')}
             >
               {/* {'Go to seed detail page'} */}
-            {/* </Button> */}
+          {/* </Button> */}
           {/* </Flex> */}
         </Flex>
       </>
@@ -145,7 +155,11 @@ export default function FullProductDetail(props: IProps) {
                   alt={detail.name}
                 /> */}
                 <Avatar
-                  src={!!detail.img ? '/../' + detail.img : 'https://gaosachsonghau.com/upload/images/gao-dai-loan.jpg'}
+                  src={
+                    !!detail.img
+                      ? '/../' + detail.img
+                      : 'https://gaosachsonghau.com/upload/images/gao-dai-loan.jpg'
+                  }
                   alt={detail.name}
                   shape='square'
                   size={400}
@@ -169,16 +183,16 @@ export default function FullProductDetail(props: IProps) {
                 <Flex>
                   <Descriptions title={'Tên sản phẩm'}>
                     <Typography.Text>
-                      {/* {detail.name} */}
-                      Gạo Đài Loan
-                      </Typography.Text>
+                      {detail.name}
+                      {/* Gạo Đài Loan */}
+                    </Typography.Text>
                   </Descriptions>
                 </Flex>
                 <Flex>
                   <Descriptions title={'Lưu giữ'}>
                     <Typography.Text>
                       {detail.quantity}
-                      {detail.unit}
+                      {` (${detail.unit})`}
                     </Typography.Text>
                   </Descriptions>
                 </Flex>
@@ -197,19 +211,15 @@ export default function FullProductDetail(props: IProps) {
                 margin: '0 auto'
               }}
             >
-              <Descriptions title={'Description'} />
+              <Descriptions title={'Mô tả'} />
               <Typography.Text>
                 {/* {seed.description} */}
-                Rice is a cereal grain, and in its domesticated form is the staple food
-                for over half of the worlds human population, particularly in Asia and
-                Africa, due to the vast amount of soil that is able to grow rice. Rice is
-                the seed of the grass species Oryza sativa (Asian rice) or, much less
-                commonly, O. glaberrima (African rice). Asian rice was domesticated in
-                China some 13,500 to 8,200 years ago, while African rice was domesticated
-                in Africa some 3,000 years ago. Rice has become commonplace in many
-                cultures worldwide; in 2021, 787 million tons were produced, placing it
-                fourth after sugarcane, maize, and wheat. Only some 8% of rice is traded
-                internationally.
+                Gạo Đài Loan là loại gạo rất quen thuộc với chúng ta. Khi nấu gạo có mùi
+                vị rất thơm, dẻo ít và phù hợp với mọi lứa tuổi. Gạo Đài Loan có nguồn gốc
+                từ một giống lúa của Đài Loan, gạo được du nhập vào nước ta từ nhiều năm
+                trước. Hiện nay, gạo được trồng nhiều ở những tỉnh Nam Bộ ở nước ta, nhưng
+                nếu các bạn muốn tìm loại gạo đúng chuẩn thì các bạn đến Gò Công thuộc
+                tỉnh Tiền Giang.
               </Typography.Text>
             </Flex>
           )}
@@ -228,16 +238,17 @@ export default function FullProductDetail(props: IProps) {
             borderRadius: 10
           }}
         >
-          <Descriptions title={'Production Status'} />
+          <Descriptions title={'Tình trạng sản xuất'} />
           <div
             style={{
               width: '100%',
               height: '80%'
             }}
           >
-            <ProductionDetailList productId='sasd' 
-            productions={[]}
-              productName='Gạo Đài Loan'
+            <ProductionDetailList
+              productId={detail.id}
+              productions={prox.filter(e=>e.product.name === 'Gạo Đài Loan')}
+              //productName='Gạo Đài Loan'
             />
           </div>
         </Flex>
@@ -251,7 +262,7 @@ export default function FullProductDetail(props: IProps) {
               onClick={() => farmRouter.push('/products')}
               type='primary'
             >
-              Back to list
+              Quay lại
             </Button>
             {/* <Button></Button> */}
           </Space>

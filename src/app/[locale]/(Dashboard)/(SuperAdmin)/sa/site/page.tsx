@@ -29,13 +29,13 @@ import MapBoxReact from '@/components/MapBox/mapBoxReact';
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
 
-import { usePathname, useRouter } from '@/navigation';
+import { usePathname } from '@/navigation';
 
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import Loader from '@/components/Loader/Loader';
 import useGeolocation from '@/utils/getlocaiton';
 import { MAP_BOX_SATELLITE } from '@/constants/MapBoxStyles';
-import BreadcrumbComponent from '../subscription/components/Breadcrumb/breadCrumb';
+import BreadcrumbComponent from './components/BreadCum/breadCrumb';
 import ControlPanel from './components/control-panel';
 import { getDiseaseApi } from '@/services/SuperAdmin/Site/diseaseListMap';
 import {
@@ -43,6 +43,8 @@ import {
   MarkerDiseaseParseNum
 } from '@/services/SuperAdmin/Site/payload/response/markerDisease';
 import PinDisease from '@/components/MapBox/pinDisease';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 //import BreadcrumbComponent from '../../subscription/components/Breadcrumb/breadCrumb';
 
 type Props = {};
@@ -61,7 +63,8 @@ const SitePage = (props: Props) => {
   const t = useTranslations('Disease');
   const t2 = useTranslations('Button');
   const path = usePathname();
-
+  const { data: session } = useSession();
+  const siteName = session?.user.userInfo.siteName || '';
   const http = UseAxiosAuth();
   const router = useRouter();
 
@@ -128,7 +131,7 @@ const SitePage = (props: Props) => {
       lon: parseFloat(item.location.lon)
     }
   }));
-  // console.log('convertedData: ', convertedData);
+ // console.log('convertedData: ', convertedData);
 
   const pinsDiseasePosition = useMemo(() => {
     return convertedData?.map((city, index) => (
@@ -147,7 +150,8 @@ const SitePage = (props: Props) => {
       >
         <>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <PinDisease /> <span className='red'></span>
+            <PinDisease type={city?.diseaseName} />
+            <span className='red'></span>
           </div>
         </>
       </Marker>
@@ -163,7 +167,7 @@ const SitePage = (props: Props) => {
   return (
     <>
       <Content>
-        <BreadcrumbComponent subPath={path} />
+        <BreadcrumbComponent siteName={siteName} />
 
         <MapBoxReact
           onLoaded={handleMapLoading}

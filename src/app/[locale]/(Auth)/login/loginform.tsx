@@ -12,6 +12,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import {
   DASHBOARD_ADMIN,
   DASH_BOARD_PATH,
+  FORGOT_PATH,
   HOME_PATH,
   REGISTER_PATH,
   TIME_TABLE_PATH
@@ -161,7 +162,8 @@ const LoginForm: React.FC = () => {
                 <Col span={12}>
                   <a
                     className={cx('login_form_forgot')}
-                    href=''
+                    href={FORGOT_PATH}
+                  
                   >
                     Quên mật khẩu
                   </a>

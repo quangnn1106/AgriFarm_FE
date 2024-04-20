@@ -7,13 +7,15 @@ export const LOGIN_PATH = '/login',
   HOME_PATH = '/home',
   DENIED_PATH = '/denied',
   FORGOT_PATH = '/forgot',
+  VERIFY_PATH = '/verify',
   RESET_PASS_PATH = '/reset-password';
 
 //----- private paths---------//
-//admin
+//super admin
 export const DASH_BOARD_PATH = '/sa/statistic',
   SA_PROFILE_PATH = '/sa/user-profile',
-  SITE_MAP_PATH = '/sa/site';
+  SITE_MAP_PATH = '/sa/site',
+  SUBSCRIPTION_PATH = '/sa/subscription';
 
 // admin path + manager
 export const DASHBOARD_ADMIN = '/statistic_admin',
@@ -27,3 +29,6 @@ export const TIME_TABLE_PATH = '/time-table';
 export const MEM_PROFILE_PATH = '/mem-profile';
 // call back for OAuth2
 export const CALLBACK_URL = process.env.NEXT_PUBLIC_FE;
+
+// url for media
+export const AWS_PATH_GET = process.env.NEXT_PUBLIC_BASE_FILE_PATH;

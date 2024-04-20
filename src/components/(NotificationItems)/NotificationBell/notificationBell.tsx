@@ -1,9 +1,22 @@
+import { NotifyGroupItem } from '@/app/[locale]/Layouts/MainLayout/MenuSider/Models/notiItem';
 import { useSignalRNotification } from '@/components/context/notification/SignalRNotifyContext';
 import { useRouter } from '@/navigation';
 import { BellOutlined } from '@ant-design/icons';
-import { Button, Col, Flex, FloatButton, List, Popover, Row, Typography } from 'antd';
+import {
+  Badge,
+  Button,
+  Col,
+  Flex,
+  FloatButton,
+  List,
+  Popover,
+  Row,
+  Typography,
+  Tooltip
+} from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { FaBell } from 'react-icons/fa6';
 
 export default function NotificationBell() {
   const { messages } = useSignalRNotification();
@@ -57,7 +70,7 @@ export default function NotificationBell() {
                       type='link'
                       onClick={() => farmRouter.push(e.ref ?? '')}
                     >
-                      Detail
+                      Chi tiết
                     </Button>
                   )}
                 </Col>
@@ -80,18 +93,42 @@ export default function NotificationBell() {
           overflow: 'auto'
           //   marginRight:'3vw'
         }}
-        placement='bottomRight'
+        placement='rightTop'
         content={contents}
         title='Your Notification Message'
         trigger='click'
       >
-        <FloatButton
+        {/* <FloatButton
           onClick={() => resetBellCount()}
-          style={{ right: '5vw', top: '10vh' }}
-          tooltip={<div>Notify</div>}
+          style={{ position: 'absolute' }}
+          tooltip={<div>Thông báo</div>}
           badge={{ count: bellCount }}
           icon={<BellOutlined />}
-        />
+        /> */}
+
+        <Flex
+          style={{ padding: '10px 10px', cursor: 'pointer' }}
+          justify='space-between'
+        >
+          <Flex
+            align='center'
+            gap={10}
+          >
+            {/* <FaBell /> */}
+            {/* <Tooltip title='Thông báo'>
+              <FaBell size={21} />
+
+              <span>Thông báo</span>
+            </Tooltip> */}
+            <FaBell size={20} />
+
+            <span>Thông báo</span>
+          </Flex>
+
+          <div className='noti-number'>{bellCount}</div>
+
+          {/* <div className={cx('noti-number')}>8</div> */}
+        </Flex>
       </Popover>
     </>
   );

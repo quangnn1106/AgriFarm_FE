@@ -1,5 +1,5 @@
 interface HarvestCreateRequest {
-  productionId: string;
+  landId: string;
 }
 
 interface TrainingCreateRequest {
@@ -8,10 +8,18 @@ interface TrainingCreateRequest {
 }
 
 interface TreatmentCreateRequest {
+  target: string;
   method: string;
   isWasteProcess: boolean;
 }
 
 interface AssessmentCreateRequest {
   checkListId: string;
+}
+
+
+interface HarvestProductRequest{
+  output:number
+  activityId: string
+  unit: string
 }

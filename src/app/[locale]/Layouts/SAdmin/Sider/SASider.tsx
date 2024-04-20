@@ -12,7 +12,8 @@ import { GiHighGrass } from 'react-icons/gi';
 import styles from './SASider.module.scss';
 import { HomeFilled, ClusterOutlined } from '@ant-design/icons';
 import { Button, Flex, type MenuProps } from 'antd';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+
 import { useTranslations } from 'next-intl';
 
 import classNames from 'classnames/bind';
@@ -24,6 +25,7 @@ import {
   GetUserInfoGroup,
   getItem
 } from '../../MainLayout/MenuSider/Models/menuItemsUser';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = {
@@ -55,7 +57,7 @@ const SAdminSider = ({ path, visible }: Props) => {
 
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
-
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     getItem(
