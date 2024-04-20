@@ -3,19 +3,16 @@ import * as React from 'react';
 import { useState, useCallback } from 'react';
 import BreadcrumbArgiFarm from '@/components/Breadcrumb/breadCrumb';
 import { usePathname } from '@/navigation';
-import { SITE_MAP_PATH } from '@/constants/routes';
+import { AWS_PATH_GET, SITE_MAP_PATH } from '@/constants/routes';
 import { Content } from 'antd/es/layout/layout';
 import {
-  App,
   Button,
   Col,
   ConfigProvider,
-  Flex,
   Form,
   FormInstance,
   Input,
   Row,
-  Select,
   Upload,
   message,
   notification
@@ -54,16 +51,21 @@ import { useSession } from 'next-auth/react';
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import UploadImgAgri from '@/components/Upload/uploadAvatar';
+import ImgCrop from 'antd-img-crop';
+import { UploadFileApi } from '@/services/Admin/Media/uploadFileApi';
 
 const cx = classNames.bind(styles);
 type Props = {};
+
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   const path = usePathname();
   const { data: session } = useSession();
   const [form] = Form.useForm();
+
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
-  const [fileList, setFileList] = useState<any[]>([]);
+
+  const [previewImage, setPreviewImage] = useState<string>('');
   const [loadingMap, setLoading] = useState<boolean>(true);
   const [displayMarker, setDisplayMarker] = useState<boolean>(true);
   const [stateBtnConfirm, setStateBtnConfirm] = useState<boolean>(true);
@@ -85,22 +87,38 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
       duration: 2
     });
   };
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
   const fetchSitesDetails = async (
     http: AxiosInstance,
     siteId?: string,
-    form?: FormInstance,
-    fileList?: any
+    form?: FormInstance
+    // sitesDetail?: Sites | undefined
+    // fileList?: any
   ) => {
     try {
       const responseData = await getSitesService(http, siteId);
       if (responseData.status === STATUS_OK) {
         //  console.log('status ok: ', responseData?.data);
         setSitesDetail(responseData?.data as Sites);
+
         // console.log('fetchSitesDetails: ', responseData?.data);
+        const defaultImagePath: string = 'drafts/d1f1b219-6aa1_638488953544034389.png';
+        const ava: string = `${AWS_PATH_GET}${form?.getFieldValue('avatar')}`;
+        const avaInit: string = `${AWS_PATH_GET}${defaultImagePath}`;
+        console.log('avaInit', avaInit);
+
+        setFileList([
+          {
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: form?.getFieldValue('avatar') ? ava : avaInit
+          }
+        ]);
 
         form?.setFieldsValue({
-          ...responseData?.data,
-          avatarImg: fileList[0]?.name ? fileList[0]?.name : undefined
+          ...responseData?.data
         });
       }
       setIsFetching(false);
@@ -109,8 +127,9 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     }
   };
   React.useEffect(() => {
-    fetchSitesDetails(http, params.id, form, fileList);
-  }, [form, http, params.id, router, fileList]);
+    fetchSitesDetails(http, params.id, form);
+  }, [form, http, params.id, router]);
+
   const [marker, setMarker] = useState<any>();
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
@@ -137,52 +156,37 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
     setStateBtnConfirm(false);
   }, []);
   const getFile = (e: any) => {
-    console.log('Upload event:', e);
+    console.log('Upload event:', e.file);
 
     if (Array.isArray(e)) {
       return e;
     }
-    return e && e.fileList;
+    return e && e.file;
   };
   // logic update + upload file image
   var bearer = 'Bearer ' + session?.user.accessToken;
   const handleForm = async (values: any) => {
     console.log('value form: ', values);
-    let count: number = 0;
+    //let count: number = 0;
     const formData = new FormData();
-    fileList.forEach(file => {
-      formData.append('file', file as FileType);
-    });
+    // formData.append('file', fileList[0].fileName as FileType);
+    // fileList?.forEach(file => {
+    //   console.log('value file: ', file);
+    // });
+
+    formData?.append('file', fileList[0]?.originFileObj as FileType);
+    console.log('formData', formData);
 
     // You can use any AJAX library you like
-    fetch('https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Authorization: bearer
-        //'Content-Type': 'multipart/form-data'
-      }
-    })
-      .then(res => {
-        console.log('res.json(): ', res);
 
-        return res.json();
-      })
-      .then(() => {
-        setFileList([]);
-        //  message.success('upload successfully.');
-        count++;
-      })
-      .catch(() => {
-        //   message.error('upload failed.');
-      })
-      .finally(() => {
-        //setUploading(false);
-        //  console.log('finaly');
-      });
-
-    setIsFetching(true);
-    const res = await updateSiteService(http, params.id, values);
+    // setIsFetching(true);
+    const resUpload = await UploadFileApi(http, formData);
+    console.log('resUpload: ', resUpload.data);
+    const editValues: any = {
+      ...values,
+      avatarImg: resUpload.data
+    };
+    const res = await updateSiteService(http, params.id, editValues);
     if (res.data && res.status === STATUS_OK) {
       setIsFetching(false);
       openNotification('top', `${tM('update_susses')}`, 'success');
@@ -190,25 +194,45 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
       console.log('update site success', res.status);
     } else {
       openNotification('top', `${tM('update_error')}`, 'error');
-
       console.log('update site fail', res.status);
     }
   };
 
-  const props: UploadProps = {
-    onRemove: file => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-    },
-    beforeUpload: file => {
-      setFileList([...fileList, file]);
+  const props: UploadProps | UploadProps['onChange'] = {
+    // onRemove: file => {
+    //   const index = fileList.indexOf(file);
+    //   const newFileList = fileList.slice();
+    //   newFileList.splice(index, 1);
+    //   setFileList(newFileList);
+    // },
 
-      return false;
+    onChange: ({ fileList: newFile }) => {
+      setFileList(newFile);
     },
 
-    fileList
+    onPreview: async (file: UploadFile) => {
+      let src = file.url as string;
+      if (!src) {
+        src = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file.originFileObj as FileType);
+          reader.onload = () => resolve(reader.result as string);
+        });
+      }
+      const image = new Image();
+      image.src = src;
+      const imgWindow = window.open(src);
+      imgWindow?.document.write(image.outerHTML);
+    }
+
+    // beforeUpload: file => {
+    //   setFileList(()=>{
+    //     ...fileList,
+    //     file
+    //   });
+
+    //   return false;
+    // },
   };
   const handleConfirmPosition = async () => {
     const payLoadAddPos: Position[] = [
@@ -230,25 +254,11 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
   };
   //  console.log('fileList out return: ', fileList);
 
-  console.log('fileList all: ', fileList[0]?.name);
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
+  // console.log('fileList all: ', fileList[0]?.name);
+  // const onChange: UploadProps['onChange'] = ({ fileList: newFile }) => {
+  //   setFileList(newFile);
+  // };
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise(resolve => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
   return (
     <>
       {contextHolder}
@@ -344,12 +354,12 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
               >
                 <Form.Item
                   name='avatarImg'
-                  label={<TitleLabelFormItem name='Avatar Farm'></TitleLabelFormItem>}
+                  label={<TitleLabelFormItem name='Ảnh đại diện'></TitleLabelFormItem>}
                   valuePropName='fileList'
                   getValueFromEvent={getFile}
                 >
                   {/* action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188' */}
-                  <UploadImgAgri
+                  {/* <UploadImgAgri
                     // customRequest={(i: any) => {
                     //   setFileList([i.file]);
                     // }}
@@ -357,18 +367,44 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                     onChange={onChange}
                     onPreview={onPreview}
                     beforeUpload={file => {
-                      setFileList([...fileList, file]);
+                      setFileList(file);
 
                       return false;
                     }}
-                  />
+                  /> */}
+
+                  <ImgCrop
+                    rotationSlider
+                    // beforeCrop={file => {
+                    //   setFileList([...fileList, file]);
+
+                    //   return true;
+                    // }}
+                  >
+                    <Upload
+                      {...props}
+                      //  action={action}
+                      //action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+                      listType='picture-card'
+                      maxCount={1}
+                      fileList={fileList}
+                      // showUploadList={false}
+                      //    onChange={onChange}
+                      //  onPreview={onPreview}
+                      //  customRequest={customRequest}
+                    >
+                      {/* {fileList.length < 5 && '+ Upload'} */}
+                      +Chọn ảnh
+                      {/* <Button icon={<UploadOutlined />}>Upload your Image</Button> */}
+                    </Upload>
+                  </ImgCrop>
                   {/* <Upload {...props}>
                     <Button icon={<UploadOutlined />}>Select File</Button>
                   </Upload> */}
                 </Form.Item>
                 <Form.Item
                   name='siteCode'
-                  label={<TitleLabelFormItem name='Site Code'></TitleLabelFormItem>}
+                  label={<TitleLabelFormItem name='Mã số nông trại'></TitleLabelFormItem>}
                 >
                   <Input
                     disabled
@@ -378,13 +414,13 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
 
                 <Form.Item
                   name='name'
-                  label={<TitleLabelFormItem name='Site Name'></TitleLabelFormItem>}
+                  label={<TitleLabelFormItem name='Tên nông trại'></TitleLabelFormItem>}
                 >
                   <Input size='large' />
                 </Form.Item>
                 <Form.Item
                   name='description'
-                  label={<TitleLabelFormItem name='Description'></TitleLabelFormItem>}
+                  label={<TitleLabelFormItem name='Mô tả'></TitleLabelFormItem>}
                 >
                   <Input size='large' />
                 </Form.Item>
@@ -396,7 +432,7 @@ const UpdateSitePage = ({ params }: { params: { id: string } }) => {
                     loading={isFetching}
                     size='middle'
                   >
-                    Save Changes
+                    Lưu thay đổi
                   </Button>
                 </Form.Item>
               </Form>

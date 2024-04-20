@@ -62,6 +62,7 @@ const UploadImgAgri = ({
         action={action}
         listType='picture'
         //   maxCount={1}
+        
         onChange={onChange}
         onPreview={onPreview}
         customRequest={customRequest}

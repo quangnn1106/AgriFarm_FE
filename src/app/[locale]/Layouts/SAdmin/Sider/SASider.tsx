@@ -25,6 +25,7 @@ import {
   GetUserInfoGroup,
   getItem
 } from '../../MainLayout/MenuSider/Models/menuItemsUser';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = {
@@ -56,7 +57,7 @@ const SAdminSider = ({ path, visible }: Props) => {
 
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
-
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     getItem(

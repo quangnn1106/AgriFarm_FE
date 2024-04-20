@@ -29,7 +29,7 @@ import MapBoxReact from '@/components/MapBox/mapBoxReact';
 import Pin from '@/components/MapBox/pin';
 import { MAPBOX_TOKEN } from '@/constants/mapbox_token';
 
-import { usePathname, useRouter } from '@/navigation';
+import { usePathname } from '@/navigation';
 
 import GeocoderControl from '@/components/MapBox/geocoder-controll';
 import Loader from '@/components/Loader/Loader';
@@ -44,6 +44,7 @@ import {
 } from '@/services/SuperAdmin/Site/payload/response/markerDisease';
 import PinDisease from '@/components/MapBox/pinDisease';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 //import BreadcrumbComponent from '../../subscription/components/Breadcrumb/breadCrumb';
 
 type Props = {};
@@ -130,7 +131,7 @@ const SitePage = (props: Props) => {
       lon: parseFloat(item.location.lon)
     }
   }));
-  console.log('convertedData: ', convertedData);
+ // console.log('convertedData: ', convertedData);
 
   const pinsDiseasePosition = useMemo(() => {
     return convertedData?.map((city, index) => (

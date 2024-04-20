@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button, Flex, type MenuProps } from 'antd';
+import { Badge, Button, Flex, Popover, type MenuProps } from 'antd';
 
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -24,6 +24,9 @@ import {
 } from '@/constants/routes';
 import { ROLES } from '@/constants/roles';
 import { Link } from '@/navigation';
+import NotificationBell from '@/components/(NotificationItems)/NotificationBell/notificationBell';
+import { NotificationContextProvider } from '@/components/context/notification/SignalRNotifyContext';
+import NotifyBellResponsive from '@/components/(NotificationItems)/NotificationBell/notifyBellResponsive';
 
 const cx = classNames.bind(styles);
 
@@ -63,7 +66,7 @@ export const renderMemPro: (role: string) => string = (role: string): string => 
   return DENIED_PATH; // You need to define DEFAULT_PATH according to your application logic
 };
 // Function to generate user information group
-export function GetUserInfoGroup(visible: boolean): MenuItem {
+export function NotifyGroupItem(visible?: boolean): MenuItem {
   const { data: session } = useSession();
   const userRole = session?.user?.userInfo?.role as string;
   const userId = session?.user.userInfo.id;
@@ -75,7 +78,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
       {!visible ? (
         <div>
           {/* if admin */}
-          <Link href={renderMemPro(userRole)}>
+          {/* <Link href={renderMemPro(userRole)}>
             <div
               className='d-flex'
               style={{ padding: '1rem' }}
@@ -93,38 +96,22 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
                 <p className={cx('p_name')}>{session?.user?.userInfo?.fullName}</p>
               </div>
             </div>
-          </Link>
-          {/* <Flex
-            style={{ padding: '10px 16px' }}
-            justify='space-between'
-          >
-            <Flex
-              align='center'
-              gap={10}
-            >
-              <FaBell />
-              <span> {t('notification')}</span>
-            </Flex>
-            <div className={cx('noti-number')}>8</div>
-          </Flex> */}
+          </Link> */}
+
+          <NotificationBell />
         </div>
       ) : (
         <div
-          className='d-flex'
-          style={{ padding: '24px 6px 12px 8px' }}
+          className='d-flex jus-center'
+          // style={{ padding: '24px 6px 12px 8px' }}
+          style={{ margin: '3px' }}
         >
-          <Badge
-          // count={5}
-          >
-            <Image
-              src={sampleAva}
-              width={40}
-              height={40}
-              priority={true}
-              placeholder='empty'
-              alt='123'
-            />
-          </Badge>
+          {/* <Badge>
+            <FaBell size={21} />
+            
+          </Badge> */}
+
+          <NotifyBellResponsive />
         </div>
       )}
     </>,

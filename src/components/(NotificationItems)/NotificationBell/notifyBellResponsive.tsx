@@ -1,24 +1,13 @@
 import { NotifyGroupItem } from '@/app/[locale]/Layouts/MainLayout/MenuSider/Models/notiItem';
 import { useSignalRNotification } from '@/components/context/notification/SignalRNotifyContext';
 import { useRouter } from '@/navigation';
-import { BellOutlined } from '@ant-design/icons';
-import {
-  Badge,
-  Button,
-  Col,
-  Flex,
-  FloatButton,
-  List,
-  Popover,
-  Row,
-  Typography,
-  Tooltip
-} from 'antd';
+
+import { Badge, Button, Col, Flex, List, Popover, Row, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { FaBell } from 'react-icons/fa6';
 
-export default function NotificationBell() {
+export default function NotifyBellResponsive() {
   const { messages } = useSignalRNotification();
   const farmRouter = useRouter();
   const [bellCount, setBellCount] = useState(messages.length);
@@ -106,29 +95,12 @@ export default function NotificationBell() {
           icon={<BellOutlined />}
         /> */}
 
-        <Flex
-          style={{ padding: '10px 10px', cursor: 'pointer' }}
-          justify='space-between'
-        >
-          <Flex
-            align='center'
-            gap={10}
-          >
-            {/* <FaBell /> */}
-            {/* <Tooltip title='Thông báo'>
-              <FaBell size={21} />
-
-              <span>Thông báo</span>
-            </Tooltip> */}
-            <FaBell size={20} />
-
-            <span>Thông báo</span>
-          </Flex>
-
-          <div className='noti-number'>{bellCount}</div>
-
-          {/* <div className={cx('noti-number')}>8</div> */}
-        </Flex>
+        <Badge count={bellCount}>
+          <FaBell
+            size={21}
+            style={{ cursor: 'pointer' }}
+          />
+        </Badge>
       </Popover>
     </>
   );

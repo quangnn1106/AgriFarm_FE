@@ -29,3 +29,6 @@ export const TIME_TABLE_PATH = '/time-table';
 export const MEM_PROFILE_PATH = '/mem-profile';
 // call back for OAuth2
 export const CALLBACK_URL = process.env.NEXT_PUBLIC_FE;
+
+// url for media
+export const AWS_PATH_GET = process.env.NEXT_PUBLIC_BASE_FILE_PATH;
