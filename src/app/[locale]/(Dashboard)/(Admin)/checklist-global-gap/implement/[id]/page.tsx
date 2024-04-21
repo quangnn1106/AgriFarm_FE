@@ -1,5 +1,5 @@
 'use client'
-import { Breadcrumb, Button, Card, Col, ConfigProvider, Divider, Empty, Form, Input, Radio, RadioChangeEvent, Row, Space, Spin, Tag, Upload, message } from "antd";
+import { Breadcrumb, Button, Card, Col, ConfigProvider, Divider, Empty, Form, Input, Radio, Row, Space, Spin, Tag, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -16,9 +16,10 @@ import getDataChecklistApi from "@/services/Checklist/getDataChecklistApi";
 import TextArea from "antd/es/input/TextArea";
 import { CHECKLIST } from "@/constants/routes";
 import { useRouter } from "next/navigation";
-import { ExportOutlined, HomeOutlined } from "@ant-design/icons";
 import { STATUS_OK } from "@/constants/https";
 import { createResponseApi , ChecklistResponseDef } from "@/services/Checklist/createResponseApi";
+import { HomeOutlined } from "@ant-design/icons";
+
 
 const CheklistImplement = ({ params }: { params: { id: string } }) => {
     const tCom = useTranslations('common');
@@ -151,14 +152,6 @@ const CheklistImplement = ({ params }: { params: { id: string } }) => {
                         <>
                             <Space>
                                 <span className={cx('h2-info')}>{checklistData.name}</span>
-                                <Button
-                                    type='primary'
-                                    htmlType='button'
-                                    size='small'
-                                    icon={<ExportOutlined />}
-                                >
-                                    {tLbl('btn_export_pdf')}
-                                </Button>
                             </Space>
                             <Divider />
                             <Form

@@ -20,6 +20,8 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Quixote from '../../component/Pdf/pdfViewer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 type StatisticsResponseDef = {
     key: string;
@@ -28,6 +30,13 @@ type StatisticsResponseDef = {
     no: number;
     na: number;
     percent: number;
+}
+type SummaryHeaderPdfDef = {
+  type: string;
+  yes: string;
+  no: string;
+  na: string;
+  percent: string;
 }
 const CheckListSummary = ({ params }: { params: { id: string } }) => {
   const tCom = useTranslations('common');
@@ -41,7 +50,7 @@ const CheckListSummary = ({ params }: { params: { id: string } }) => {
   const { data: session, status } = useSession();
   const [dataStatistic, setDataStatistic] = useState<StatisticsResponseDef[]>();
   const [isGlobalGAP, setIsGlobalGAP] = useState<boolean>(false);
-
+  const [informationPdf, setInformationPdf] = useState<string[]>([]);
   const calculatePercentage = (responseData: StatisticsResponseDef[]) => {
     responseData.forEach((item: StatisticsResponseDef, index: number) => {
       const totalResponses = item.yes + item.no + item.na;
@@ -60,6 +69,21 @@ const CheckListSummary = ({ params }: { params: { id: string } }) => {
               setLoading(true);
               const responseData = await getDataChecklistApi(http, checklistId);
               setChecklistData(responseData.data.checklistMaster);
+
+              const date = new Date(responseData.data.startDate);
+              const year = date.getFullYear();
+              const month = (date.getMonth() + 1).toString().padStart(2, '0');
+              const day = date.getDate().toString().padStart(2, '0');
+              let status = tLbl('not_yet');
+              if (responseData.data.status == 1) {
+                status = tLbl('in_progress');
+              } else if (responseData.data.status == 2) {
+                status = tLbl('done');
+              }
+              setInformationPdf([
+                `${tLbl('checklist_create_date')}: ${day}/${month}/${year}`,
+                `${tLbl('status')}: ${status}`
+              ]);
               let checklistItemResponses: StatisticsResponseDef[] = [
                 {
                   key: '1',
@@ -117,7 +141,13 @@ const CheckListSummary = ({ params }: { params: { id: string } }) => {
       };
       getData(http, params.id);
   },[http, params.id, tLbl]);
-
+  const summaryHeaderPdf: SummaryHeaderPdfDef = {
+    type: tLbl('type'),
+    yes: tLbl('yes'),
+    no: tLbl('no'),
+    na: 'N/A',
+    percent: tLbl('satisfy_condition')
+  }
   const columns: TableColumnsType<StatisticsResponseDef> = [
     {
       title: tLbl('type'),
@@ -192,14 +222,19 @@ const CheckListSummary = ({ params }: { params: { id: string } }) => {
               <>
                 <Space>
                   <span className={cx('h2-info')}>{checklistData.name}</span>
-                  <Button
-                      type='primary'
-                      htmlType='button'
-                      size='small'
-                      icon={<ExportOutlined />}
-                  >
-                      {tLbl('btn_export_pdf')}
-                  </Button>
+                  <PDFDownloadLink document={<Quixote checklistDetail={checklistData} statistics={dataStatistic} header={summaryHeaderPdf} checklistName={checklistData.name} infomation={informationPdf}/>} fileName="document.pdf">
+                      {({ loading }) =>
+                      loading ? 'Loading document...' : 
+                      <Button
+                          type='primary'
+                          htmlType='button'
+                          size='small'
+                          icon={<ExportOutlined />}
+                      >
+                          {tLbl('btn_export_pdf')}
+                      </Button>
+                      }
+                  </PDFDownloadLink>
                 </Space>
                 <Divider />
                 <h3>{tLbl('integrated')}</h3>
