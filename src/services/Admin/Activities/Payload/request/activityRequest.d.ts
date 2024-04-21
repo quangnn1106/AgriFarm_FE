@@ -10,6 +10,15 @@ export interface CreateActivityRequest {
   locationId?: string;
 }
 
+export interface EditActivityRequest {
+  title: string;
+  duration: string[];
+  descriptions: {
+    name: string;
+    value: string;
+  }[];
+}
+
 export interface SetLocationRequest {
   id: string;
   name: string;

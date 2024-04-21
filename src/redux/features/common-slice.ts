@@ -83,12 +83,12 @@ export default auth.reducer;
 export const registerAsyncApi = createAppAsyncThunk(
   'userReducer/registerAsyncApi',
   async (values: FormRegisterValues) => {
-    const userRegister: FormRegisterValues = {
-      ...values,
-      paymentDetail: 'custom default',
-      solutionId: 'e43d372f-1ad5-46bd-b950-a95419211c0e'
-    };
-    const response = await register(userRegister);
+    // const userRegister: FormRegisterValues = {
+    //   ...values,
+    //   paymentDetail: 'custom default'
+    //   // solutionId: 'e43d372f-1ad5-46bd-b950-a95419211c0e'
+    // };
+    const response = await register(values);
     if (response && response.status === 202) {
       console.log('data resp register: ', response);
 

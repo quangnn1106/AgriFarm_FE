@@ -115,7 +115,7 @@ export function NotifyGroupItem(visible?: boolean): MenuItem {
         </div>
       )}
     </>,
-    'user',
+    'notify',
     null,
     [],
     'group'
