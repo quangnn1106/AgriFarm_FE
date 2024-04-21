@@ -69,30 +69,30 @@ const Quixote: React.FC<PdfDataDef> = ({
       <View style={{border: 1, color: '#000'}}>
         <View style={styles.summaryTable}>
           <Text style={styles.summaryTableHeader}>{header.type}</Text>
-          <Text style={styles.summaryTableHeader}>{header.yes}</Text>
-          <Text style={styles.summaryTableHeader}>{header.no}</Text>
-          <Text style={styles.summaryTableHeader}>{header.na}</Text>
+          <Text style={{...styles.summaryTableHeader, width: '70px'}}>{header.yes}</Text>
+          <Text style={{...styles.summaryTableHeader, width: '70px'}}>{header.no}</Text>
+          <Text style={{...styles.summaryTableHeader, width: '70px'}}>{header.na}</Text>
           <Text style={styles.summaryTableHeader}>{header.percent}</Text>
         </View>
         <View style={styles.summaryTable}>
           <Text style={styles.summaryTableBody}>{statistics ? statistics[0].type : "Major must"}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[0].yes : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[0].no : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[0].na : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[0].yes : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[0].no : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[0].na : 0}</Text>
           <Text style={styles.summaryTableBody}>{statistics ? `${statistics[0].percent}%` : '0%'}</Text>
         </View>
         <View style={styles.summaryTable}>
           <Text style={styles.summaryTableBody}>{statistics ? statistics[1].type : "Minor must"}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[1].yes : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[1].no : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[1].na : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[1].yes : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[1].no : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[1].na : 0}</Text>
           <Text style={styles.summaryTableBody}>{statistics ? `${statistics[1].percent}%` : '0%'}</Text>
         </View>
         <View style={styles.summaryTable}>
           <Text style={styles.summaryTableBody}>{statistics ? statistics[2].type : "Recommendation"}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[2].yes : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[2].no : 0}</Text>
-          <Text style={styles.summaryTableBody}>{statistics ? statistics[2].na : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[2].yes : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[2].no : 0}</Text>
+          <Text style={{...styles.summaryTableBody, width: '70px'}}>{statistics ? statistics[2].na : 0}</Text>
           <Text style={styles.summaryTableBody}>{statistics ? `${statistics[2].percent}%` : '0%'}</Text>
         </View>
       </View>
@@ -226,61 +226,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   summaryTableHeader: {
-    width: 110,
+    width: 130,
     fontWeight: 'bold',
     fontSize: 14
   },
   summaryTableBody: {
-    width: 110,
+    width: 130,
     fontSize: 12
   }
 });
-// const styles = StyleSheet.create({
-//   body: {
-//     paddingTop: 35,
-//     paddingBottom: 65,
-//     paddingHorizontal: 35,
-//   },
-//   title: {
-//     fontSize: 24,
-//     textAlign: 'center',
-//     fontFamily: 'Times-Roman'
-//   },
-//   author: {
-//     fontSize: 12,
-//     textAlign: 'center',
-//     marginBottom: 40,
-//   },
-//   subtitle: {
-//     fontSize: 18,
-//     margin: 12,
-//     fontFamily: 'Times-Roman'
-//   },
-//   text: {
-//     margin: 12,
-//     fontSize: 14,
-//     textAlign: 'justify',
-//     fontFamily: 'Times-Roman'
-//   },
-//   image: {
-//     marginVertical: 15,
-//     marginHorizontal: 100,
-//   },
-//   header: {
-//     fontSize: 12,
-//     marginBottom: 20,
-//     textAlign: 'center',
-//     color: 'grey',
-//   },
-//   pageNumber: {
-//     position: 'absolute',
-//     fontSize: 12,
-//     bottom: 30,
-//     left: 0,
-//     right: 0,
-//     textAlign: 'center',
-//     color: 'grey',
-//   },
-// });
 
 export default Quixote;
