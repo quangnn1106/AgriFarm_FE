@@ -1,23 +1,21 @@
 'use client';
-
 import {
   Breadcrumb,
   Button,
   ConfigProvider,
   Divider,
-  Flex,
-  Layout,
+  Dropdown,
+  MenuProps,
+  Space,
   Table,
   TableColumnsType,
   TablePaginationConfig,
   TableProps,
   Tag,
-  Tooltip,
-  message,
-  theme
+  message
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined, CheckCircleOutlined, CloseCircleOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HomeOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import styles from '../adminStyle.module.scss';
 import checklistStyle from './checklistStyle.module.scss';
 import classNames from 'classnames/bind';
@@ -25,7 +23,6 @@ import FilterSection from './component/FilterSection/filterSection';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import CheckListInspectionTableColumn from './component/Table/CheckListInspection/column-type';
 import { ChecklistMappingDef, SearchConditionDef } from './models';
 import { AxiosInstance } from 'axios';
 import UseAxiosAuth from '@/utils/axiosClient';
@@ -33,7 +30,9 @@ import checklistApi from '@/services/Checklist/checklistApi';
 import { useRouter } from "next/navigation";
 import { usePathname } from "@/navigation";
 import { useSession } from 'next-auth/react';
-import { ROLES } from '@/constants/roles';
+import getLatestVersionApi from '@/services/Checklist/getLatestVersionApi';
+import addNewChecklistApi from '@/services/Checklist/addNewChecklistApi';
+import { CHECKLIST_IMPLEMENT } from '@/constants/routes';
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -59,6 +58,7 @@ const CheckListInspection = () => {
   const [searchCodition, setSearchCondition] = useState<SearchConditionDef>();
   const { data: session, status } = useSession();
   const roles = session?.user?.userInfo.role;
+  const [latestVersion, setLatestVersion] = useState();
 
   useEffect(() => {
     const getData = async (http: AxiosInstance | null) => {
@@ -68,18 +68,13 @@ const CheckListInspection = () => {
               perPage: 10,
               pageId: 1
             };
-            if (roles != ROLES.SUPER_ADMIN) {
-              const userId = session?.user?.userInfo.id;
-              searchCondition = {
-                userId: userId
-              }
-            }
             const responseData = await checklistApi(http, searchCondition);
             const normalizedData: ChecklistMappingDef[] = responseData['data'].map(
                 (item: ChecklistMappingDef, index: number) => ({
                     key : item.id,
                     no: index + 1,
                     checklistName: item.checklistMaster.name,
+                    checklistMasterId: item.checklistMaster.id,
                     startDate: item.startDate,
                     endDate: item.endDate,
                     status: item.status,
@@ -109,8 +104,17 @@ const CheckListInspection = () => {
             setLoading(false);
         }
     };
+    const getLatestVersion = async (http: AxiosInstance | null) => {
+      try {
+        const latestVersion = await getLatestVersionApi(http);
+        setLatestVersion(latestVersion.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLatestVersion(http);
     getData(http);
-  }, [http, roles, session?.user?.userInfo.id]);
+  }, [http, session?.user?.userInfo.id]);
   const searchAction = async (saerchCondition: SearchConditionDef | undefined, pagination: TablePaginationConfig) => {
     const searchCondition: SearchConditionDef = {
         keyword: saerchCondition?.keyword,
@@ -127,6 +131,7 @@ const CheckListInspection = () => {
               key : item.id,
               no: index + 1,
               checklistName: item.checklistMaster.name,
+              checklistMasterId: item.checklistMaster.id,
               startDate: item.startDate,
               endDate: item.endDate,
               status: item.status,
@@ -166,7 +171,167 @@ const CheckListInspection = () => {
         title: tLbl('screen_name_checklist')
     }
   ];
-
+  const addNew = async () => {
+    try {
+      const id = latestVersion &&  await addNewChecklistApi(http, session?.user?.userInfo.id as string, latestVersion);
+      router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const addNewChecklist = async (checklistMasterId: string) => {
+    try {
+      const id = await addNewChecklistApi(http, session?.user?.userInfo.id as string, checklistMasterId);
+      router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const CheckListInspectionTableColumn: TableColumnsType<ChecklistMappingDef> = [
+    {
+        title: '#',
+        dataIndex: 'no',
+        width: '5%',
+    },
+    {
+        title: tLbl('checklist_name'),
+        render: (_,checklist) => (
+          checklist.checklistName
+        )
+    },
+    {
+        title: tLbl('checklist_start_date'),
+        // dataIndex: 'startDate',
+        width: '15%',
+        render: (_, item) => {
+          if (item.startDate) {
+            const date = new Date(item.startDate);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+          }
+      }
+    },
+    {
+        title: tLbl('checklist_end_date'),
+        // dataIndex: 'endDate',
+        width: '15%',
+        render: (_, item) => {
+          if (item.endDate) {
+            const date = new Date(item.endDate);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+          }
+      }
+    },
+    {
+        title: tLbl('checklist_status'),
+        width: '15%',
+        render: (_,checklist) => {
+            if (checklist.status == 1) {
+                return (<Tag icon={<SyncOutlined spin={false}/>} color="processing">{tLbl('in_progress')}</Tag>)
+            } else if (checklist.status == 2) {
+                return (<Tag icon={<CheckCircleOutlined />} color="success">{tLbl('done')}</Tag>)
+            } else {
+              return (<Tag icon={<CloseCircleOutlined />} color="error">{tLbl('not_yet')}</Tag>)
+            }
+        }
+    },
+    {
+        title: tLbl('checklist_create_date'),
+        // dataIndex: 'createdDate',
+        width: '15%',
+        render: (_, item) => {
+          const date = new Date(item.createdDate);
+          const year = date.getFullYear();
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          return `${year}-${month}-${day}`;
+      }
+    },
+    {
+        title: '',
+        width: '5%',
+        render: (_,item) => {
+            const renderItems = (
+                id: string
+            ): MenuProps['items'] => {
+                return [
+                    {
+                        label: (
+                            <a
+                                onClick={() => {
+                                    router.push(`${CHECKLIST_IMPLEMENT}/${id}`);
+                                }}
+                            >
+                                <Space>
+                                <ExclamationCircleOutlined /> {tCom('btn_implement')}
+                                </Space>
+                            </a>
+                        ),
+                        key: '0'
+                    },
+                    {
+                        type: 'divider'
+                    },
+                    {
+                        label: (
+                            <a
+                            onClick={() => {
+                                router.push(`/checklist-global-gap/summary/${id}`);
+                            }}
+                            >
+                            <Space>
+                                <EditOutlined /> {tCom('btn_result')}
+                            </Space>
+                            </a>
+                        ),
+                        key: '1'
+                    },
+                    {
+                        type: 'divider'
+                    },
+                    {
+                        label: (
+                            <a
+                            onClick={() => {
+                              addNewChecklist(item.checklistMasterId)
+                            }}
+                            >
+                            <Space>
+                                <AppstoreAddOutlined /> {tLbl('btn_add_new')}
+                            </Space>
+                            </a>
+                        ),
+                        key: '2'
+                    }
+                ];
+            };
+            return (
+                <Dropdown
+                    menu={{
+                    items: renderItems(
+                        item.key!
+                    )
+                    }}
+                    key={item.id}
+                >
+                    <a onClick={e => e.preventDefault()} key={item.id}>
+                        <Space>
+                        <Button
+                            type='text'
+                            icon={<EllipsisOutlined />}
+                        ></Button>
+                        </Space>
+                    </a>
+                </Dropdown>
+            )
+        }
+    }
+  ]
   const handleDetails = async (id: string) => {
   };
   const handleDelete = (id: string) => {};
@@ -218,17 +383,25 @@ const CheckListInspection = () => {
                 cellPaddingBlock: 8,
                 headerSortHoverBg: '#F2F3F5',
                 borderColor: '#F2F3F5',
-                headerBg: '#F2F3F5',
                 rowHoverBg: '#F2F3F5'
               }
             }
           }}
         >
+          <Button
+              type="primary"
+              style={{marginTop: '20px', marginBottom: '10px'}}
+              // onClick={() => console.log(form.getFieldsValue())}
+              icon={<PlusOutlined />}
+              disabled= {latestVersion ? false : true}
+              onClick={addNew}
+          >
+              {tCom('btn_add')}
+          </Button>
           <Table
-              // loading={loading}
               rowKey={(record) => record.key}
               dataSource={checkListData}
-              columns={CheckListInspectionTableColumn()}
+              columns={CheckListInspectionTableColumn}
               pagination={
                   {
                     ...tableParams.pagination,

@@ -5,18 +5,21 @@ import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import styles from './disease.module.scss';
 import SearchConditionForm from './component/SearchCondition/searchConditionForm';
-import { Breadcrumb, Button, ConfigProvider, Flex } from 'antd';
+import { Breadcrumb, Button, ConfigProvider, Flex, TablePaginationConfig } from 'antd';
 import { PlusOutlined, ExportOutlined, HomeOutlined } from '@ant-design/icons';
 import TableComponent from './component/Table/table';
 import { diseaseModel } from './model/disease-model';
-import fetchDiseaseDataForExport from '@/services/Disease/exportDiseaseDiagnosesApi';
-import fetchDiseaseData from '@/services/Disease/diseaseDiagnosesApi';
+import { fetchDiseaseDataForExport } from '@/services/Disease/exportDiseaseDiagnosesApi';
+import { fetchDiseaseData } from '@/services/Disease/diseaseDiagnosesApi';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { AxiosInstance } from 'axios';
 import Link from 'next/link';
 
+interface TableParams {
+    pagination?: TablePaginationConfig;
+}
 const cx = classNames.bind(styles);
 const DiseaseDiagnostic = () => {
     const [loading, setLoading] = useState(false);
@@ -25,17 +28,44 @@ const DiseaseDiagnostic = () => {
     const [dateTo, setDateTo] = useState('');
     const [apiData, setApiData] = useState<diseaseModel[]>([]);
     const t = useTranslations('Disease');
-    const tCom = useTranslations('Common');
+    const tCom = useTranslations('common');
     const router = useRouter();
     const http = UseAxiosAuth();
     const { data: session, status } = useSession();
+    const [tableParams, setTableParams] = useState<TableParams>({
+      pagination: {
+        current: 1,
+        pageSize: 10,
+      },
+    });
 
     useEffect(() => {
         const getData = async (http: AxiosInstance | null) => {
             try {
                 setLoading(true);
-                const responseData = await fetchDiseaseData(http,"","","");
-                setApiData(responseData);
+                const pagination: TablePaginationConfig = {
+                    pageSize: 10,
+                    current: 1
+                }
+                const responseData = await fetchDiseaseData(http,"","","", pagination.pageSize, pagination.current);
+                const normalizedData: diseaseModel[] = responseData['data'].map(
+                    (item: any, index: number) => ({
+                        key : item.id,
+                        no: index + 1,
+                        predictResult: item.plantDisease.diseaseName,
+                        description: item.description,
+                        feedback: item.feedback,
+                        date: item.createdDate,
+                    })
+                );
+                setApiData(normalizedData);
+                setTableParams({
+                    ...pagination,
+                    pagination: {
+                      ...pagination,
+                      total: responseData.pagination.totalRecord,
+                    },
+                  });
             } catch (error: unknown) {
                 // Assert the type of error to be an instance of Error
                 if (error instanceof Error) {
@@ -50,11 +80,28 @@ const DiseaseDiagnostic = () => {
         getData(http);
     },[http]);
 
-    const searchAction = async () => {
+    const searchAction = async (pagination: TablePaginationConfig) => {
         try {
             setLoading(true);
-            const responseData = await fetchDiseaseData(http, keyword, dateFrom, dateTo);
-            setApiData(responseData);
+            const responseData = await fetchDiseaseData(http, keyword, dateFrom, dateTo, pagination.pageSize, pagination.current);
+            const normalizedData: diseaseModel[] = responseData['data'].map(
+                (item: any, index: number) => ({
+                    key : item.id,
+                    no: index + 1 + (pagination.pageSize ?? 10) * ((pagination.current ?? 1) - 1),
+                    predictResult: item.plantDisease.diseaseName,
+                    description: item.description,
+                    feedback: item.feedback,
+                    date: item.createdDate,
+                })
+            );
+            setApiData(normalizedData);
+            setTableParams({
+                ...pagination,
+                pagination: {
+                  ...pagination,
+                  total: responseData.pagination.totalRecord,
+                },
+              });
         } catch (error: unknown) {
             // Assert the type of error to be an instance of Error
             if (error instanceof Error) {
@@ -179,7 +226,7 @@ const DiseaseDiagnostic = () => {
                     {t('export_excel')}
                 </Button>
             </Flex>
-            <TableComponent data={apiData} loading={loading} />
+            <TableComponent data={apiData} loading={loading} searchAction={searchAction} tablePag={tableParams}/>
         </Content>
     </>
     );
