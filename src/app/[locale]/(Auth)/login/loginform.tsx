@@ -21,13 +21,17 @@ import { Link } from '@/navigation';
 import { hasDuplicate } from '@/utils/checkUrl';
 import { ROLES } from '@/constants/roles';
 import Loader from '@/components/Loader/Loader';
+import { useLocale } from 'next-intl';
 
 const cx = classNames.bind(styles);
 export const renderPath: (role: string) => string = (role: string): string => {
   if (role === ROLES.SUPER_ADMIN) {
     return DASH_BOARD_PATH;
   }
-  if (role === ROLES.ADMIN || ROLES.MANAGER) {
+  if (role === ROLES.ADMIN) {
+    return DASHBOARD_ADMIN;
+  }
+  if (role === ROLES.MANAGER) {
     return DASHBOARD_ADMIN;
   }
   if (role === ROLES.MEMBER) {
@@ -40,14 +44,15 @@ export const renderPath: (role: string) => string = (role: string): string => {
 };
 const LoginForm: React.FC = () => {
   const router = useRouter();
-
+  const locale = useLocale();
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
-
+  console.log('callbackUrl: sss', callbackUrl);
+  const localeCallBack = `${'/' + locale}${callbackUrl}`;
   const handleLogin = async (data: loginModel) => {
     try {
       console.log('data: ', data.siteCode);
@@ -57,7 +62,7 @@ const LoginForm: React.FC = () => {
         userName: data?.userName as string,
         password: data?.password as string,
         redirect: false,
-        callbackUrl
+        callbackUrl: localeCallBack
       });
       setLoading(false);
 
@@ -71,7 +76,8 @@ const LoginForm: React.FC = () => {
             />
           );
         }
-        router.push(callbackUrl as string);
+        // router.push(callbackUrl as string);
+        //  router.push('/' + locale + '/home');
       } else {
         setError('Sai mật khẩu hoặc email');
         console.log(error);
@@ -163,7 +169,6 @@ const LoginForm: React.FC = () => {
                   <a
                     className={cx('login_form_forgot')}
                     href={FORGOT_PATH}
-                  
                   >
                     Quên mật khẩu
                   </a>

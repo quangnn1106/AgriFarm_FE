@@ -10,10 +10,12 @@ import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader/Loader';
 import { redirect, usePathname } from '@/navigation';
 import LogoImage from '@/components/Logo/LogoImage';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { DASH_BOARD_PATH } from '@/constants/routes';
 import { renderPath } from './login/loginform';
 import { ROLES } from '@/constants/roles';
+import MenuHeaderLocale from '../Layouts/MainLayout/MenuSider/MenuLocale';
+import { useLocale } from 'next-intl';
 
 const { Sider, Content } = Layout;
 
@@ -51,6 +53,7 @@ const { Sider, Content } = Layout;
 
 const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
+  const locale = useLocale();
   const { data: session, status } = useSession();
   const userRole = session?.user?.userInfo?.role as ROLES;
   const isPath = path.startsWith('/login');
@@ -58,10 +61,11 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
-  //console.log('callbackUrl: ', callbackUrl);
+  const localeCallBack = `${'/' + locale}${callbackUrl}`;
+  console.log('localeCallBack: ', localeCallBack);
 
-  if (session?.user.accessToken) {
-    router.push(callbackUrl);
+  if (status === 'authenticated') {
+    router.push(localeCallBack);
   } else {
     if (status === 'loading') {
       return (
@@ -96,6 +100,8 @@ const AuthenticateTemplate = ({ children }: { children: React.ReactNode }) => {
         <div className=''>
           <LogoImage />
         </div>
+        <MenuHeaderLocale path={path} />
+
         <Col
           xs={24}
           sm={10}

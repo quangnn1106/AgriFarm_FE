@@ -1,6 +1,6 @@
 'use client'
 import React, { ChangeEvent, ReactElement } from 'react';
-import { Form, Input, DatePicker, Button } from 'antd';
+import { Form, Input, DatePicker, Button, TablePaginationConfig } from 'antd';
 import styles from '../../disease.module.scss';
 import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,7 @@ const { RangePicker } = DatePicker;
 interface SearchConditionFormProps {
     handleKeyword: (e: ChangeEvent<HTMLInputElement>) => void;
     handleDate: (dates: any, dateStrings: any) => void;
-    searchAction: () => void;
+    searchAction: (pagination: TablePaginationConfig) => void;
   }
   const SearchConditionForm: React.FC<SearchConditionFormProps> = ({
     handleKeyword,
@@ -43,7 +43,13 @@ interface SearchConditionFormProps {
                 htmlType="submit"
                 size="large"
                 className={cx('disease__searchBtn')}
-                onClick={searchAction}
+                onClick={() => {
+                    const page: TablePaginationConfig = {
+                        pageSize: 10,
+                        current: 1
+                    }
+                    searchAction(page);
+                }}
                 >
                 {t('search_btn')}
                 </Button>

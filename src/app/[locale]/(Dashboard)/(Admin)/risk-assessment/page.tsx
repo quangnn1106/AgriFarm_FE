@@ -136,7 +136,7 @@ const List = () => {
             const normalizedData: RiskMasterListDef[] = responseData['data'].map(
                 (item: RiskMasterListDef, index: number) => ({
                     key : item.id,
-                    no: index + 1,
+                    no: index + 1 + (pagination.pageSize ?? 10) * ((pagination.current ?? 1) - 1),
                     riskName: item.riskName,
                     riskDescription: item.riskDescription,
                     isDraft: item.isDraft,

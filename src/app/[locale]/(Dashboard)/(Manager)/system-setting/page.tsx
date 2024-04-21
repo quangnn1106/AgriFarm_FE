@@ -137,7 +137,7 @@ const SystemSetting = () => {
                                                 max={10}
                                             />
                                         </Form.Item>
-                                        <Tag icon={<InfoCircleOutlined />} color="processing">{`${tMsg('msg_distance_des')}${distance ?? 1}km`}</Tag>
+                                        <Tag icon={<InfoCircleOutlined />} color="processing">{`${tMsg('msg_distance_des')} ${distance ?? 1}km`}</Tag>
                                     </Card>
                                 </Card>
                             </Space>

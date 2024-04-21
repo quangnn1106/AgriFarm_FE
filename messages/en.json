@@ -171,12 +171,12 @@
   "FormRegister": {
     "title_add": "Add new Farm Admin",
     "title_update": "Update Farm Admin",
-    "address_form": "Address",
     "farm_code": "Farm Code",
     "farm_name": "Farm Name",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "phone_number": "Phone Number"
+    "phone_number": "Phone Number",
+    "address_form": "Address"
   },
   "AddStaff": {
     "title_add": "Add new Farm Admin",
@@ -278,7 +278,8 @@
     "page": "page",
     "all": "All",
     "btn_implement": "Implement",
-    "btn_result": "Result"
+    "btn_result": "Result",
+    "no_data": "No data"
   },
   "Services": {
     "RiskAsm": {
@@ -334,8 +335,9 @@
         "date_execution": "Date of execution",
         "status": "Status",
         "keyword_placeholder": "Input search text",
-        "screen_name_checklist": "GlobalG.A.P Check list",
-        "screen_name_implement": "GlobalG.A.P Check list implement",
+        "screen_name_checklist": "GlobalG.A.P Checklist",
+        "screen_name_implement": "GlobalG.A.P Checklist implement",
+        "screen_name_summary": "GlobalG.A.P Checklist summary",
         "search_condition": "Search Condition",
         "search_result": "Search Result",
         "in_progress": "In progress",
@@ -351,10 +353,34 @@
         "minor_must": "Minor must",
         "recommandation": " Recommandation",
         "btn_export_pdf": "Export PDF",
-        "btn_add_new": "Add new checklist"
+        "btn_add_new": "Add new checklist",
+        "checklist_create": "GlobalG.A.P Check list create",
+        "name": "Checklist name",
+        "palaceholder": "Please input %%ITEM%%",
+        "type_yes_no": "Yes no",
+        "type_text": "Text",
+        "order_no": "Order no",
+        "af_num": "AF Number",
+        "item_title": "Title",
+        "item_level": "Level",
+        "item_type": "Yes/No or Text",
+        "item_content": "Content",
+        "item_is_response": "Is Response",
+        "integrated": "INTEGRATED FARM ASSURANCE",
+        "evaluate": "Evaluate",
+        "requirements_achieved": "Requirements Achieved",
+        "yes": "Yes",
+        "no": "No",
+        "type": "Type",
+        "satisfy_condition": "% Satisfy Condition",
+        "encourage_implementation": "Encourage implementation"
       },
       "message": {
-        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?"
+        "msg_confirm_delete": "Do you want to delete 「%ITEM%」?",
+        "msg_required": "Please input %%ITEM%%!",
+        "msg_add_fail": "Add checklist fail!",
+        "msg_add_success": "Add checklist success!",
+        "msg_evaluate": "The farm meets GlobalG.A.P standards"
       }
     },
     "SystemSetting": {
@@ -393,5 +419,9 @@
   },
   "Supplier": {
     "Do_you_want_to_delete_this_suppliers": "Do you want to delete this suppliers"
+  },
+  "Certificate": {
+    "Cer": "Certificate",
+    "confirmDelete": "Do you want to delete these certificates?"
   }
 }

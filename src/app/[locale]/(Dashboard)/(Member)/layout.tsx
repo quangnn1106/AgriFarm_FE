@@ -27,11 +27,7 @@ export default function LayoutRoleMember({ children }: Props) {
       />
     );
   } else {
-    if (
-      userRole !== ROLES.ADMIN &&
-      userRole !== ROLES.MANAGER &&
-      userRole !== ROLES.MEMBER
-    ) {
+    if (userRole !== ROLES.MEMBER) {
       return (
         <>
           <DeniedPage />

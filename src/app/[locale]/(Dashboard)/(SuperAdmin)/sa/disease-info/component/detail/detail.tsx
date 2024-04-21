@@ -65,7 +65,7 @@ const DetailComponent: React.FC<TableComponentProps> = ({ data }) => {
                 </Col>
             </Row>
             <Row className={cx('dd__row')}>
-                <Col span={4}>
+                <Col span={6}>
                     <label className={cx('dd__label')}>{t('disease_suggest')}</label>
                 </Col>
             </Row>

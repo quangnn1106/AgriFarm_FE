@@ -2,7 +2,7 @@ import { NextRequestWithAuth, withAuth } from 'next-auth/middleware';
 import { locales } from './navigation';
 import { NextRequest, NextResponse } from 'next/server';
 // export { default } from 'next-auth/middleware';
-import createMiddleware from 'next-intl/middleware';
+import createIntlMiddleware from 'next-intl/middleware';
 import {
   ERROR_PATH,
   LOGIN_PATH,
@@ -31,7 +31,7 @@ const publicPages = [
   // (/secret requires auth)
 ];
 
-const intlMiddleware = createMiddleware({
+const intlMiddleware = createIntlMiddleware({
   locales,
   localePrefix: 'as-needed',
   defaultLocale: 'vi'
@@ -55,7 +55,7 @@ const authMiddleware = withAuth(
   }
 );
 
-export default function middleware(req: NextRequestWithAuth) {
+export default function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages
       .flatMap(p => (p === '/' ? ['', '/'] : p))

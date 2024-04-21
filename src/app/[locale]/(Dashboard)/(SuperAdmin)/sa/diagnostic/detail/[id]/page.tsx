@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import styles from '../../disease.module.scss';
-import { Breadcrumb, Button, Col, ConfigProvider, Flex, Row } from 'antd';
+import { Breadcrumb, Button, Col, ConfigProvider, Empty, Flex, Row, Spin } from 'antd';
 import Link from 'next/link';
 import DetailComponent from './component/detail/detail';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,11 +24,12 @@ const DiseaseDiagnosticDetail = ({ params }: { params: { id: string } }) => {
     const [fbStatusVal, setFbStatusVal] = useState(1);
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
-    const tCom = useTranslations('Common');
+    const tCom = useTranslations('common');
     const id = params.id;
     const [dataDetail, setDataDetail] = useState();
     const [displayModalUpdate, setDisplayModalUpdate] = useState(false);
     const http = UseAxiosAuth();
+    const [loading, setLoading] = useState(false);
 
     useEffect(()=> {
         diseaseDetail(http, id);
@@ -41,11 +42,14 @@ const DiseaseDiagnosticDetail = ({ params }: { params: { id: string } }) => {
 
     const diseaseDetail = async (http : AxiosInstance | null, id : any) => {
         try {
+            setLoading(true);
             const responseData = await fetchDiseaseDetailData(http, id);
             setFbStatusVal(responseData.data.feedbackStatus);
             setDataDetail(responseData.data);
+            setLoading(false);
         } catch (error) {
             console.error('Error calling API:', error);
+            setLoading(false);
         }
     };
 
@@ -121,30 +125,36 @@ const DiseaseDiagnosticDetail = ({ params }: { params: { id: string } }) => {
                 <h3 className={cx('disease__title')}>{t('diagnostic')}</h3>
                 <Breadcrumb style={{ margin: '0px 24px' }} items={breadCrumb}>
                 </Breadcrumb>
-                {dataDetail && (
-                    <>
-                        <DetailComponent handleSel={handleChangeSel} data={dataDetail}/>
-                        {/* <MapComponent/> */}
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            size="large"
-                            className={`${cx('disease__btn')} ${cx('disease__btn--back')}`}
-                            onClick={backAction}
-                        >   
-                        {t('back_btn')}
-                        </Button>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            size="large"
-                            className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
-                            onClick={saveAction}
-                        >   
-                        {t('save_btn')}
-                        </Button>
-                    </>
-                )}
+                <Spin spinning={loading}>
+                    {dataDetail ? (
+                        <>
+                            <DetailComponent handleSel={handleChangeSel} data={dataDetail} />
+                            {/* <MapComponent/> */}
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                                className={`${cx('disease__btn')} ${cx('disease__btn--back')}`}
+                                onClick={backAction}
+                            >   
+                            {t('back_btn')}
+                            </Button>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                                className={`${cx('disease__btn')} ${cx('disease__btn--save')}`}
+                                onClick={saveAction}
+                            >   
+                            {t('save_btn')}
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Empty description={tCom('no_data')}/>
+                        </>
+                    )}
+                </Spin>
             </Content>
             {displayModalUpdate && msgUpdate && (
                 <ModalComponent title={t('update_feedback_status')} body={msgUpdate} open={displayModalUpdate} handleClose={handleClose}/>
