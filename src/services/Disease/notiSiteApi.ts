@@ -9,9 +9,9 @@ const notiSiteApi = async (
     data : WarningDiseaseDef) => {
     try {
         const params : params = {
-            siteId: data.siteId,
-            distance: data.distance,
-            diseaseName: data.diseaseName,
+            SiteId: data.siteId,
+            Distance: data.distance.toString(),
+            DiseaseName: data.diseaseName,
         };
         const response = await http?.post('/noti/hubs/warning-disease', params);
 
