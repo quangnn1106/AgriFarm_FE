@@ -20,6 +20,9 @@ import {
 import { Link } from '@/navigation';
 
 import { ROLES } from '@/constants/roles';
+import { ChangePasswordOnResetRequest } from '@/services/Common/ResetPassword/request/reset.pass.request';
+import { resetPasswordService } from '@/services/Common/ResetPassword/resetPassService';
+import UseAxiosAuth from '@/utils/axiosClient';
 
 const cx = classNames.bind(styles);
 export const renderPath: (role: string) => string = (role: string): string => {
@@ -37,7 +40,12 @@ export const renderPath: (role: string) => string = (role: string): string => {
   // Add a default return value in case the role doesn't match any condition
   return HOME_PATH; // You need to define DEFAULT_PATH according to your application logic
 };
-const ResetForm: React.FC = () => {
+
+interface IProps{
+  id: string
+}
+
+const ResetForm: React.FC<IProps> = ({id}) => {
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -45,34 +53,27 @@ const ResetForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
+  const http = UseAxiosAuth()
   const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
 
-  const handleLogin = async (data: loginModel) => {
-    // try {
-    //   console.log('data: ', data.siteCode);
-    //   setLoading(true);
-    //   const res = await signIn('credentials', {
-    //     // siteCode: data?.siteCode as string,
-    //     userName: data?.userName as string,
-    //     password: data?.password as string,
-    //     redirect: false,
-    //     callbackUrl
-    //   });
-    //   setLoading(false);
+  const handleLogin = async (data: ChangePasswordOnResetRequest) => {
+    try {
+      setLoading(true);
+      data.id = id
+      console.log('send data: ', data);
+      const res = await resetPasswordService(http, data);
 
-    //   if (!res?.error) {
-    //     setError('');
-    //     router.push(callbackUrl as string);
-    //   } else {
-    //     setError('Invalid User or password');
-    //     console.log(error);
-    //   }
-    // } catch (error: any) {
-    //   setLoading(false);
-    //   setError(error?.message);
-    // }
-    console.log('click confirm email to reset pass');
-    router.push('/login');
+      if (res) {
+        // setError('');
+        console.log('reset pass');
+        router.push('/login');
+      } else throw new Error();
+    } catch (err) {
+      // setError(error?.message);
+      console.log('Error: ', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -101,13 +102,13 @@ const ResetForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name='passWord'
-              label='Mật Khẩu'
+              name='password'
+              label='Mật khẩu mới'
               rules={[
                 { required: true },
                 {
                   type: 'string',
-                  message: 'UserName is not valid'
+                  message: 'Hãy nhập mật khẩu'
                 }
               ]}
             >
@@ -115,13 +116,13 @@ const ResetForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name='newPassWord'
-              label='Mật Khẩu Mới'
+              name='confirmPassword'
+              label='Xác nhận mật khẩu mới'
               rules={[
                 { required: true },
                 {
                   type: 'string',
-                  message: 'UserName is not valid'
+                  message: 'Hãy nhập mật khẩu'
                 }
               ]}
             >
@@ -172,7 +173,7 @@ const ResetForm: React.FC = () => {
                   className={cx('auth__btn')}
                   disabled={loading ? true : false}
                 >
-                  {loading ? <Loading userState={status} /> : 'Confirm'}
+                  {loading ? <Loading userState={status} /> : 'Xác nhận'}
                 </Button>
               </Flex>
             </Form.Item>

@@ -1,6 +1,5 @@
 import HttpResponseCommon from '@/types/response';
 import { AxiosInstance, AxiosResponse } from 'axios';
-import { EquipmentResponse } from '../Equipments/Payload/response/equipmentResponses';
 import {
   FarmProductResponse,
   ProductionResponse
