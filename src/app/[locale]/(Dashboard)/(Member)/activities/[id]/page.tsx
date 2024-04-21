@@ -4,6 +4,7 @@ import { renderPath } from '@/app/[locale]/(Auth)/login/loginform';
 import ErrorPage from '@/app/[locale]/(Result)/error/page';
 import NotFound from '@/app/not-found';
 import ActivityFullDetail from '@/components/(ScheduleItems)/ActivityDetail/activityFullDetail';
+import { ActivityDetailBoundary } from '@/components/(ScheduleItems)/DetailBoundary/actvityDetailBoundary';
 import { DASH_BOARD_PATH } from '@/constants/routes';
 import { useRouter } from '@/navigation';
 import { getActivityByIdService } from '@/services/Admin/Activities/activityService';
@@ -51,7 +52,11 @@ export default function ActivityFullDetailPage(props: any) {
 
   return (
     <>
-      {!initLoading && activity && <ActivityFullDetail item={activity} />}
+      {!initLoading && activity && (
+        <ActivityDetailBoundary>
+          <ActivityFullDetail item={activity} />
+        </ActivityDetailBoundary>
+      )}
       {!initLoading && !activity && (
         <Result
           status='404'

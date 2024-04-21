@@ -9,33 +9,48 @@ import {
 import ActionByTypeSection from './actionByTypeSection';
 import UseAxiosAuth from '@/utils/axiosClient';
 import { removeActionService } from '@/services/Admin/Activities/additionService';
+import { useActivityBoundary } from '../DetailBoundary/actvityDetailBoundary';
+import { useRouter } from '@/navigation';
 
 interface IProps {
-  activity: ActivityResponse;
-  curLocationId: string|null;
-  editable: boolean;
+  // activity: ActivityResponse;
+  // curLocationId: string | null;
+  // editable: boolean;
 }
 
 export default function ActivityTaskAdditionSection(props: IProps) {
-  const { activity, editable, curLocationId } = props;
+  // const { activity, editable, curLocationId } = props;
   const http = UseAxiosAuth();
-  
-  const [item, setItem] = useState<Addition | null>(activity.addition ?? null);
+  const { activity, addition, setAddition } = useActivityBoundary();
+  const farmRouter = useRouter()
+
+  // [addition, setAddition] = useState<Addition | null>(activity?.addition ?? null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
   const [change, setChange] = useState(false);
 
-  useEffect(()=>{
-    setItem(item)
-  },[change])
+  useEffect(() => {
+    // if (addition) {
+      //setAddition(addition);
+      console.log("addition change: ",addition)
+      if (addition) {
+              
+        // setAddition({ ...addition, type: data });
+        // console.log("has change: ",{ ...addition, type: data })
+        // farmRouter.push("/activities/"+activity.id)
+      }
+
+    // }
+  }, [addition]);
 
   const handleDeleteDetail = () => {
     setIsLoading(true);
-    removeActionService(http, activity.id)
+    if(activity){
+      removeActionService(http, activity.id)
       .then(res => {
         if (res) {
-          setItem(null);
+          setAddition(null);
         }
       })
       .catch(err => {
@@ -45,13 +60,15 @@ export default function ActivityTaskAdditionSection(props: IProps) {
         setDeleteOpen(false);
         setIsLoading(false);
       });
+    }
+    
   };
 
   const handleAddDetail = (data: any) => {
     setFinderOpen(false);
   };
 
-  const itemDetail = (
+  const additionDetail =()=> (
     <>
       <Flex
         style={{
@@ -70,7 +87,7 @@ export default function ActivityTaskAdditionSection(props: IProps) {
           justify='end'
           align='center'
         >
-          {editable && (
+          {activity && activity.editAble && (
             <Button
               onClick={() => setDeleteOpen(true)}
               type='text'
@@ -93,11 +110,11 @@ export default function ActivityTaskAdditionSection(props: IProps) {
           Thu hoạch lô đất: <Typography.Text mark>{activity.location?.name}</Typography.Text>
         </Typography.Title>
         <Typography.Text strong>được chọn cho hoạt động này</Typography.Text> */}
-          {item && (
+          {activity && addition && (
             <ActionByTypeSection
               change={change}
               activityId={activity.id}
-              addition={item.type}
+              addition={addition.type}
             />
           )}
         </Flex>
@@ -130,8 +147,8 @@ export default function ActivityTaskAdditionSection(props: IProps) {
             borderRadius: 20
           }}
         >
-          {item ? (
-            itemDetail
+          {addition ? (
+            additionDetail()
           ) : (
             <Space
               direction='vertical'
@@ -140,7 +157,7 @@ export default function ActivityTaskAdditionSection(props: IProps) {
               <Typography.Text type='secondary'>
                 Chưa có hoạt động nâng cao nào được đính kèm
               </Typography.Text>
-              {editable && (
+              {activity && activity.editAble && (
                 <Button
                   type='dashed'
                   onClick={() => setFinderOpen(true)}
@@ -174,17 +191,14 @@ export default function ActivityTaskAdditionSection(props: IProps) {
           )}
         ></Modal>
       )}
-      {finderOpen && (
+      {finderOpen && activity && activity.location && (
         <AdditionAttachModal
-          curLocationId={curLocationId}
+          curLocationId={activity.location.id}
           curActivity={activity}
-          onSelected={(data) => {
+          onSelected={data => {
             setFinderOpen(false);
-            setChange(prev => !prev);
-            if(item){
-
-              setItem({...item, type:data})
-            }
+            //setChange(prev => !prev);
+            
           }}
           onClose={() => setFinderOpen(false)}
         />

@@ -69,7 +69,7 @@ const AssessmentAddition = (props: IProps) => {
                 <Button
                   type='primary'
                   onClick={() =>
-                    router.push('/risk-assessment/implement?taskId=' + detail?.taskId)
+                    router.push('/risk-assessment/implement/' + detail?.taskId)
                   }
                 >
                   Đi đến đánh giá
