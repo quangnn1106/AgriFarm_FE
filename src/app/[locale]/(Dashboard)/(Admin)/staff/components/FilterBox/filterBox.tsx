@@ -39,7 +39,7 @@ const FilterBox = (props: Props) => {
           className={cx('label-icon')}
         >
           <HomeOutlined />
-          <span>Filter</span>
+          <span>Bộ lọc</span>
         </Flex>
         <Flex
           justify={'center'}
@@ -52,14 +52,14 @@ const FilterBox = (props: Props) => {
             options={options}
             multiple
             maxTagCount='responsive'
-            showCheckedStrategy={SHOW_CHILD}
-            defaultValue={[
-              ['bamboo', 'little', 'fish'],
-              ['bamboo', 'little', 'cards'],
-              ['bamboo', 'little', 'bird']
-            ]}
+            // showCheckedStrategy={SHOW_CHILD}
+            // defaultValue={[
+            //   ['bamboo', 'little', 'fish'],
+            //   ['bamboo', 'little', 'cards'],
+            //   ['bamboo', 'little', 'bird']
+            // ]}
           />
-          <span>Created At: </span>
+          <span>Tạo từ ngày: </span>
 
           <RangePicker
             defaultValue={[
@@ -72,7 +72,7 @@ const FilterBox = (props: Props) => {
             className={cx('bg-btn')}
             icon={<SearchOutlined />}
           >
-            Search
+            Tìm kiếm
           </Button>
         </Flex>
       </Flex>
