@@ -83,7 +83,6 @@ const DiseaseDiagnosticAdd = () => {
     //Hàm xử lí thống báo, nhận vào vị trí land, tên bệnh
     const notifyAction = async (location : any, diseaseName : any) => {
         //Gọi APi lấy thông tin site , SiteId, Position, NotiDistance
-        // const getListSiteDistanceData: any = getListSiteDistance(http);
         const responseData = await getListSiteDistanceApi(http);
 
         const landLocation = [parseFloat(location.lat as string), parseFloat(location.long as string)];
@@ -92,10 +91,10 @@ const DiseaseDiagnosticAdd = () => {
         responseData.data.forEach((site: any) => {
             if (site.positions.length != 0) {
                 const siteLocation = [parseFloat(site.positions[0].lat), parseFloat(site.positions[0].long)];
-                const distance = calculateDistance(siteLocation, landLocation);
-                console.log(`Khoảng cách đến ${site.id}: ${distance}`);
+                console.log(siteLocation);
+                const distance = calculateDistance(siteLocation, landLocation).toFixed(2);
     
-                if (distance < site.NotiDistance) {
+                if (distance < site.notiDistance) {
                     warningDisease(site.id, distance, diseaseName)
                 }
             }
