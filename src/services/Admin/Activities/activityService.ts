@@ -4,7 +4,7 @@ import {
   ActivityByMonthResponse,
   ActivityResponse
 } from '@/services/Admin/Activities/Payload/response/activityResponse';
-import { CreateActivityRequest } from './Payload/request/activityRequest';
+import { CreateActivityRequest, EditActivityRequest } from './Payload/request/activityRequest';
 
 const basePath = '/cult/activities';
 
@@ -114,7 +114,7 @@ export const deleteActivitiesService: (
 
 export const putActivitiesService: (
   http: AxiosInstance,
-  payLoad: CreateActivityRequest
+  payLoad: EditActivityRequest
 ) => Promise<HttpResponseCommon<ActivityResponse>> = async (http, payLoad) => {
   const res = await http.put(`${basePath}/put`, payLoad);
   return res?.data as HttpResponseCommon<ActivityResponse>;

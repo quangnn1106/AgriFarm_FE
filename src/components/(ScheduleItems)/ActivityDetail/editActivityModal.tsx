@@ -25,6 +25,12 @@ const { RangePicker } = DatePicker;
 export default function EditActivityInfoModal(props: IProps) {
   const { detail, onClose } = props;
   const [infoForm] = Form.useForm();
+
+  const handleUpdate=async ()=>{
+    const data = infoForm.getFieldsValue();
+    
+  }
+
   const descriptionListInput = (
     <>
       <Form.List
