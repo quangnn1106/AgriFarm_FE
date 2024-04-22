@@ -7,22 +7,26 @@ const borderColor = '#90e5fc';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderBottomColor: '#bff0fd',
-    backgroundColor: '#bff0fd',
+    display: 'flex',
+    borderBottomColor: '#df544a',
+    backgroundColor: '#df544a',
     borderBottomWidth: 1,
     alignItems: 'center',
-    height: 24,
+    height: 100,
     textAlign: 'center',
-    fontStyle: 'bold',
-    flexGrow: 1
+    // fontStyle: 'bold',
+    
+    flexGrow: 1,
+    fontWeight: 'bold',
   },
   season: {
-    width: '20%',
+    width: '30%',
+    // height:100,
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
   qty: {
-    width: '30%',
+    width: '20%',
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
@@ -37,7 +41,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1
   },
   amount: {
-    width: '20%'
+    width: '15%'
   }
 });
 

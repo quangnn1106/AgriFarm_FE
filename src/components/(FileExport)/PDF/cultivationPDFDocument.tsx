@@ -1,36 +1,48 @@
+'use client';
 import { Page, Font, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import CultivationTable from './Table/cultivationTable';
 // import seedData from './fakeData';
-// import Roboto from '@/assets/fonts/Roboto/Roboto-Regular.ttf'
-// import robotoRegular from '../../../assets/fonts/Roboto/Roboto-Regular.ttf';
+// import Roboto from '../../../assets/fonts/Roboto/Roboto-Regular.ttf'
+import robotoRegular from '../../../assets/fonts/Roboto/Roboto-Bold.ttf';
 import { Roboto } from 'next/font/google';
-import localFont from 'next/font/local'
+import localFont from 'next/font/local';
 
 // const local = localFont({src:'../../../assets/fonts/Roboto/Roboto-Bold.ttf'})
+// Font.register({
+//   family: 'Roboto',
+//   fonts: [
+//     { src: robotoRegular}
+//   ],
+//   format: 'truetype'
+// });
+
 Font.register({
   family: 'Roboto',
   fonts: [
-    { src: '/fonts/Roboto/Roboto-Regular.ttf', fontWeight:400 },
-    { src: '/fonts/Roboto/Roboto-Bold.ttf', fontWeight: 600 }
+    {
+      src: '/fonts/Roboto/Roboto-Regular.ttf',
+    },
+    {
+      src: '/fonts/Roboto/Roboto-Bold.ttf',
+      fontWeight: 'bold'
+    }
   ],
-  format: 'truetype'
+  // fontWeight: 'normal'
 });
-// const roboto = Roboto({
-//   weight: ['400', '700'],
-//   style: ['normal'],
-//   subsets: ['vietnamese'],
-//   display: 'auto',
-// })
+
+
 
 const styles = StyleSheet.create({
-  
   page: {
     fontFamily: 'Roboto',
-    fontSize: 11,
-    paddingTop: 30,
-    paddingLeft: 60,
-    paddingRight: 60,
-    lineHeight: 1.5,
+    fontWeight: 'normal',
+    fontSize: 10,
+    borderColor: '#df544a',
+    // paddingTop: 20,
+    // paddingLeft: 30,
+    // paddingRight: 40,
+    // lineHeight: 1.5,
+    display: 'flex',
     flexDirection: 'column'
   },
   logo: {
