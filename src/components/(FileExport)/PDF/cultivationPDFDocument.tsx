@@ -1,44 +1,48 @@
+'use client';
 import { Page, Font, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import CultivationTable from './Table/cultivationTable';
 // import seedData from './fakeData';
+// import Roboto from '../../../assets/fonts/Roboto/Roboto-Regular.ttf'
+import robotoRegular from '../../../assets/fonts/Roboto/Roboto-Bold.ttf';
+import { Roboto } from 'next/font/google';
+import localFont from 'next/font/local';
 
+// const local = localFont({src:'../../../assets/fonts/Roboto/Roboto-Bold.ttf'})
 // Font.register({
-//     family: 'Arial',
-//     src: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js', // Use your font URL
-//     fontStyle: 'normal',
-//     fontWeight: 'normal',
-//   });
+//   family: 'Roboto',
+//   fonts: [
+//     { src: robotoRegular}
+//   ],
+//   format: 'truetype'
+// });
 
 Font.register({
-  family: "Roboto",
+  family: 'Roboto',
   fonts: [
     {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
-      fontWeight: 300,
+      src: '/fonts/Roboto/Roboto-Regular.ttf',
     },
     {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf",
-      fontWeight: 400,
-    },
-    {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf",
-      fontWeight: 500,
-    },
-    {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf",
-      fontWeight: "bold",
-    },
+      src: '/fonts/Roboto/Roboto-Bold.ttf',
+      fontWeight: 'bold'
+    }
   ],
+  // fontWeight: 'normal'
 });
+
+
 
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Roboto',
-    fontSize: 11,
-    paddingTop: 30,
-    paddingLeft: 60,
-    paddingRight: 60,
-    lineHeight: 1.5,
+    fontWeight: 'normal',
+    fontSize: 10,
+    borderColor: '#df544a',
+    // paddingTop: 20,
+    // paddingLeft: 30,
+    // paddingRight: 40,
+    // lineHeight: 1.5,
+    display: 'flex',
     flexDirection: 'column'
   },
   logo: {
@@ -65,11 +69,11 @@ export interface CultRecordRow {
 
 // const data = seedData
 
-interface IProps{
-  data: CultRecordRow[]
+interface IProps {
+  data: CultRecordRow[];
 }
 
-export const CultDocument = ({data}:IProps) => (
+export const CultDocument = ({ data }: IProps) => (
   <Document>
     <Page
       size='A4'

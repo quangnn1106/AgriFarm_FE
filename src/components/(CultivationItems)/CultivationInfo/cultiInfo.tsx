@@ -34,7 +34,15 @@ import UseAxiosAuth from '@/utils/axiosClient';
 import { PaginationResponse } from '@/types/pagination';
 import { getFarmCultivationService } from '@/services/Admin/Productions/farmCultivationService';
 import { getPaginationResponse } from '@/utils/paginationHelper';
+import dynamic from 'next/dynamic';
 import { CultDocument } from '@/components/(FileExport)/PDF/cultivationPDFDocument';
+// const CultDocument = dynamic(
+//   () => import('@/components/(FileExport)/PDF/cultivationPDFDocument').then(mod => mod.CultDocument),
+//   {
+//     ssr: false,
+//     loading: () => <p>Loading...</p>
+//   }
+// );
 const { RangePicker } = DatePicker;
 // import styles from '../adminStyle.module.scss';
 
@@ -182,7 +190,7 @@ export default function CultivationInfo() {
               href='#'
               size={'large'}
             >
-              <HomeOutlined style={{ color: 'green' }} />
+              <HomeOutlined style={{ color: 'green' }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               {siteName}
             </Button>
           </ConfigProvider>
@@ -232,7 +240,9 @@ export default function CultivationInfo() {
                     justify='center'
                   >
                     <Typography.Title level={3}>
-                      <CalendarTwoTone twoToneColor={'#cfa524'} />
+                      <CalendarTwoTone twoToneColor={'#cfa524'} 
+                      onPointerEnterCapture={undefined} 
+                      onPointerLeaveCapture={undefined} />
                       {/* {'    '}Đông xuân {`(${2024})`} */}
                       {`${cult?.season.title} (${dayjs(cult?.season.startIn).year()})`}
                     </Typography.Title>
@@ -303,7 +313,7 @@ export default function CultivationInfo() {
                     document={
                       <CultDocument
                         data={
-                          cult.productions.map(e => ({
+                          cult.productions.filter(e=>dayjs(e.season.startIn).year() === dayjs(new Date()).year()).map(e => ({
                             id: e.id,
                             harvestDate: e.harvestDate,
                             location: e.land.name,

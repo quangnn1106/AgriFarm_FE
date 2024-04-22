@@ -28,18 +28,16 @@ import {
   RightSquareTwoTone
 } from '@ant-design/icons';
 import ActivityParticipantSection from '../ActivityParticipant/activityParticipantSection';
-import { useEffect, useState } from 'react';
 import ActivityLocationSection from '../ActivityLocation/activityLocationSection';
 import ActivityMaterialSection from '../ActivityMaterial/activityMaterialSection';
 import ActivityTaskAdditionSection from '../activityAdditions/activityTaskAdditionSection';
 import ActivityInviteWaitingSection from './activityInviteWaitingSection';
-import { useRouter } from '@/navigation';
+import { usePathname, useRouter } from '@/navigation';
 import {
   completeActivitiesService,
   deleteActivitiesService,
   getActivityByIdService
 } from '@/services/Admin/Activities/activityService';
-import { notFound, usePathname } from 'next/navigation';
 import {
   ActivityLocation,
   ActivityParticipant,
@@ -48,6 +46,7 @@ import {
 import UseAxiosAuth from '@/utils/axiosClient';
 import EditActivityInfoModal from './editActivityModal';
 import { ActivityDetailBoundary, useActivityBoundary } from '../DetailBoundary/actvityDetailBoundary';
+import { useEffect, useState } from 'react';
 
 interface IProps {
   item: ActivityResponse;

@@ -7,24 +7,25 @@ const borderColor = '#90e5fc';
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    borderBottomColor: '#bff0fd',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
     alignItems: 'center',
-    height: 24,
-    fontStyle: 'bold'
+    height: 100,
+    //fontStyle: 'bold'
   },
   season: {
-    width: '20%',
+    width: '30%',
+    height: '100%',
     textAlign: 'left',
     borderRightColor: borderColor,
     borderRightWidth: 1,
     paddingLeft: 8
   },
   product: {
-    width: '30%',
+    width: '20%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
-    textAlign: 'right',
+    textAlign: 'center',
     paddingRight: 8
   },
   output: {
@@ -38,13 +39,13 @@ const styles = StyleSheet.create({
     width: '15%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
-    textAlign: 'right',
+    textAlign: 'center',
     paddingRight: 8
   },
   harvest: {
-    width: '20%',
-    textAlign: 'right',
-    paddingRight: 8
+    width: '15%',
+    textAlign: 'center',
+    paddingRight: 3
   }
 });
 
@@ -65,7 +66,9 @@ const TableRows = ({content}:IProps) => {
       } (${dayjs(item.season.start).year()})`}</Text>
       <Text style={styles.product}>{item.productName}</Text>
       <Text style={styles.output}>{item.output}{`(${item.unit})`}</Text>
-      <Text style={styles.location}>{item.location}{`(${item.location})`}</Text>
+      <Text style={styles.location}>{item.location}
+      {/* {`(${item.location})`} */}
+      </Text>
       <Text style={styles.harvest}>{dayjs(item.harvestDate).format("DD/MM/YYYY")}</Text>
     </View>
   ));

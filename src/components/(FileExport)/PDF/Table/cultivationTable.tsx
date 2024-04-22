@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 24,
     borderWidth: 1,
-    borderColor: '#bff0fd'
+    borderColor: '#df544a',
+    fontWeight: 'normal',
   }
 });
 
