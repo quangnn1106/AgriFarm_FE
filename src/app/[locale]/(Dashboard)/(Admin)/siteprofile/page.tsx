@@ -63,8 +63,8 @@ const UpdateSitePageForUser = () => {
   const path = usePathname();
   const { data: session } = useSession();
   const [form] = Form.useForm();
-  const siteId = session?.user.userInfo.siteName || '';
   const [sitesDetail, setSitesDetail] = useState<Sites | undefined>();
+  const siteId = session?.user.userInfo.siteId || '';
 
   const [previewImage, setPreviewImage] = useState<string>('');
   const [loadingMap, setLoading] = useState<boolean>(true);
