@@ -93,7 +93,7 @@ const RegisterForm: React.FC = () => {
         setErrorFName('');
       }
     }
-  }, [userRegister, router, dispatch, t, http, price]);
+  }, [userRegister, router, dispatch, t, http, convertPrice]);
 
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
