@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-'use client'
+'use client';
 import {
   TableColumnsType,
   Dropdown,
@@ -21,7 +21,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Pesticide } from '../../models/pesticide-models';
 
- export function PesticideTableColumns() {
+export function PesticideTableColumns() {
   const t = useTranslations('Common');
   const p = useTranslations('Pesticide');
 
@@ -33,14 +33,22 @@ import { Pesticide } from '../../models/pesticide-models';
       render: (_, pesticideItem) => {
         return (
           <>
-          <Flex align='center' gap='10px'>
-          <Image
-              style={{borderRadius: '10%'}}
-              height={40}
-              src={pesticideItem?.notes ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path='+pesticideItem?.notes : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'}
-            />
-            <p style={{color:'#009A29', fontWeight:'600'}} >{pesticideItem.name}</p>
-            </Flex>  
+            <Flex
+              align='center'
+              gap='10px'
+            >
+              <Image
+                style={{ borderRadius: '10%' }}
+                height={40}
+                src={
+                  pesticideItem?.notes
+                    ? 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=' +
+                      pesticideItem?.notes
+                    : 'http://ec2-3-109-154-96.ap-south-1.compute.amazonaws.com/api/v1/files/get?path=drafts/d1f1b219-6aa1_638488953544034389.png'
+                }
+              />
+              <p style={{ color: '#009A29', fontWeight: '600' }}>{pesticideItem.name}</p>
+            </Flex>
           </>
         );
       }
@@ -50,15 +58,15 @@ import { Pesticide } from '../../models/pesticide-models';
       dataIndex: 'stock',
       align: 'end',
       width: 'max-content',
-      render: (_,pesticideItem) => `${pesticideItem.stock} ${pesticideItem.measureUnit}`
+      render: (_, pesticideItem) => `${pesticideItem.stock} ${pesticideItem.measureUnit}`
     },
     {
-        title: t('Unit_Price'),
-        dataIndex: 'unitPrice',
-        width: 'max-content',
-        align: 'end',
-        render: (_,pesticideItem) => `${pesticideItem.unitPrice.toLocaleString()} VND`
-      },
+      title: t('Unit_Price'),
+      dataIndex: 'unitPrice',
+      width: 'max-content',
+      align: 'end',
+      render: (_, pesticideItem) => `${pesticideItem.unitPrice.toLocaleString()} VND`
+    },
     {
       width: 'max-content',
       title: '',
@@ -70,7 +78,7 @@ import { Pesticide } from '../../models/pesticide-models';
           id: string,
           onDetailsPesticide: () => void,
           onViewHistory: () => void,
-          onRemovePesticide: () => void,
+          onRemovePesticide: () => void
         ): MenuProps['items'] => {
           return [
             {
@@ -78,7 +86,7 @@ import { Pesticide } from '../../models/pesticide-models';
                 <a
                   onClick={() => {
                     onDetailsPesticide();
-                  } }
+                  }}
                 >
                   <Space>
                     <ExclamationCircleOutlined /> {t('Details')}
@@ -92,7 +100,7 @@ import { Pesticide } from '../../models/pesticide-models';
                 <a
                   onClick={() => {
                     onViewHistory();
-                  } }
+                  }}
                 >
                   <Space>
                     <ClockCircleOutlined /> {t('View_history')}
@@ -127,7 +135,7 @@ import { Pesticide } from '../../models/pesticide-models';
                         </>
                       )
                     });
-                  } }
+                  }}
                 >
                   <Space>
                     <DeleteOutlined /> {t('Delete')}

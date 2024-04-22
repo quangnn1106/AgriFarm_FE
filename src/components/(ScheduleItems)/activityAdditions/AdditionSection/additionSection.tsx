@@ -14,6 +14,7 @@ import { AxiosInstance } from 'axios';
 import TrainingAddition from '../viewer/TrainingDetail/trainingAddition';
 import TreatmentAddition from '../viewer/TreatmentDetail/treatmentAddition';
 import AssessmentAddition from '../viewer/AssessmentDetail/assessmentAddition';
+import { useActivityBoundary } from '../../DetailBoundary/actvityDetailBoundary';
 
 interface IProps {
   activityId: string;
@@ -21,54 +22,66 @@ interface IProps {
 }
 
 export default function AdditionSection(props: IProps) {
-  const { activityId, addition } = props;
+  // const { activityId, addition } = props;
+  const { addition, setAddition, activity} = useActivityBoundary()
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
+  const additionSection = useRef<HTMLDivElement|null>(null)
+
+  useEffect(()=>{
+    console.log("Addtion change: ", addition)
+  },[addition])
+
   const renderAddition = (type: string) => {
-    switch (type) {
+    if(activity){
+      switch (type) {
       
-      case TRAINING_ADDITION:
-        return (
-          <>
-            <TrainingAddition
-              change={true}
-              activityId={activityId}
-              setIsFetching={setIsFetching}
-            />
-          </>
-        );
-      case TREATMENT_ADDITION:
-        return (
-          <>
-            <TreatmentAddition
-              activityId={activityId}
-              setIsFetching={setIsFetching}
-            />
-          </>
-        );
-      case HARVEST_ADDITION:
-        return (
-          <>
-            <div>Harvest section</div>
-            <Link href={`activities/${activityId}/harvest`}>Show more detail</Link>
-          </>
-        );
-      case ASSESSMENT_ADDITION:
-        return (
-          <>
-            <div>Assessment section</div>
-            <AssessmentAddition
-              activityId={activityId}
-              setIsFetching={setIsFetching}
-            />
-          </>
-        );
-      default:
-        return <></>;
+        case TRAINING_ADDITION:
+          return (
+            <>
+              <TrainingAddition
+                activityId={activity.id}
+                setIsFetching={setIsFetching}
+              />
+            </>
+          );
+        case TREATMENT_ADDITION:
+          return (
+            <>
+              <TreatmentAddition
+                activityId={activity.id}
+                setIsFetching={setIsFetching}
+              />
+            </>
+          );
+        case HARVEST_ADDITION:
+          return (
+            <>
+              <div>Harvest section</div>
+              <Link href={`activities/${activity.id}/harvest`}>Show more detail</Link>
+            </>
+          );
+        case ASSESSMENT_ADDITION:
+          return (
+            <>
+              <div>Assessment section</div>
+              <AssessmentAddition
+                activityId={activity.id}
+                setIsFetching={setIsFetching}
+              />
+            </>
+          );
+        default:
+          return <></>;
+      }
     }
+    return <></>;
   };
 
-  return <>{renderAddition(addition.type)}</>;
+  return <>
+  <div ref={additionSection}></div>
+  {addition && renderAddition(addition.type)}
+  </>;
 }

@@ -1,5 +1,6 @@
-import React from 'react';
-import { Table } from 'antd';
+'use client'
+import React, { useState } from 'react';
+import { Empty, Table, TablePaginationConfig, TableProps } from 'antd';
 import { diseaseModel } from '../../model/disease-model';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -7,9 +8,15 @@ import { useRouter } from 'next/navigation';
 interface TableComponentProps {
     loading: boolean,
     data: diseaseModel[];
+    searchAction: (pagination: TablePaginationConfig) => void;
+    tablePag: TableParams;
 }
-const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
+interface TableParams {
+    pagination?: TablePaginationConfig;
+}
+const TableComponent: React.FC<TableComponentProps> = ({ data, loading , searchAction, tablePag}) => {
     const t = useTranslations('Disease');
+    const tCom = useTranslations('common');
     const router = useRouter();
     const columns = [
         {
@@ -22,7 +29,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
             title: t('col_name_predict'),
             dataIndex: 'predictResult',
             key: 'predictResult',
-            width: '10%',
+            width: '15%',
         },
         {
             title: t('col_name_description'),
@@ -49,14 +56,42 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, loading }) => {
             }
         },
     ];
-    return <Table loading={loading} columns={columns} dataSource={data} onRow={(record, rowIndex) => {
-            return {
-                onClick: (e) => {
-                    router.push(`/sa/diagnostic/detail/${record.key}`);
+    const handleTableChange: TableProps['onChange'] = (pagination) => {
+        searchAction(pagination);
+      };
+    return (
+        <Table
+            loading={loading}
+            columns={columns}
+            dataSource={data}
+            onRow={(record) => {
+                return {
+                    onClick: (e) => {
+                        router.push(`/sa/diagnostic/detail/${record.key}`);
+                    }
+                }
+            }}
+            pagination={
+                {
+                    ...tablePag.pagination,
+                    showTotal: total => tCom('result_text').replace('%%ITEM%%', total.toString()),
+                    showSizeChanger: true,
+                    pageSizeOptions: ['10', '20', '30'],
+                    locale: {
+                      items_per_page: `/${tCom('page')}`,
+                    },
                 }
             }
-        }}
-    />;
+            onChange={handleTableChange}
+            locale={
+                {
+                    emptyText: () => {
+                        return <Empty description={tCom('no_data')}/>;
+                    }
+                }
+            }
+        />
+    );
 };
 
 export default TableComponent;

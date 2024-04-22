@@ -11,27 +11,74 @@ import {
   TableProps,
   Typography
 } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { ProductionDetailList } from './productionDetailList';
 import { useRouter } from '@/navigation';
 import Search from 'antd/es/input/Search';
+import { FakePro, fakeProduct } from '@/components/(CultivationItems)/fakeProductions';
+import { useSession } from 'next-auth/react';
+import { useDebounceSearch } from '@/utils/debounceSearch';
+import { getFarmProductsService } from '@/services/Admin/Productions/farmProductsService';
+import { Expert } from '@/services/Admin/Training/response/training.response';
+import { PaginationResponse } from '@/types/pagination';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { getPaginationResponse } from '@/utils/paginationHelper';
 
-const fakeData: FarmProductResponse[] = Array.from({ length: 10 }, (_, i) => ({
-  id: 'asdis' + i * 5 + i * 8,
-  name: 'Gạo ' + i+1,
-  quantity: 100 + 23 * i,
-  seedRef: {
-    id: 'asdis' + i * 4 + i * 9,
-    name: 'seed -0' + i
-  },
-  unit: 'kg'
-}));
+const fakeData: FarmProductResponse[] = fakeProduct;
+const prox = FakePro;
 
 export default function ProductList() {
   const [list, setList] = useState<FarmProductResponse[]>(fakeData);
   const farmRouter = useRouter();
+  const { data: session } = useSession();
+  const siteId = session?.user.userInfo.siteId;
+  const siteName = session?.user.userInfo.siteName;
   const [expanded, setExpanded] = useState(true);
+  const [term, setTerm] = useState<string>('');
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasChanged, setHasChanged] = useState(true);
+  const http = UseAxiosAuth();
+  const [page, setPage] = useState<PaginationResponse>({
+    CurrentPage: 1,
+    PageSize: 5,
+    TotalCount: 0,
+    TotalPages: 1
+  });
+
+  const fetchData = async () => {
+    try {
+      console.log('Fetching data..');
+      const responseData = await getFarmProductsService(
+        http,
+        page.CurrentPage,
+        page.PageSize,
+        term.length === 0 ? undefined : term
+      );
+      console.log('Data here: ', responseData);
+      setPage(getPaginationResponse(responseData));
+      setList(responseData?.data.data as FarmProductResponse[]);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error calling API training content:', error);
+    }
+
+  };
+
+  const handleSearch = async (val: string) => {
+    console.log('key: ', val);
+    // setPage(prev=>({...prev, CurrentPage:1}))
+    setTerm(val.trim().toLowerCase());
+  };
+  const [onSearch] = useDebounceSearch(handleSearch, 500);
+
+  useEffect(() => {
+    console.log('On fetching..');
+    fetchData();
+  }, [term, page.CurrentPage]);
+
+  
+
   //   const selected
   const expandableProps = useMemo<TableProps<FarmProductResponse>['expandable']>(() => {
     if (!expanded) {
@@ -44,8 +91,19 @@ export default function ProductList() {
         // console.log(expanded);
       },
       defaultExpandAllRows: false,
-      expandedRowRender: record => <ProductionDetailList productId={record.id}
-      productions={[]} />
+      expandedRowRender: (record, i, expanded) => (
+        <>
+          {expanded ? (
+            <ProductionDetailList
+              productId={record.id}
+              //productions={prox.filter(e => e.product.name === record.name)}
+              productions={[]}
+            />
+          ) : (
+            <></>
+          )}
+        </>
+      )
       // rowExpandable: (record) => record.id % 2 === 0,
     };
   }, [expanded]);
@@ -68,7 +126,11 @@ export default function ProductList() {
             >
               <Avatar
                 shape='square'
-                src={record.img ? '/../' + record.img : '#'}
+                src={
+                  record.img
+                    ? record.img
+                    : 'https://product.hstatic.net/1000391653/product/sun025_683685242f1542469df6ceb548168b66_120549b361d74b6fa8413bb1011a6b59_master.jpg'
+                }
                 alt={record.name}
                 size={100}
               />
@@ -90,7 +152,7 @@ export default function ProductList() {
         <>
           <Flex gap={10}>
             <Typography>{record.quantity}</Typography>
-            <Typography>{record.unit}</Typography>
+            <Typography>({record.unit})</Typography>
           </Flex>
         </>
       )
@@ -101,7 +163,7 @@ export default function ProductList() {
     {
       title: 'Chi tiết',
       key: 'operation',
-      render: () => <a onClick={() => farmRouter.push('/products/id')}>Xem</a>
+      render: (_, e) => <a onClick={() => farmRouter.push('/products/' + e.id)}>Xem</a>
     }
   ];
 
@@ -125,13 +187,21 @@ export default function ProductList() {
         }}
       >
         <Flex>
-          <Search type='text' style={{ height:50}} placeholder='search keyword here'/>
+          
+          <Search
+            allowClear
+            style={{ height: 50 }}
+            placeholder='Nhập từ khóa'
+            // onClear={()=>setTerm('')}
+            onChange={e => onSearch(e.target.value)}
+            onSearch={handleSearch}
+          />
         </Flex>
         <Table
           rowKey={record => record.id}
           columns={columns}
           expandable={expandableProps}
-          dataSource={fakeData}
+          dataSource={list}
           pagination={false}
           scroll={{ y: 600 }}
         />

@@ -5,8 +5,8 @@ import styles from '../disease.module.scss';
 import { useTranslations } from "next-intl";
 import { diseaseDiagnosticDef, landDef, plantDiseaseDef } from "./model/diseaseDiagnosticModel";
 import { useEffect, useState } from "react";
-import getListLandApi from "@/services/Disease/getListLandApi";
-import { Breadcrumb, Button, Col, ConfigProvider, Row, Select, Spin, Tabs, TabsProps } from "antd";
+import { getListLandApi } from "@/services/Disease/getListLandApi";
+import { Breadcrumb, Button, Col, ConfigProvider, Empty, Row, Select, Spin, Tabs, TabsProps } from "antd";
 import { Input } from 'antd';
 import diseaseDiagnosesAddApi from "@/services/Disease/diseaseDiagnosesAddApi";
 import ModalComponent from "./component/modal/modal";
@@ -24,7 +24,7 @@ const DiseaseDiagnosticAdd = () => {
     const { TextArea } = Input;
     const cx = classNames.bind(styles);
     const t = useTranslations('Disease');
-    const tCom = useTranslations('Common');
+    const tCom = useTranslations('common');
     const [listLand, setListLand] = useState<Array<landDef>>([]);
     const [loadings, setLoadings] = useState<boolean>(false);
     const [selLand, setSelLand] = useState("");
@@ -169,6 +169,8 @@ const DiseaseDiagnosticAdd = () => {
         setMsgAdd("");
         setLoadings(false);
         setDiagnosticRs(false);
+        setDescription("");
+        setSelLand("");
     }
     const sendFeedback = async () => {
         try {
@@ -185,7 +187,8 @@ const DiseaseDiagnosticAdd = () => {
         setDescription(e.target.value);
     }
     const handleSelectLand = (value: string) => {
-        setSelLand(value);
+        const arrVal = value.split(",");
+        setSelLand(arrVal[0]);
     }
     const handleClose = () => {
         setDisplayModalAdd(false);
@@ -345,15 +348,16 @@ const DiseaseDiagnosticAdd = () => {
                                     filterOption={filterOption}
                                     options={listLand}
                                     optionFilterProp="children"
-                                    style={{width: "20%"}}
+                                    style={{width: "40%"}}
                                     onChange={handleSelectLand}
+                                    notFoundContent= {<Empty description={tCom('no_data')}/>}
                                 />
                             </Row>
                             <Row className={cx('dd__row')}>
                                 <label className={cx('dd__label')}>{t('enter_description_disease')}</label>
                             </Row>
                             <Row>
-                                <TextArea onChange={handleInputDescription} disabled={loadings} rows={6} cols={7} placeholder={t('enter_description_disease')} style={{width: "40%"}}/>
+                                <TextArea onChange={handleInputDescription} disabled={loadings} rows={6} cols={7} placeholder={t('enter_description_disease')} style={{width: "70%"}}/>
                             </Row>
                             <Button
                                 type="primary"

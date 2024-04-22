@@ -11,6 +11,7 @@ export interface ChecklistMasterDef {
 export interface ChecklistMappingDef {
     key: string;
     checklistName: string;
+    checklistMasterId: string;
     userId: string;
     status: number;
     startDate: string;

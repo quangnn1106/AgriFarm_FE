@@ -14,11 +14,11 @@ interface IProps {
   activityId: string;
   isFetching?: boolean;
   setIsFetching: any;
-  change: boolean;
+  // change: boolean;
 }
 
 const TrainingAddition = (props: IProps) => {
-  const { activityId, isFetching, setIsFetching, change } = props;
+  const { activityId, isFetching, setIsFetching } = props;
   const [detail, setDetail] = useState<TrainingDetail | null>();
   const http = UseAxiosAuth();
 
@@ -36,7 +36,7 @@ const TrainingAddition = (props: IProps) => {
 
   useEffect(() => {
     fetchAddition(http, activityId);
-  }, [activityId, change]);
+  }, [activityId]);
 
   return (
     <>

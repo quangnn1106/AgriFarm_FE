@@ -44,6 +44,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { useEffect, useState } from 'react';
 import { FarmObjective } from '../converter/FarmOjective';
 import { ActivityRiskResponse } from '@/services/Admin/Activities/Payload/response/activityAdditionResponse';
+import { useActivityBoundary } from '../DetailBoundary/actvityDetailBoundary';
 
 interface IProps {
   curActivity: ActivityResponse;
@@ -65,7 +66,7 @@ export default function AdditionAttachModal(props: IProps) {
   const target = FarmObjective;
   const [type, setType] = useState<string>(ASSESSMENT_ADDITION);
   const [experts, setExperts] = useState<Expert[]>([]);
-
+  const { activity, addition, setAddition } = useActivityBoundary();
   const [chooseAble, setChooseAble] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Addition | null>(null);
   const [confirmable, setConfirmable] = useState(true);
@@ -126,14 +127,7 @@ export default function AdditionAttachModal(props: IProps) {
     };
   }, []);
 
-  const handleSelect = async (data: Addition) => {
-    switch (type) {
-    }
-
-    setSelectedItem(data);
-  };
-
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setIsLoading(true);
     actionForm.validateFields();
     const data = actionForm.getFieldsValue();
@@ -143,16 +137,24 @@ export default function AdditionAttachModal(props: IProps) {
         const treatment = { ...(data as TreatmentCreateRequest), isWaste: isWaste };
 
         console.log(treatment);
-        createTreatmentActionService(http, curActivity.id, treatment)
-          .then(res => {})
-          .catch(err => {});
+        const resTreat = await createTreatmentActionService(http, curActivity.id, treatment)
+          
+            if (resTreat.status === 202 && activity) {
+              console.log("Reset data: ",{ ...addition, type: type })
+              setAddition({ id: activity.id, type: type, data:"" });
+            }
         break;
       case HARVEST_ADDITION:
         if (curLocationId) {
-          console.log(curLocationId)
-          createHarvestActionService(http, curActivity.id, {landId:curLocationId})
-            .then(res => {})
-            .catch(err => {});
+          console.log(curLocationId);
+          const resHarvest = await createHarvestActionService(http, curActivity.id, { landId: curLocationId })
+            
+              if (resHarvest.status === 202 && activity) {
+                console.log("Reset data: ",{ ...addition, type: type })
+                setAddition({ id: activity.id, type: type, data:"" });
+              }
+            // })
+            // .catch(err => {});
         }
 
         break;
@@ -160,16 +162,24 @@ export default function AdditionAttachModal(props: IProps) {
         const assessment = data as AssessmentCreateRequest;
         console.log(assessment);
 
-        createAssessmentActionService(http, curActivity.id, assessment)
-          .then(res => {})
-          .catch(err => {});
+        const resAssessment = await createAssessmentActionService(http, curActivity.id, assessment)
+          // .then(res => {
+            console.log("data: ",resAssessment)
+            if (resAssessment.status === 202 && activity) {
+              console.log("Reset data: ",{ ...addition, type: type })
+              setAddition({ id: activity.id, type: type, data:"" });
+            }
+          // })
+          // .catch(err => {});
         break;
       case TRAINING_ADDITION:
         const training = data as TrainingCreateRequest;
         console.log(training);
-        createTrainingActionService(http, curActivity.id, training)
-          .then(res => {})
-          .catch(err => {});
+        const resTrain = await createTrainingActionService(http, curActivity.id, training)
+        if (resTrain.status === 202 && activity) {
+          console.log("Reset data: ",{ ...addition, type: type })
+          setAddition({ id: activity.id, type: type, data:"" });
+        }
         break;
     }
     setIsLoading(false);
@@ -330,6 +340,7 @@ export default function AdditionAttachModal(props: IProps) {
         //   minWidth: 500
         // }}
         centered
+        cancelText={'Hủy bỏ'}
         onCancel={() => onClose()}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
@@ -339,7 +350,7 @@ export default function AdditionAttachModal(props: IProps) {
               type='primary'
               onClick={() => handleConfirm()}
             >
-              Confirm
+              Xác nhận
             </Button>
           </>
         )}

@@ -28,6 +28,7 @@
     "@nivo/bar": "^0.85.1",
     "@react-pdf/renderer": "^3.4.2",
     "@reduxjs/toolkit": "^2.0.1",
+    "@turf/rhumb-distance": "^6.5.0",
     "@types/lodash": "^4.17.0",
     "antd": "^5.13.3",
     "antd-img-crop": "^4.21.0",

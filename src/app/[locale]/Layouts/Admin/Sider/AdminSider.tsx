@@ -42,6 +42,7 @@ import { GetLogoutItem } from '../../MainLayout/MenuSider/Models/logoutItem';
 import { signOut, useSession } from 'next-auth/react';
 import { ROLES } from '@/constants/roles';
 import { LOGIN_PATH, SALOGIN_PATH } from '@/constants/routes';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = { path: string; visible: boolean };
@@ -69,6 +70,8 @@ const AdminSider = ({ path, visible }: Props) => {
   };
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
+
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     getItem(`${t('gr_dash')}`, 'dashboard', <HomeFilled />, [
@@ -164,8 +167,8 @@ const AdminSider = ({ path, visible }: Props) => {
         />
       ),
       getItem(
-        <Link href={`/globalcheck`}>{t('GBG_checklist')}</Link>,
-        `/globalcheck`,
+        <Link href={`/checklist-global-gap`}>{t('GBG_checklist')}</Link>,
+        `/checklist-global-gap`,
         <FaClipboardCheck />
       )
     ]),

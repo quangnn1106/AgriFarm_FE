@@ -18,6 +18,7 @@ export interface ProductSeedResponse {
 }
 
 export interface ProductionResponse {
+  id: string,
   product: {
     id: string;
     name: string;
@@ -30,11 +31,21 @@ export interface ProductionResponse {
     startIn: Date
     endIn?: Date
   }
-  location:{
+  land:{
     id: string,
     name: string
   }
 //   status: number
   productivity?: number;
   harvestDate?: Date|null
+}
+
+export interface CultivationRecordResponse{
+  season: {
+    id: string
+    title: string
+    startIn: Date
+    endIn?: Date
+  }
+  productions: ProductionResponse[]
 }

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { registerAsyncApi, resetState } from '@/redux/features/common-slice';
 import { useEffect, useState } from 'react';
 import Loading from '@/components/LoadingBtn/Loading';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/navigation';
 import { LOGIN_PATH, SUCCESS_PATH } from '@/constants/routes';
 import FormRegisterValues from '@/types/register';
 import { useTranslations } from 'next-intl';
@@ -21,13 +21,21 @@ import Admin from '@/types/admin';
 import UseAxiosAuth from '@/utils/axiosClient';
 import paymentApi from '@/services/Payment/paymentApi';
 import { AxiosInstance } from 'axios';
-
+import { useSearchParams } from 'next/navigation';
 const cx = classNames.bind(styles);
 
 const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { userRegister } = useAppSelector(state => state.authReducer);
   const t = useTranslations('Message');
+
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get('id');
+  const nameSolution = searchParams.get('name');
+  const price = searchParams.get('price') || '10000';
+  const convertPrice = parseFloat(price);
+
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string>('');
   const http = UseAxiosAuth();
@@ -45,7 +53,7 @@ const RegisterForm: React.FC = () => {
   useEffect(() => {
     const processPayment = async (http: AxiosInstance) => {
       console.log('Start api thanh toan');
-      const res = await paymentApi(http);
+      const res = await paymentApi(http, convertPrice);
       console.log(res);
       window.location.href = res?.data.paymentUrl;
       //   router.push(res?.data?.paymentUrl);
@@ -85,13 +93,20 @@ const RegisterForm: React.FC = () => {
         setErrorFName('');
       }
     }
-  }, [userRegister, router, dispatch, t, http]);
+  }, [userRegister, router, dispatch, t, http, price]);
 
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
     console.log('errorEmail: ', errorEmail);
+    const userRegister: FormRegisterValues = {
+      ...data,
+      paymentDetail: 'custom default',
+      solutionId: id || 'e43d372f-1ad5-46bd-b950-a95419211c0e'
+    };
 
-    const actionAsyncThunk = registerAsyncApi(data);
+    //console.log('userRegister ', userRegister);
+
+    const actionAsyncThunk = registerAsyncApi(userRegister);
     dispatch(actionAsyncThunk);
     // console.log('Start api thanh toan');
     // const res = await paymentApi(http);
@@ -107,7 +122,7 @@ const RegisterForm: React.FC = () => {
             marginBottom: '5px'
           }}
         >
-          <h1 className={cx('auth__title')}>Đăng ký</h1>
+          <h1 className={cx('auth__title')}>Đăng ký gói {nameSolution}</h1>
           <p className={cx('auth_subtitle')}>
             Đăng ký thông tin để quan lí nông trại của bạn
           </p>
@@ -130,6 +145,17 @@ const RegisterForm: React.FC = () => {
             layout='vertical'
             autoComplete='off'
           >
+            {/* <Form.Item
+              name='id'
+              hidden
+              // label='Email'
+              //  rules={[{ required: true }]}
+            >
+              <Input
+                //  onChange={handleSetStateError}
+                size='middle'
+              />
+            </Form.Item> */}
             <Form.Item
               name='email'
               label='Email'

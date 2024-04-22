@@ -25,6 +25,7 @@ import {
   GetUserInfoGroup,
   getItem
 } from '../../MainLayout/MenuSider/Models/menuItemsUser';
+import { NotifyGroupItem } from '../../MainLayout/MenuSider/Models/notiItem';
 const cx = classNames.bind(styles);
 
 type Props = {
@@ -56,7 +57,7 @@ const SAdminSider = ({ path, visible }: Props) => {
 
   const items: MenuProps['items'] = [
     GetUserInfoGroup(visible),
-
+    NotifyGroupItem(visible),
     { type: 'divider' },
 
     getItem(
@@ -91,13 +92,13 @@ const SAdminSider = ({ path, visible }: Props) => {
           <FaClipboard />
         ),
         getItem(
-          <Link href={`/disease-info-detail`}>{t('rice_plant')}</Link>,
-          `/disease-info-detail`,
+          <Link href={`/sa/disease-info`}>{t('rice_plant')}</Link>,
+          `/sa/disease-info`,
           <GiHighGrass />
         ),
         getItem(
-          <Link href={`/diagnostic`}>{t('diagnostic')}</Link>,
-          `/diagnostic`,
+          <Link href={`/sa/diagnostic`}>{t('diagnostic')}</Link>,
+          `/sa/diagnostic`,
           <ClusterOutlined />
         )
         // getItem(

@@ -94,7 +94,7 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
               </div>
             </div>
           </Link>
-          <Flex
+          {/* <Flex
             style={{ padding: '10px 16px' }}
             justify='space-between'
           >
@@ -105,8 +105,8 @@ export function GetUserInfoGroup(visible: boolean): MenuItem {
               <FaBell />
               <span> {t('notification')}</span>
             </Flex>
-            {/* <div className={cx('noti-number')}>8</div> */}
-          </Flex>
+            <div className={cx('noti-number')}>8</div>
+          </Flex> */}
         </div>
       ) : (
         <div
