@@ -1,3 +1,4 @@
+import { useActivityBoundary } from '@/components/(ScheduleItems)/DetailBoundary/actvityDetailBoundary';
 import { useRouter } from '@/navigation';
 import { getAssessmentDetailService } from '@/services/Admin/Activities/additionService';
 import { AssessmentDetail } from '@/services/Admin/Activities/Payload/response/activityAdditionResponse';
@@ -19,6 +20,15 @@ const AssessmentAddition = (props: IProps) => {
   const [detail, setDetail] = useState<RiskAdditionResponse | null>();
   const http = UseAxiosAuth();
   const router = useRouter();
+  const {
+    activity,
+    setActivity,
+    setAddition,
+    setLocation: setLoaction,
+    location,
+    setActive,
+    active
+  } = useActivityBoundary();
 
   const fetchAddition = async (http: AxiosInstance, activityId: string) => {
     try {
@@ -68,6 +78,7 @@ const AssessmentAddition = (props: IProps) => {
               <Col span={4}>
                 <Button
                   type='primary'
+                  disabled={!active}
                   onClick={() =>
                     router.push('/risk-assessment/implement/' + detail?.taskId)
                   }

@@ -12,7 +12,7 @@ export interface CreateActivityRequest {
 
 export interface EditActivityRequest {
   title: string;
-  duration: string[];
+  // duration: string[];
   descriptions: {
     name: string;
     value: string;

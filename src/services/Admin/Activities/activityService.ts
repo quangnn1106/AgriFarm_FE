@@ -114,10 +114,15 @@ export const deleteActivitiesService: (
 
 export const putActivitiesService: (
   http: AxiosInstance,
+  id: string,
   payLoad: EditActivityRequest
-) => Promise<HttpResponseCommon<ActivityResponse>> = async (http, payLoad) => {
-  const res = await http.put(`${basePath}/put`, payLoad);
-  return res?.data as HttpResponseCommon<ActivityResponse>;
+) => Promise<boolean> = async (http,id, payLoad) => {
+  const res = await http.put(`${basePath}/put`, payLoad,{
+    params:{
+      id:id
+    }
+  });
+  return res?.status === 204;
 };
 
 export const checkInviteActivitiesService: (

@@ -52,7 +52,7 @@ export function ProductionDetailList(props: IProps) {
           page.CurrentPage,
           page.PageSize
         );
-        console.log('Data here: ', responseData);
+        console.log('Production data here: ', responseData);
         setPage(getPaginationResponse(responseData));
         setList(responseData?.data.data as ProductionResponse[]);
         setIsFetching(false);
@@ -225,7 +225,7 @@ export function ProductionDetailList(props: IProps) {
         }}
         scroll={{ y: 200 }}
         columns={columns}
-        dataSource={list}
+        dataSource={!productId?productions:list}
         pagination={false}
       />
       {open && item && (
