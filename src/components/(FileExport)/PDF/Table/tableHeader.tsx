@@ -3,13 +3,13 @@ import { Text, View, StyleSheet } from '@react-pdf/renderer';
 import { Font } from "@react-pdf/renderer"
 
 
-const borderColor = '#90e5fc';
+const borderColor = '#000000';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     display: 'flex',
-    borderBottomColor: '#df544a',
-    backgroundColor: '#df544a',
+    borderBottomColor: '#000000',
+    backgroundColor: '#f3f6f4',
     borderBottomWidth: 1,
     alignItems: 'center',
     height: 100,
@@ -22,26 +22,32 @@ const styles = StyleSheet.create({
   season: {
     width: '30%',
     // height:100,
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
   qty: {
     width: '20%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
   output: {
     width: '15%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
   location: {
     width: '15%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1
   },
   amount: {
-    width: '15%'
+    width: '15%',
+    height: '100%',
+    borderRightColor: borderColor,
   }
 });
 

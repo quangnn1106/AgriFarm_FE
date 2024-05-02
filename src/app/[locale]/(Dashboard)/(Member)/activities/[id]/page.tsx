@@ -52,12 +52,12 @@ export default function ActivityFullDetailPage(props: any) {
 
   return (
     <>
-      {!initLoading && activity && (
+      {!initLoading && !isLoading && activity && (
         <ActivityDetailBoundary>
           <ActivityFullDetail item={activity} />
         </ActivityDetailBoundary>
       )}
-      {!initLoading && !activity && (
+      {!initLoading && !isLoading && !activity && (
         <Result
           status='404'
           title='404'

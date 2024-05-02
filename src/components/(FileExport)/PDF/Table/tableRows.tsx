@@ -3,14 +3,14 @@ import { Text, View, StyleSheet } from '@react-pdf/renderer';
 import dayjs from 'dayjs'
 import { CultRecordRow } from '../cultivationPDFDocument';
 
-const borderColor = '#90e5fc';
+const borderColor = '#000000';
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    borderBottomColor: 'black',
+    borderBottomColor: '#000000',
     borderBottomWidth: 1,
     alignItems: 'center',
-    height: 100,
+    height: 50,
     //fontStyle: 'bold'
   },
   season: {
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   },
   product: {
     width: '20%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
     textAlign: 'center',
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
   },
   output: {
     width: '15%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
     textAlign: 'right',
@@ -37,6 +39,7 @@ const styles = StyleSheet.create({
   },
   location: {
     width: '15%',
+    height: '100%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
     textAlign: 'center',
@@ -44,6 +47,7 @@ const styles = StyleSheet.create({
   },
   harvest: {
     width: '15%',
+    height: '100%',
     textAlign: 'center',
     paddingRight: 3
   }

@@ -16,7 +16,8 @@ export interface ActivityResponse {
   end: Date;
   addition?: Addition;
   editAble?: boolean
-  completable?: boolean
+  completable?: boolean,
+  active?: boolean
 }
 
 export interface ActivityByMonthResponse {

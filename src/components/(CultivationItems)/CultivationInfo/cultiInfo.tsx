@@ -36,6 +36,7 @@ import { getFarmCultivationService } from '@/services/Admin/Productions/farmCult
 import { getPaginationResponse } from '@/utils/paginationHelper';
 import dynamic from 'next/dynamic';
 import { CultDocument } from '@/components/(FileExport)/PDF/cultivationPDFDocument';
+import { forEach } from 'lodash';
 // const CultDocument = dynamic(
 //   () => import('@/components/(FileExport)/PDF/cultivationPDFDocument').then(mod => mod.CultDocument),
 //   {
@@ -131,6 +132,16 @@ export default function CultivationInfo() {
 
   const [search, setSearch] = useState<{ start?: Date; end?: Date } | null>(null);
 
+  const calcHarvest=()=>{
+    let sum = 0
+    if(cult){
+      const ss = cult.productions.filter(e=>e.season.id === cult.season.id)
+      ss.forEach(e=>sum+=e.output)
+    }
+    
+    return sum
+  }
+
   const fetchData = async () => {
     try {
       console.log('Fetching data..');
@@ -141,11 +152,11 @@ export default function CultivationInfo() {
         search ? search.start : undefined,
         search ? search.end : undefined
       );
-      console.log('Data here: ', responseData);
+      // console.log('Cult here: ', responseData);
       setPage(getPaginationResponse(responseData));
       const body = responseData?.data.data as CultivationRecordResponse
-      console.log('body: ', body);
-      setCult(body);
+      console.log('Cult body: ', body);
+      setCult({season: body.season, productions: body.productions});
       setIsFetching(false);
     } catch (error) {
       console.error('Error calling API training content:', error);
@@ -247,9 +258,9 @@ export default function CultivationInfo() {
                       {`${cult?.season.title} (${dayjs(cult?.season.startIn).year()})`}
                     </Typography.Title>
                     <Typography.Text strong>
-                      {`${dayjs(cult.season.startIn).format('DD/MM')}-${dayjs(
+                      {`${dayjs(cult.season.startIn).format('DD/MM/YYYY')} - ${dayjs(
                         cult.season.endIn
-                      ).format('DD/MM')}`}
+                      ).format('DD/MM/YYYY')}`}
                     </Typography.Text>
                     <Row
                       gutter={16}
@@ -275,7 +286,7 @@ export default function CultivationInfo() {
                           justify='center'
                         >
                           <Typography.Title level={4}>
-                            Đã thu hoạch: 0 (kg)
+                            Đã thu hoạch: {calcHarvest()} (kg)
                           </Typography.Title>
                         </Flex>
                       </Col>
@@ -294,7 +305,7 @@ export default function CultivationInfo() {
                           justify='center'
                         >
                           <Typography.Title level={4}>
-                            Năng suất: {`${25}(tạ/m2)`}
+                            Sản lượng: {calcHarvest()} (kg)
                           </Typography.Title>
                         </Flex>
                       </Col>
@@ -384,7 +395,7 @@ export default function CultivationInfo() {
                 </Flex>
                 <ProductionDetailList
                   //productId='sadsada'
-                  productions={list}
+                  productions={cult.productions}
                 />
               </Col>
               <Flex

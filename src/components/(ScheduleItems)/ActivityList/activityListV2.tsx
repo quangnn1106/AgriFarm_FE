@@ -195,7 +195,7 @@ export default function ActivityListV2(props: IProp) {
           //handleWindowResize={true}
           fixedWeekCount={false}
           events={monthView.map(e => ({
-            title: `${e.activityCount} activity`,
+            title: `${e.activityCount} hoạt động`,
             start: e.date,
             allDay: true
           }))}

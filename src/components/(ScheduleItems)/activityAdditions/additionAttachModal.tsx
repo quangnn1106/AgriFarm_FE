@@ -36,7 +36,8 @@ import {
   Select,
   Space,
   Radio,
-  Checkbox
+  Checkbox,
+  message
 } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
@@ -62,11 +63,11 @@ export default function AdditionAttachModal(props: IProps) {
     curLocationId
     //addition
   } = props;
-
+  
   const target = FarmObjective;
   const [type, setType] = useState<string>(ASSESSMENT_ADDITION);
   const [experts, setExperts] = useState<Expert[]>([]);
-  const { activity, addition, setAddition } = useActivityBoundary();
+  const { activity, addition, setAddition, location, setLocation } = useActivityBoundary();
   const [chooseAble, setChooseAble] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Addition | null>(null);
   const [confirmable, setConfirmable] = useState(true);
@@ -145,13 +146,15 @@ export default function AdditionAttachModal(props: IProps) {
             }
         break;
       case HARVEST_ADDITION:
-        if (curLocationId) {
-          console.log(curLocationId);
-          const resHarvest = await createHarvestActionService(http, curActivity.id, { landId: curLocationId })
+        if (location) {
+          console.log(location.id);
+          const resHarvest = await createHarvestActionService(http, curActivity.id, { landId: location.id })
             
               if (resHarvest.status === 202 && activity) {
                 console.log("Reset data: ",{ ...addition, type: type })
                 setAddition({ id: activity.id, type: type, data:"" });
+              }else if(resHarvest.status == 400 && resHarvest.message === 'There no production to harvest'){
+                message.error("Khu vực này hiện không canh tác")
               }
             // })
             // .catch(err => {});
@@ -244,11 +247,11 @@ export default function AdditionAttachModal(props: IProps) {
         return (
           <>
             <Flex>
-              {curActivity.location ? (
+              {location ? (
                 <Flex vertical>
                   Lô đất thu hoạch là
                   <Typography.Title level={3}>
-                    {curActivity.location?.name}
+                    {location.name}
                   </Typography.Title>
                 </Flex>
               ) : (

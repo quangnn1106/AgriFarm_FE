@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs'
 import HarvestModal from '../../HarvestAction/harvestModal';
+import { useActivityBoundary } from '@/components/(ScheduleItems)/DetailBoundary/actvityDetailBoundary';
 
 interface IProps {
   activityId: string;
@@ -22,6 +23,16 @@ const HarvestAddition = (props: IProps) => {
   const [open, setOpen] = useState(false)
   const http = UseAxiosAuth();
   const router = useRouter();
+  const {
+    activity,
+    setActivity,
+    setAddition,
+    setLocation,
+    location,
+    setActive,
+    active
+  } = useActivityBoundary();
+
 
   const fetchAddition = async (http: AxiosInstance, activityId: string) => {
     try {
@@ -108,7 +119,7 @@ const HarvestAddition = (props: IProps) => {
                     overflow: 'auto'
                   }}
                 >
-                  <Button type='primary' disabled={!!detail.harvestDate} onClick={()=>setOpen(true)}> {!detail.harvestDate?'Thu hoạch':'Đã thu hoạch'}</Button>
+                  <Button type='primary' disabled={!!detail.harvestDate || !active} onClick={()=>setOpen(true)}> {!detail.harvestDate?'Thu hoạch':'Đã thu hoạch'}</Button>
                   {/* <Button type='primary' disabled onClick={()=>setOpen(true)}> Đã hoàn thành</Button> */}
                 </Flex>
               </Col>

@@ -15,20 +15,45 @@ import CreateActivityV2 from '../CreateActivity/createActivityV2';
 import dayjs from 'dayjs';
 import { PlusOutlined, CloseCircleTwoTone } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
+import { putActivitiesService } from '@/services/Admin/Activities/activityService';
+import { EditActivityRequest } from '@/services/Admin/Activities/Payload/request/activityRequest';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { useState } from 'react';
+import { useRouter } from '@/navigation';
+import { title } from 'process';
 
 interface IProps {
   detail: ActivityResponse;
   onClose: () => void;
+  onOk:(data: ActivityResponse)=>void
 }
 
 const { RangePicker } = DatePicker;
 export default function EditActivityInfoModal(props: IProps) {
-  const { detail, onClose } = props;
+  const { detail, onClose, onOk } = props;
   const [infoForm] = Form.useForm();
+  const http = UseAxiosAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const farmRouter = useRouter()
+
 
   const handleUpdate=async ()=>{
-    const data = infoForm.getFieldsValue();
+    const data = infoForm.getFieldsValue() as EditActivityRequest;
+    console.log("edit: ",{...data})
+    console.log("edit: ",detail.descriptions??[])
     
+    const edit = {
+      descriptions:data.descriptions?data.descriptions:(detail.descriptions?? []),
+      // duration: data.duration?data.duration: ([detail.start., detail.end]),
+      title: data.title?data.title: detail.title??""
+    }
+
+    var rs = await putActivitiesService(http,detail.id ,edit)
+
+    if(rs){
+      // farmRouter.push('/activities/'+detail.id)
+      onOk({...detail,title: edit.title, descriptions: edit.descriptions})
+    }
   }
 
   const descriptionListInput = (
@@ -60,7 +85,7 @@ export default function EditActivityInfoModal(props: IProps) {
                   disabled={fields.length >= 5}
                   onClick={() => add()}
                   //style={{ width: '60%' }}
-                  icon={<PlusOutlined />}
+                  icon={<PlusOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
                 >
                   Add
                 </Button>
@@ -134,8 +159,7 @@ export default function EditActivityInfoModal(props: IProps) {
                           <CloseCircleTwoTone
                             twoToneColor={'#f44336'}
                             className='dynamic-delete-button'
-                            onClick={() => remove(field.name)}
-                          />
+                            onClick={() => remove(field.name)} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                          />
                         </Flex>
                         <Row>
                           <Col
@@ -213,12 +237,12 @@ export default function EditActivityInfoModal(props: IProps) {
           <Col span={12}>
             <Input
               type='text'
-              value={detail.title+" 2"}
+              defaultValue={detail.title}
               placeholder={'Tên hoạt động'}
             />
           </Col>
         </Form.Item>
-        <Descriptions title={'Bắt đầu và kết thúc'} />
+        {/* <Descriptions title={'Bắt đầu và kết thúc'} />
         <Form.Item
           name='duration'
           rules={[{ required: true, message: 'Please input duration time!' }]}
@@ -232,7 +256,7 @@ export default function EditActivityInfoModal(props: IProps) {
               defaultValue: [dayjs('09:00', 'HH:mm'), dayjs('10:00', 'HH:mm')]
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name='notes'
           rules={[{ required: true, message: 'Please input!' }]}
@@ -303,6 +327,9 @@ export default function EditActivityInfoModal(props: IProps) {
         open
         width={'40vw'}
         centered
+        onOk={()=>{
+          handleUpdate()
+        }}
         onCancel={() => onClose()}
       >
         {infoSection}

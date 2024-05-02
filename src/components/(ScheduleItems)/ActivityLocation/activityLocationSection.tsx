@@ -26,6 +26,7 @@ import {
   setLocationService
 } from '@/services/Admin/Activities/activitySubService';
 import UseAxiosAuth from '@/utils/axiosClient';
+import { useActivityBoundary } from '../DetailBoundary/actvityDetailBoundary';
 
 interface IProps {
   activityId: string;
@@ -36,9 +37,10 @@ interface IProps {
 
 export default function ActivityLocationSection(props: IProps) {
   const { detail, setDetail, activityId, editable } = props;
-  const [locationDetail, setLocationDetail] = useState<ActivityLocation | null>(
-    detail ?? null
-  );
+  // const [locationDetail, setLocationDetail] = useState<ActivityLocation | null>(
+  //   detail ?? null
+  // );
+  const {activity, setActivity, setAddition, setLocation, location} = useActivityBoundary()
   const [locationOpen, setLocationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -53,11 +55,11 @@ export default function ActivityLocationSection(props: IProps) {
   });
   const handleDelete = async () => {
     setIsLoading(true);
-    if (locationDetail) {
+    if (location) {
       try {
-        const res = await removeLocationService(http, activityId, locationDetail?.id);
+        const res = await removeLocationService(http, activityId, location?.id);
         if (res) {
-          setLocationDetail(null);
+          setLocation(null);
         } else throw new Error();
       } catch {
         message.error('Something went wrong. Try again!');
@@ -75,7 +77,7 @@ export default function ActivityLocationSection(props: IProps) {
         name: data.name
       });
       if (res) {
-        setLocationDetail(data);
+        setLocation(data);
         setLocationOpen(false);
       } else throw new Error();
     } catch {
@@ -143,7 +145,7 @@ export default function ActivityLocationSection(props: IProps) {
               }}
             >
               {!isLoading &&
-                (locationDetail ? (
+                (location ? (
                   <Flex
                     //vertical
                     align='center'
@@ -164,7 +166,7 @@ export default function ActivityLocationSection(props: IProps) {
                       <Typography.Text strong>
                         {/* M02 */}
 
-                        {locationDetail.name}
+                        {location.name}
                       </Typography.Text>
                     </div>
                   </Flex>
@@ -178,7 +180,7 @@ export default function ActivityLocationSection(props: IProps) {
                 ))}
               {isLoading && (
                 <Flex>
-                  <LoadingOutlined />
+                  <LoadingOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                 </Flex>
               )}
             </Flex>
@@ -195,16 +197,16 @@ export default function ActivityLocationSection(props: IProps) {
                   }}
                   type='primary'
                   style={{ backgroundColor: '#1b8ef5' }}
-                  disabled={!!locationDetail}
+                  disabled={!!location}
                   loading={isLoading}
                   block
                 >
-                  <PlusOutlined />
+                  <PlusOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   {/* Add */}
                   Thêm
                 </Button>
                 <Button
-                  disabled={!locationDetail}
+                  disabled={!location}
                   onClick={() => {
                     setLocationOpen(true);
                   }}
@@ -212,7 +214,7 @@ export default function ActivityLocationSection(props: IProps) {
                   block
                   loading={isLoading}
                 >
-                  <SwapOutlined />
+                  <SwapOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   {/* Change */}
                   Đổi
                 </Button>
@@ -227,11 +229,11 @@ export default function ActivityLocationSection(props: IProps) {
                     setConfirmOpen(true);
                   }}
                   type='primary'
-                  disabled={!locationDetail}
+                  disabled={!location}
                   style={{ backgroundColor: 'red' }}
                   block
                 >
-                  <CloseOutlined />
+                  <CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   {/* Remove */}
                   Gỡ
                 </Button>
