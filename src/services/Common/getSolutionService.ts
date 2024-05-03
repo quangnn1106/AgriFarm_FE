@@ -5,7 +5,7 @@ import { SolutionPackage } from './payload/response/solutionResponse';
 const getSolutionApi: (
   http?: AxiosInstance | null
 ) => Promise<HttpResponseCommon<SolutionPackage[]>> = async http => {
-  const res = await http?.get(`/register/solution/get`, {
+  const res = await http?.get(`/farm/solution/get`, {
     // params: {
     //   seasonId: seasonId
     // },
