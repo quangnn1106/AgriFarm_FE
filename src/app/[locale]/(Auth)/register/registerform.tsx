@@ -1,42 +1,117 @@
 'use client';
 import { Form, Input, Button, Row, Col, ConfigProvider, Checkbox } from 'antd';
 import styles from '../auth.module.scss';
-
 import classNames from 'classnames/bind';
-
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { registerAsyncApi, resetState } from '@/redux/features/common-slice';
 import { useEffect, useState } from 'react';
-
 import Loading from '@/components/LoadingBtn/Loading';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/navigation';
 import { LOGIN_PATH, SUCCESS_PATH } from '@/constants/routes';
 import FormRegisterValues from '@/types/register';
-
+import { useTranslations } from 'next-intl';
+import { MessageError } from '@/constants/message';
+import {
+  STATUS_ACCEPTED,
+  STATUS_BAD_REQUEST,
+  STATUS_NOT_FOUND,
+  STATUS_SERVER_ERROR
+} from '@/constants/https';
+import Admin from '@/types/admin';
+import UseAxiosAuth from '@/utils/axiosClient';
+import paymentApi from '@/services/Payment/paymentApi';
+import { AxiosInstance } from 'axios';
+import { useSearchParams } from 'next/navigation';
 const cx = classNames.bind(styles);
 
 const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { userRegister } = useAppSelector(state => state.authReducer);
+  const t = useTranslations('Message');
+
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get('id');
+  const nameSolution = searchParams.get('name');
+  const price = searchParams.get('price') || '10000';
+  const convertPrice = parseFloat(price);
+
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string>('');
+  const http = UseAxiosAuth();
+  const [errorEmail, setErrorEmail] = useState<string>('');
+  const [errorFCode, setErrorFCode] = useState<string>('');
+  const [errorFName, setErrorFName] = useState<string>('');
+  const handleSetStateError = async () => {
+    setErrorEmail('');
+    setErrorFCode('');
+    setErrorFName('');
+    const messageError = userRegister?.message as string;
+    console.log('messageError', messageError);
+  };
+
   useEffect(() => {
-    if (userRegister?.message === 'done') {
+    const processPayment = async (http: AxiosInstance) => {
+      console.log('Start api thanh toan');
+      const res = await paymentApi(http, convertPrice);
+      console.log(res);
+      window.location.href = res?.data.paymentUrl;
+      //   router.push(res?.data?.paymentUrl);
+    };
+
+    if (userRegister?.status === STATUS_ACCEPTED) {
       dispatch(resetState());
       setError('');
-      router.push(SUCCESS_PATH);
-    }
-    if (userRegister?.message === 'error') {
-      console.log('userRegister?.message', userRegister?.message);
+      setErrorEmail('');
+      setErrorFCode('');
+      setErrorFName('');
+      processPayment(http);
+      //  router.push(SUCCESS_PATH);
 
-      setError('Lỗi server vui lòng đăng ký lại');
+      const eeee = userRegister?.data as Admin;
+      console.log('eeee', eeee.id);
     }
-  }, [userRegister, router, dispatch]);
+    if (userRegister?.status === STATUS_BAD_REQUEST) {
+      const messageError = userRegister?.message as string;
+      //setError(t('allErrorRegis').replace(/\./g, '.\n'));
+      if (messageError.includes(MessageError.FARM_NAME_EXIST)) {
+        setErrorFName(t('farmName_error'));
+        setErrorFCode('');
+        setErrorEmail('');
+      }
+
+      if (messageError.includes(MessageError.FARM_CODE_EXIST)) {
+        setErrorFCode(t('farmCode_error'));
+        setErrorEmail('');
+        setErrorFName('');
+      }
+
+      if (messageError.includes(MessageError.EMAIL_EXIST)) {
+        setErrorEmail(t('email_error'));
+
+        setErrorFCode('');
+        setErrorFName('');
+      }
+    }
+  }, [userRegister, router, dispatch, t, http, convertPrice]);
 
   const handleRegister = async (data: FormRegisterValues) => {
     console.log('data register: ', data);
-    const actionAsyncThunk = registerAsyncApi(data);
+    console.log('errorEmail: ', errorEmail);
+    const userRegister: FormRegisterValues = {
+      ...data,
+      paymentDetail: 'custom default',
+      solutionId: id || 'e43d372f-1ad5-46bd-b950-a95419211c0e'
+    };
+
+    //console.log('userRegister ', userRegister);
+
+    const actionAsyncThunk = registerAsyncApi(userRegister);
     dispatch(actionAsyncThunk);
+    // console.log('Start api thanh toan');
+    // const res = await paymentApi(http);
+    // console.log(res);
+    // window.location.href = res?.data.paymentUrl;
   };
 
   return (
@@ -47,9 +122,9 @@ const RegisterForm: React.FC = () => {
             marginBottom: '5px'
           }}
         >
-          <h1 className={cx('auth__title')}>Register Farm</h1>
+          <h1 className={cx('auth__title')}>Đăng ký gói {nameSolution}</h1>
           <p className={cx('auth_subtitle')}>
-            Register information to receive a farm management account
+            Đăng ký thông tin để quan lí nông trại của bạn
           </p>
         </Form.Item>
 
@@ -70,6 +145,17 @@ const RegisterForm: React.FC = () => {
             layout='vertical'
             autoComplete='off'
           >
+            {/* <Form.Item
+              name='id'
+              hidden
+              // label='Email'
+              //  rules={[{ required: true }]}
+            >
+              <Input
+                //  onChange={handleSetStateError}
+                size='middle'
+              />
+            </Form.Item> */}
             <Form.Item
               name='email'
               label='Email'
@@ -81,12 +167,16 @@ const RegisterForm: React.FC = () => {
                 }
               ]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorEmail && <p className={cx('auth__error')}>{errorEmail}</p>}
 
             <Form.Item
               name='address'
-              label='Address'
+              label='Địa chỉ'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -97,20 +187,28 @@ const RegisterForm: React.FC = () => {
               label='Farm code'
               rules={[{ required: true }]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorFCode && <p className={cx('auth__error')}>{errorFCode}</p>}
 
             <Form.Item
               name='siteName'
-              label='Farm Name'
+              label='Tên nông trại'
               rules={[{ required: true, message: 'Password is required' }]}
             >
-              <Input size='middle' />
+              <Input
+                onChange={handleSetStateError}
+                size='middle'
+              />
             </Form.Item>
+            {errorFName && <p className={cx('auth__error')}>{errorFName}</p>}
 
             <Form.Item
               name='firstName'
-              label='First Name'
+              label='Họ'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -118,7 +216,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='lastName'
-              label='Last name'
+              label='Tên'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -126,7 +224,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item
               name='phone'
-              label='Phone'
+              label='SĐT'
               rules={[{ required: true }]}
             >
               <Input size='middle' />
@@ -151,19 +249,19 @@ const RegisterForm: React.FC = () => {
                     ]}
                   >
                     <Checkbox>
-                      Agree to our{' '}
+                      Đồng ý với các{' '}
                       <a
                         href=''
                         target=''
                       >
-                        Terms
+                        điều khoản
                       </a>{' '}
-                      of use and{' '}
+                      sử dụng và{' '}
                       <a
                         href=''
                         target=''
                       >
-                        Privacy Policy
+                        pháp lí của chúng tôi
                       </a>{' '}
                     </Checkbox>
                   </Form.Item>
@@ -189,7 +287,7 @@ const RegisterForm: React.FC = () => {
 
             <Form.Item>
               <p style={{ marginTop: '0', marginBottom: '5px' }}>
-                Have an account yet? <a href={LOGIN_PATH}>Click here</a>
+                Đã có tài khoản? <a href={LOGIN_PATH}>ấn vào đây</a>
               </p>
             </Form.Item>
           </Form>

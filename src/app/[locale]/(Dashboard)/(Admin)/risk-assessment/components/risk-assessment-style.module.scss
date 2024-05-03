@@ -1,0 +1,86 @@
+.single-choice-btn__addrec {
+    background: #E53835 !important;
+}
+.risk__line {
+    border-top: 2px solid #CFD0D2;
+}
+.risk__btn {
+    margin: 10px;
+    min-width: 8rem;
+}
+.risk__btn--save {
+    background: #4caf4f !important;
+}
+.risk__btn--edit {
+    background: #4caf4f !important;
+}
+.risk__btn--delete {
+    background: #E53835 !important;
+}
+.risk__btn--cancel {
+    background: #F5F5F5 !important;
+}
+.risk__btn--back {
+    background: #ffffff !important;
+    border: 1px solid #4caf4f !important;
+    color: #4caf4f !important;
+}
+.risk__searchBtn {
+    background: #4caf4f !important;
+    width: 10rem;
+}
+.risk-item {
+    .risk-item__wrap {
+        min-height: 300px;
+        border-radius: 20px;
+        .single-choice__wrap {
+            margin-left: 45px;
+            .row {
+                margin-top: 10px;
+            }
+        }
+        .must {
+            margin: 20px;
+        }
+        .delete-item {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .must-checkbox {
+            margin-left: 30px;
+        }
+        .text-item__wrap {
+            margin-left: 45px;
+            .row {
+                margin-top: 10px;
+            }
+        }
+        .item-upload__wrap {
+            margin-left: 45px;
+            .row {
+                margin-top: 10px;
+            }
+        }
+    }
+    .risk-item-radio__mg {
+        margin: 20px;
+    }
+    // .title {
+    // }
+}
+.risk-div {
+    margin-left: 7rem;
+    display: flex;
+    align-items: center;
+    .label {
+        width: 30%;
+        padding: 7px 0px 7px 5px;
+        border-left: 5px solid #4CAF4F;
+    }
+}
+.item-list__items {
+    margin-top: 15px;
+}
+.item-list__wrap {
+    margin: 0 7rem 7rem 7rem;
+}

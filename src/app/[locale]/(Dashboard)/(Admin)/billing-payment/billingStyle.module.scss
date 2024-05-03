@@ -1,0 +1,82 @@
+.drawer-width {
+    :global {
+        .ant-drawer-header-title {
+            flex-direction: row-reverse;
+        }
+        button.ant-drawer-close {
+            margin: 0px !important;
+        }
+        .ant-drawer-body {
+            padding: 0.5rem 1.5rem !important;
+        }
+        .ant-col.ant-form-item-label {
+            text-align: start;
+            align-items: center;
+            display: flex;
+        }
+        .ant-input-outlined:focus{
+            background-color: rgba(5, 97, 13, 0.24);
+        }
+        .ant-input-outlined {
+            border: none;
+        }
+        .ant-row.ant-form-item-row {
+            gap: 0.5rem;
+        }
+        .ant-form-item {
+            margin-bottom: 0.8rem;
+        }
+        .ant-space-item {
+            .ant-form-item {
+                margin-bottom: 0px !important;
+            }
+            .ant-row.ant-form-item-row {
+                display: block;
+                .ant-form-item-control {
+                    max-width: 100%;
+                }
+            }
+            span.anticon-close {
+                padding: 4px;
+                border-radius: 8px;
+                background: #ff000078;
+                color: #ffffff;
+            }
+            span.anticon-close:hover {
+                background: red; 
+                border-radius: 8px;
+            }
+        }
+        .stock-input
+        {
+            max-width: 100%;
+            width: 100%;
+            .ant-input-number {
+                width: 70%;
+            }
+        } 
+        .ant-input-number-group-wrapper{
+            max-width: 100%;
+            width: 100%;
+        }
+        .ant-input-number.ant-input-number-in-form-item {
+            width: 100%;
+        }
+    }
+    
+}
+.add-supply-modal {
+    :global {
+        .ant-col.ant-form-item-label {
+            text-align: start;
+            align-items: center;
+            display: flex;
+        }
+        .ant-input-outlined {
+            border: none;
+        }
+        .ant-input-number.ant-input-number-in-form-item {
+            width: 100%;
+        }
+    } 
+}

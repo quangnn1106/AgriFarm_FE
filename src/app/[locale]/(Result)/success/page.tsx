@@ -1,16 +1,33 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Result } from 'antd';
-import { useRouter } from 'next/navigation';
 import { LOGIN_PATH, REGISTER_PATH } from '@/constants/routes';
+import { useRouter } from '@/navigation';
+import { useTranslations } from 'next-intl';
+import approveFromApi from '@/services/Payment/approveFromApi';
+import UseAxiosAuth from '@/utils/axiosClient';
+import { useAppSelector } from '@/redux/hooks';
+import Admin from '@/types/admin';
 
-const SuccessPage: React.FC = () => {
+const SuccessPage = (props: any) => {
   const router = useRouter();
+  const t = useTranslations('Result');
+  const http = UseAxiosAuth();
+  const { userRegister } = useAppSelector(state => state.authReducer);
+  const dataForm = userRegister?.data as Admin;
+  useEffect(() => {
+    approve();
+  }, []);
+  const approve = () => {
+    const res = approveFromApi(http, dataForm.id);
+    console.log(res);
+  }
+
   return (
     <Result
       status='success'
-      title='Đăng ký thành công'
-      subTitle='Bạn đã có tài khoản, hệ thống sẽ tự động duyệt trong vòng 5 phút'
+      title={t('regis_success')}
+      subTitle={t('subTitle_success')}
       extra={[
         <Button
           type='primary'
@@ -19,7 +36,7 @@ const SuccessPage: React.FC = () => {
             router.push(LOGIN_PATH);
           }}
         >
-          Đi đến trang đăng nhập
+          {t('btn_redToLogin')}
         </Button>,
         <Button
           key='buy'
@@ -27,7 +44,7 @@ const SuccessPage: React.FC = () => {
             router.push(REGISTER_PATH);
           }}
         >
-          Trở lại trang đăng ký
+          {t('btn_redToRegis')}
         </Button>
       ]}
     />

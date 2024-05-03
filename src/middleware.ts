@@ -1,24 +1,37 @@
-import { withAuth } from 'next-auth/middleware';
+import { NextRequestWithAuth, withAuth } from 'next-auth/middleware';
 import { locales } from './navigation';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 // export { default } from 'next-auth/middleware';
-import createMiddleware from 'next-intl/middleware';
+import createIntlMiddleware from 'next-intl/middleware';
 import {
+  ERROR_PATH,
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
-  SUCCESS_PATH
+  SUCCESS_PATH,
+  HOME_PATH,
+  DENIED_PATH,
+  DASH_BOARD_PATH,
+  DASHBOARD_ADMIN,
+  FORGOT_PATH,
+  RESET_PASS_PATH,
+  VERIFY_PATH
 } from './constants/routes';
+import { ROLES } from './constants/roles';
 const publicPages = [
   LOGIN_PATH,
   REGISTER_PATH,
   SALOGIN_PATH,
-  SUCCESS_PATH
-
+  SUCCESS_PATH,
+  ERROR_PATH,
+  HOME_PATH,
+  FORGOT_PATH,
+  RESET_PASS_PATH,
+  VERIFY_PATH
   // (/secret requires auth)
 ];
 
-const intlMiddleware = createMiddleware({
+const intlMiddleware = createIntlMiddleware({
   locales,
   localePrefix: 'as-needed',
   defaultLocale: 'vi'
@@ -26,17 +39,17 @@ const intlMiddleware = createMiddleware({
 
 const authMiddleware = withAuth(
   // `withAuth` augments your `Request` with the user's token.
-  // async function middleware(req) {},
+
   // Note that this callback is only invoked if
   // the `authorized` callback has returned `true`
   // and not for pages listed in `pages`.
   req => intlMiddleware(req),
   {
     callbacks: {
-      authorized: ({ token, req }) => (token ? true : false)
+      authorized: ({ token }) => token != null
     },
     pages: {
-      signIn: '/login' || '/salogin',
+      signIn: '/login' || '/en/salogin',
       newUser: '/register'
     }
   }
@@ -50,7 +63,12 @@ export default function middleware(req: NextRequest) {
     'i'
   );
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-
+  //console.log('req.nextauth.token?.role: ', req?.nextauth?.token?.user_info);
+  //console.log('req.nextUrl.pathname ', req.nextUrl.pathname);
+  // if (req.nextUrl.pathname.startsWith('/en/login')) {
+  //   console.log('123123123 123213123123123123');
+  //   return NextResponse.redirect(new URL('/register', req.url));
+  // }
   if (isPublicPage) {
     return intlMiddleware(req);
   } else {
@@ -58,22 +76,8 @@ export default function middleware(req: NextRequest) {
   }
 }
 
-// export const config = {
-//   matcher: [
-//     '/lead/:path*',
-//     '/dashboard/:path*',
-//     '/contact/:path*',
-//     '/task/:path*',
-//     '/opportunity/:path*',
-//     '/meeting/:path*',
-//     '/calls/:path*',
-//     '/products/:path*',
-//     '/account/:path*',
-//     '/profile/:path*'
-//   ]
-// };
-
 export const config = {
   // Skip all paths that should not be internationalized
   matcher: ['/((?!api|_next|.*\\..*).*)']
+  //matcher: ['/login']
 };

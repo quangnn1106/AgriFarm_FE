@@ -8,39 +8,78 @@ import classNames from 'classnames/bind';
 import { loginModel } from '../models/login-model';
 import Loading from '@/components/LoadingBtn/Loading';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { DASH_BOARD_PATH, REGISTER_PATH } from '@/constants/routes';
+import { useSearchParams, useRouter } from 'next/navigation';
+import {
+  DASHBOARD_ADMIN,
+  DASH_BOARD_PATH,
+  FORGOT_PATH,
+  HOME_PATH,
+  REGISTER_PATH,
+  TIME_TABLE_PATH
+} from '@/constants/routes';
+import { Link } from '@/navigation';
+import { hasDuplicate } from '@/utils/checkUrl';
+import { ROLES } from '@/constants/roles';
+import Loader from '@/components/Loader/Loader';
+import { useLocale } from 'next-intl';
 
 const cx = classNames.bind(styles);
+export const renderPath: (role: string) => string = (role: string): string => {
+  if (role === ROLES.SUPER_ADMIN) {
+    return DASH_BOARD_PATH;
+  }
+  if (role === ROLES.ADMIN) {
+    return DASHBOARD_ADMIN;
+  }
+  if (role === ROLES.MANAGER) {
+    return DASHBOARD_ADMIN;
+  }
+  if (role === ROLES.MEMBER) {
+    return TIME_TABLE_PATH;
+  }
+  console.log(' return HOME_PATH');
 
+  // Add a default return value in case the role doesn't match any condition
+  return HOME_PATH; // You need to define DEFAULT_PATH according to your application logic
+};
 const LoginForm: React.FC = () => {
   const router = useRouter();
-
+  const locale = useLocale();
   const { data: session, status } = useSession();
-
+  const userRole = session?.user?.userInfo?.role as ROLES;
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const searchParams = useSearchParams();
-
-  const callbackUrl = searchParams.get('callbackUrl') || DASH_BOARD_PATH;
-
+  const callbackUrl = searchParams.get('callbackUrl') || renderPath(userRole);
+  console.log('callbackUrl: sss', callbackUrl);
+  const localeCallBack = `${'/' + locale}${callbackUrl}`;
   const handleLogin = async (data: loginModel) => {
     try {
       console.log('data: ', data.siteCode);
       setLoading(true);
       const res = await signIn('credentials', {
-        sideCode: data?.siteCode as string,
+        // siteCode: data?.siteCode as string,
         userName: data?.userName as string,
         password: data?.password as string,
         redirect: false,
-        callbackUrl
+        callbackUrl: localeCallBack
       });
       setLoading(false);
 
       if (!res?.error) {
-        router.push(callbackUrl);
+        setError('');
+        if (status === 'loading') {
+          return (
+            <Loader
+              fullScreen
+              spinning={true}
+            />
+          );
+        }
+        // router.push(callbackUrl as string);
+        //  router.push('/' + locale + '/home');
       } else {
-        setError('Invalid User or password');
+        setError('Sai mật khẩu hoặc email');
         console.log(error);
       }
     } catch (error: any) {
@@ -48,6 +87,14 @@ const LoginForm: React.FC = () => {
       setError(error?.message);
     }
   };
+  if (status === 'loading') {
+    return (
+      <Loader
+        fullScreen
+        spinning={true}
+      />
+    );
+  }
 
   return (
     <>
@@ -70,20 +117,20 @@ const LoginForm: React.FC = () => {
             autoComplete='off'
           >
             <Form.Item>
-              <h1 className={cx('auth__title')}>Login {session?.user?.email} </h1>
-              <p className={cx('auth_subtitle')}>Access to your farm</p>
+              <h1 className={cx('auth__title')}>Đăng nhập {session?.user?.email} </h1>
+              <p className={cx('auth_subtitle')}>Truy cập vào nông trại của bạn</p>
             </Form.Item>
 
             <Form.Item
               name='siteId'
-              label='SiteId'
-              rules={[{ required: true }]}
+              label='Mã số nông trại'
+              rules={[{ required: false }]}
             >
               <Input size='large' />
             </Form.Item>
             <Form.Item
               name='userName'
-              label='UserName'
+              label='Email'
               rules={[
                 { required: true },
                 {
@@ -97,8 +144,8 @@ const LoginForm: React.FC = () => {
 
             <Form.Item
               name='password'
-              label='Password'
-              rules={[{ required: true, message: 'Password is required' }]}
+              label='Mật khẩu'
+              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
             >
               <Input.Password size='large' />
             </Form.Item>
@@ -115,15 +162,15 @@ const LoginForm: React.FC = () => {
                     className={cx('auth__btn')}
                     disabled={loading ? true : false}
                   >
-                    {loading ? <Loading userState={status} /> : 'Login'}
+                    {loading ? <Loading userState={status} /> : 'Đăng nhập'}
                   </Button>
                 </Col>
                 <Col span={12}>
                   <a
                     className={cx('login_form_forgot')}
-                    href=''
+                    href={FORGOT_PATH}
                   >
-                    Forgot password
+                    Quên mật khẩu
                   </a>
                 </Col>
               </Row>
@@ -131,7 +178,7 @@ const LoginForm: React.FC = () => {
 
             <Form.Item>
               <p>
-                Have an account yet? <a href={REGISTER_PATH}>Click here</a>{' '}
+                Chưa có tài khoản? <Link href={REGISTER_PATH}>Ấn vào đây</Link>{' '}
               </p>
             </Form.Item>
           </Form>

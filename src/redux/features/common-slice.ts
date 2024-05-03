@@ -8,32 +8,9 @@ import HttpResponseCommon from '@/types/response';
 import Admin, { Solution } from '@/types/admin';
 import { register } from '@/services/authService';
 
-export interface UserState {
-  userRegister: HttpResponseCommon<Admin> | null;
-}
-
-export interface UserLoginResponse {
-  data: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    address: string;
-    siteCode: string;
-    siteName: string;
-    isApprove: number;
-    solution: Solution;
-    cost: number;
-    paymentDetail: string;
-  };
-  status: string;
-}
-
-// export type UserRegisterResponse = {
-//   email: string;
-//   status: string;
-// };
+export type UserState = {
+  userRegister: HttpResponseCommon<Admin | [] | undefined> | null;
+};
 
 const initialState: UserState = {
   userRegister: {
@@ -57,6 +34,7 @@ const initialState: UserState = {
       cost: 10.0,
       paymentDetail: ''
     },
+
     status: 0,
     message: ''
   }
@@ -67,24 +45,26 @@ const auth = createSlice({
   initialState,
   reducers: {
     resetState: (state: UserState) => {
-      if (state.userRegister) state.userRegister.message = '';
+      if (state.userRegister) state.userRegister.status = 0;
     }
   },
   extraReducers(builder) {
-    builder
-      .addCase(registerAsyncApi.pending, (state: UserState) => {
-        if (state.userRegister) state.userRegister.message = 'loading';
-      })
-      .addCase(registerAsyncApi.fulfilled, (state: UserState) => {
-        if (state.userRegister) {
-          state.userRegister.message = 'done';
-        }
-      })
-      .addCase(registerAsyncApi.rejected, (state: UserState) => {
-        if (state.userRegister) {
-          state.userRegister.message = 'error';
-        }
-      });
+    builder.addCase(registerAsyncApi.pending, (state: UserState) => {
+      if (state.userRegister) state.userRegister.message = 'loading';
+    });
+    builder.addCase(registerAsyncApi.fulfilled, (state: UserState, action) => {
+      //tắt loading
+      console.log('action: ', action);
+
+      state.userRegister = action.payload;
+    });
+    builder.addCase(registerAsyncApi.rejected, (state: UserState, action) => {
+      if (state.userRegister) {
+        console.log('state.userRegister rejected: ', action);
+
+        state.userRegister.message = 'error';
+      }
+    });
   }
 });
 
@@ -103,16 +83,23 @@ export default auth.reducer;
 export const registerAsyncApi = createAppAsyncThunk(
   'userReducer/registerAsyncApi',
   async (values: FormRegisterValues) => {
-    const userRegister: FormRegisterValues = {
-      ...values,
-      paymentDetail: 'custom default',
-      solutionId: '45aa6629-5e67-4c70-aa9c-eed4e82e7da6'
-    };
-    const response: HttpResponseCommon<Admin> | any = await register(userRegister);
-    if (response && response.status) {
-      console.log('data resp register: ', response.data);
+    // const userRegister: FormRegisterValues = {
+    //   ...values,
+    //   paymentDetail: 'custom default'
+    //   // solutionId: 'e43d372f-1ad5-46bd-b950-a95419211c0e'
+    // };
+    const response = await register(values);
+    if (response && response.status === 202) {
+      console.log('data resp register: ', response);
 
-      return response.data;
-    } else return console.log('fail ko call dc register data ', response.data);
+      return response;
+    }
+    if (response && response.status === 400) {
+      console.log('ấdasdasdasdass', response.message);
+
+      return response;
+    }
+
+    return null;
   }
 );
