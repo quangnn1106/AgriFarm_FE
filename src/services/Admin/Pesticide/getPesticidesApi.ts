@@ -14,7 +14,7 @@ const getPesticidesApi: (
     keySearch?: string
     ) => Promise<HttpResponseCommon<Pesticide[]>> = async (http, keySearch) => {
     try {
-        const res = await http?.get(`/ppp/farm-pesticides/get`, {
+        const res = await http?.get(`/material/farm-pesticides/get`, {
             params: {
                 key: keySearch
             },

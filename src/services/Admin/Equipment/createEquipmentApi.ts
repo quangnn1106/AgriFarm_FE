@@ -10,7 +10,7 @@ export const createEquipmentApi: (
     createEquipmentDto
 ) => {
     try {
-        const res = await http?.post(`equip/farm-equipments/post`, createEquipmentDto);
+        const res = await http?.post(`material/farm-equipments/post`, createEquipmentDto);
         return res?.data;
     } catch (error: unknown) {
         // Assert the type of error to be an instance of Error

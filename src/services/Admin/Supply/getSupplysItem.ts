@@ -15,7 +15,7 @@ const getSuppliesItemApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<Supply[]>> = async (itemId, http) => {
     try {
-        const res = await http?.get(`/sup/supplies/get-by`, {
+        const res = await http?.get(`/material/supplies/get-by`, {
             params: {
                 itemId: itemId
             }

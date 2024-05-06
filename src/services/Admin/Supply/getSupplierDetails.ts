@@ -15,7 +15,7 @@ const getSupplierDetailApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<SupplierResponse>> = async (supplierID, http) => {
     try {
-        const res = await http?.get(`/sup/suppliers/get`, {
+        const res = await http?.get(`/material/suppliers/get`, {
             params: {
               id: supplierID
             }

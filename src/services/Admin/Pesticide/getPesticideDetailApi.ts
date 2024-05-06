@@ -14,7 +14,7 @@ const getPesticideDetailApi: (
     http?: AxiosInstance | null
     ) => Promise<HttpResponseCommon<Pesticide>> = async (pesticideId, http) => {
     try {
-        const res = await http?.get(`/ppp/farm-pesticides/get`, {
+        const res = await http?.get(`/material/farm-pesticides/get`, {
             params: {
               id: pesticideId
             }

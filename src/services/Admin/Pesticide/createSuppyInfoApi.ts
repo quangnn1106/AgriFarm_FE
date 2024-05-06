@@ -13,7 +13,7 @@ export const createSupplyInfoApi: (
     CreateSupplyDto
 ) => {
     try {
-        const res = await http?.post(`ppp/farm-pesticides/supply`, CreateSupplyDto, {
+        const res = await http?.post(`material/farm-pesticides/supply`, CreateSupplyDto, {
             params: {
                 id: pesticideID
             }

@@ -12,7 +12,7 @@ export const updateSupplierApi: (
     updateSupplierDto
 ) => {
     try {
-        const res = await http?.put(`sup/suppliers/put`, updateSupplierDto, {
+        const res = await http?.put(`material/suppliers/put`, updateSupplierDto, {
             params: {
                 id: supplierId
             }

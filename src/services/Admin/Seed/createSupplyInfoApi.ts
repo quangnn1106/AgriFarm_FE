@@ -12,7 +12,7 @@ export const createSupplyInfoApi: (
     CreateSupplierDto
 ) => {
     try {
-        const res = await http?.post(`seed/farm-seeds/supply`, CreateSupplierDto, {
+        const res = await http?.post(`material/farm-seeds/supply`, CreateSupplierDto, {
             params: {
                 id: seedId
             }

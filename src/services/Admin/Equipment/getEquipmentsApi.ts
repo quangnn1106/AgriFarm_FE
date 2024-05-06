@@ -14,7 +14,7 @@ const getEquipmentsApi: (
     keySearch?: string
     ) => Promise<HttpResponseCommon<Equipment[]>> = async (http, keySearch) => {
     try {
-        const res = await http?.get(`/equip/farm-equipments/get`, {
+        const res = await http?.get(`/material/farm-equipments/get`, {
             params: {
                 key: keySearch
             },

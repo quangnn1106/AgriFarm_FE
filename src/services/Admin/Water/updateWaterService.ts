@@ -13,7 +13,7 @@ export const updateWaterApi: (
   siteId
 ) => {
   try {
-    const res = await http?.put(`/water/farm-water/put`, updateWaterPayLoad, {
+    const res = await http?.put(`/env/farm-water/put`, updateWaterPayLoad, {
       params: {
         id: siteId
       }

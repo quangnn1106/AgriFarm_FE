@@ -11,7 +11,7 @@ export const addNewLandApi: (
   addLandPayLoad
 ) => {
   try {
-    const res = await http?.post(`soil/lands/post`, addLandPayLoad);
+    const res = await http?.post(`env/lands/post`, addLandPayLoad);
     return res?.data;
   } catch (error: unknown) {
     // Assert the type of error to be an instance of Error
