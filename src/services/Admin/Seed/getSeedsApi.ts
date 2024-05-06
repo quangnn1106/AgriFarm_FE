@@ -16,7 +16,7 @@ const getSeedsApi: (
     keySearch?: string
     ) => Promise<HttpResponseCommon<Seed[]>> = async (siteId, http, keySearch) => {
     try {
-        const res = await http?.get(`/seed/farm-seeds/get`, {
+        const res = await http?.get(`/material/farm-seeds/get`, {
             params: {
               siteId: siteId,
               key: keySearch

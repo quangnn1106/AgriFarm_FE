@@ -15,7 +15,7 @@ const getSuppliersApi: (
     keySearch?: string
     ) => Promise<HttpResponseCommon<SupplierResponse[]>> = async (http, keySearch) => {
     try {
-        const res = await http?.get(`/sup/suppliers/get`, {
+        const res = await http?.get(`/material/suppliers/get`, {
             params: {
                 key: keySearch
             },

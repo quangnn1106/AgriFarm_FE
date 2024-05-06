@@ -5,7 +5,7 @@ export const deleteLandApi = async (
   landId?: string | undefined
 ) => {
   try {
-    const res = await http?.delete(`soil/lands/delete`, {
+    const res = await http?.delete(`env/lands/delete`, {
       params: {
         id: landId
       }

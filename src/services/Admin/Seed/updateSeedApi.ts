@@ -12,7 +12,7 @@ export const updateSeedApi: (
     UpdateSeedDto
 ) => {
     try {
-        const res = await http?.put(`seed/farm-seeds/put`, UpdateSeedDto, {
+        const res = await http?.put(`/material/farm-seeds/put`, UpdateSeedDto, {
             params: {
                 id: seedId
             }

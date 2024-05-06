@@ -13,7 +13,7 @@ export const createSupplyInfoApi: (
     CreateSupplyDto
 ) => {
     try {
-        const res = await http?.post(`fert/farm-fertilizers/supply`, CreateSupplyDto, {
+        const res = await http?.post(`material/farm-fertilizers/supply`, CreateSupplyDto, {
             params: {
                 id: fertilizerID
             }

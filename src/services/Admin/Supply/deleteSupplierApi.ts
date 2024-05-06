@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 
 export const deleteSupplierApi = async ( http: AxiosInstance | null, supplierId?: string | undefined ) => {
     try {
-        const res = await http?.delete(`sup/suppliers/delete`, {
+        const res = await http?.delete(`material/suppliers/delete`, {
           params: {
             id: supplierId
           }

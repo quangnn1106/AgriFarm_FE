@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 
 export const deleteSeedApi = async ( http: AxiosInstance | null, seedId?: string | undefined ) => {
     try {
-        const res = await http?.delete(`seed/farm-seeds/delete`, {
+        const res = await http?.delete(`material/farm-seeds/delete`, {
           params: {
             id: seedId
           }
