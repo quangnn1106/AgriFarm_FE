@@ -12,7 +12,7 @@ export const updateFertilizerApi: (
     UpdateFertilizerDto
 ) => {
     try {
-        const res = await http?.put(`fert/farm-fertilizers/put`, UpdateFertilizerDto, {
+        const res = await http?.put(`material/farm-fertilizers/put`, UpdateFertilizerDto, {
             params: {
                 id: fertilizerId
             }

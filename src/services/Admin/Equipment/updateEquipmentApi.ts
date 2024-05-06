@@ -12,7 +12,7 @@ export const updateEquipmentApi: (
     UpdateEquipmentDto
 ) => {
     try {
-        const res = await http?.put(`equip/farm-equipments/put`, UpdateEquipmentDto, {
+        const res = await http?.put(`material/farm-equipments/put`, UpdateEquipmentDto, {
             params: {
                 id: equipmentId
             }

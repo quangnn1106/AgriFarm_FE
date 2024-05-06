@@ -14,7 +14,7 @@ export const updateLandApi: (
   siteId
 ) => {
   try {
-    const res = await http?.put(`soil/lands/put`, updateLandPayLoad, {
+    const res = await http?.put(`env/lands/put`, updateLandPayLoad, {
       params: {
         id: siteId
       }

@@ -12,7 +12,7 @@ export const createSeedApi: (
     createSeasonDto
 ) => {
     try {
-        const res = await http?.post(`seed/farm-seeds/post`, createSeasonDto, {
+        const res = await http?.post(`material/farm-seeds/post`, createSeasonDto, {
             params: {
                 siteId: siteId
             }

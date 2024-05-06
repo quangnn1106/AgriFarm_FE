@@ -16,7 +16,7 @@ const getFertilizersApi: (
     keySearch?: string
     ) => Promise<HttpResponseCommon<Fertilizer[]>> = async (siteId, http, keySearch) => {
     try {
-        const res = await http?.get(`/fert/farm-fertilizers/get`, {
+        const res = await http?.get(`/material/farm-fertilizers/get`, {
             params: {
               siteId: siteId,
               key: keySearch

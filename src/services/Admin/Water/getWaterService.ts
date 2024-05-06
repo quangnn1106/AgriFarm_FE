@@ -7,7 +7,7 @@ const fetchListWaterData: (
   http?: AxiosInstance | null
 ) => Promise<HttpResponseCommon<Water[]>> = async (siteId, http) => {
   try {
-    const res = await http?.get(`water/farm-water/get`, {
+    const res = await http?.get(`env/farm-water/get`, {
       params: {
         siteId: siteId
       }

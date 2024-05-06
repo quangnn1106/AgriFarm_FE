@@ -12,7 +12,7 @@ export const createSupplyInfoApi: (
     createSupplyDto
 ) => {
     try {
-        const res = await http?.post(`equip/farm-equipments/supply`, createSupplyDto, {
+        const res = await http?.post(`material/farm-equipments/supply`, createSupplyDto, {
             params: {
                 id: equipmentID
             }

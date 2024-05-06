@@ -11,7 +11,7 @@ export const addNewWaterApi: (
   addWaterPayLoad
 ) => {
   try {
-    const res = await http?.post(`water/farm-water/post`, addWaterPayLoad);
+    const res = await http?.post(`env/farm-water/post`, addWaterPayLoad);
     return res?.data;
   } catch (error: unknown) {
     // Assert the type of error to be an instance of Error

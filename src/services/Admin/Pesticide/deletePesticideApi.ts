@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 
 export const deletePesticideApi = async ( http: AxiosInstance | null, pesticideId?: string | undefined ) => {
     try {
-        const res = await http?.delete(`ppp/farm-pesticides/delete`, {
+        const res = await http?.delete(`material/farm-pesticides/delete`, {
           params: {
             id: pesticideId
           }
